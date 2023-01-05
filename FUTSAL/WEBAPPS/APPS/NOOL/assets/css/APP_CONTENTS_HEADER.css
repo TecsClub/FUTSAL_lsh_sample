@@ -1,0 +1,135 @@
+@charset "utf-8";
+/* Çì´õ */
+#APP_CONTENTS header{
+	background-color: #292929;
+    border-color: #000;
+    width:100%;
+    height:12%;
+}
+#APP_CONTENTS header nav{
+background-color: #292929;
+border-color: #000;
+padding-top: 50px;
+border-radius: 0;
+padding-bottom: 5px;
+margin: 0;
+min-height: 50px;
+display: block;		
+}
+#APP_CONTENTS header nav .navbar-header{
+width: 35%;
+float: left;
+}
+#APP_CONTENTS header nav .navbar-header a{
+font-size: 43px;
+font-weight: bold;
+color: #E06731 !important;
+padding: 10px;
+margin-left: 10px;
+height: 50px;
+line-height: 20px;
+}
+#APP_CONTENTS header nav .navbar-header a em{
+	font-size: 43px;
+font-weight: bold;
+color: #E06731 !important;
+line-height: 20px;
+}
+#APP_CONTENTS header nav .navbar-header a small{
+font-size: 18px;
+font-weight: bold;
+color: #aaa;
+}
+
+#APP_CONTENTS header .navbar-collapse{
+	display: inline-block;
+	width: 65%;
+	float: left;
+	flex-basis: auto;
+}
+#APP_CONTENTS header .navbar-nav{
+height: 50px;
+padding: 10px;
+float: left;
+width: 40%;
+}
+#APP_CONTENTS header .navbar-nav strong{
+color: #e06731;
+font-size: 30px;
+line-height: 1;
+margin-right: 10px;
+}
+#APP_CONTENTS header .navbar-nav small{
+background: none;
+border: none;
+color: #aaa;
+line-height: 2;
+}
+#APP_CONTENTS header .navbar-right{
+padding: 0;
+height: 50px;
+float: right;
+width: auto;
+}
+#APP_CONTENTS header .navbar-right >button{
+top: 10px;
+
+background: none;
+
+border: none;
+
+color: #aaa;
+
+line-height: 2;
+
+position: absolute;
+right: 2%;
+}
+#APP_CONTENTS header .navbar-right >button:hover, #APP_CONTENTS header .navbar-right >button:focus{
+	color: #ddd;
+}
+
+#APP_CONTENTS header .navbar-right .btn-group button{
+	box-shadow:none !important;
+}
+#APP_CONTENTS header .navbar-right .btn-group button:first-child{
+background-color: #555;
+color: #fff;
+border-color: #555;
+}
+#APP_CONTENTS header .navbar-right .btn-group button:first-child:hover, #APP_CONTENTS header .navbar-right .btn-group button:first-child:focus{
+background-color: #444;
+color: #eee;
+border-color: #444;
+}
+#APP_CONTENTS header .navbar-right .btn-group button:last-child{
+background-color: #999;
+border-color: #555;
+color: #fff;
+border-radius: 4px;
+}
+#APP_CONTENTS header .navbar-right .btn-group button:last-child:hover, #APP_CONTENTS header .navbar-right .btn-group button:last-child:focus{
+background-color: #888;
+border-color: #555;
+color: #eee;
+}
+#APP_CONTENTS header .navbar_middle {
+float: left;
+width: 40%;
+padding: 10px;
+}
+#APP_CONTENTS header .navbar_middle h3{
+font-size: 17px;
+font-weight: bold;
+color: #fff;
+border-right: 2px solid #e06731;
+line-height: 31px;
+text-align: center;
+float:left;
+width: 25%;
+margin-left: 20%;
+margin-right: 2%;
+}
+#APP_CONTENTS header .navbar_middle #inputjqxWidget_library_range{
+text-align: center !important;
+}

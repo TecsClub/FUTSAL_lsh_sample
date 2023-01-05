@@ -1,0 +1,219 @@
+{@ $ARGS = json_decode(base64_decode($ARGS->JSON_ARGS_BASE64)); }
+#PAGE_ARGS# <!-- <script>var JSON_ARGS=JSON.parse(Base64.decode($ARGS->JSON_ARGS_BASE64));</script> -->
+
+<style>
+	.ask_regard_music_list 			{width:100%; height:100%;}
+	.ask_regard_music_list table	{width:100%; height:100%; font-size:100%; border-collapse: separate; border-spacing: 1px; line-height: 100%;}
+	.ask_regard_music_list table th	{text-decoration:bold; text-align: center; white-space:normal; vertical-align: middle; word-break:break-all; background:#ccc;}
+	.ask_regard_music_list table td	{text-decoration:none; text-align: left;   white-space:normal; vertical-align: middle;word-break:break-all;}
+</style>
+
+<script>
+function INIT_WIDGETS_FOR_ASK_REGARD_MUSIC_LIST() {
+
+	if ($(".BTN_FOR_ASK_REGARD_MUSIC_LIST").length < 1) return;
+	$(".BTN_FOR_ASK_REGARD_MUSIC_LIST").jqxButton({
+		width: '100%',
+		height: '100%'
+	}).on('click', function () {
+		var ID = $(this).attr('ID');
+		if (ID == 'DUMMY') {
+		} else if (ID == 'BTN_FOR_MUSIC_LISTEN') {
+			POPUP_FOR_WAE_PLAY($(this).attr('URL'), parseInt($(this).attr('PLAY_TIME')));
+		} else if (ID == 'BTN_FOR_MUSIC_REMOVE') {
+			REMOVE_ASK_REGARD_MUSIC_FROM_SERVER($(this));
+		} else if (ID == 'BTN_FOR_MUSIC_SELECT') {
+			$('#SELECTED_ASK_REGARD_MUSIC').val($(this).attr('TITLE'));
+			$('#SELECTED_ASK_REGARD_MUSIC').attr('URL', $(this).attr('URL'));
+			$('#SELECTED_ASK_REGARD_MUSIC').attr('PLAY_TIME', $(this).attr('PLAY_TIME'));
+			CLOSE_POPUP_FOR_SEL_ASK_REGARD_MUSIC();
+		}
+	});
+}
+
+function POPUP_FOR_WAE_PLAY(WAV_FILE_URL, PLAY_TIME) {
+
+	var JSON_ARGS_BASE64 = Base64.encode(JSON.stringify({
+		ACCESS_FROM_APP: _ACCESS_FROM_APP,
+		AUDIO_URL: WAV_FILE_URL,
+		PLAY_TIME: PLAY_TIME
+	}));
+
+	QIIP_API_ACCESS({
+			REQ: 'api_GET_PAGE',
+			FLDR_TEMPLATE: _FLDR_TEMPLATE,
+			FILE_TEMPLATE: 'POPUP/POPUP_FOR_WAE_PLAY.html',
+			JSON_ARGS_BASE64: JSON_ARGS_BASE64,
+			PHONE_ID: _RS.PHONE_INFO.PHONE_ID,
+			PHONE_NO: _RS.PHONE_INFO.PHONE_NO,
+			SVC_CATEGORY: _RS.PHONE_INFO.APP_NAME,
+		},function(STR_RESULT) {
+			var OBJ_POPUP = QIIP_JQX_POPUP_WINDOW({
+	            showCollapseButton: true, 
+	            height: '95%',
+	            width: '90%',
+	            minHeight: 100,
+	            minWidth: 100,
+				},
+				'오디오 파형 보기 및 재생',
+				STR_RESULT
+			);
+		  	INIT_WIDGETS_POPUP_FOR_WAE_PLAY(OBJ_POPUP);
+/*
+		},{
+			QIIP_JQX_WINDOW: true,
+			title: _RS.PHONE_INFO.APP_NAME + ' 안내',
+			template: ARR_TO_TABLE_CENTER([
+				'팝업 화면을 구성하고 있습니다.',
+				'잠시만 기다려 주십시오!'
+			]),
+			cssClass: 'qiip_popup'
+*/
+		}
+	);
+
+}
+
+
+function REMOVE_ASK_REGARD_MUSIC_FROM_SERVER(JQUERY_DOM) {
+	QIIP_POPUP_FOR_YES_NO(
+		'경고!',[
+			'선택하신 노래 선물',
+			'[' + JQUERY_DOM.attr('TITLE') + ']를, 삭제하시겠습니까?',
+			'삭제 후에는 복구할 수 없습니다.',
+		], function () {
+			var YOUTUBE_MEDIA_LIST_PREV = _RS.OBJ_POST_ROOT.YOUTUBE_MEDIA_LIST;
+//			alert(JSON.stringify(YOUTUBE_MEDIA_LIST_PREV, null, '\t'));
+			var YOUTUBE_MEDIA_LIST_NEW = [];
+			YOUTUBE_MEDIA_LIST_PREV.forEach(function (ONE_YOUTUBE_MEDIA) {
+				if (ONE_YOUTUBE_MEDIA.MEDIA_URL != JQUERY_DOM.attr('URL')) {
+					YOUTUBE_MEDIA_LIST_NEW.push(ONE_YOUTUBE_MEDIA);
+				}
+			});
+//			alert(JSON.stringify(YOUTUBE_MEDIA_LIST_NEW, null, '\t'));
+
+			var OBJ_UPDATE = new Object();
+				OBJ_UPDATE.BASE64	= true;
+				OBJ_UPDATE.YOUTUBE_MEDIA_LIST = YOUTUBE_MEDIA_LIST_NEW;
+			QIIP_UPDATE_POST_ROOT(OBJ_UPDATE, function () {
+				REFRESH_ASK_REGARD_MUSICS(false);
+			});
+		}, function () {
+		},
+		95,
+		50
+	);
+}
+
+</script>
+<div class="ask_regard_music_list" style="width:100%; height:7%; overflow:auto;">
+	<table>
+		<tr style="height:7%;">
+			<th>
+				보유한 노래 선물 목록
+			</th>
+		</tr>
+	</table>
+</div>
+<div class="ask_regard_music_list" style="width:100%; height:93%; overflow:auto;">
+	<table>
+	<!--@foreach($ARGS as $KEY=>$ONE_YOUTUBE_MEDIA)-->
+{@
+	$parsed = date_parse($ONE_YOUTUBE_MEDIA->MEDIA_INFO->details->playtime);
+	$seconds = $parsed['hour'] * 3600 + $parsed['minute'] * 60 + $parsed['second'];	
+}
+		<tr cond="$seconds < 300">
+			<td>
+				<table>
+					<col width="30%"/>
+					<tr style="height:33%;">
+						<td rowspan="3">
+							<img
+								width="100%"
+								src="{$ONE_YOUTUBE_MEDIA->MEDIA_INFO->snippet->thumbnails->high->url}" />
+						</td>
+						<th colspan="2">
+							{$ONE_YOUTUBE_MEDIA->MEDIA_INFO->snippet->title}
+						</th>
+					</tr>
+					<tr style="height:33%;">
+						<td colspan="2">
+							<table>
+								<col width="34%"/>
+								<col width="33%"/>
+								<tr>
+									<td>
+								      	<button
+								      		class="BTN_FOR_ASK_REGARD_MUSIC_LIST"
+								      		ID="BTN_FOR_MUSIC_LISTEN"
+								      		URL="{$ONE_YOUTUBE_MEDIA->MEDIA_URL}"
+								      		PLAY_TIME='{$seconds}'
+								      		>
+								        	들어보기
+								    	</button>
+									</td>
+									<td>
+										<button
+											class="BTN_FOR_ASK_REGARD_MUSIC_LIST"
+											ID="BTN_FOR_MUSIC_REMOVE"
+								      		URL="{$ONE_YOUTUBE_MEDIA->MEDIA_URL}"
+								      		TITLE="{$ONE_YOUTUBE_MEDIA->MEDIA_INFO->snippet->title}"
+											>
+											삭제
+										</button>
+									</td>
+									<td>
+										<button
+											class="BTN_FOR_ASK_REGARD_MUSIC_LIST"
+											ID="BTN_FOR_MUSIC_SELECT"
+								      		URL="{$ONE_YOUTUBE_MEDIA->MEDIA_URL}"
+								      		PLAY_TIME='{$seconds}'
+								      		TITLE="{$ONE_YOUTUBE_MEDIA->MEDIA_INFO->snippet->title}"
+											>
+											선택
+										</button>
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr style="height:34%;">
+						<th>
+							PLAY TIME
+						</th>
+						<th>
+							{$ONE_YOUTUBE_MEDIA->MEDIA_INFO->details->playtime}
+						</th>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr style="height:60%;">
+			<td>
+				<!--@if(strlen($ONE_YOUTUBE_MEDIA->MEDIA_INFO->snippet->description) > 0)-->
+					{$ONE_YOUTUBE_MEDIA->MEDIA_INFO->snippet->description}
+				<!--@else-->
+					...
+				<!--@end-->
+			</td>
+		</tr>
+	<!--@end-->
+	<!--@if(count($ARGS) < 1)-->
+		<tr>
+			<td style="text-align:center;">
+				[노래 선물] 이 하나도 없습니다.
+			</td>
+		</tr>
+		<tr>
+			<td style="text-align:center;">
+				[추가] 버튼을 터치하시면,...
+			</td>
+		</tr>
+		<tr>
+			<td style="text-align:center;">
+				원하시는 노래를 유투브에서 찾아서 목록에 추가하실 수 있습니다.
+			</td>
+		</tr>
+	<!--@end-->
+	</table>
+</div>

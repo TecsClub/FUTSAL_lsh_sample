@@ -1,0 +1,1192 @@
+
+@font-face {
+  font-family: "GongGothicMedium";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-10@1.0/GongGothicMedium.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "GongGothicLight";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-10@1.0/GongGothicLight.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+.taggingNotDoneWrap{
+  display: flex;
+  position: fixed;
+  width: 100%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  justify-content: center;
+  align-items: center;
+  font-family: GongGothicLight, serif;
+}
+.taggingNotDoneBody{
+  flex-direction: column;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: GongGothicLight, serif;
+}
+.taggingNotDoneTitle{
+  font-size:4vh; 
+  font-family: GongGothicLight, serif;
+}
+.taggingNotDoneContent{
+  font-size: 3vh; 
+  font-family: GongGothicLight, bold;
+  margin: 0 0 2vh 0;
+}
+.taggingNotDoneLinkMain{
+  background: rgb(33, 68, 0); 
+  font-size: 2.5vh; 
+  color: white;
+  margin: 0 0 1vh 0;
+}
+.taggingNotDoneLinkQnA{
+  background: rgb(98, 202, 0); 
+  font-size: 2.5vh; 
+  color: white;
+  margin: 0 0 1vh 0;
+}
+.taggingNotDoneImg{
+  margin: 0 0 2vh 0;
+  width:20%;
+  height:20%;
+}
+.wrongHashImg{
+  margin: 0 0 2vh 0;
+  width:40%;
+  height:40%;
+}
+
+
+.logoLandWrap {
+  flex-direction: column;
+  height: 6vh;
+  margin: 0 0 0 0;
+  align-items: center;
+}
+.body {
+  display: flex;
+  flex-direction: row;
+  height: 98vh;
+  width: 100vw;
+}
+.main {
+  flex-direction: column;
+  justify-content: center;
+  height: 97vh;
+}
+
+.playerContainer {
+  /* margin-bottom: 700px; */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 70vw;
+  height: 92vh;
+  align-self: center; 
+}
+
+
+.onePlayer {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  z-index:0;
+}
+
+.sideBar {
+  display: flex;
+  flex-direction: column;
+
+  width: 29vw;
+  height: 100vh;
+  margin-left: 0.2vw;
+  background: #f3fff4;
+}
+
+.sideBarTop {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 0.5vh 1vw 0.5vh -0vw;
+  /* align-items: stretch; */
+  /* align-self: center; */
+  /* background-color: #93f669; */
+  margin: 0 0 -1vh 0;
+  background-color: #55c325;
+}
+
+.sideBarTitle {
+  color: white;
+  display: flex;
+  align-self: center;
+  justify-content: center;
+  font-size: 3vw;
+  background-color: #55c325;
+  border-width: 0px;
+  margin: 1vh 1vw 1vh 1vw;
+  /* font-weight: 700; */
+}
+.gameTitle {
+  display: flex;
+  flex-direction: row;
+  align-self: center;
+  align-items: center;
+  text-align: center;
+  padding: 0;
+  height: 5vh;
+  width: 26vw;
+  background-color: #55c325;
+  font-family: GongGothicLight, serif;
+  font-size: 1.25vw;
+  color: white;
+  font-weight: 700;
+  overflow: scroll;
+  white-space: nowrap;
+}
+.gameTitle::-webkit-scrollbar {
+  display: none;
+}
+.cameraButtons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  margin-bottom: 0.5vh;
+  background-color: #ebf7da;
+}
+.logoBar {
+  display: none;
+}
+.logoImgLand {
+  justify-content: center;
+  align-items: center;
+  align-self: center;
+  display: flex;
+  margin: 0 0 0 0;
+}
+.logoImgPor {
+  justify-content: flex-start;
+  align-self: center;
+}
+.shareButtons {
+  display: flex;
+  height: 6vh;
+  flex-direction: row;
+  justify-content: space-between;
+  background-color: #ebf7da;
+  position:relative;
+  z-index:1;
+}
+
+.cameraButton {
+  display: flex;
+  font-size: 1vw;
+  font-weight: 700;
+  text-align: left;
+  background-color: #55c325;
+  color: white;
+  border-style: solid;
+  border-width: 0px;
+  height: 4vh;
+  padding: 0.5vh 0 0 0;
+  margin: 0 0 0 0.5vw;
+  padding-inline: 1vw;
+  font-family: GongGothicLight, serif;
+  align-items: center;
+}
+
+.fastForwardingDropdown{
+  height:6vh;
+  margin: 0 0.5vw 0 0;
+}
+.fastForwardingController{
+  display: flex;
+  font-size: 1vw;
+  font-weight: 700;
+  text-align: left;
+  background-color: #ebf7da;
+  color: rgb(194, 194, 194);
+  border-style: solid;
+  border-width: 0px;
+  margin: 0 0.5vw 0 0;
+  height: 6vh;
+  font-family: GongGothicLight, serif;
+  align-items: center;
+}
+.fastForwardingButton{
+  display: flex;
+  font-size: 1.5vw;
+  font-weight: 700;
+  text-align: center;
+  background-color: #55c325;
+  color: white;
+  border-style: solid;
+  border-width: 0px;
+  height: 6vh;
+  width: 8vw;
+  padding: 0.5vh 0 0 0;
+  padding : 0 1vw 0 1vw;
+  font-family: GongGothicLight, serif;
+  align-items: center;
+}
+.unactivatedFastForwardingButton{
+  display: flex;
+  font-size: 1.5vw;
+  font-weight: 700;
+  text-align: center;
+  background-color: rgb(148, 148, 148);
+  color: white;
+  border-style: solid;
+  border-width: 0px;
+  height: 6vh;
+  width: 8vw;
+  padding: 0.5vh 0 0 0;
+  padding : 0 1vw 0 1vw;
+  font-family: GongGothicLight, serif;
+  align-items: center;
+}
+.dropdownFastForwardingButton{
+  display: flex;
+  font-size: 1.5vw;
+  font-weight: 700;
+  text-align: center;
+  background-color: rgb(194, 194, 194);
+  color: white;
+  border-style: solid;
+  border-width: 0px;
+  height: 6vh;
+  width: 8vw;
+  padding: 0.5vh 0 0 0;
+  padding : 0 1vw 0 1vw;
+  font-family: GongGothicLight, serif;
+  align-items: center;
+}
+.cameraIcon {
+  align-self: center;
+  font-size: 2vw;
+}
+
+.shareButton {
+  align-items: center;
+  display: flex;
+  height: 6vh;
+  width: 18vw;
+  padding: 0 1vw 0 1vw;
+  font-size: 1.5vw;
+  font-weight: 700;
+  text-align: left;
+  background-color: #55c325;
+  color: white;
+  border-style: solid;
+  border-width: 0px;
+  font-family: GongGothicLight, serif;
+  justify-content: center;
+}
+.tags {
+  display: flex;
+  flex-direction: column;
+  height: 87vh;
+  width: 29vw;
+  overflow: scroll;
+}
+.tags::-webkit-scrollbar {
+  display: none;
+}
+.tagsTaggingPage {
+  display: flex;
+  flex-direction: column;
+  height: 80vh;
+  overflow: scroll;
+}
+.tagsTaggingPage::-webkit-scrollbar {
+  display: none;
+}
+.banner1 {
+  display: flex;
+  justify-content: space-between;
+  background-color: rgb(0, 112, 43);
+  border-width: 0;
+  border-radius: 16;
+  text-align: center;
+  padding: 1.4vh 0.8vw 1.4vh 0.8vw;
+  padding-left: 1.2vw;
+  padding-right: 2vw;
+  font-family: GongGothicLight, serif;
+  font-size: 1.8vw;
+  font-weight: 600;
+  color: white;
+}
+.banner2 {
+  display: flex;
+  justify-content: space-between;
+  background-color: rgb(1, 201, 34);
+  border-width: 0;
+  border-radius: 16;
+  text-align: center;
+  padding: 1.4vh 0.8vw 1.4vh 0.8vw;
+  padding-left: 1.2vw;
+  padding-right: 2vw;
+  font-family: GongGothicLight, serif;
+  font-size: 1.8vw;
+  font-weight: 600;
+  color: white;
+}
+.oneTag {
+  display: flex;
+  justify-content: space-between;
+  background-color: white;
+  border-width: 0;
+  border-radius: 16;
+  padding: 0.5vh 0 0.5vh 0;
+  padding-left: 1.2vw;
+  padding-right: 2vw;
+  width:29vw;
+  font-family: GongGothicLight, serif;
+  background-color: #999;
+  justify-content: center;
+}
+
+.tagTitle {
+  font-size: 1.2vw;
+  display: flex;
+  flex: 1;
+  margin: 0.9vh 0.4vw 0.9vh 0;
+  text-align: justify;
+  align-self: center;
+}
+.tagContents {
+  max-width: 20vw;
+}
+.tagTime {
+  align-self: center;
+  /* color: #aaa; */
+  font-size: 1vw;
+  font-weight: 600;
+  width: 5.5vw;
+  text-align: right;
+}
+.likeImage{
+  color:rgb(255, 97, 49);
+  font-size: 1.5vw;
+  margin: 0 0 0 1vw;
+  align-self: center;
+  display: flex;
+  cursor: pointer;
+}
+.numLikeWhite{
+  color:rgb(255, 255, 255);
+  font-size: 1.0vw;
+  margin: 0 0 0 0.4vw;
+  align-self: center;
+}
+.numLikeBlack{
+  color:#999;
+  font-size: 1.0vw;
+  margin: 0 0 0 0.4vw;
+  align-self: center;
+}
+.likeButton{
+  height: 2vh;
+  margin: 0 0 0.5vh 0;
+}
+.downloadButton{
+  justify-content: flex-start;
+  align-self: center;
+  height: 3vh;
+  margin: 0 0.5vw 0 0;
+  cursor: pointer;
+}
+.downloadWrap{
+  margin :0.5vh 1vw 0.5vh 1vw;
+  font-family: GongGothicLight, serif;
+  color : rgb(105, 105, 105);
+  font-size: 1vw;
+  align-items: center;
+}
+.downloadTitle{
+  margin: 0 1vw 0 0;
+}
+.downloadBoxTitle{
+  margin :0.5vh 1vw;
+  font-family: GongGothicLight, serif;
+  color : rgb(0, 0, 0);
+  font-size: 1.2vw;
+}
+.downloadBoxButtonWrap{
+  display:flex;
+  justify-content: flex-end;
+}
+.requestDownload{
+  border: none;
+  background-color:#A0CF60;
+  align-items: flex-end !important;
+  font-family: GongGothicLight, serif;
+  font-size: 1vw;
+  padding: 1vh 0;
+  margin: 0 1vw 1vh 0;
+  width: 5vw;
+  cursor: pointer;
+}
+.downloadClose{
+  border: none;
+  background-color:rgb(194, 194, 194);
+  align-items: flex-end !important;
+  font-family: GongGothicLight, serif;
+  font-size: 1vw;
+  padding: 1vh 0;
+  margin: 0 1vw 1vh 0;
+  width: 5vw;
+  cursor: pointer;
+}
+.contactInput{
+  font-family: GongGothicLight, serif;
+  font-size: 1vw;
+  text-align: left;
+  resize: none;
+  width: 15vw;
+  height: 2.5vh;
+}
+.additionalInput{
+  font-family: GongGothicLight, serif;
+  font-size: 1vw;
+  text-align: left;
+  resize: none;
+  width: 26vw;
+  height: 10vh;
+  margin :0.5vh 1vw 1vh 1vw;
+}
+.addTagTitle {
+  font-family: GongGothicLight, serif;
+  font-size: 4vmin;
+}
+
+.cancelAddTagButton {
+  align-self: flex-end;
+  border-style: solid;
+  border-width: 0px;
+  padding: 0.4vw;
+  padding-inline: 2vw;
+  font-family: GongGothicLight, serif;
+  font-size: 3vmin;
+  font-weight: 700;
+  text-align: center;
+  background-color: #999;
+  color: white;
+}
+.addTagbutton {
+  color: white;
+}
+
+.confirmAddTagButton {
+  align-self: flex-end;
+  margin-left: 2vw;
+  border-style: solid;
+  border-width: 0px;
+  padding: 0.4vw;
+  padding-inline: 2vw;
+  font-family: GongGothicLight, serif;
+  font-size: 3vmin;
+  font-weight: 700;
+  text-align: center;
+  background-color: #55c325;
+  color: white;
+}
+
+.addTagButtonContainer {
+  margin-top: 6vmin;
+  display: flex;
+  align-self: flex-end;
+  justify-self: end;
+}
+.addtagModalStyle{
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  background-color: white;
+  position:absolute;
+  top: 35vh ;
+  width: 50vw;
+  height: 25vh;
+  left: 25vw;
+  border-radius: 0;
+  padding: 2vmin;
+  box-shadow: 0 0.5vh 0.5vh rgba(0, 0, 0, 0.3);
+}
+.addtagModalStyleTaggingPage{
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  background-color: white;
+  position:absolute;
+  top: 0vh ;
+  left: 71vw;
+  width: 27vw;
+  height: 25vh;
+  border-radius: 0;
+  padding: 2vmin;
+  box-shadow: 0 0.5vh 0.5vh rgba(0, 0, 0, 0.3);
+}
+.newTagInputfieldsTaggingPage {
+  display: flex;
+  flex-direction: column;
+  height: 2vmax;
+  justify-content: center;
+}
+.tagMinSecInputTaggingPage{
+  display: flex;
+  align-content: flex-end;
+  flex-direction: center;
+  margin: 1vh 0 0 0;
+
+}
+.ReactModal__Overlay--after-open{
+  opacity: 1;
+  background-color: rgba(255,255,255,0.5) !important;
+}
+
+.addTagForm {
+  display: flex;
+  flex-direction: column;
+}
+
+.newTagInputfields {
+  display: flex;
+  padding-inline: 5vw;
+  height: 2vmax;
+  justify-content: center;
+}
+
+.tagMinSecInput {
+  display: flex;
+  flex-direction: row;
+}
+
+.tagInfoInput {
+  font-family: GongGothicLight, serif;
+  font-size: 1vw;
+  padding-inline: 1vw;
+  width: 25vw;
+  margin-right: 3vw;
+}
+
+.tagMinInput {
+  font-family: GongGothicLight, serif;
+  font-size: 1vw;
+  text-align: center;
+  width: 5vw;
+  margin-right: 1vw;
+}
+
+.tagSecInput {
+  font-family: GongGothicLight, serif;
+  font-size: 1vw;
+  text-align: center;
+  width: 5vw;
+  margin-left: 1vw;
+}
+
+.contentArea {
+  margin: 0 0 0 0;
+}
+.menuBar {
+  /* padding: 1rem; */
+  align-self: center;
+  width: 23.5vw;
+  margin: 0 0 0 0;
+}
+.tabs {
+  padding: 0;
+  width: 29vw;
+  margin: 1.5vh 0 0 0;
+}
+.tabs li {
+  float: left;
+  font-size: 1rem;
+  text-indent: 3vh;
+  font-weight: bold;
+  text-align: left;
+  display: inline-block;
+  font-size: 1.5vw;
+  font-weight: 600;
+  background-color: #ebf7da;
+  color: black;
+  width: 50%;
+  padding: 1vh 0vw 1vh 0vw;
+  margin: 0 0 0 0;
+  font-family: GongGothicLight, serif;
+}
+.tabs li.active {
+  background-color: #55c325;
+  text-indent: 3vh;
+  color: white;
+  width: 50%;
+}
+.modalStyle {
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: column;
+  height: 80vh;
+  width: 60vh;
+  border-radius: 0;
+  background-color: white;
+  box-shadow: 0 0.5vh 0.5vh rgba(0, 0, 0, 0.3);
+  margin: 10vh 0 0 5vw;
+}
+.popupImgWrapper {
+  display: flex;
+  justify-content: center;
+  overflow-y: scroll;
+}
+
+.popupImgWrapper::-webkit-scrollbar {
+  display: none;
+}
+.manualPopupImg {
+  display: flex;
+  width: 100%;
+  margin: 0 0 0 0;
+  justify-content: flex-start;
+  align-self: flex-start;
+}
+.popupBody {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-end;
+}
+.popupBar {
+  display: flex;
+  flex-direction: row;
+}
+.cancelPopupButton {
+  border-style: solid;
+  border-width: 0px;
+  padding: 1vh 1vw 1vh 1vw;
+  font-family: GongGothicLight, serif;
+  font-size: 1vmin;
+  font-weight: 700;
+  margin: 0.5vw;
+  text-align: center;
+  color: black;
+}
+
+@media screen and (orientation: portrait) {
+
+  .taggingNotDoneTitle{
+    font-size:4vw; 
+    font-family: GongGothicLight, serif;
+  }
+  .taggingNotDoneContent{
+    font-size: 3.5vw; 
+    font-family: GongGothicLight, bold;
+    margin: 0 0 2vh 0;
+  }
+  .taggingNotDoneLinkMain{
+    background: rgb(33, 68, 0); 
+    font-size: 4vw; 
+    color: white;
+    margin: 0 0 1vh 0;
+  }
+  .taggingNotDoneLinkQnA{
+    background: rgb(98, 202, 0); 
+    font-size: 4vw; 
+    color: white;
+    margin: 0 0 1vh 0;
+  }
+  .taggingNotDoneImg{
+    margin: 0 0 2vh 0;
+    height: 30%;
+    width: 30%;
+  }
+
+  .body {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw;
+  }
+  .main {
+    flex-direction: column;
+    justify-content: flex-start;
+    height: 40vh;
+  }
+  .playerContainer {
+    margin: 0 0 0 -1vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100vw;
+    height: 56vw;
+    align-self: center;
+
+  }
+  .logoBar {
+    display: flex;
+    height: 4vh;
+    margin: 1vh 0 0 0;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background-color: #ebf7da;
+  }
+  .logoImgPor {
+    display: flex;
+    margin: 0 0 0 0;
+    justify-content: flex-start;
+    align-self: center;
+  }
+  .logoImgLand {
+    display: none;
+  }
+  .logoLandWrap {
+    display: none;
+  }
+
+  .cameraIcon {
+    display: none;
+  }
+  .shareButtons {
+    display: flex;
+    height: 4vh;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    background-color: #ebf7da;
+  }
+  .cameraButton {
+    display: flex;
+    font-size: 1.2vh;
+    font-weight: 700;
+    text-align: left;
+    background-color: #55c325;
+    color: white;
+    border-style: solid;
+    border-width: 0px;
+    height: 2.5vh;
+    margin: 0 0 0 1vw;
+    padding-inline: 2.2vw;
+    justify-content: center;
+    font-family: GongGothicLight, serif;
+    align-self: center;
+  }
+  .fastForwardingDropdown{
+    height:4vh;
+    margin: 0 1vw 0 0;
+  }
+  .fastForwardingController{
+    display: flex;
+    font-size: 1vh;
+    font-weight: 700;
+    text-align: left;
+    background-color: #ebf7da;
+    color: rgb(194, 194, 194);
+    border-style: solid;
+    border-width: 0px;
+    margin: 0 0.5vw 0 0;
+    height: 4vh;
+    font-family: GongGothicLight, serif;
+    align-items: center;
+  }
+  .fastForwardingButton{
+    display: flex;
+    font-size: 1.8vh;
+    font-weight: 700;
+    text-align: left;
+    background-color: #55c325;
+    color: white;
+    border-style: solid;
+    border-width: 0px;
+    height: 4vh;
+    width: 20vw;
+    padding: 0 2vw 0 2vw;
+    font-family: GongGothicLight, serif;
+  
+  }
+  .unactivatedFastForwardingButton{
+    display: flex;
+    font-size: 1.8vh;
+    font-weight: 700;
+    background-color: rgb(148, 148, 148);
+    color: white;
+    border-style: solid;
+    border-width: 0px;
+    padding: 0 2vw 0 2vw;
+    height: 4vh;
+    width: 20vw;
+    font-family: GongGothicLight, serif;
+  }
+  .dropdownFastForwardingButton{
+    display: flex;
+    font-size: 1.8vh;
+    font-weight: 700;
+    background-color: rgb(194, 194, 194);
+    color: white;
+    border-style: solid;
+    border-width: 0px;
+    height: 4vh;
+    width: 20vw;
+    padding: 0 2vw 0 2vw;
+    font-family: GongGothicLight, serif;
+    align-items: center;
+  }
+  .shareButton {
+    display: flex;
+    height: 4vh;
+    margin: 0 3vw 0 0;
+    width: 18vw;
+    font-size: 1.8vh;
+    font-weight: 700;
+    text-align: center;
+    background-color: #55c325;
+    justify-content: center;
+    color: white;
+    border-style: solid;
+    border-width: 0px;
+    padding-inline: 0vw;
+    font-family: GongGothicLight, serif;
+    align-self: center;
+  }
+  .sideBar {
+    display: flex;
+    flex-direction: column;
+
+    width: 100vw;
+    height: 100vh;
+    margin: 0 0 0 0;
+  }
+
+  .sideBarTop {
+    display: flex;
+    flex-direction: column;
+    padding: 0.5vh 1vw 0.5vh -0vw;
+    /* align-items: stretch; */
+    /* align-self: center; */
+    /* background-color: #93f669; */
+    margin: 0 0 -1vh 0;
+    background-color: #55c325;
+  }
+  .gameTitle {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    height: 4vh;
+    width: 100vw;
+    background-color: #55c325;
+    font-family: GongGothicLight, serif;
+    font-size: 2vh;
+    color: white;
+    font-weight: 700;
+    overflow: scroll;
+    white-space: nowrap;
+  }
+  .gameTitle::-webkit-scrollbar {
+    display: none;
+  }
+
+  .menuBar {
+    /* padding: 1rem; */
+    align-self: center;
+    width: 100vw;
+    margin: 0 0 0 0;
+  }
+  .tabs {
+    padding: 0;
+    width: 100vw;
+    margin: 1vh 0 0 0;
+  }
+  .tabs li {
+  	float: left;
+    font-size: 1rem;
+    text-indent: 3vh;
+    font-weight: bold;
+    text-align: left;
+    display: inline-block;
+    font-size: 1.5vh;
+    font-weight: 600;
+    background-color: #ebf7da;
+    color: black;
+    width: 50%;
+    padding: 1vh 0vw 1vh 0vw;
+    margin: 0 0 0 0;
+    font-family: GongGothicLight, serif;
+  }
+  .tabs li.active {
+    background-color: #55c325;
+    text-indent: 3vh;
+    color: white;
+    width: 50%;
+  }
+
+  .tags {
+    display: flex;
+    flex-direction: column;
+    height: 54vh;
+    width: 99vw;
+    overflow: scroll;
+  }
+  .tags::-webkit-scrollbar {
+    display: none;
+  }
+
+  .oneTag {
+    display: flex;
+    justify-content: space-between;
+    background-color: #999;
+    justify-content: center;
+    border-width: 0;
+    border-radius: 16;
+    width: 97vw;
+    padding: 0.5vh 0.8vw 0.5vh 0.8vw;
+    padding-inline: 3vw;
+    font-family: GongGothicLight, serif;
+  }
+
+  .tagTitle {
+    font-size: 1.8vh;
+    display: flex;
+    flex: 1;
+    margin-right: 0.4vw;
+    text-align: justify;
+  }
+  .likeImage{
+    color:rgb(255, 97, 49);
+    font-size: 1.5vh;
+    margin: 0 0 0 3vw;
+    align-self: center;
+    display: flex;
+  
+  }
+  .numLikeWhite{
+    color:rgb(255, 255, 255);
+    font-size: 1.5vh;
+    margin: 0 0 0 0.4vw;
+    align-self: center;
+  }
+  .numLikeBlack{
+    color:#999;
+    font-size: 1.5vh;
+    margin: 0 0 0 0.4vw;
+    align-self: center;
+  }
+  .likeButton{
+    height: 2vh;
+    margin: 0 1vw 0.5vh 0;
+  }
+  .downloadButton{
+    justify-content: flex-start;
+    align-self: center;
+    height: 3vh;
+    margin: 0 0.5vw 0 0;
+    cursor: pointer;
+  }
+  .downloadWrap{
+    margin :0.5vh 1vw 0.5vh 1vw;
+    font-family: GongGothicLight, serif;
+    color : rgb(105, 105, 105);
+    font-size: 4vw;
+    align-items: center;
+  }
+  .downloadTitle{
+    margin: 0 3vw 0 0;
+  }
+  .downloadBoxTitle{
+    margin :0.5vh 1vw;
+    font-family: GongGothicLight, serif;
+    color : rgb(0, 0, 0);
+    font-size: 5vw;
+  }
+  .downloadBoxButtonWrap{
+    display:flex;
+    justify-content: flex-end;
+  }
+  .requestDownload{
+    border: none;
+    background-color:#A0CF60;
+    align-items: flex-end !important;
+    font-family: GongGothicLight, serif;
+    font-size: 1vw;
+    padding: 1vh 0;
+    margin: 0 2vw 1vh 0;
+    width: 20vw;
+    cursor: pointer;
+  }
+  .downloadClose{
+    border: none;
+    background-color:rgb(194, 194, 194);
+    align-items: flex-end !important;
+    font-family: GongGothicLight, serif;
+    font-size: 1vw;
+    padding: 1vh 0;
+    margin: 0 6vw 1vh 0;
+    width: 20vw;
+    cursor: pointer;
+  }
+  .contactInput{
+    font-family: GongGothicLight, serif;
+    font-size: 3vw;
+    text-align: left;
+    resize: none;
+    width: 60vw;
+    height: 2.5vh;  
+  }
+  .additionalInput{
+    font-family: GongGothicLight, serif;
+    font-size: 3vw;
+    text-align: left;
+    resize: none;
+    width: 90vw;
+    height: 10vh;
+    margin :0.5vh 1vw 1vh 1vw;
+  }
+  .addTagbutton {
+    color: white;
+  }
+  .addtagModalStyle{
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    background-color: white;
+    position:absolute;
+    top: 35vh ;
+    width: 80vw;
+    height: 15vh;
+    left: 10vw;
+    border-radius: 0;
+    padding: 2vmin;
+    box-shadow: 0 0.5vh 0.5vh rgba(0, 0, 0, 0.3);
+  }
+
+  .tagMinSecInput {
+    display: flex;
+    flex-direction: row;
+  }
+  
+  .tagInfoInput {
+    font-family: GongGothicLight, serif;
+    padding-inline: 1vw;
+    width: 70vw;
+    margin-right: 3vw;
+  }
+  
+  .tagMinInput {
+    font-family: GongGothicLight, serif;
+    text-align: center;
+    width: 10vw;
+    margin-left: 1vw;
+    margin-right: 1vw;
+  }
+  
+  .tagSecInput {
+    font-family: GongGothicLight, serif;
+    text-align: center;
+    width: 10vw;
+    margin-left: 1vw;
+    margin-right: 1vw;
+  }
+
+  .tagContents {
+    max-width: 80vw;
+    font-size: 1.8vh;
+  }
+  .tagTime {
+    align-self: center;
+    /* color: #aaa; */
+    font-size: 1.5vh;
+    font-weight: 600;
+    width: 20vw;
+    text-align: right;
+  }
+  .banner1 {
+    display: flex;
+    justify-content: space-between;
+    background-color: rgb(0, 112, 43);
+    border-width: 0;
+    border-radius: 16;
+    text-align: center;
+    padding-inline: 4vw;
+    height: 2vh;
+    padding: 1vh 2vw 2vh 2vw;
+    font-family: GongGothicLight, serif;
+    font-size: 3vw;
+    font-weight: 600;
+    color: white;
+  }
+  .banner2 {
+    display: flex;
+    justify-content: space-between;
+    border-width: 0;
+    border-radius: 16;
+    text-align: center;
+    padding-inline: 4vw;
+    height: 2vh;
+    padding: 1vh 2vw 2vh 2vw;
+    font-family: GongGothicLight, serif;
+    font-size: 3vw;
+    font-weight: 600;
+    color: white;
+  }
+  .newTagInputfields {
+    display: flex;
+    flex-direction: column;
+    padding-inline: 1vmin;
+    height: 2vmax;
+    justify-content: center;
+    align-items: center;
+  }
+  .tagMinSecInput {
+    display: flex;
+    flex-direction: row;
+    margin-top: 1vh;
+  }
+
+  .modalStyle {
+    display: flex;
+    justify-content: flex-end;
+    flex-direction: column;
+    height: 80vh;
+    width: 96vw;
+    border-radius: 0;
+    background-color: white;
+    box-shadow: 0 0.5vh 0.5vh rgba(0, 0, 0, 0.3);
+    margin: 1vh 2vw 1vh 2vw;
+  }
+
+  .popupImgWrapper {
+    justify-content: center;
+    overflow: scroll;
+  }
+  .manualPopupImg {
+    display: flex;
+    width: 100%;
+    margin: 0 0 0 0;
+    justify-content: flex-start;
+    align-self: flex-start;
+  }
+  .popupBody {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-end;
+  }
+  .popupBar {
+    display: flex;
+    flex-direction: row;
+  }
+  .cancelPopupButton {
+    border-style: solid;
+    border-width: 0px;
+    padding: 1vh 1vw 1vh 1vw;
+    font-family: GongGothicLight, serif;
+    font-size: 5vmin;
+    font-weight: 700;
+    margin: 0.5vw;
+    text-align: center;
+    color: black;
+  }
+}

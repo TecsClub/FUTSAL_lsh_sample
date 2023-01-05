@@ -1,0 +1,325 @@
+<link href="assets/css/font-awesome.css" rel="stylesheet" />
+
+<style>
+body{
+overflow-y: auto !important;
+height: 100%;
+}
+ul{
+padding: 0;
+list-style: none;	
+}
+#remote{
+	display: none;
+}
+#DIV_CONTENT{
+margin-top: -70px;
+}
+.detail_content {
+	width: 100%;
+	margin-top: -60px;
+	position: relative;
+}
+.detail_content .sub_bg{
+height: 400px;
+background: #0F2027;  /* fallback for old browsers */
+background: -webkit-linear-gradient(to bottom, #2C5364, #203A43, #0F2027);  /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to bottom, #2C5364, #203A43, #0F2027); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+text-align: center;
+	position: relative;	
+}
+.detail_content .sub_bg > div{
+	position: absolute;
+	top: calc(50% + 35px);
+	left: 50%;
+	transform: translate(-50%, -50%);
+	padding-top: 70px;
+}
+.detail_content .sub_bg > div h2{
+	font-size: 48px;
+	font-weight: 700;
+	margin-bottom: 15px;
+	margin-top: 0;
+	color: #fff;
+}
+.detail_content .sub_bg > div p{
+	font-size: 17px;
+	font-weight: 500;
+	color: #fff;
+}
+
+button#move_top_btn {
+    position: fixed;
+    right: 2%;
+    bottom: 50px;
+    display: none;
+    z-index: 999;
+    text-align: center;
+    background-color: #114991;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    color: #fff;
+    font-weight: 500;
+    border: none;
+    right: 50px;
+}
+button#move_top_btn:hover, button#move_top_btn:focus{
+	background-color: #049DCC;
+}
+button#move_top_btn.stop_move{
+display: block;
+position: absolute;
+bottom: 250px;
+}
+.breadcrumb_wrap{
+	 border-bottom: 1px solid #ddd;
+	 box-shadow: 0px 5px aliceblue;
+}
+.breadcrumb{
+	  background: none;
+   margin-bottom: 0;
+    border-radius: 0;
+    text-align: right;
+    padding: 15px 0px;
+}
+.structure2{
+text-align: center;
+margin-top: 50px;
+margin-bottom: 100px;
+}
+.structure2 h3 {
+		text-align: center;
+    font-weight: bold;
+    display: inline-block;
+    border-bottom: 4px solid #114991;
+    padding-bottom: 8px;
+    font-size: 32px;
+}
+.structure2 .bg{
+	height: 450px;
+background: url("assets/img/chart_bg1.jpg");
+	position: relative;
+margin-top: 40px;
+margin-bottom: 40px;
+}
+.structure2 .bg h4{
+	position: absolute;
+color: #fff;
+left: 50%;
+font-size: 24px;
+font-weight: bold;
+top: 40px;
+transform: translateX(-50%);
+}
+.structure_table{
+	padding: 0 15px;
+}
+.structure_table > li{
+text-align: left;
+clear:both;
+display: flex;
+margin-bottom: 15px;
+border-bottom: 1px solid #ddd;
+padding-bottom: 15px;
+} 
+.structure_table > li .num{
+
+font-size: 22px;
+font-weight: bold;
+color: #114991;
+padding-right: 15px;
+}
+.structure_table > li .img_box{
+
+}
+.structure_table > li .text_box{
+padding: 10px;
+}
+.structure_table > li .text_box h4{
+	font-weight: bold;
+color: #333;
+margin-bottom: 8px;
+margin-top: 0;
+}
+.structure_table > li img{
+	width: 300px;
+}
+.structure_table > li ul li{
+color: #555;	
+padding-left: 10px;
+position: relative;
+font-size: 15px;
+line-height: 23px;
+}
+.structure_table > li ul li::before{
+content: "";
+border-radius: 50%;
+width: 5px;
+height: 5px;
+display: inline-block;
+background-color: #ccc;
+position: absolute;
+top: 50%;
+left: 0px;
+transform: translateY(-50%);
+}
+</style>
+
+<script>
+	
+	function QIIP_MENU_CONTENTS_INIT_WIDGETS() {
+//		alert('QIIP_MENU_CONTENTS_INIT_WIDGETS');
+		$("#move_top_btn").click(function() {
+	        $('html, body').animate({
+	            scrollTop : 0
+	        }, 400);
+	        return false;
+	  });
+		$("body").scroll(function(){
+			if ($(this).scrollTop() > 0) {
+		        $('#move_top_btn').fadeIn();
+	    } else {
+	        $('#move_top_btn').fadeOut();
+	    }
+	    
+	    if($(this).scrollTop() > 260){
+	    		$('QIIP_MENU').animate({"background-color":"#fff", "border-color": "#eee"}, 10);	
+	    		$('DIV_LEFT, QIIP_MENU MENU_1ST_TEXT, QIIP_MENU DIV_RIGHT button, QIIP_MENU DIV_RIGHT button span').animate({"color":"#444", "border-color": "#eee"}, 10);	
+	    }else{
+	    		$('QIIP_MENU').animate({"background-color":"rgb(255, 255, 255, 0)", "border-color": "#fff"}, 10);	
+	    		$('DIV_LEFT, QIIP_MENU MENU_1ST_TEXT, QIIP_MENU DIV_RIGHT button, QIIP_MENU DIV_RIGHT button span').animate({"color":"#fff", "border-color": "#fff"}, 10);	
+	    }
+		});
+		
+		$(window).resize(function(){
+	      	var width = parseInt($(this).width());
+			if (width > 960){
+				$("body").scroll(function(){
+				    if($(this).scrollTop() + $(this).height() > $(document).height() - 200) {
+						$("button#move_top_btn").addClass("stop_move");
+				   	} else {
+				   		$("button#move_top_btn").removeClass("stop_move");
+				   	}
+				});
+			} else {
+			  	$("body").scroll(function(){
+					if($(this).scrollTop() + $(this).height() > $(document).height() - 200) {
+						$("button#move_top_btn").addClass("stop_move");
+					} else {
+						$("button#move_top_btn").removeClass("stop_move");
+					}
+				});
+			}
+	    }).resize();
+	}
+	
+</script>
+<!-- DETAIL_CONTENT START -->
+<div class="detail_content">
+	<div class="sub_bg">
+		<div>
+			<h2>BUSINESS STRUCTURE</h2>
+			<p>한국 쓰리디프린팅 소재산업 협동조합의 사업구조 대해 소개합니다.</p>
+		</div>
+	</div>
+	<div class="breadcrumb_wrap">
+		<ol class="breadcrumb container">
+			  <li>Home</li>
+			  <li>사업구조</li>
+			  <li class="active">수익구조</li>
+		</ol>	
+	</div>
+	<div class="container structure2">	
+		<h3>수익구조</h3>
+		<div class="container">
+			<div class="bg">
+				<h4>참여 주체별 수익구조</h4>
+			</div>
+			<ul class="structure_table">
+				<li>
+					<div class="num">
+						01.
+					</div>
+					<div class="img_box">
+						<img src="assets/img/work0.jpg" alt="소재산업 협동조합">
+					</div>
+					<div class="text_box">
+						<h4>소재산업 협동조합</h4>
+						<ul>
+							<li>원자재 공동구매 및 제조사(협동조합 임원사)공급 수수료(3%)</li>
+							<li>조달청 MAS 연계 매출 수수료(매출총액 1%)</li>
+							<li>공인시험분석 접수대행 수수료</li>
+							<li>회원사 연회비</li>
+							<li>3D 프린팅 소재(필라멘트) 관련 기술교육 사업 수익</li>
+							<li>각종 기술개발 사업 참여 등</li>
+						</ul>
+					</div>
+				</li>
+				<li>
+					<div class="num">
+						02.
+					</div>
+					<div class="img_box">
+						<img src="assets/img/work1.jpg" alt="MAS 공급 승인 제조사">
+					</div>
+					<div class="text_box">
+						<h4>MAS 공급 승인 제조사</h4>
+						<ul>
+							<li>조달청 나라장터 MAS 등록 주문제품의 제조 및 판매 수익</li>
+							<li>조달청 나라장터 MAS 주문제품 결제대금의 최초 수령주체</li>
+						</ul>
+					</div>
+				</li>
+				<li>
+					<div class="num">
+						03.
+					</div>
+					<div class="img_box">
+						<img src="assets/img/work2.jpg" alt="총괄 유통관리 업체">
+					</div>
+					<div class="text_box">
+						<h4>총괄 유통관리 업체</h4>
+						<ul>
+							<li>MAS 공급 승인 제조사로부터 개별배송 및 A/S 업무위탁 운영 수수료 수익</li>
+						</ul>
+					</div>
+				</li>
+				<li>
+					<div class="num">
+						04.
+					</div>
+					<div class="img_box">
+						<img src="assets/img/work3.jpg" alt="지역 유통 대리점">
+					</div>
+					<div class="text_box">
+						<h4>지역 유통 대리점</h4>
+						<ul>
+							<li>개별배송, A/S 업무 관리, 검수확인서 전달업무 수수료 수익</li>
+						</ul>
+					</div>
+				</li>
+				<li>
+					<div class="num">
+						05.
+					</div>
+					<div class="img_box">
+						<img src="assets/img/work4.jpg" alt="납품배송, A/S 기사">
+					</div>
+					<div class="text_box">
+						<h4>납품배송, A/S 기사</h4>
+						<ul>
+							<li>개별배송, A/S 업무, 기관담당자 기술지원 업무 수수료 수익</li>
+						</ul>
+					</div>
+				</li>
+		</div>
+	</div>
+	<div class="footer" style="background-color: #333;">
+	    <div style="height: 200px;">footer</div>
+	</div>
+	<button id="move_top_btn" alt="MOVE TOP"><span class="glyphicon glyphicon-chevron-up"></span><br>TOP</button>
+
+</div>
+<!-- DETAIL_CONTENT END -->
+	

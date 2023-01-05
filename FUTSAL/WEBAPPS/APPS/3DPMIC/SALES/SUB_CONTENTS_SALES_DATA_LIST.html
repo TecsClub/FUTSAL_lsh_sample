@@ -1,0 +1,738 @@
+<style>
+	#SALES_DATA_LIST 			{width:100%; height:100%;}
+	#SALES_DATA_LIST div		{box-sizing:border-box;}
+	#SALES_DATA_LIST textarea	{width:100%; height:100%;}
+	#SALES_DATA_LIST table		{width:100%; height:100%; font-size:100%; border-collapse: separate; border-spacing: 1px; line-height: 100%;}
+	#SALES_DATA_LIST table th	{font-weight:bold; text-align: center; white-space:normal; vertical-align: middle; word-break:break-all; word-wrap:break-all; background:#999;  }
+//	#SALES_DATA_LIST table th	{font-weight:bold; text-align: center; white-space:normal; vertical-align: middle; word-break:break-all; word-wrap:break-all; background:#5799b7; color:white; }
+	#SALES_DATA_LIST table td	{text-decoration:none; text-align: left;   white-space:normal; vertical-align: middle; word-break:break-all; word-wrap:break-all; background:#eee; padding:0 10px;}
+</style>
+
+<script>
+function REGIST_BUTTON_EVENT() {
+	$(".EVENT_SALES_DATA_LIST").on('click', function () {
+		var ID = $(this).attr('ID');
+		if (ID == 'DUMMY') {
+		} else if(ID == 'BTN_GET_SALES_DATA_LIST') {
+		}
+	});
+}
+
+function MODAL_FOR_ADD_SALES_TARGET() {
+	QIIP_API_ACCESS({
+			REQ: 'api_GET_PAGE',
+			FLDR_TEMPLATE: _FLDR_TEMPLATE,
+			FILE_TEMPLATE: 'SALES/MODAL_FOR_ADD_SALES_TARGET.html',
+		},function(STR_RESULT) {
+			var HTML_COMPILED = QIIP_STATIC_HTML({}, STR_RESULT);
+			QIIP_APP_MODAL_POPUP({
+				TITLE: '영업대상 찾아서 추가하기',
+				BACKDROP: false,
+				CSS: {
+					width: '90%',
+					height: '90%',
+				},
+				CONTENT: HTML_COMPILED,
+				INIT_FUNC: function (UNIQUE_ID) {
+					INIT_WIDGETS_FOR_ADD_SALES_TARGET(UNIQUE_ID);
+				}
+			});
+		}
+	);
+}
+
+function ON_CLICK_BTN_SALES_TARGET_ROW(OBJ_DOM) {
+	var ATTR = QIIP_GET_DOM_ATTRIBUTES(OBJ_DOM);
+	var STR_CMD = ATTR.cmd;
+	var ROW_DATA = $('#DIV_GRID_SALES_TARGET_LIST').jqxGrid('getrowdata', ATTR.row);
+
+	if (STR_CMD == 'DUMMY') {
+	} else if (STR_CMD == 'VIEW') {
+	} else if ((STR_CMD == 'NEW') || (STR_CMD == 'ADD')) {
+		MODAL_FOR_ADD_SALES_DATA(ROW_DATA);
+	}
+}
+
+function MODAL_FOR_ADD_SALES_DATA(JSON_ARGS) {
+	QIIP_API_ACCESS({
+			REQ: 'api_GET_PAGE',
+			FLDR_TEMPLATE: _FLDR_TEMPLATE,
+			FILE_TEMPLATE: 'SALES/MODAL_FOR_ADD_SALES_DATA.html',
+		},function(STR_RESULT) {
+			var HTML_COMPILED = QIIP_STATIC_HTML(JSON_ARGS, STR_RESULT);
+			QIIP_APP_MODAL_POPUP({
+				TITLE: '영업자료 추가 등록',
+				BACKDROP: false,
+				CSS: {
+//					width: '1050px',
+//					height: '900px',
+					width: '50%',
+					height: '90%',
+				},
+				CONTENT: HTML_COMPILED,
+				INIT_FUNC: function (UNIQUE_ID) {
+					INIT_WIDGETS_FOR_ADD_SALES_DATA(UNIQUE_ID);
+				}
+			});
+		}
+	);
+}
+
+function INIT_DATE_RANGE_WIDGET() {
+    // create Date object for current location
+    var d = new Date();
+    // convert to msec
+    // add local time zone offset 
+    // get UTC time in msec
+    var utc_today = d.getTime() + (-1 * d.getTimezoneOffset() * 60000);
+    var utc_day_ago = d.getTime() + (-1 * d.getTimezoneOffset() * 60000) - (1000 * 60 * 60 * 24 * 1);
+    var utc_week_ago = d.getTime() + (-1 * d.getTimezoneOffset() * 60000) - (1000 * 60 * 60 * 24 * 7);
+    var utc_month_ago = d.getTime() + (-1 * d.getTimezoneOffset() * 60000) - (1000 * 60 * 60 * 24 * 30);
+    
+	var FIRST_DAY_OF_THIS_MONTH = new Date(d.getFullYear(), d.getMonth(), 1);
+	var LAST__DAY_OF_THIS_MONTH = new Date(d.getFullYear(), d.getMonth() + 1, 0);
+    
+    var TODAY = new Date(utc_today);
+    var ONE_MONTH_AGO = new Date(utc_month_ago);
+    var ONE_WEEK_AGO = new Date(utc_week_ago);
+    var ONE_DAY_AGO = new Date(utc_day_ago);
+
+    $('#DATE_RANGE_FOR_SALES_LOG_LIST').jqxDateTimeInput({
+    	width: '100%',
+    	selectionMode: 'range',
+    	formatString: 'yyyy-MM-dd',
+    	readonly: true,
+//	}).on('click', function () {
+//		$(this).jqxDateTimeInput('open');
+    }).on('change', function (event) {
+//		FILL_HTML_FOR_USE_VOUCHER_LIST();
+    });		
+    $('#DATE_RANGE_FOR_SALES_LOG_LIST').jqxDateTimeInput('setRange', FIRST_DAY_OF_THIS_MONTH, LAST__DAY_OF_THIS_MONTH);
+}
+
+function INIT_WIDGETS_FOR_SALES_DATA_LIST() {
+	_RS.SELECTED_ROW_DATA = null;
+	_RS.$apply();
+//	REGIST_BUTTON_EVENT();
+	INIT_DATE_RANGE_WIDGET();
+	QUERY_SALES_TARGET_LIST();
+}
+
+function QUERY_SALES_TARGET_LIST() {
+
+	var STR_PHP_COND  = sprintf("$COND_CHECK = false; ");
+
+	   	STR_PHP_COND += sprintf("  if ($ONE_ROOT_CONTENTES->SALERS_INFO->SALER_BIZ_NO . '' == '%s') $COND_CHECK = true; ", _RS.OBJ_POST_ROOT.BIZ_INFO.BIZ_NO);
+	    STR_PHP_COND += sprintf("return $COND_CHECK;");
+
+	QIIP_API_ACCESS({
+			REQ: 'post_GET_ALL_ROOT_ATTRIBUTE',
+			SVC_CATEGORY: _RS.PHONE_INFO.APP_NAME,
+			ATTR_KEY: [
+				'SCHOOL_INFO',
+				'SALERS_INFO',
+			],
+			SEARCH_KEY: 'SCHOOL',
+//			LIMIT: 1,
+			PHP_COND: [
+				"if (isset($ONE_ROOT_CONTENTES->SALERS_INFO)) { ",
+					STR_PHP_COND,
+				"} else { ",
+				"   return false;",
+				"}"
+			]
+		},function(STR_RESULT) {
+			var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+			if ((JSON_RESULT instanceof Array)) {
+				REFRESH_GRID_SALES_DATA_LIST(JSON_RESULT);
+			}
+		}
+	);		
+	
+}
+
+function REFRESH_GRID_SALES_DATA_LIST(args_SQL_RESULT) {
+
+//	QIIP_APP_ALERT([args_SQL_RESULT[0]]); return;
+//	QIIP_APP_ALERT([args_SQL_RESULT]); return;
+
+	var SQL_RESULT = Array();
+	args_SQL_RESULT.forEach(function (ONE_ITEM) {
+		var DATA_FOR_PUSH = ONE_ITEM.SCHOOL_INFO;
+			DATA_FOR_PUSH.SALER_BIZ_NO = ONE_ITEM.SALERS_INFO.SALER_BIZ_NO;
+			DATA_FOR_PUSH.SALER_BIZ_NAME = ONE_ITEM.SALERS_INFO.SALER_BIZ_NAME;
+			DATA_FOR_PUSH.SALER_PHONE_NO = ONE_ITEM.SALERS_INFO.SALER_PHONE_NO;
+			DATA_FOR_PUSH.BUY_IN_CHARGE_NAME = ONE_ITEM.SALERS_INFO.BUY_IN_CHARGE_NAME;
+			DATA_FOR_PUSH.BUY_IN_CHARGE_PHONE_NO = ONE_ITEM.SALERS_INFO.BUY_IN_CHARGE_PHONE_NO;
+			DATA_FOR_PUSH.BUY_IN_CHARGE_EMAIL = ONE_ITEM.SALERS_INFO.BUY_IN_CHARGE_EMAIL;
+			DATA_FOR_PUSH.SALER_IN_CHARGE_NAME = ONE_ITEM.SALERS_INFO.SALER_IN_CHARGE_NAME;
+			DATA_FOR_PUSH.SALER_IN_CHARGE_PHONE_NO = ONE_ITEM.SALERS_INFO.SALER_IN_CHARGE_PHONE_NO;
+			DATA_FOR_PUSH.SALER_IN_CHARGE_EMAIL = ONE_ITEM.SALERS_INFO.SALER_IN_CHARGE_EMAIL;
+			DATA_FOR_PUSH.SALES_GOAL_N = ONE_ITEM.SALERS_INFO.SALES_GOAL_N;
+			DATA_FOR_PUSH.SALES_GOAL_KG = ONE_ITEM.SALERS_INFO.SALES_GOAL_KG;
+		SQL_RESULT.push(DATA_FOR_PUSH);
+	});
+/*
+	SQL_RESULT.forEach(function (ONE_ITEM) {
+	});
+*/
+    var source = {
+        localdata: SQL_RESULT,
+        datatype: "json",
+        datafields:[
+//            { name: 'ID',			type: 'string' },
+            { name: 'HOME_PAGE',	type: 'string' },
+            { name: 'SCHOOL_GRADE',	type: 'string' },
+            { name: 'SCHOOL_DETAIL',type: 'string' },
+            { name: 'HS_TYPE',		type: 'string' },
+            { name: 'AREA',			type: 'string' },
+            { name: 'EDU_OFFICE',	type: 'string' },
+            { name: 'AREA_SUB',		type: 'string' },
+            { name: 'SCHOOL_NAME',	type: 'string' },
+            { name: 'BRANCH_INFO',	type: 'string' },
+            { name: 'BRANCH_STATUS',type: 'string' },
+            { name: 'FOUNDER',		type: 'string' },
+            { name: 'GENDER_INFO',	type: 'string' },
+            { name: 'POST_NO',		type: 'string' },
+            { name: 'POST_ADDRESS',	type: 'string' },
+            { name: 'PHONE_NO',		type: 'string' },
+            { name: 'FAX_NO',		type: 'string' },
+            { name: 'SALER_BIZ_NO',	type: 'string' },
+            { name: 'SALER_BIZ_NAME',type: 'string' },
+            { name: 'SALER_PHONE_NO',type: 'string' },
+            { name: 'BUY_IN_CHARGE_NAME',type: 'string' },
+            { name: 'BUY_IN_CHARGE_PHONE_NO',type: 'string' },
+            { name: 'BUY_IN_CHARGE_EMAIL',type: 'string' },
+            { name: 'SALER_IN_CHARGE_NAME',type: 'string' },
+            { name: 'SALER_IN_CHARGE_PHONE_NO',type: 'string' },
+            { name: 'SALER_IN_CHARGE_EMAIL',type: 'string' },
+            { name: 'SALES_GOAL_N',type: 'string' },
+            { name: 'SALES_GOAL_KG',type: 'string' },
+        ]                     
+    };
+
+    var dataAdapter = new $.jqx.dataAdapter(source);
+	$("#DIV_GRID_SALES_TARGET_LIST").unbind();
+	$("#DIV_GRID_SALES_TARGET_LIST").jqxGrid({
+        width: '100%',
+        height: '100%',
+        source: dataAdapter,                
+//        pageable: true,
+//        autoheight: true,
+        sortable: true,
+        altrows: true,
+        enabletooltips: true,
+//        editable: true,
+        pagesize: 15,
+//        selectionmode: 'multiplecellsadvanced',
+        selectionmode: 'singlerow',
+        columns: [
+//          { text: 'ID',			columngroup: 'SALES_TARGET', datafield: 'ID'},
+
+          { text: '학교명',	columngroup: 'SALES_TARGET', datafield: 'SCHOOL_NAME',	width: '20%', align: 'center',	cellsalign: 'left'},
+          { text: '연락처',	columngroup: 'SALES_TARGET', datafield: 'PHONE_NO',	width: '15%', align: 'center',	cellsalign: 'center'},
+          { text: '우편번호',	columngroup: 'SALES_TARGET', datafield: 'POST_NO',	width: '7%',	align: 'center',	cellsalign: 'center'},
+          { text: '도로명주소',	columngroup: 'SALES_TARGET', datafield: 'POST_ADDRESS',	width: '35%', align: 'center',	cellsalign: 'left'},
+          { text: '홈페이지',	columngroup: 'SALES_TARGET', datafield: 'HOME_PAGE',	align: 'center',	cellsalign: 'left'},
+        ],
+        columngroups: [
+            { text: 
+            	'나의 영업대상 목록에 ' + 
+            	'<button class="btn btn-primary" onclick="MODAL_FOR_ADD_SALES_TARGET();" >추가하기</button> ,' +
+            	'나의 영업대상 목록에서 ' + 
+            	'<button class="btn btn-primary" onclick="EXEC_DEL_SALES_TARGET();" >삭제하기</button>' +
+            	'',
+              align: 'center', 
+              name: 'SALES_TARGET' 
+            },
+        ]
+    }).on('rowclick', function (event)  { 
+	    var args = event.args;
+	    _RS.SELECTED_ROW_DATA = $(this).jqxGrid('getrowdata', args.rowindex);
+	    _RS.$apply();
+	    QUERY_SALES_LOG_LIST();
+    }).on('rowdoubleclick', function (event)  { 
+	    var args = event.args;
+	    var ROW_DATA = $(this).jqxGrid('getrowdata', args.rowindex);
+	    MODAL_FOR_SCHOOL_DETAIL(ROW_DATA);
+    });	
+    
+}
+
+function EXEC_DEL_SALES_TARGET() {
+	if (_RS.SELECTED_ROW_DATA == null)	{
+		QIIP_APP_ALERT([
+			'삭제할 영업대상 기관을 선택하지 않으셨습니다.'
+		]); 
+		return;
+	}
+	
+	QIIP_APP_ALERT({
+		MESSAGES: [
+			sprintf('정말로, 나의 영업대상 목록에서 [%s]를 삭제하시겠습나까?', _RS.SELECTED_ROW_DATA.SCHOOL_NAME)
+		],
+		FILE_TEMPLATE: 'POPUP/YES_NO.html',
+	},function () {
+		QIIP_API_ACCESS({
+				REQ: 'post_GET_ROOT_INFO',
+				PHONE_NO: sprintf('SCHOOL_%s-%s', _RS.SELECTED_ROW_DATA.POST_NO, _RS.SELECTED_ROW_DATA.PHONE_NO),
+				PHONE_ID: sprintf('SCHOOL_%s-%s', _RS.SELECTED_ROW_DATA.POST_NO, _RS.SELECTED_ROW_DATA.PHONE_NO),
+				SVC_CATEGORY: _RS.PHONE_INFO.APP_NAME,
+			},function(STR_RESULT) {
+				var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+				if (JSON_RESULT instanceof Object) {
+					if ('SALERS_INFO' in JSON_RESULT) {
+						JSON_RESULT.SALERS_INFO = null;
+
+						QIIP_API_ACCESS({
+								REQ: 'post_PUT_ROOT_INFO',
+								PHONE_NO: sprintf('SCHOOL_%s-%s', _RS.SELECTED_ROW_DATA.POST_NO, _RS.SELECTED_ROW_DATA.PHONE_NO),
+								PHONE_ID: sprintf('SCHOOL_%s-%s', _RS.SELECTED_ROW_DATA.POST_NO, _RS.SELECTED_ROW_DATA.PHONE_NO),
+								SVC_CATEGORY: _RS.PHONE_INFO.APP_NAME,
+								JSON_UPDATE: JSON_RESULT,
+							},function(STR_RESULT) {
+								var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+					//			alert(JSON.stringify(JSON_RESULT, null, '\t'));
+								_RS.SELECTED_ROW_DATA = null;
+								QUERY_SALES_TARGET_LIST();
+							}
+						);
+					}
+				}
+			}
+		);
+		
+	}, function () {
+		
+	});
+	
+	
+}
+
+function MODAL_FOR_SCHOOL_DETAIL(JSON_ARGS) {
+	QIIP_API_ACCESS({
+			REQ: 'api_GET_PAGE',
+			FLDR_TEMPLATE: _FLDR_TEMPLATE,
+			FILE_TEMPLATE: 'SALES/MODAL_FOR_SCHOOL_DETAIL.html',
+		},function(STR_RESULT) {
+			var HTML_COMPILED = QIIP_STATIC_HTML(JSON_ARGS, STR_RESULT);
+			QIIP_APP_MODAL_POPUP({
+				TITLE: '상세정보',
+				BACKDROP: false,
+				CSS: {
+//					width: '1050px',
+//					height: '900px',
+					width: '50%',
+					height: '90%',
+				},
+				CONTENT: HTML_COMPILED,
+				INIT_FUNC: function (UNIQUE_ID) {
+					INIT_WIDGETS_FOR_SCHOOL_DETAIL(UNIQUE_ID);
+				}
+			});
+		}
+	);
+}
+
+function ADD_SALES_LOG() {
+	if (_RS.SELECTED_ROW_DATA == null)	{
+		QIIP_APP_ALERT([
+			'영업 내용을 저장할 영업대상 기관을 선택하지 않으셨습니다.'
+		]); 
+		return;
+	}
+	if ($('#TXT_SALES_LOG').val().length < 30) {
+		QIIP_APP_ALERT([
+			'영업 내용을 입력하지 않았거나 너무 짧습니다.'
+		]); 
+		return;
+	}
+	
+	QIIP_API_ACCESS({
+			REQ: 'post_LOG',
+			PHONE_ID: sprintf("SCHOOL_%s-%s", _RS.SELECTED_ROW_DATA.POST_NO, _RS.SELECTED_ROW_DATA.PHONE_NO),
+			PHONE_NO: sprintf("SCHOOL_%s-%s", _RS.SELECTED_ROW_DATA.POST_NO, _RS.SELECTED_ROW_DATA.PHONE_NO),
+			CATEGORY: _RS.PHONE_INFO.APP_NAME,
+			SALES_ACTIVITY: {
+				SALER_BIZ_NO: _RS.SELECTED_ROW_DATA.SALER_BIZ_NO,
+				SALER_BIZ_NAME: _RS.SELECTED_ROW_DATA.SALER_BIZ_NAME,
+				SALER_IN_CHARGE_NAME: _RS.SELECTED_ROW_DATA.SALER_IN_CHARGE_NAME,
+				SALER_IN_CHARGE_PHONE_NO: _RS.SELECTED_ROW_DATA.SALER_IN_CHARGE_PHONE_NO,
+				SALER_IN_CHARGE_EMAIL: _RS.SELECTED_ROW_DATA.SALER_IN_CHARGE_EMAIL,
+				SALES_LOG: $('#TXT_SALES_LOG').val(),
+			}
+		},function(STR_RESULT) {
+			$('#TXT_SALES_LOG').val('');
+			QUERY_SALES_LOG_LIST();
+		}
+	);
+}
+
+function QUERY_SALES_LOG_LIST() {
+//	QIIP_APP_ALERT([_RS.SELECTED_ROW_DATA]); return;
+	QIIP_API_ACCESS({
+			REQ: 'post_GET_LOG_LIST',
+			STR_DATE_FROM: $('#DATE_RANGE_FOR_SALES_LOG_LIST').jqxDateTimeInput('getText').substring(0,10),
+			STR_DATE_TO: $('#DATE_RANGE_FOR_SALES_LOG_LIST').jqxDateTimeInput('getText').substring(13),
+			STR_FILTER: 'SALES_ACTIVITY',
+			PHONE_ID: sprintf("SCHOOL_%s-%s", _RS.SELECTED_ROW_DATA.POST_NO, _RS.SELECTED_ROW_DATA.PHONE_NO),
+			PHONE_NO: sprintf("SCHOOL_%s-%s", _RS.SELECTED_ROW_DATA.POST_NO, _RS.SELECTED_ROW_DATA.PHONE_NO),
+			CATEGORY: _RS.PHONE_INFO.APP_NAME,
+		},function(STR_RESULT) {
+			var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+			if ((JSON_RESULT instanceof Array)) {
+				REFRESH_GRID_SALES_LOG_LIST(JSON_RESULT);
+			}
+		}
+	);
+}
+
+function REFRESH_GRID_SALES_LOG_LIST(args_SQL_RESULT) {
+
+//	QIIP_APP_ALERT([args_SQL_RESULT[0]]); return;
+//	QIIP_APP_ALERT([args_SQL_RESULT]); return;
+
+	var SQL_RESULT = Array();
+	args_SQL_RESULT.forEach(function (ONE_ITEM) {
+		var DATA_FOR_PUSH = ONE_ITEM.OBJ_LOG.SALES_ACTIVITY;
+			DATA_FOR_PUSH.UNIQUE_ID = ONE_ITEM.UNIQUE_ID;
+			DATA_FOR_PUSH.DATE_TIME = ONE_ITEM.DATE_TIME;
+		SQL_RESULT.push(DATA_FOR_PUSH);
+	});
+/*
+	SQL_RESULT.forEach(function (ONE_ITEM) {
+	});
+*/
+    var source = {
+        localdata: SQL_RESULT,
+        datatype: "json",
+        datafields:[
+            { name: 'UNIQUE_ID',	type: 'string' },
+            { name: 'DATE_TIME',	type: 'string' },
+            { name: 'SALER_BIZ_NO',	type: 'string' },
+            { name: 'SALER_BIZ_NAME',type: 'string' },
+            { name: 'SALER_IN_CHARGE_NAME',		type: 'string' },
+            { name: 'SALER_IN_CHARGE_PHONE_NO',			type: 'string' },
+            { name: 'SALER_IN_CHARGE_EMAIL',	type: 'string' },
+            { name: 'SALES_LOG',		type: 'string' },
+        ]                     
+    };
+
+    var dataAdapter = new $.jqx.dataAdapter(source);
+	$("#DIV_GRID_SALES_LOG_LIST").unbind();
+	$("#DIV_GRID_SALES_LOG_LIST").jqxGrid({
+        width: '100%',
+        height: '100%',
+        source: dataAdapter,                
+//        pageable: true,
+//        autoheight: true,
+		rowsheight: 100,
+        sortable: true,
+        altrows: true,
+        enabletooltips: true,
+        editable: true,
+        pagesize: 15,
+//        selectionmode: 'multiplecellsadvanced',
+        selectionmode: 'singlerow',
+        editmode: 'dblclick',
+        columns: [
+          { text: '일시',	datafield: 'DATE_TIME',	width: '20%', align: 'center',	cellsalign: 'center', editable: false },
+//          { text: '사업자번호',	datafield: 'SALER_BIZ_NO',	width: '10%', align: 'center',	cellsalign: 'center'},
+//          { text: '상호',	datafield: 'SALER_BIZ_NAME',	width: '10%', align: 'center',	cellsalign: 'center'},
+          { text: '성명',	 columngroup: 'SALES_MANAGER', datafield: 'SALER_IN_CHARGE_NAME',	width: '10%', align: 'center',	cellsalign: 'center', editable: false },
+          { text: '폰번호', columngroup: 'SALES_MANAGER', datafield: 'SALER_IN_CHARGE_PHONE_NO',	width: '10%', align: 'center',	cellsalign: 'center', editable: false },
+          { text: '이메일', columngroup: 'SALES_MANAGER', datafield: 'SALER_IN_CHARGE_EMAIL',	width: '15%', align: 'center',	cellsalign: 'center', editable: false },
+          { text: '버튼',	width: '10%', align: 'center',	cellsalign: 'center',
+          	cellsrenderer: function (row, column, value) {
+                var STR_HTML  = '';
+                	STR_HTML += '<div style="width:100%;height:100%;text-align:center;">';
+                	STR_HTML += '<button style="height:100%;" CMD="DEL" ROW="' + row + '" onclick="ON_CLICK_BTN_PROCESS_SALES_LOG(this);" >삭제</button>';
+                	STR_HTML += ' ';
+                	STR_HTML += '<button style="height:100%;" CMD="UPD" ROW="' + row + '" onclick="ON_CLICK_BTN_PROCESS_SALES_LOG(this);" >갱신</button>';
+                	STR_HTML += '</div>';
+                return STR_HTML;
+            }
+          },
+          { text: '영업활동 내용',	datafield: 'SALES_LOG',	align: 'center',	cellsalign: 'center', columntype: 'custom', editable: true,
+            createeditor: function (row, cellvalue, editor, cellText, width, height) {
+				// construct the editor. 
+				editor.jqxTextArea({ height: '100', width: '100%'});
+            },
+            initeditor: function (row, cellvalue, editor, celltext, pressedkey) {
+				// set the editor's current value. The callback is called each time the editor is displayed.
+				editor.val(cellvalue);
+            },
+            geteditorvalue: function (row, cellvalue, editor) {
+				// return the editor's value.
+				// return editor.val();
+				return editor.val();
+            },
+          	cellsrenderer: function (row, column, value) {
+                var STR_HTML  = '';
+                	STR_HTML += '<xmp style="width:100%;height:100%;overflow:auto;">';
+                	STR_HTML += value;
+                	STR_HTML += '</xmp>';
+                return STR_HTML;
+            }
+          },
+        ],
+        columngroups: [
+            { text: '영업활동 등록 영업기사',
+              align: 'center', 
+              name: 'SALES_MANAGER' 
+            },
+        ]
+    }).on('rowclick', function (event)  { 
+	    var args = event.args;
+	    var ROW_DATA = $(this).jqxGrid('getrowdata', args.rowindex);
+    }).on('rowdoubleclick', function (event)  { 
+	    var args = event.args;
+	    var ROW_DATA = $(this).jqxGrid('getrowdata', args.rowindex);
+    });	
+    
+}
+
+function ON_CLICK_BTN_PROCESS_SALES_LOG(OBJ_DOM) {
+	var ATTR = QIIP_GET_DOM_ATTRIBUTES(OBJ_DOM);
+	var STR_CMD = ATTR.cmd;
+	var ROW_DATA = $('#DIV_GRID_SALES_LOG_LIST').jqxGrid('getrowdata', ATTR.row);
+
+	var UPDATE_ACTION = '';
+	if (STR_CMD == 'DUMMY') {
+	} else if (STR_CMD == 'UPD') {
+		UPDATE_ACTION = 'UPDATE';
+	} else if (STR_CMD == 'DEL') {
+		UPDATE_ACTION = 'DELETE';
+	}
+
+	QIIP_API_ACCESS({
+			REQ: 'post_UPDATE_LOG',
+			PHONE_ID: sprintf("SCHOOL_%s-%s", _RS.SELECTED_ROW_DATA.POST_NO, _RS.SELECTED_ROW_DATA.PHONE_NO),
+			PHONE_NO: sprintf("SCHOOL_%s-%s", _RS.SELECTED_ROW_DATA.POST_NO, _RS.SELECTED_ROW_DATA.PHONE_NO),
+			CATEGORY: _RS.PHONE_INFO.APP_NAME,
+			UNIQUE_ID: ROW_DATA.UNIQUE_ID,
+			UPDATE_ACTION: UPDATE_ACTION,
+			UPDATE_ATTR: 'SALES_ACTIVITY',
+			UPDATE_VALUE: {
+				SALER_BIZ_NO: ROW_DATA.SALER_BIZ_NO,
+				SALER_BIZ_NAME: ROW_DATA.SALER_BIZ_NAME,
+				SALER_IN_CHARGE_NAME: ROW_DATA.SALER_IN_CHARGE_NAME,
+				SALER_IN_CHARGE_PHONE_NO: ROW_DATA.SALER_IN_CHARGE_PHONE_NO,
+				SALER_IN_CHARGE_EMAIL: ROW_DATA.SALER_IN_CHARGE_EMAIL,
+				SALES_LOG: ROW_DATA.SALES_LOG,
+			}
+		},function(STR_RESULT) {
+			QUERY_SALES_LOG_LIST();
+		}
+	);
+//	console.log(ROW_DATA);
+	
+}
+
+function SAVE_BUY_IN_CHARGE_INFO() {
+	if (_RS.SELECTED_ROW_DATA == null) {
+		QIIP_APP_ALERT([
+			'저장할 영업대상 기관을 선택하지 않으셨습니다.'
+		]); 
+		return;
+	}
+	if (($('#TXT_UPD_BUY_IN_CHARGE_NAME').val().length < 1) ||
+		($('#TXT_UPD_BUY_IN_CHARGE_PHONE_NO').val().length < 1) ||
+		($('#TXT_UPD_BUY_IN_CHARGE_EMAIL').val().length < 1)) {
+		QIIP_APP_ALERT([
+			'영업대상 학교 담당자 정보 중 하나를 입력하지 않으셨습니다.'
+		]); 
+		return;
+	}
+	
+//	QIIP_APP_ALERT([_RS.SELECTED_ROW_DATA]); return;
+
+	QIIP_API_ACCESS({
+			REQ: 'post_GET_ROOT_INFO',
+			PHONE_NO: "SCHOOL_" + _RS.SELECTED_ROW_DATA.POST_NO + "-" + _RS.SELECTED_ROW_DATA.PHONE_NO,
+			PHONE_ID: "SCHOOL_" + _RS.SELECTED_ROW_DATA.POST_NO + "-" + _RS.SELECTED_ROW_DATA.PHONE_NO,
+			SVC_CATEGORY: _RS.PHONE_INFO.APP_NAME,
+		},function(STR_RESULT) {
+			var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+			if (JSON_RESULT instanceof Object) {
+//				QIIP_APP_ALERT([_RS.SELECTED_ROW_DATA, JSON_RESULT]); return;
+				var SALERS_INFO_FOR_UPDATE = JSON_RESULT.SALERS_INFO;
+					SALERS_INFO_FOR_UPDATE.BUY_IN_CHARGE_NAME		= $('#TXT_UPD_BUY_IN_CHARGE_NAME').val();
+					SALERS_INFO_FOR_UPDATE.BUY_IN_CHARGE_PHONE_NO	= $('#TXT_UPD_BUY_IN_CHARGE_PHONE_NO').val();
+					SALERS_INFO_FOR_UPDATE.BUY_IN_CHARGE_EMAIL		= $('#TXT_UPD_BUY_IN_CHARGE_EMAIL').val();
+
+//				QIIP_APP_ALERT([SALERS_INFO_FOR_UPDATE]); return;
+
+				QIIP_API_ACCESS({
+						REQ: 'post_PUT_ROOT_INFO',
+						PHONE_NO: "SCHOOL_" + _RS.SELECTED_ROW_DATA.POST_NO + "-" + _RS.SELECTED_ROW_DATA.PHONE_NO,
+						PHONE_ID: "SCHOOL_" + _RS.SELECTED_ROW_DATA.POST_NO + "-" + _RS.SELECTED_ROW_DATA.PHONE_NO,
+						SVC_CATEGORY: _RS.PHONE_INFO.APP_NAME,
+						JSON_UPDATE: {
+							SALERS_INFO: SALERS_INFO_FOR_UPDATE
+						},
+					},function(STR_RESULT) {
+					}
+				);
+			}
+		}
+	);
+	
+}
+
+</script>
+<div id="SALES_DATA_LIST">
+	<div style="width:50%;float:left;">
+		<div style="height:50%;">
+			<div id="DIV_GRID_SALES_TARGET_LIST">
+			</div>
+		</div>
+		<div style="height:50%;">
+			<table>
+				<col width="16%" />
+				<col width="16%" />
+				<col width="16%" />
+				<col width="16%" />
+				<col width="16%" />
+				<col width="20%" />
+				<tr>
+					<th colspan="6">
+						영업대상 학교 담당자 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<button class="btn btn-primary" onclick="SAVE_BUY_IN_CHARGE_INFO();">
+							영업대상 학교 담당자 정보 갱신
+						</button>
+					</th>
+				</tr>
+				<tr>
+					<th>
+						담당자 이름
+					</th>
+					<td>
+						<input type="text" id="TXT_UPD_BUY_IN_CHARGE_NAME" value="{{SELECTED_ROW_DATA.BUY_IN_CHARGE_NAME}}" />
+					</td>
+					<th>
+						담당자 폰번호
+					</th>
+					<td>
+						<input type="number" id="TXT_UPD_BUY_IN_CHARGE_PHONE_NO" value="{{SELECTED_ROW_DATA.BUY_IN_CHARGE_PHONE_NO}}" />
+					</td>
+					<th>
+						담당자 이메일
+					</th>
+					<td>
+						<input type="text" id="TXT_UPD_BUY_IN_CHARGE_EMAIL" value="{{SELECTED_ROW_DATA.BUY_IN_CHARGE_EMAIL}}" />
+					</td>
+				</tr>
+				<tr>
+					<th colspan="6">
+						담당 영업 대리점
+					</th>
+				</tr>
+				<tr>
+					<th>
+						사업자 번호
+					</th>
+					<td colspan="2">
+						{{SELECTED_ROW_DATA.SALER_BIZ_NO}}
+					</td>
+					<th>
+						사업자 상호
+					</th>
+					<td colspan="2">
+						{{SELECTED_ROW_DATA.SALER_BIZ_NAME}}
+					</td>
+				</tr>
+				<tr>
+					<th colspan="6">
+						담당 영업 기사
+					</th>
+				</tr>
+				<tr>
+					<th>
+						기사 이름
+					</th>
+					<td>
+						{{SELECTED_ROW_DATA.SALER_IN_CHARGE_NAME}}
+					</td>
+					<th>
+						핸드폰 번호
+					</th>
+					<td>
+						{{SELECTED_ROW_DATA.SALER_IN_CHARGE_PHONE_NO}}
+					</td>
+					<th>
+						이메일
+					</th>
+					<td>
+						{{SELECTED_ROW_DATA.SALER_IN_CHARGE_EMAIL}}
+					</td>
+				</tr>
+				<tr>
+					<th colspan="6">
+						영업 목표
+					</th>
+				</tr>
+				<tr>
+					<th colspan="2">
+						분기 주문 횟수(회)
+					</th>
+					<td>
+						{{SELECTED_ROW_DATA.SALES_GOAL_N}}
+					</td>
+					<th colspan="2">
+						분기 주문 량(Kg)
+					</th>
+					<td>
+						{{SELECTED_ROW_DATA.SALES_GOAL_KG}}
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<div style="width:50%;float:left;">
+		<div style="width:100%;height:25%;">
+			<table>
+				<col width="25%" />
+				<col width="25%" />
+				<col width="25%" />
+				<col width="25%" />
+				<tr>
+					<th style="width:100%;height:20%;" colspan="4">
+						영업내용을 입력해 주세요.
+					</td>
+				</tr>
+				<tr>
+					<td style="width:100%;height:60%;" colspan="4">
+						<textarea id="TXT_SALES_LOG"></textarea>
+					</td>
+				</tr>
+				<tr>
+					<th>
+						날짜 구간
+					</th>
+					<td>
+						<div id="DATE_RANGE_FOR_SALES_LOG_LIST"></div>
+					</td>
+					<th>
+						영업 내용
+					</th>
+					<td style="text-align:center;">
+						<button class="btn btn-primary" onclick="ADD_SALES_LOG();" >추가</button>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div style="width:100%;height:5%;">
+			<table>
+				<tr>
+					<th>
+						영업 활동 내역
+					</th>
+				</tr>
+			</table>
+		</div>
+		<div style="width:100%;height:70%;">
+			<div id="DIV_GRID_SALES_LOG_LIST"></div>
+		</div>
+	</div>
+</div>

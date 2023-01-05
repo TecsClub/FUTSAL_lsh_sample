@@ -1,0 +1,884 @@
+<style>
+	#SALES_ASSIGN_LIST 			{width:100%; height:100%;}
+	#SALES_ASSIGN_LIST input		{width:100%; height:100%; text-align:center;}
+	#SALES_ASSIGN_LIST table		{width:100%; height:100%; font-size:100%; border-collapse: separate; border-spacing: 1px; line-height: 100%;}
+	#SALES_ASSIGN_LIST table th	{font-weight:bold; text-align: center; white-space:normal; vertical-align: middle; word-break:break-all; word-wrap:break-all; background:#94bbd6; }
+	#SALES_ASSIGN_LIST table td	{text-decoration:none; text-align: left;   white-space:normal; vertical-align: middle; word-break:break-all; word-wrap:break-all; background:#eee; padding:0 10px;}
+	STEP_GUAGE	{}
+	LIST_STEP	{}
+	CURR_STEP	{ background-color: #555; color:white;}
+</style>
+
+<script>
+
+function REGIST_BUTTON_EVENT() {
+	$(".EVENT_SALES_ASSIGN_LIST").jqxButton({
+		width: '100%',
+		height: '100%'
+	}).on('click', function () {
+		var ID = $(this).attr('ID');
+		if (ID == 'DUMMY') {
+		} else if(ID == 'BTN_ADD_SALES_ASSIGN') {
+			MODAL_FOR_ADD_SALES_ASSIGN();
+		} else if(ID == 'BTN_GET_SALES_ASSIGN_LIST') {
+			QUERY_SALES_ASSIGN_LIST();
+		}
+	});
+}
+
+function CONFIRM_DELIVERY_BIZ_ADDR() {
+//	CONFIRM_DATA = QIIP_CLONE(_RS.GRID_SALES_ASSIGN_LIST_ROW_DATA);
+	CONFIRM_DATA = _RS.GRID_SALES_ASSIGN_LIST_ROW_DATA;
+	CONFIRM_DATA.SALES_STEP += 1;
+	CONFIRM_DATA.DELIVERY_BIZ_ADDR = $('#TXT_DELIVERY_BIZ_ADDR').val();
+//	QIIP_APP_ALERT([CONFIRM_DATA]); return;	
+
+	var SALES_ACTIVITY = {
+			SALER_BIZ_NO: CONFIRM_DATA.DELIVERY_BIZ_NO,
+			SALER_BIZ_NAME: CONFIRM_DATA.DELIVERY_BIZ_NAME,
+			SALER_IN_CHARGE_NAME: _RS.LOGIN_INFO.data.display_name,
+			SALER_IN_CHARGE_PHONE_NO: _RS.LOGIN_INFO.data.user_login,
+			SALER_IN_CHARGE_EMAIL: _RS.LOGIN_INFO.data.user_email,
+			SALES_LOG: sprintf('방문배송 물품 수령 주소 확정\n확정 주소 : %s', CONFIRM_DATA.DELIVERY_BIZ_ADDR),
+		};
+
+	QIIP_API_ACCESS({
+			REQ: 'post_PUT_ROOT_INFO',
+			PHONE_NO: CONFIRM_DATA.UNIQUE_ID,
+			PHONE_ID: CONFIRM_DATA.UNIQUE_ID,
+			SVC_CATEGORY: _RS.PHONE_INFO.APP_NAME,
+			JSON_UPDATE: {
+				SALES_INFO: CONFIRM_DATA
+			},
+			OBJ_LEAF: {
+				SALES_ACTIVITY: SALES_ACTIVITY
+			},
+		},function(STR_RESULT) {
+			QUERY_SALES_ORDER_LOG_LIST(CONFIRM_DATA);
+			_RS.$apply();
+		}
+	);
+}
+
+function SEND_DELIVERY_BIZ_ADDR() {
+
+	if (($('#TXT_DELIVERY_COMPANY').val().length < 1) ||
+		($('#TXT_DELIVERY_TRACE_NO').val().length < 1)) {
+		QIIP_APP_ALERT([
+			'운송회사 또는 송장번호를 입력하지 않으셨습니다.'
+		]); 
+		return;
+	}
+
+//	CONFIRM_DATA = QIIP_CLONE(_RS.GRID_SALES_ASSIGN_LIST_ROW_DATA);
+	CONFIRM_DATA = _RS.GRID_SALES_ASSIGN_LIST_ROW_DATA;
+	CONFIRM_DATA.SALES_STEP += 1;
+	CONFIRM_DATA.DELIVERY_COMPANY = $('#TXT_DELIVERY_COMPANY').val();
+	CONFIRM_DATA.DELIVERY_TRACE_NO = $('#TXT_DELIVERY_TRACE_NO').val();
+//	QIIP_APP_ALERT([CONFIRM_DATA]); return;	
+
+	var SALES_ACTIVITY = {
+			SALER_BIZ_NO: CONFIRM_DATA.DELIVERY_BIZ_NO,
+			SALER_BIZ_NAME: CONFIRM_DATA.DELIVERY_BIZ_NAME,
+			SALER_IN_CHARGE_NAME: _RS.LOGIN_INFO.data.display_name,
+			SALER_IN_CHARGE_PHONE_NO: _RS.LOGIN_INFO.data.user_login,
+			SALER_IN_CHARGE_EMAIL: _RS.LOGIN_INFO.data.user_email,
+			SALES_LOG: sprintf(
+				'방문배송 물품 수령주소로 발송\n발송 주소 : %s\n운송회사 : %s\n송장번호 : %s',
+				CONFIRM_DATA.DELIVERY_BIZ_ADDR,
+				CONFIRM_DATA.DELIVERY_COMPANY,
+				CONFIRM_DATA.DELIVERY_TRACE_NO
+			),
+		};
+
+	QIIP_API_ACCESS({
+			REQ: 'post_PUT_ROOT_INFO',
+			PHONE_NO: CONFIRM_DATA.UNIQUE_ID,
+			PHONE_ID: CONFIRM_DATA.UNIQUE_ID,
+			SVC_CATEGORY: _RS.PHONE_INFO.APP_NAME,
+			JSON_UPDATE: {
+				SALES_INFO: CONFIRM_DATA
+			},
+			OBJ_LEAF: {
+				SALES_ACTIVITY: SALES_ACTIVITY
+			},
+		},function(STR_RESULT) {
+			QUERY_SALES_ORDER_LOG_LIST(CONFIRM_DATA);
+			_RS.$apply();
+		}
+	);
+}
+
+function START_DELIVERY_TO_SALES_TARGET() {
+//	CONFIRM_DATA = QIIP_CLONE(_RS.GRID_SALES_ASSIGN_LIST_ROW_DATA);
+	CONFIRM_DATA = _RS.GRID_SALES_ASSIGN_LIST_ROW_DATA;
+	CONFIRM_DATA.SALES_STEP += 1;
+//	QIIP_APP_ALERT([CONFIRM_DATA]); return;	
+
+	var SALES_ACTIVITY = {
+			SALER_BIZ_NO: CONFIRM_DATA.DELIVERY_BIZ_NO,
+			SALER_BIZ_NAME: CONFIRM_DATA.DELIVERY_BIZ_NAME,
+			SALER_IN_CHARGE_NAME: _RS.LOGIN_INFO.data.display_name,
+			SALER_IN_CHARGE_PHONE_NO: _RS.LOGIN_INFO.data.user_login,
+			SALER_IN_CHARGE_EMAIL: _RS.LOGIN_INFO.data.user_email,
+			SALES_LOG: sprintf(
+				'방문배송 물품수령 및 주문기관 방문배송 시작\n방문배송 업체 : %s(%s)\n주문 기관 : %s',
+				CONFIRM_DATA.DELIVERY_BIZ_NAME,
+				CONFIRM_DATA.DELIVERY_BIZ_NO,
+				CONFIRM_DATA.SALES_TARGET_NAME
+			),
+		};
+
+	QIIP_API_ACCESS({
+			REQ: 'post_PUT_ROOT_INFO',
+			PHONE_NO: CONFIRM_DATA.UNIQUE_ID,
+			PHONE_ID: CONFIRM_DATA.UNIQUE_ID,
+			SVC_CATEGORY: _RS.PHONE_INFO.APP_NAME,
+			JSON_UPDATE: {
+				SALES_INFO: CONFIRM_DATA
+			},
+			OBJ_LEAF: {
+				SALES_ACTIVITY: SALES_ACTIVITY
+			},
+		},function(STR_RESULT) {
+			QUERY_SALES_ORDER_LOG_LIST(CONFIRM_DATA);
+			_RS.$apply();
+		}
+	);
+}
+
+function DONE_DELIVERY_TO_SALES_TARGET() {
+//	CONFIRM_DATA = QIIP_CLONE(_RS.GRID_SALES_ASSIGN_LIST_ROW_DATA);
+	CONFIRM_DATA = _RS.GRID_SALES_ASSIGN_LIST_ROW_DATA;
+	CONFIRM_DATA.SALES_STEP += 1;
+//	QIIP_APP_ALERT([CONFIRM_DATA]); return;	
+
+	var SALES_ACTIVITY = {
+			SALER_BIZ_NO: CONFIRM_DATA.DELIVERY_BIZ_NO,
+			SALER_BIZ_NAME: CONFIRM_DATA.DELIVERY_BIZ_NAME,
+			SALER_IN_CHARGE_NAME: _RS.LOGIN_INFO.data.display_name,
+			SALER_IN_CHARGE_PHONE_NO: _RS.LOGIN_INFO.data.user_login,
+			SALER_IN_CHARGE_EMAIL: _RS.LOGIN_INFO.data.user_email,
+			SALES_LOG: sprintf(
+				'주문기관으로 방문배송 완료\n방문배송 업체 : %s(%s)\n주문 기관 : %s',
+				CONFIRM_DATA.DELIVERY_BIZ_NAME,
+				CONFIRM_DATA.DELIVERY_BIZ_NO,
+				CONFIRM_DATA.SALES_TARGET_NAME
+			),
+		};
+
+	QIIP_API_ACCESS({
+			REQ: 'post_PUT_ROOT_INFO',
+			PHONE_NO: CONFIRM_DATA.UNIQUE_ID,
+			PHONE_ID: CONFIRM_DATA.UNIQUE_ID,
+			SVC_CATEGORY: _RS.PHONE_INFO.APP_NAME,
+			JSON_UPDATE: {
+				SALES_INFO: CONFIRM_DATA
+			},
+			OBJ_LEAF: {
+				SALES_ACTIVITY: SALES_ACTIVITY
+			},
+		},function(STR_RESULT) {
+			QUERY_SALES_ORDER_LOG_LIST(CONFIRM_DATA);
+			_RS.$apply();
+		}
+	);
+}
+
+function DELIVERY_CONFIRM_FROM_SALES_TARGET() {
+//	CONFIRM_DATA = QIIP_CLONE(_RS.GRID_SALES_ASSIGN_LIST_ROW_DATA);
+	CONFIRM_DATA = _RS.GRID_SALES_ASSIGN_LIST_ROW_DATA;
+	CONFIRM_DATA.SALES_STEP += 1;
+//	QIIP_APP_ALERT([CONFIRM_DATA]); return;	
+
+	var SALES_ACTIVITY = {
+			SALER_BIZ_NO: CONFIRM_DATA.DELIVERY_BIZ_NO,
+			SALER_BIZ_NAME: CONFIRM_DATA.DELIVERY_BIZ_NAME,
+			SALER_IN_CHARGE_NAME: _RS.LOGIN_INFO.data.display_name,
+			SALER_IN_CHARGE_PHONE_NO: _RS.LOGIN_INFO.data.user_login,
+			SALER_IN_CHARGE_EMAIL: _RS.LOGIN_INFO.data.user_email,
+			SALES_LOG: sprintf(
+				'주문기관의 나라장터 검수 확인\n방문배송 업체 : %s(%s)\n주문 기관 : %s',
+				CONFIRM_DATA.DELIVERY_BIZ_NAME,
+				CONFIRM_DATA.DELIVERY_BIZ_NO,
+				CONFIRM_DATA.SALES_TARGET_NAME
+			),
+		};
+
+	QIIP_API_ACCESS({
+			REQ: 'post_PUT_ROOT_INFO',
+			PHONE_NO: CONFIRM_DATA.UNIQUE_ID,
+			PHONE_ID: CONFIRM_DATA.UNIQUE_ID,
+			SVC_CATEGORY: _RS.PHONE_INFO.APP_NAME,
+			JSON_UPDATE: {
+				SALES_INFO: CONFIRM_DATA
+			},
+			OBJ_LEAF: {
+				SALES_ACTIVITY: SALES_ACTIVITY
+			},
+		},function(STR_RESULT) {
+			QUERY_SALES_ORDER_LOG_LIST(CONFIRM_DATA);
+			_RS.$apply();
+		}
+	);
+}
+
+function MODAL_FOR_ADD_SALES_ASSIGN() {
+	QIIP_API_ACCESS({
+			REQ: 'api_GET_PAGE',
+			FLDR_TEMPLATE: _FLDR_TEMPLATE,
+			FILE_TEMPLATE: 'SALES/MODAL_FOR_ADD_SALES_ASSIGN.html',
+		},function(STR_RESULT) {
+			var HTML_COMPILED = QIIP_STATIC_HTML({}, STR_RESULT);
+			QIIP_APP_MODAL_POPUP({
+				TITLE: '조달 주문건 등록',
+				BACKDROP: false,
+				CSS: {
+					width: '90%',
+					height: '90%',
+				},
+				CONTENT: HTML_COMPILED,
+				INIT_FUNC: function (UNIQUE_ID) {
+					INIT_WIDGETS_FOR_ADD_SALES_ASSIGN(UNIQUE_ID);
+				}
+			});
+		}
+	);
+}
+
+function MODAL_FOR_SCHOOL_DETAIL(JSON_ARGS) {
+	QIIP_API_ACCESS({
+			REQ: 'api_GET_PAGE',
+			FLDR_TEMPLATE: _FLDR_TEMPLATE,
+			FILE_TEMPLATE: 'SALES/MODAL_FOR_SCHOOL_DETAIL.html',
+		},function(STR_RESULT) {
+			var HTML_COMPILED = QIIP_STATIC_HTML(JSON_ARGS, STR_RESULT);
+			QIIP_APP_MODAL_POPUP({
+				TITLE: 'SCHOOL DETAIL INFORMATION',
+				BACKDROP: false,
+				CSS: {
+//					width: '1050px',
+//					height: '900px',
+					width: '50%',
+					height: '90%',
+				},
+				CONTENT: HTML_COMPILED,
+				INIT_FUNC: function (UNIQUE_ID) {
+					INIT_WIDGETS_FOR_SCHOOL_DETAIL(UNIQUE_ID);
+				}
+			});
+		}
+	);
+}
+
+
+function INIT_WIDGETS_FOR_SALES_ASSIGN_LIST() {
+	_RS.ARRAY_FOR_STEP_GUAGE = [
+		'방문배송 업체 할당',
+		'방문배송 물품 수령주소 확정',
+		'방문배송 물품 수령주소로 발송',
+		'방문배송 물품수령 및 주문기관 방문배송 중',
+		'주문기관으로 방문배송 완료',
+		'주문기관의 나라장터 검수 확인',
+	];
+
+	REGIST_BUTTON_EVENT();
+	QIIP_REGIST_RS_FUNCTION('PRICE_SUM', PRICE_SUM);
+	INIT_DATE_RANGE_WIDGET();
+	QUERY_SALES_ASSIGN_LIST();
+}
+
+function PRICE_SUM(args_ORDER_LIST, KEY) {
+//	console.log('PRICE_SUM');
+	var RESULT = 0;
+	args_ORDER_LIST.forEach(function (ONE_PRODUCT) {
+		RESULT += ONE_PRODUCT[KEY];
+	});
+	return RESULT;
+}
+
+function SALES_STEP_GUAGE(args_STEP) {
+	var STR_HTML  = '';
+	ARRAY_STEP_GUAGE.forEach(function (ONE_STEP, INDEX) {
+		if (INDEX == args_STEP) {
+			STR_HTML += '<' + ONE_STEP + '>';
+		} else {
+			STR_HTML += ONE_STEP;
+		}
+		if (INDEX < (ARRAY_STEP_GUAGE.length - 1)) {
+			STR_HTML += ' -> ';
+		}
+	});
+	return STR_HTML;
+}
+
+function QUERY_SALES_ASSIGN_LIST() {
+
+	REFRESH_GRID_SALES_ORDER_LOG_LIST([]);
+	
+	var STR_SALES_TARGET_NAME = $('#STR_SALES_TARGET_NAME').val();
+	var STR_DELIVERY_BIZ_NAME = $('#STR_DELIVERY_BIZ_NAME').val();
+	var MAX_LIST = parseInt($('#MAX_LIST').val());
+	var MIN_SALES_STEP = parseInt($('#MIN_SALES_STEP').val());
+
+	var STR_DATE_FROM		= $('#DATE_RANGE_FOR_SALES_ASSIGN_LIST').jqxDateTimeInput('getText').substring(0,10);
+	var STR_DATE_TO			= $('#DATE_RANGE_FOR_SALES_ASSIGN_LIST').jqxDateTimeInput('getText').substring(13);
+	var STR_DATE_SAME_PART	= QIIP_STR_1ST_SAME_PART(STR_DATE_FROM, STR_DATE_TO);
+	
+	var STR_PHP_COND  = sprintf("$COND_CHECK = true;");
+		if (STR_SALES_TARGET_NAME.length > 0)
+		    STR_PHP_COND += sprintf("$COND_CHECK = $COND_CHECK && (strpos($ONE_ROOT_CONTENTES->SALES_INFO->SALES_TARGET_NAME, '%s') !== false);", STR_SALES_TARGET_NAME);
+		if (STR_DELIVERY_BIZ_NAME.length > 0)
+		    STR_PHP_COND += sprintf("$COND_CHECK = $COND_CHECK && (strpos($ONE_ROOT_CONTENTES->SALES_INFO->DELIVERY_BIZ_NAME, '%s') !== false);", STR_DELIVERY_BIZ_NAME);
+		if (MIN_SALES_STEP > 0)
+		    STR_PHP_COND += sprintf("$COND_CHECK = $COND_CHECK && ($ONE_ROOT_CONTENTES->SALES_INFO->SALES_STEP > %d);", MIN_SALES_STEP);
+	    STR_PHP_COND += sprintf("return $COND_CHECK;");
+
+	QIIP_API_ACCESS({
+			REQ: 'post_GET_ALL_ROOT_ATTRIBUTE',
+			SVC_CATEGORY: _RS.PHONE_INFO.APP_NAME,
+			ATTR_KEY: [
+				'UNIQUE_ID',
+				'DATE_TIME',
+				'SALES_INFO',
+			],
+			SEARCH_KEY: [
+				'SALES_ASSIGN_' + STR_DATE_SAME_PART,
+			],
+			LIMIT: MAX_LIST,
+			PHP_COND: [
+				STR_PHP_COND,
+			]
+		},function(STR_RESULT) {
+			var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+			if ((JSON_RESULT instanceof Array)) {
+				REFRESH_GRID_SALES_ASSIGN_LIST(JSON_RESULT);
+			}
+		}
+	);		
+	
+}
+
+function REFRESH_GRID_SALES_ASSIGN_LIST(args_SQL_RESULT) {
+
+//	QIIP_APP_ALERT([args_SQL_RESULT[0]]); return;
+//	QIIP_APP_ALERT([args_SQL_RESULT]); return;
+
+	var SQL_RESULT = Array();
+	args_SQL_RESULT.forEach(function (ONE_ITEM) {
+		var DATA_FOR_PUSH = ONE_ITEM.SALES_INFO;
+			DATA_FOR_PUSH.UNIQUE_ID = ONE_ITEM.UNIQUE_ID;
+			DATA_FOR_PUSH.DATE_TIME = ONE_ITEM.DATE_TIME;
+		SQL_RESULT.push(DATA_FOR_PUSH);
+	});
+
+/*
+	SQL_RESULT.forEach(function (ONE_ITEM) {
+	});
+*/
+
+	delete(_RS.GRID_SALES_ASSIGN_LIST_ROW_DATA);
+	_RS.$apply();
+
+    var source = {
+        localdata: SQL_RESULT,
+        datatype: "json",
+        datafields:[
+            { name: 'UNIQUE_ID',		type: 'string' },
+            { name: 'DATE_TIME',		type: 'string' },
+            { name: 'SALES_STEP',		type: 'string' },
+            { name: 'SALES_TARGET_CODE',type: 'string' },
+            { name: 'SALES_TARGET_NAME',type: 'string' },
+            { name: 'DELIVERY_BIZ_NO',	type: 'string' },
+            { name: 'DELIVERY_BIZ_NAME',type: 'string' },
+            { name: 'DELIVERY_BIZ_ADDR',type: 'string' },
+            { name: 'DELIVERY_COMPANY',type: 'string' },
+            { name: 'DELIVERY_TRACE_NO',type: 'string' },
+            { name: 'ORDER_PRODUCTS',	type: 'array' },
+        ]                     
+    };
+
+    var dataAdapter = new $.jqx.dataAdapter(source);
+	$("#DIV_GRID_SALES_ASSIGN_LIST").unbind();
+	$("#DIV_GRID_SALES_ASSIGN_LIST").jqxGrid({
+        width: '100%',
+        height: '100%',
+        source: dataAdapter,                
+//        pageable: true,
+//        autoheight: true,
+//		rowsheight: 50,
+        sortable: true,
+        altrows: true,
+        enabletooltips: true,
+//        editable: true,
+        pagesize: 15,
+//        selectionmode: 'multiplecellsadvanced',
+        selectionmode: 'singlerow',
+        columns: [
+          { text: '일시',					columngroup: 'SALES_ASSIGN_LIST', datafield: 'DATE_TIME',			width:'25%', align: 'center',	cellsalign: 'center'},
+//          { text: '고유번호',				columngroup: 'SALES_ASSIGN_LIST', datafield: 'UNIQUE_ID',			width:'20%', align: 'center',	cellsalign: 'left'},
+//          { text: '주문처 고유번호',			columngroup: 'SALES_ASSIGN_LIST', datafield: 'SALES_TARGET_CODE',	width:'20%', align: 'center',	cellsalign: 'center'},
+          { text: '주문기관',				columngroup: 'SALES_ASSIGN_LIST', datafield: 'SALES_TARGET_NAME',	width:'25%', align: 'center',	cellsalign: 'center'},
+          { text: '배송(AS) 업체명',		columngroup: 'SALES_ASSIGN_LIST', datafield: 'DELIVERY_BIZ_NAME',	width:'25%', align: 'center',	cellsalign: 'center'},
+          { text: '배송(AS) 업체 사업자번호',	columngroup: 'SALES_ASSIGN_LIST', datafield: 'DELIVERY_BIZ_NO',		width:'25%', align: 'center',	cellsalign: 'center'},
+        ],
+        columngroups: [
+            { text: 
+            	'<b>클릭 => 우측 세부내용, 하단 업무진행 로그 표시</b>',
+              align: 'center', 
+              name: 'SALES_ASSIGN_LIST' 
+            },
+        ]
+    }).on('rowclick', function (event)  { 
+	    var args = event.args;
+	    var ROW_DATA = $(this).jqxGrid('getrowdata', args.rowindex);
+	    _RS.GRID_SALES_ASSIGN_LIST_ROW_DATA = ROW_DATA;
+	    _RS.$apply();
+	    QUERY_SALES_ORDER_LOG_LIST(ROW_DATA);
+    }).on('rowdoubleclick', function (event)  { 
+	    var args = event.args;
+	    var ROW_DATA = $(this).jqxGrid('getrowdata', args.rowindex);
+    });	
+    
+}
+
+function QUERY_SALES_ORDER_LOG_LIST(args_ROW_DATA) {
+	
+//	QIIP_APP_ALERT([args_ROW_DATA]); return;
+
+	QIIP_API_ACCESS({
+			REQ: 'post_GET_LOG_LIST',
+//			STR_FILTER: 'SALES_ACTIVITY',
+			PHONE_ID: sprintf("%s", args_ROW_DATA.UNIQUE_ID),
+			PHONE_NO: sprintf("%s", args_ROW_DATA.UNIQUE_ID),
+			CATEGORY: _RS.PHONE_INFO.APP_NAME,
+		},function(STR_RESULT) {
+			var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+			if ((JSON_RESULT instanceof Array)) {
+				REFRESH_GRID_SALES_ORDER_LOG_LIST(JSON_RESULT);
+			}
+		}
+	);
+}
+
+function REFRESH_GRID_SALES_ORDER_LOG_LIST(args_SQL_RESULT) {
+
+//	QIIP_APP_ALERT([args_SQL_RESULT[0]]); return;
+//	QIIP_APP_ALERT([args_SQL_RESULT]); return;
+
+	var SQL_RESULT = Array();
+	args_SQL_RESULT.forEach(function (ONE_ITEM) {
+		var DATA_FOR_PUSH = ONE_ITEM.OBJ_LOG.SALES_ACTIVITY;
+			DATA_FOR_PUSH.UNIQUE_ID = ONE_ITEM.UNIQUE_ID;
+			DATA_FOR_PUSH.DATE_TIME = ONE_ITEM.DATE_TIME;
+		SQL_RESULT.push(DATA_FOR_PUSH);
+	});
+/*
+	SQL_RESULT.forEach(function (ONE_ITEM) {
+	});
+*/
+    var source = {
+        localdata: SQL_RESULT,
+        datatype: "json",
+        datafields:[
+            { name: 'UNIQUE_ID',	type: 'string' },
+            { name: 'DATE_TIME',	type: 'string' },
+            { name: 'SALER_BIZ_NO',	type: 'string' },
+            { name: 'SALER_BIZ_NAME',type: 'string' },
+            { name: 'SALER_IN_CHARGE_NAME',		type: 'string' },
+            { name: 'SALER_IN_CHARGE_PHONE_NO',			type: 'string' },
+            { name: 'SALER_IN_CHARGE_EMAIL',	type: 'string' },
+            { name: 'SALES_LOG',		type: 'string' },
+        ]                     
+    };
+
+    var dataAdapter = new $.jqx.dataAdapter(source);
+	$("#DIV_GRID_SALES_ORDER_LOG_LIST").unbind();
+	$("#DIV_GRID_SALES_ORDER_LOG_LIST").jqxGrid({
+        width: '100%',
+        height: '100%',
+        source: dataAdapter,                
+//        pageable: true,
+//        autoheight: true,
+		rowsheight: 70,
+        sortable: true,
+        altrows: true,
+        enabletooltips: true,
+//        editable: true,
+        pagesize: 15,
+//        selectionmode: 'multiplecellsadvanced',
+        selectionmode: 'singlerow',
+        editmode: 'dblclick',
+        columns: [
+          { text: '일시',	datafield: 'DATE_TIME',	width: '20%', align: 'center',	cellsalign: 'center', editable: false },
+//          { text: '사업자번호',	datafield: 'SALER_BIZ_NO',	width: '10%', align: 'center',	cellsalign: 'center'},
+//          { text: '상호',	datafield: 'SALER_BIZ_NAME',	width: '10%', align: 'center',	cellsalign: 'center'},
+          { text: '성명',	 columngroup: 'SALES_OPERATOR', datafield: 'SALER_IN_CHARGE_NAME',	width: '10%', align: 'center',	cellsalign: 'center', editable: false },
+          { text: '폰번호', columngroup: 'SALES_OPERATOR', datafield: 'SALER_IN_CHARGE_PHONE_NO',	width: '10%', align: 'center',	cellsalign: 'center', editable: false },
+          { text: '이메일', columngroup: 'SALES_OPERATOR', datafield: 'SALER_IN_CHARGE_EMAIL',	width: '15%', align: 'center',	cellsalign: 'center', editable: false },
+          { text: '업무 진행 내용',	datafield: 'SALES_LOG',	align: 'center',	cellsalign: 'center', columntype: 'custom', editable: true,
+          	cellsrenderer: function (row, column, value) {
+                var STR_HTML  = '';
+                	STR_HTML += '<xmp style="width:100%;height:100%;overflow:auto;">';
+                	STR_HTML += value;
+                	STR_HTML += '</xmp>';
+                return STR_HTML;
+            }
+          },
+        ],
+        columngroups: [
+            { text: '업무 진행 처리자',
+              align: 'center', 
+              name: 'SALES_OPERATOR' 
+            },
+        ]
+    }).on('rowclick', function (event)  { 
+	    var args = event.args;
+	    var ROW_DATA = $(this).jqxGrid('getrowdata', args.rowindex);
+    }).on('rowdoubleclick', function (event)  { 
+	    var args = event.args;
+	    var ROW_DATA = $(this).jqxGrid('getrowdata', args.rowindex);
+    });	
+    
+}
+
+
+
+function INIT_DATE_RANGE_WIDGET() {
+    // create Date object for current location
+    var d = new Date();
+    // convert to msec
+    // add local time zone offset 
+    // get UTC time in msec
+    var utc_today = d.getTime() + (-1 * d.getTimezoneOffset() * 60000);
+    var utc_day_ago = d.getTime() + (-1 * d.getTimezoneOffset() * 60000) - (1000 * 60 * 60 * 24 * 1);
+    var utc_week_ago = d.getTime() + (-1 * d.getTimezoneOffset() * 60000) - (1000 * 60 * 60 * 24 * 7);
+    var utc_month_ago = d.getTime() + (-1 * d.getTimezoneOffset() * 60000) - (1000 * 60 * 60 * 24 * 30);
+    
+	var FIRST_DAY_OF_THIS_MONTH = new Date(d.getFullYear(), d.getMonth(), 1);
+	var LAST__DAY_OF_THIS_MONTH = new Date(d.getFullYear(), d.getMonth() + 1, 0);
+    
+    var TODAY = new Date(utc_today);
+    var ONE_MONTH_AGO = new Date(utc_month_ago);
+    var ONE_WEEK_AGO = new Date(utc_week_ago);
+    var ONE_DAY_AGO = new Date(utc_day_ago);
+
+    $('#DATE_RANGE_FOR_SALES_ASSIGN_LIST').jqxDateTimeInput({
+    	width: '100%',
+    	selectionMode: 'range',
+    	formatString: 'yyyy-MM-dd',
+    	readonly: true,
+//	}).on('click', function () {
+//		$(this).jqxDateTimeInput('open');
+    }).on('change', function (event) {
+//		FILL_HTML_FOR_USE_VOUCHER_LIST();
+    });		
+    $('#DATE_RANGE_FOR_SALES_ASSIGN_LIST').jqxDateTimeInput('setRange', FIRST_DAY_OF_THIS_MONTH, LAST__DAY_OF_THIS_MONTH);
+}
+
+</script>
+<div id="SALES_ASSIGN_LIST">
+	<div style="height:100%;width:50%;float:left;">
+		<div style="height:10%;">
+			<table>
+				<col width="15%" />
+				<col width="15%" />
+				<col width="15%" />
+				<col width="10%" />
+				<col width="15%" />
+				<col width="10%" />
+				<col width="10%" />
+				<col width="10%" />
+				<tr>
+
+					<th>주문기관</th>
+					<td>
+						<input type="text" id="STR_SALES_TARGET_NAME"/>
+					</td>
+
+					<th colspan="2">
+						날짜 구간
+					</th>
+					<td colspan="2">
+						<div id="DATE_RANGE_FOR_SALES_ASSIGN_LIST"></div>
+					</td>
+
+					<td rowspan="2" colspan="2" ng-if="!IS_SALES_ADMIN()">
+						<button class="EVENT_SALES_ASSIGN_LIST" id="BTN_GET_SALES_ASSIGN_LIST">
+							목록갱신
+						</button>
+					</td>
+
+					<td rowspan="2" ng-if="IS_SALES_ADMIN()">
+						<button class="EVENT_SALES_ASSIGN_LIST" id="BTN_GET_SALES_ASSIGN_LIST">
+							목록갱신
+						</button>
+					</td>
+
+					<td rowspan="2" ng-if="IS_SALES_ADMIN()">
+						<button class="EVENT_SALES_ASSIGN_LIST" id="BTN_ADD_SALES_ASSIGN">
+							추가등록
+						</button>
+					</td>
+
+				</tr>
+				<tr>
+					<th>방문 배송 업체</th>
+					<td>
+						<input type="text" id="STR_DELIVERY_BIZ_NAME" ng-if="!IS_SALES_ADMIN()" readonly value="{{OBJ_POST_ROOT.BIZ_INFO.BIZ_NAME}}" />
+						<input type="text" id="STR_DELIVERY_BIZ_NAME" ng-if="IS_SALES_ADMIN()"/>
+					</td>
+
+					<th>업무 진행 단계</th>
+					<td>
+						<input type="number" id="MIN_SALES_STEP" value="0"/>
+					</td>
+					<th>LIMIT</th>
+					<td>
+						<input type="text" id="MAX_LIST" value="25"/>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div style="height:45%;">
+			<div id="DIV_GRID_SALES_ASSIGN_LIST" style="box-sizing:border-box;">
+			</div>
+		</div>
+		<div style="height:45%;">
+			<div id="DIV_GRID_SALES_ORDER_LOG_LIST" style="box-sizing:border-box;">
+			</div>
+		</div>
+	</div>
+	<div style="height:100%;width:50%;float:left;" ng-if="GRID_SALES_ASSIGN_LIST_ROW_DATA">
+		<div style="height:10%;width:100%;">
+			<table>
+				<tr>
+					<th>
+						주문 세부 내용
+					</th>
+				</tr>
+			</table>
+		</div>
+		<div style="height:50%;width:100%;">
+			<table>
+				<col width="20%" />
+				<col width="30%" />
+				<col width="20%" />
+				<col width="30%" />
+				<tr>
+					<th colspan="2">
+						조달 주문 등록 일시
+					</th>
+					<td colspan="2">
+						{{GRID_SALES_ASSIGN_LIST_ROW_DATA.DATE_TIME}}
+					</td>
+				</tr>
+				<tr>
+					<th colspan="4">
+						업무 진행 단계
+					</th>
+				</tr>
+				<tr>
+					<td colspan="4">
+						<STEP_GUAGE ng-repeat="ONE_STEP in ARRAY_FOR_STEP_GUAGE" >
+							<CURR_STEP ng-if="$index == GRID_SALES_ASSIGN_LIST_ROW_DATA.SALES_STEP">
+								{{ONE_STEP}}
+							</CURR_STEP>
+							<LIST_STEP ng-if="$index != GRID_SALES_ASSIGN_LIST_ROW_DATA.SALES_STEP">
+								{{ONE_STEP}}
+							</LIST_STEP>
+							<span ng-if="$index < (ARRAY_FOR_STEP_GUAGE.length - 1)">
+								▶
+							</span>
+						</STEP_GUAGE>
+					</td>
+				</tr>
+				<tr>
+					<th colspan="4">
+						주문 기관
+					</th>
+				</tr>
+				<tr>
+					<th>
+						고유번호
+					</th>
+					<td>
+						{{GRID_SALES_ASSIGN_LIST_ROW_DATA.SALES_TARGET_CODE}}
+					</td>
+					<th>
+						기관명
+					</th>
+					<td>
+						{{GRID_SALES_ASSIGN_LIST_ROW_DATA.SALES_TARGET_NAME}}
+					</td>
+				</tr>
+				<tr>
+					<th colspan="4">
+						방문 배송 업체
+					</th>
+				</tr>
+				<tr>
+					<th>
+						사업자 번호
+					</th>
+					<td>
+						{{GRID_SALES_ASSIGN_LIST_ROW_DATA.DELIVERY_BIZ_NO}}
+					</td>
+					<th>
+						업체 상호
+					</th>
+					<td>
+						{{GRID_SALES_ASSIGN_LIST_ROW_DATA.DELIVERY_BIZ_NAME}}
+					</td>
+				</tr>
+				<tr ng-if="IS_SALES_ADMIN() || GRID_SALES_ASSIGN_LIST_ROW_DATA.SALES_STEP >= 1">
+					<th>
+						방문배송 물품 수령 주소
+					</th>
+					<td colspan="3">
+						{{GRID_SALES_ASSIGN_LIST_ROW_DATA.DELIVERY_BIZ_ADDR}}
+					</td>
+				</tr>
+				<tr ng-if="!IS_SALES_ADMIN() && GRID_SALES_ASSIGN_LIST_ROW_DATA.SALES_STEP < 1">
+					<th>
+						방문배송 물품 수령 주소
+					</th>
+					<td colspan="2">
+						<input type="text" id="TXT_DELIVERY_BIZ_ADDR" value="{{GRID_SALES_ASSIGN_LIST_ROW_DATA.DELIVERY_BIZ_ADDR}}" />
+					</td>
+					<td>
+						<button class="btn btn-primary " onclick="CONFIRM_DELIVERY_BIZ_ADDR();">
+							방문배송 물품 수령 주소 확정
+						</button>
+					</td>
+				</tr>
+				<tr ng-if="GRID_SALES_ASSIGN_LIST_ROW_DATA.SALES_STEP >= 2">
+					<th>
+						운송회사
+					</th>
+					<td>
+						{{GRID_SALES_ASSIGN_LIST_ROW_DATA.DELIVERY_COMPANY}}
+					</td>
+					<th>
+						송장번호
+					</th>
+					<td>
+						{{GRID_SALES_ASSIGN_LIST_ROW_DATA.DELIVERY_TRACE_NO}}
+					</td>
+				</tr>
+				<tr ng-if="IS_SALES_ADMIN() && GRID_SALES_ASSIGN_LIST_ROW_DATA.SALES_STEP == 1">
+					<th>
+						운송회사
+					</th>
+					<td>
+						<input type="text" id= "TXT_DELIVERY_COMPANY" value="{{GRID_SALES_ASSIGN_LIST_ROW_DATA.DELIVERY_COMPANY}}" />
+					</td>
+					<th>
+						송장번호
+					</th>
+					<td>
+						<input type="text" id= "TXT_DELIVERY_TRACE_NO" value="{{GRID_SALES_ASSIGN_LIST_ROW_DATA.DELIVERY_TRACE_NO}}" />
+					</td>
+				</tr>
+				<tr ng-if="IS_SALES_ADMIN() && GRID_SALES_ASSIGN_LIST_ROW_DATA.SALES_STEP == 1">
+					<td colspan="4" style="text-align:center;">
+						<button class="btn btn-primary " onclick="SEND_DELIVERY_BIZ_ADDR();">
+							방문배송 물품 수령주소로 발송
+						</button>
+					</td>
+				</tr>
+				<tr ng-if="!IS_SALES_ADMIN() && GRID_SALES_ASSIGN_LIST_ROW_DATA.SALES_STEP == 2">
+					<td colspan="4" style="text-align:center;">
+						<button class="btn btn-primary " onclick="START_DELIVERY_TO_SALES_TARGET();">
+							방문배송 물품수령 및 주문기관 방문배송 시작
+						</button>
+					</td>
+				</tr>
+				<tr ng-if="!IS_SALES_ADMIN() && GRID_SALES_ASSIGN_LIST_ROW_DATA.SALES_STEP == 3">
+					<td colspan="4" style="text-align:center;">
+						<button class="btn btn-primary " onclick="DONE_DELIVERY_TO_SALES_TARGET();">
+							주문기관으로 방문배송 완료
+						</button>
+					</td>
+				</tr>
+				<tr ng-if="IS_SALES_ADMIN() && GRID_SALES_ASSIGN_LIST_ROW_DATA.SALES_STEP == 4">
+					<td colspan="4" style="text-align:center;">
+						<button class="btn btn-primary " onclick="DELIVERY_CONFIRM_FROM_SALES_TARGET();">
+							주문기관의 나라장터 검수 확인
+						</button>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div style="height:5%;width:100%;">
+			<table>
+				<tr>
+					<th>
+						주문 내역
+					</th>
+				</tr>
+			</table>
+		</div>
+		<div style="height:35%;width:100%;overflow:auto;">
+			<table>
+				<col width="20%" />
+				<col width="15%" />
+				<col width="30%" />
+				<col width="10%" />
+				<col width="10%" />
+				<tr style="height:10%;">
+					<th>
+						제조사
+					</th>
+					<th>
+						제품 코드
+					</th>
+					<th>
+						제품 명
+					</th>
+					<th>
+						단가
+					</th>
+					<th>
+						수량
+					</th>
+					<th>
+						가격
+					</th>
+				</tr>
+				<tr ng-repeat="ONE_PRODUCT in GRID_SALES_ASSIGN_LIST_ROW_DATA.ORDER_PRODUCTS">
+					<td>
+						{{ONE_PRODUCT.MAKER}}
+					</td>
+					<td>
+						{{ONE_PRODUCT.FILAMENT_ID}}
+					</td>
+					<td>
+						{{ONE_PRODUCT.FILAMENT_NAME}}
+					</td>
+					<td style="text-align:right;">
+						{{ONE_PRODUCT.PRICE}}
+					</td>
+					<td style="text-align:right;">
+						{{ONE_PRODUCT.COUNT}}
+					</td>
+					<td style="text-align:right;">
+						{{ONE_PRODUCT.PRICE_MULT}}
+					</td>
+				</tr>
+				<tr style="height:10%;">
+					<th colspan="4">
+						SUMMARY
+					</th>
+					<td style="text-align:right;">
+						{{PRICE_SUM(GRID_SALES_ASSIGN_LIST_ROW_DATA.ORDER_PRODUCTS, 'COUNT')}}
+					</td>
+					<td style="text-align:right;">
+						{{PRICE_SUM(GRID_SALES_ASSIGN_LIST_ROW_DATA.ORDER_PRODUCTS, 'PRICE_MULT')}}
+					</td>
+				</tr>
+			</table>
+		</div>
+		
+	</div>
+</div>

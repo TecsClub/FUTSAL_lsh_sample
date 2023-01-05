@@ -1,0 +1,142 @@
+{@ $VARS = json_decode(base64_decode($ARGS->JSON_ARGS_BASE64)); }
+<script>
+var FOR_POPUP_SELECT_ONE_ITEM_FROM_CONTACTS = null;
+
+function CLOSE_POPUP_FOR_SELECT_ONE_ITEM_FROM_CONTACTS() {
+	if (FOR_POPUP_SELECT_ONE_ITEM_FROM_CONTACTS != null) {
+		QIIP_JQX_CLOSE_WINDOW(FOR_POPUP_SELECT_ONE_ITEM_FROM_CONTACTS);
+	}
+}
+
+function INIT_WIDGETS_FOR_POPUP_SELECT_ONE_ITEM_FROM_CONTACTS(OBJ_DIALOG) {
+	FOR_POPUP_SELECT_ONE_ITEM_FROM_CONTACTS = OBJ_DIALOG;
+
+	$(".BTN_POPUP").jqxButton({
+		width: '100%',
+		height: '100%'
+	}).on('click', function () {
+		var ID = $(this).attr('ID');
+		if (ID == 'DUMMY') {
+		} else if (ID == 'BTN_ONE_ITEM_FROM_CONTACTS_CANCLE') {
+			CLOSE_POPUP_FOR_SELECT_ONE_ITEM_FROM_CONTACTS();
+		}
+	});
+	
+	$(".BTN_SELECT_ONE_CONTACT").jqxButton({
+		width: '100%',
+		height: '100%'
+	}).on('click', function () {
+		var DIV_ID_RESULT_FOR_SELECTED_CONTACT = '{$VARS->DIV_ID_RESULT}';
+		var SELECTED_PHONE_NO = $(this).attr("PHONE_NO");
+		if (DIV_ID_RESULT_FOR_SELECTED_CONTACT != '') {
+			$('#'+DIV_ID_RESULT_FOR_SELECTED_CONTACT).val(SELECTED_PHONE_NO);
+			$('#'+DIV_ID_RESULT_FOR_SELECTED_CONTACT).attr('PHONE_NO',		$(this).attr("PHONE_NO"));
+			$('#'+DIV_ID_RESULT_FOR_SELECTED_CONTACT).attr('MEMBER',		$(this).attr("MEMBER"));
+			$('#'+DIV_ID_RESULT_FOR_SELECTED_CONTACT).attr('DISPLAY_NAME',	$(this).attr("DISPLAY_NAME"));
+		}
+		CLOSE_POPUP_FOR_SELECT_ONE_ITEM_FROM_CONTACTS();
+	});
+}
+
+function INIT_WIDGETS_FOR_POPUP_SELECT_ONE_ITEM_FROM_CONTACTS_BACKUP(OBJ_DIALOG) {
+	FOR_POPUP_SELECT_ONE_ITEM_FROM_CONTACTS = OBJ_DIALOG;
+
+	$(".BTN_POPUP").jqxButton({
+		width: '100%',
+		height: '100%'
+	}).on('click', function () {
+		var ID = $(this).attr('ID');
+		if (ID == 'DUMMY') {
+		} else if (ID == 'BTN_ONE_ITEM_FROM_CONTACTS_CANCLE') {
+			CLOSE_POPUP_FOR_SELECT_ONE_ITEM_FROM_CONTACTS();
+		}
+	});
+	
+	$(".BTN_SELECT_ONE_CONTACT").jqxButton({
+		width: '100%',
+		height: '100%'
+	}).on('click', function () {
+		var MEMBER_CHECK = '{$VARS->MEMBER_CHECK}';
+		var DIV_ID_RESULT_FOR_SELECTED_CONTACT = '{$VARS->DIV_ID_RESULT}';
+		var SELECTED_PHONE_NO = $(this).attr("PHONE_NO");
+		var FLAG_MEMBER = $(this).attr("MEMBER");
+
+		if (MEMBER_CHECK != '') {
+			if (FLAG_MEMBER.length > 0) {
+				if (DIV_ID_RESULT_FOR_SELECTED_CONTACT != '') {
+					$('#'+DIV_ID_RESULT_FOR_SELECTED_CONTACT).val(SELECTED_PHONE_NO);
+					$('#'+DIV_ID_RESULT_FOR_SELECTED_CONTACT).attr('PHONE_NO',		$(this).attr("PHONE_NO"));
+					$('#'+DIV_ID_RESULT_FOR_SELECTED_CONTACT).attr('MEMBER',		$(this).attr("MEMBER"));
+					$('#'+DIV_ID_RESULT_FOR_SELECTED_CONTACT).attr('DISPLAY_NAME',	$(this).attr("DISPLAY_NAME"));
+				}
+				CLOSE_POPUP_FOR_SELECT_ONE_ITEM_FROM_CONTACTS();
+			} else {
+				var strHTML = '';
+					strHTML += '<div class="qiip_index" style="width:100%; height:100%;">';
+					strHTML += ARR_TO_TABLE([
+					sprintf(
+						"%s(%s) 님은 {$ARGS->APP_NAME} 앱을 설치하지 않았습니다!",
+						$(this).attr("DISPLAY_NAME"),
+						$(this).attr("PHONE_NO")
+					),
+					sprintf(
+						"%s(%s) 님에게 {$ARGS->APP_NAME} 앱 설치를 권유하는 SMS를 발송하시겠습니까?!",
+						$(this).attr("DISPLAY_NAME"),
+						$(this).attr("PHONE_NO")
+					)
+				]);
+					strHTML += '</div>';
+
+				var OBJ_POPUP = QIIP_JQX_POPUP_WINDOW({
+		            showCollapseButton: true, 
+		            height: '45%',
+		            width: '90%',
+		            minHeight: 100,
+		            minWidth: 100,
+					},
+					'비회원 선택',
+					strHTML
+				);
+			}
+		} else {
+			if (DIV_ID_RESULT_FOR_SELECTED_CONTACT != '') {
+				$('#'+DIV_ID_RESULT_FOR_SELECTED_CONTACT).val(SELECTED_PHONE_NO);
+				$('#'+DIV_ID_RESULT_FOR_SELECTED_CONTACT).attr('PHONE_NO',		$(this).attr("PHONE_NO"));
+				$('#'+DIV_ID_RESULT_FOR_SELECTED_CONTACT).attr('MEMBER',		$(this).attr("MEMBER"));
+				$('#'+DIV_ID_RESULT_FOR_SELECTED_CONTACT).attr('DISPLAY_NAME',	$(this).attr("DISPLAY_NAME"));
+			}
+			CLOSE_POPUP_FOR_SELECT_ONE_ITEM_FROM_CONTACTS();
+		}
+
+	});
+}
+
+</script>
+<div class="qiip_index" style="width:100%; height:100%;">
+	<div style="width:100%; height:90%;overflow:auto;">
+		{@ $ARRAY_CONTACTS = $VARS->JSON_ARRAY_CONTACTS;}
+		<table cond="count($ARRAY_CONTACTS) > 0">
+			<col width="25%"/>
+			<col width="35%"/>
+			<col width="40%"/>
+			<tr loop="$ARRAY_CONTACTS=>$NO,$ONE_ITEM">
+				<td cond="$ONE_ITEM->MEMBER" ><button class="BTN_SELECT_ONE_CONTACT" MEMBER="{$ONE_ITEM->MEMBER}" DISPLAY_NAME="{$ONE_ITEM->DISPLAY_NAME}" PHONE_NO="{$ONE_ITEM->NUMBER}">회원</button></td>
+				<td cond="!$ONE_ITEM->MEMBER"><button class="BTN_SELECT_ONE_CONTACT" MEMBER="{$ONE_ITEM->MEMBER}" DISPLAY_NAME="{$ONE_ITEM->DISPLAY_NAME}" PHONE_NO="{$ONE_ITEM->NUMBER}">비회원</button></td>
+				<td><button class="BTN_SELECT_ONE_CONTACT"  MEMBER="{$ONE_ITEM->MEMBER}" DISPLAY_NAME="{$ONE_ITEM->DISPLAY_NAME}" PHONE_NO="{$ONE_ITEM->NUMBER}">{$ONE_ITEM->DISPLAY_NAME}</button></td>
+				<td><button class="BTN_SELECT_ONE_CONTACT"  MEMBER="{$ONE_ITEM->MEMBER}" DISPLAY_NAME="{$ONE_ITEM->DISPLAY_NAME}" PHONE_NO="{$ONE_ITEM->NUMBER}">{$ONE_ITEM->NUMBER}</button></td>
+			</tr>
+		</table>
+		<table cond="count($ARRAY_CONTACTS) <= 0">
+			<tr>
+				<td><button class="BTN_POPUP">검색 결과가 없습니다.</button></td>
+			</tr>
+		</table>
+	</div>
+	<div style="width:100%; height:10%;">
+		<table>
+			<tr>
+				<td><button class="BTN_POPUP" id="BTN_ONE_ITEM_FROM_CONTACTS_CANCLE">취소</button></td>
+			</tr>
+		</table>
+	</div>
+</div>

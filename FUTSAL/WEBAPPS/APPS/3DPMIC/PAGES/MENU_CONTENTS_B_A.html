@@ -1,0 +1,190 @@
+<link href="assets/css/font-awesome.css" rel="stylesheet" />
+
+<style>
+body{
+overflow-y: auto !important;
+height: 100%;
+}
+ul{
+padding: 0;
+list-style: none;	
+}
+#remote{
+	display: none;
+}
+#DIV_CONTENT{
+margin-top: -70px;
+}
+.detail_content {
+	width: 100%;
+	margin-top: -60px;
+	position: relative;
+}
+.detail_content .sub_bg{
+height: 400px;
+background: #0F2027;  /* fallback for old browsers */
+background: -webkit-linear-gradient(to bottom, #2C5364, #203A43, #0F2027);  /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to bottom, #2C5364, #203A43, #0F2027); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+text-align: center;
+	position: relative;	
+}
+.detail_content .sub_bg > div{
+	position: absolute;
+	top: calc(50% + 35px);
+	left: 50%;
+	transform: translate(-50%, -50%);
+	padding-top: 70px;
+}
+.detail_content .sub_bg > div h2{
+	font-size: 48px;
+	font-weight: 700;
+	margin-bottom: 15px;
+	margin-top: 0;
+	color: #fff;
+}
+.detail_content .sub_bg > div p{
+	font-size: 17px;
+	font-weight: 500;
+	color: #fff;
+}
+
+button#move_top_btn {
+    position: fixed;
+    right: 2%;
+    bottom: 50px;
+    display: none;
+    z-index: 999;
+    text-align: center;
+    background-color: #114991;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    color: #fff;
+    font-weight: 500;
+    border: none;
+    right: 50px;
+}
+button#move_top_btn:hover, button#move_top_btn:focus{
+	background-color: #049DCC;
+}
+button#move_top_btn.stop_move{
+display: block;
+position: absolute;
+bottom: 250px;
+}
+.breadcrumb_wrap{
+	 border-bottom: 1px solid #ddd;
+	 box-shadow: 0px 5px aliceblue;
+}
+.breadcrumb{
+	  background: none;
+   margin-bottom: 0;
+    border-radius: 0;
+    text-align: right;
+    padding: 15px 0px;
+}
+.structure1{
+text-align: center;
+margin-top: 50px;
+margin-bottom: 100px;
+}
+.structure1 h3 {
+		text-align: center;
+    font-weight: bold;
+    display: inline-block;
+    border-bottom: 4px solid #114991;
+    padding-bottom: 8px;
+    font-size: 32px;
+  }
+.structure1 img{
+clear: both;
+display: block;
+margin: 40px auto;
+width: 80%;
+}
+.structure1 h5{
+		color: 	#888;
+		margin-bottom: 30px;
+}
+</style>
+
+<script>
+	
+	function QIIP_MENU_CONTENTS_INIT_WIDGETS() {
+//		alert('QIIP_MENU_CONTENTS_INIT_WIDGETS');
+		$("#move_top_btn").click(function() {
+	        $('html, body').animate({
+	            scrollTop : 0
+	        }, 400);
+	        return false;
+	  });
+		$("body").scroll(function(){
+			if ($(this).scrollTop() > 0) {
+		        $('#move_top_btn').fadeIn();
+	    } else {
+	        $('#move_top_btn').fadeOut();
+	    }
+	    
+	    if($(this).scrollTop() > 260){
+	    		$('QIIP_MENU').animate({"background-color":"#fff", "border-color": "#eee"}, 10);	
+	    		$('DIV_LEFT, QIIP_MENU MENU_1ST_TEXT, QIIP_MENU DIV_RIGHT button, QIIP_MENU DIV_RIGHT button span').animate({"color":"#444", "border-color": "#eee"}, 10);	
+	    }else{
+	    		$('QIIP_MENU').animate({"background-color":"rgb(255, 255, 255, 0)", "border-color": "#fff"}, 10);	
+	    		$('DIV_LEFT, QIIP_MENU MENU_1ST_TEXT, QIIP_MENU DIV_RIGHT button, QIIP_MENU DIV_RIGHT button span').animate({"color":"#fff", "border-color": "#fff"}, 10);	
+	    }
+		});
+		
+		$(window).resize(function(){
+	      	var width = parseInt($(this).width());
+			if (width > 960){
+				$("body").scroll(function(){
+				    if($(this).scrollTop() + $(this).height() > $(document).height() - 200) {
+						$("button#move_top_btn").addClass("stop_move");
+				   	} else {
+				   		$("button#move_top_btn").removeClass("stop_move");
+				   	}
+				});
+			} else {
+			  	$("body").scroll(function(){
+					if($(this).scrollTop() + $(this).height() > $(document).height() - 200) {
+						$("button#move_top_btn").addClass("stop_move");
+					} else {
+						$("button#move_top_btn").removeClass("stop_move");
+					}
+				});
+			}
+	    }).resize();
+	}
+	
+</script>
+<!-- DETAIL_CONTENT START -->
+<div class="detail_content">
+	<div class="sub_bg">
+		<div>
+			<h2>BUSINESS STRUCTURE</h2>
+			<p>한국 쓰리디프린팅 소재산업 협동조합의 사업구조 대해 소개합니다.</p>
+		</div>
+	</div>
+	<div class="breadcrumb_wrap">
+		<ol class="breadcrumb container">
+			  <li>Home</li>
+			  <li>사업구조</li>
+			  <li class="active">유통구조</li>
+		</ol>	
+	</div>
+	<div class="container structure1">	
+		<h3>유통구조</h3>
+		<img src="assets/img/struct1.png" />
+		<h5>
+			국내 쓰리디프린팅 소재(필라멘트) 유통구조 체계화
+		</h5>
+		
+	</div>
+	<div class="footer" style="background-color: #333;">
+	    <div style="height: 200px;">footer</div>
+	</div>
+	<button id="move_top_btn" alt="MOVE TOP"><span class="glyphicon glyphicon-chevron-up"></span><br>TOP</button>
+
+</div>
+<!-- DETAIL_CONTENT END -->
+	

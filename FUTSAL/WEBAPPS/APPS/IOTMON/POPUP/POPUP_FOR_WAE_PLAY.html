@@ -1,0 +1,176 @@
+{@ $ARGS = json_decode(base64_decode($ARGS->JSON_ARGS_BASE64)); }
+#PAGE_ARGS# <!-- <script>var JSON_ARGS=JSON.parse(Base64.decode($ARGS->JSON_ARGS_BASE64));</script> -->
+{@ $BIG_AUDIO_LENGTH = 1200; }
+<script>
+
+var BIG_AUDIO_LENGTH = {$BIG_AUDIO_LENGTH};
+var AUDIO_LENGTH	= -1;
+
+var OBJ_POPUP_FOR_WAE_PLAY = null;
+
+function INIT_WIDGETS_POPUP_FOR_WAE_PLAY(OBJ_DIALOG) {
+	OBJ_POPUP_FOR_WAE_PLAY = OBJ_DIALOG;
+	
+	if ($(".BTN_WAE_POPUP").length > 0) {
+		$(".BTN_WAE_POPUP").jqxButton({
+			width: '100%',
+			height: '100%'
+		}).on('click', function () {
+			var ID = $(this).attr('ID');
+			if (ID == 'DUMMY') {
+			} else if (ID == 'BTN_WAE_PLAY') {
+				EXEC_WAE_PLAY();
+			} else if (ID == 'BTN_WAE_STOP') {
+//				NC({CMD: 'ABORT_WORD_STUDY'});
+			} else if (ID == 'BTN_CLOSE_POPUP_FOR_WAE_PLAY') {
+				CLOSE_POPUP_FOR_WAE_PLAY();
+			}
+		});
+	}
+
+//alert(JSON.stringify(JSON_ARGS, null, 't'));
+	
+	if ((JSON_ARGS.PLAY_TIME > BIG_AUDIO_LENGTH) && (_ACCESS_FROM_APP)) {
+		$('#WAE_PROGRESSBAR').jqxProgressBar({ animationDuration:0, value:1, max:100, width: '100%', height: '100%'});
+		var JSON_CALLBACK_SCRIPT = {
+		    CALLBACK_SCRIPT_FUNC_ON_PLAY_START:		'ASK_REGARD_ON_PLAY_START',
+		    CALLBACK_SCRIPT_FUNC_ON_PLAY_PROGRESS:	'ASK_REGARD_ON_PLAY_PROGRESS',
+		    CALLBACK_SCRIPT_FUNC_ON_PLAY_END:		'ASK_REGARD_ON_PLAY_END',
+		};
+		QIIP_APP_SET_CALLBACK_SCRIPT('STT_BACKGROUND', JSON_CALLBACK_SCRIPT);
+	} else {
+		EXEC_LOAD_NAUTES_SoundVisualizer();
+	}
+
+}
+
+function CLOSE_POPUP_FOR_WAE_PLAY() {
+	if (OBJ_POPUP_FOR_WAE_PLAY != null) {
+		if (_NAUTES_SoundVisualizer != undefined) _NAUTES_SoundVisualizer.WAE_EE.emit("stop");
+//		if (_ACCESS_FROM_APP) NC({CMD: 'ABORT_WORD_STUDY'});
+		QIIP_JQX_CLOSE_WINDOW(OBJ_POPUP_FOR_WAE_PLAY);
+	}
+}
+
+var _NAUTES_SoundVisualizer = undefined;
+function EXEC_LOAD_NAUTES_SoundVisualizer() {
+	var EDITABLE = false;
+	if (JSON_ARGS.EDITABLE == 'YES') EDITABLE = true;
+	_NAUTES_SoundVisualizer = new NAUTES_SoundVisualizer({
+		DOM_ID_FOR_RENDERING: 'DIV_NAUTES_SoundVisualizer',
+		TRACK_CONTROLLER_ENABLE: false,
+		EDITABLE: EDITABLE,
+		MAX_PLAY_SPEED: 400,
+		MOBILE_LIKE: true,
+	});
+	_NAUTES_SoundVisualizer.WAE_PLAYLIST.load([{
+			src: JSON_ARGS.AUDIO_URL
+	}]).then(function() {
+	});
+}
+
+var FLAG_IN_PLAYING = false;
+function EXEC_WAE_PLAY() {
+	if (FLAG_IN_PLAYING) {
+		QIIP_POPUP_FOR_ALERT(
+			'안내',[
+				'선택하신 오디오를 이미 재생하고 있습니다.',
+			],function() {
+			},
+			70,
+			40
+		);
+		return;
+	}
+	FLAG_IN_PLAYING = true;
+	QIIP_POPUP_FOR_ALERT(
+		'안내',[
+			'선택하신 오디오를 읽어들이고 있습니다.',
+			'알림 창이 자동으로 닫힐때 까지,...',
+			'잠시만 기다려 주십시오!'
+		],function() {
+		},
+		95,
+		90,
+		undefined,
+		true
+	);
+//	alert(JSON.stringify(JSON_ARGS, null, 't'));
+//	NC({CMD: 'PLAY_URL', URL: JSON_ARGS.AUDIO_URL});
+}
+
+function ASK_REGARD_ON_PLAY_START(strJSON_BASE64) {
+	var objParam = JSON.parse(Base64.decode(strJSON_BASE64));
+//	console.log(JSON.stringify(objParam));
+	CLOSE_POPUP_FOR_ALERT();
+}
+
+function ASK_REGARD_ON_PLAY_PROGRESS(strJSON_BASE64) {
+	var objParam = JSON.parse(Base64.decode(strJSON_BASE64));
+//	console.log(JSON.stringify(objParam));
+	$("#WAE_PROGRESSBAR").jqxProgressBar('val', objParam.CALLBACK_PARAMS);
+	$("#AUDIO_POSTION").html(sprintf('%5.2f', objParam.CALLBACK_PARAMS) + ' %');
+}
+
+function ASK_REGARD_ON_PLAY_END(strJSON_BASE64) {
+	var objParam = JSON.parse(Base64.decode(strJSON_BASE64));
+	FLAG_IN_PLAYING = false;
+}
+
+</script>
+
+<!--@if(($ARGS->PLAY_TIME > $BIG_AUDIO_LENGTH) && ($ARGS->ACCESS_FROM_APP))-->
+<div class="qiip_index" style="width:100%; height:10%; padding:0px; text-align: center; background:#aaa;">
+	<table>
+		<col width="25%"/>
+		<tr>
+			<th id="AUDIO_POSTION">
+			</th>
+			<td>
+				<div id="WAE_PROGRESSBAR" style="margis:0px;"></div>
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="qiip_index" style="width:100%;height:75%;padding:0; overflow:auto;">
+	<table>
+		<col width="50%"/>
+		<tr>
+			<td colspan="2">
+		      	<button class="BTN_WAE_POPUP">
+		        	오디오 파일이 너무 커서 들어보기와 듣기멈춤 기능만 가능합니다.
+		    	</button>
+			</td>
+		</tr>
+		<tr>
+			<td>
+		      	<button class="BTN_WAE_POPUP" id="BTN_WAE_PLAY" >
+		        	들어 보기
+		    	</button>
+			</td>
+			<td>
+		      	<button class="BTN_WAE_POPUP" id="BTN_WAE_STOP" >
+		        	듣기 멈춤
+		    	</button>
+			</td>
+		</tr>
+	</table>
+</div>
+<!--@else-->
+<div class="qiip_index" style="width:100%;height:90%;padding:0; overflow:auto;">
+	<div id="DIV_NAUTES_SoundVisualizer" style="width:100%;height:100%;padding:0;"></div>
+</div>
+<!--@end-->
+<div class="qiip_index" style="width:100%;height:10%;padding:0;">
+	<table>
+		<col width="50%"/>
+		<tr>
+			<td>
+		      	<button class="BTN_WAE_POPUP" id="BTN_CLOSE_POPUP_FOR_WAE_PLAY" >
+		        	닫기
+		    	</button>
+			</td>
+		</tr>
+	</table>
+</div>
+

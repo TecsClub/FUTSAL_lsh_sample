@@ -1,0 +1,85 @@
+<style>
+</style>
+
+<script>
+	function ON_MENU_CLICK(JSON_MENU) {
+//		alert(JSON.stringify(JSON_MENU, null, '\t'));
+		QIIP_API_ACCESS({
+				REQ: 'api_GET_PAGE',
+				FLDR_TEMPLATE: _FLDR_TEMPLATE,
+				FILE_TEMPLATE: JSON_MENU.MENU_CONTENTS,
+			},function(STR_RESULT) {
+				$('#MENU_HEADER').html(JSON_MENU.MENU_STRING);
+				$('#APPS_CONTENTS').html(_AC(STR_RESULT)(_RS)); _RS.$apply();
+				if ('MENU_INIT_FUNC' in JSON_MENU) {
+					eval(JSON_MENU.MENU_INIT_FUNC);
+				}
+			},{
+				title: '안내',
+				template: ARR_TO_TABLE_CENTER([
+					JSON_MENU.MENU_STRING,
+					'화면을 구성하고 있습니다.'
+				]),
+				cssClass: 'qiip_popup'
+			}
+		);
+	}
+
+	function TOGGLE_SIDEMENU(FUNC) {
+        $('#sidebar').toggleClass('active');
+        $('#sidebarCollapse').toggleClass('active');
+        if (FUNC != undefined) { FUNC();}
+	}
+	function SET_SIDEMENU_EVENT() {
+		// FOR BOOTSTRAP_SIDEMENU EVENT
+        $('#sidebarCollapse').on('click', function () {
+            $('#sidebar').toggleClass('active');
+            $(this).toggleClass('active');
+        });
+//        TOGGLE_SIDEMENU();
+	}
+
+</script>
+<div class="wrapper" style="width:100%;height:auto;">
+    <!-- Sidebar Holder -->
+    <nav id="sidebar">
+        <div class="sidebar-header">
+            <h3>{{PHONE_INFO.APP_NAME}} {{APP_CONFIG.SIDEMENU.HEADER}}</h3>
+        </div>
+
+        <ul class="list-unstyled components">
+
+			<li ng-repeat="MENU_ITEM in APP_CONFIG.SIDEMENU.MENUITEMS" ng-click="ON_MENU_CLICK(MENU_ITEM)">
+				<a href="#">{{MENU_ITEM.MENU_STRING}}</a>
+			</li>
+			<li ng-show="!_ACCESS_FROM_APP" ng-click="QIIP_APP_LOGOUT()">
+				<a href="#">로그아웃</a>
+			</li>
+
+        </ul>
+
+        <ul class="list-unstyled CTAs">
+            <li>
+                <a href="#" class="article">LINK</a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Page Content Holder -->
+    <div id="content" >
+		<div style="width:100%;height:50px;">
+        	<div style="width:10%;float:left;">
+                <button type="button" id="sidebarCollapse" class="navbar-btn">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+        	</div>
+        	<div style="width:100%;height:100%;float:left;font-size:160%;" id="MENU_HEADER">
+        	</div>
+		</div>
+
+		<div style="width:auto;" id="APPS_CONTENTS">
+		</div>
+    </div>
+</div>

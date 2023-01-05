@@ -1,0 +1,93 @@
+<script>
+	function QIIP_TABLE_INIT() {
+		TOGGLE_SIDEMENU(function () {
+			$('#MENU_CONTENTS').css('height', ($('#SIDEMENU_PAGE').height() - 70) / $('#SIDEMENU_PAGE').height() * 100 + '%');
+            var numberrenderer = function (row, column, value) {
+                return '<div style="text-align: center; margin-top: 5px;">' + (1 + value) + '</div>';
+            }
+            
+            // create Grid datafields and columns arrays.
+            var datafields = [];
+            var columns = [];
+            for (var i = 0; i < 26; i++) {
+                var text = String.fromCharCode(65 + i);
+                if (i == 0) {
+                    var cssclass = 'jqx-widget-header ';
+                    if (theme != '') {
+                    	cssclass += ' jqx-widget-header-' + 'dark';
+                    }
+//                    console.log(theme);
+		            columns[columns.length] = {
+		                pinned: true, 
+		                exportable: false, 
+		                text: "", 
+		                columntype: 'number', 
+		                cellclassname: cssclass, 
+	                    cellsrenderer: numberrenderer 
+                    };
+                }
+                
+                datafields[datafields.length] = { name: text };
+                columns[columns.length] = { text: text, datafield: text, width: 60, align: 'center' };
+            }
+            
+            var source = {
+		        unboundmode: true,
+		        totalrecords: 10,
+		        datafields: datafields,
+		        updaterow: function (rowid, rowdata) {
+		            // synchronize with the server - send update command   
+		        }
+            };
+            
+            var dataAdapter = new $.jqx.dataAdapter(source);
+            // initialize jqxGrid
+
+            $("#grid").jqxGrid(
+	            {
+	                width: getWidth('Grid'),
+	                source: dataAdapter,
+	                editable: true,
+	                columnsresize: true,
+	                selectionmode: 'multiplecellsadvanced',
+	                columns: columns
+            	}
+            );
+
+            $("#excelExport").jqxButton({ theme: theme });
+            $("#excelExport").click(function () {
+//              $("#grid").jqxGrid('exportdata', 'xls', 'jqxGrid', false);
+//				$("#grid").jqxGrid('exportdata', 'json', 'jqxGrid', true, null, true, 'http://15.165.17.136/');
+                _RS.grid_data = $("#grid").jqxGrid('exportdata', 'json');
+                _RS.$apply();
+            });
+
+		});
+	}
+
+
+
+	
+</script>
+
+
+
+<body>
+	<div>
+	    <div id='jqxWidget'>
+	        <div id="grid"></div>
+	        <div style='margin-top: 20px;'>
+		        <div style='float: left;'>
+		            <input type="button" value="Export to Excel" id='excelExport' />
+		        </div>
+	    	</div>
+	    </div>
+	</div>
+	
+    <div style='margin-top: 60px;'>
+    	<pre>
+    		{{grid_data | prettyJSON}}
+    	</pre>
+    </div>	
+		
+</body>

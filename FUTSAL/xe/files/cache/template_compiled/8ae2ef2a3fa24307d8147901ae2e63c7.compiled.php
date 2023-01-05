@@ -1,0 +1,24 @@
+<?php if(!defined("__XE__"))exit;?><style>
+.NAU_MAIL_TABLE		{width:100%; border-collapse: separate; border-spacing: 1px; border: 1px solid #bcbcbc;}
+.NAU_MAIL_TABLE th	{text-decoration:bold; text-align: center; white-space:normal; word-break:break-all; background-color:#aaaaaa;}
+.NAU_MAIL_TABLE td	{text-decoration:none; text-align: center; white-space:normal; word-break:break-all; background-color:#efefef;}
+</style>
+<table class="NAU_MAIL_TABLE">
+	<col width="15%"/>
+	<col width="85%"/>
+	<tr>
+		<th>
+			제목
+		</th>
+		<th>
+			<?php echo $__Context->ARGS->SUBJECT ?>
+		</th>
+	</tr>
+</table>
+<table class="NAU_MAIL_TABLE">
+<tr>
+	<td style="text-align:left; word-break:break-all">
+		<xmp><?php echo json_encode($__Context->ARGS->CONTENT, JSON_PRETTY_PRINT) ?></xmp>
+	</td>
+</tr>
+</table>

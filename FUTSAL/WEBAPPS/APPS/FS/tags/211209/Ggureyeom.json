@@ -1,0 +1,62 @@
+[
+  { "tag": "신기하셨나봐요^^", "min": 0, "sec": 1, "createdBy": "tagger" },
+  { "tag": "****** 1쿼터 시작 *****", "min": 2, "sec": 13, "createdBy": "tagger" },
+  { "tag": "일반팀 상대의 패스미스를 가로채 바로 슈팅으로 득점", "min": 18, "sec": 0, "createdBy": "tagger" },
+  { "tag": "****** 1쿼터 끝 ******", "min": 26, "sec": 18, "createdBy": "tagger" },
+  { "tag": "****** 2쿼터 시작 ******", "min": 31, "sec": 11, "createdBy": "tagger" },
+  { "tag": "일반팀 스루패스를 받아 멋진 터닝 후 슛, 골", "min": 32, "sec": 23, "createdBy": "tagger" },
+  { "tag": "일반팀 키퍼의 킥 예측해서 뺏은 후 슛, 골", "min": 43, "sec": 16, "createdBy": "tagger" },
+  { "tag": "일반팀 돌아뛰는 움직임 뒤 패스 방향만 바꿔 득점", "min": 48, "sec": 1, "createdBy": "tagger" },
+  { "tag": "일반팀 대각 스루패스를 받아 슛, 골", "min": 54, "sec": 19, "createdBy": "tagger" },
+  { "tag": "****** 2쿼터 끝 ******", "min": 55, "sec": 34, "createdBy": "tagger" },
+  { "tag": "****** 3쿼터 시작 ******", "min": 62, "sec": 21, "createdBy": "tagger" },
+  { "tag": "일반팀 오른쪽 사이드에서 멋진 스루패스. 깔끔하게 골.", "min": 70, "sec": 11, "createdBy": "tagger" },
+  {
+    "tag": "일반팀 상대 공을 뺏어 바로 전진패스. 키퍼 가랑이 사이로 슛, 골",
+    "min": 75,
+    "sec": 55,
+    "createdBy": "tagger"
+  },
+  { "tag": "****** 3쿼터 끝 ******", "min": 86, "sec": 49, "createdBy": "tagger" },
+  { "tag": "****** 4쿼터 시작 ******", "min": 93, "sec": 16, "createdBy": "tagger" },
+  { "tag": "일반팀 골대 앞 혼전상황에서 골", "min": 101, "sec": 10, "createdBy": "tagger" },
+  { "tag": "일반팀 왼발로 살짝 올려찬 공 조끼팀 수비수 맞고 자책골", "min": 104, "sec": 26, "createdBy": "tagger" },
+  { "tag": "조끼팀의 환장의 자책골", "min": 109, "sec": 7, "createdBy": "tagger" },
+  { "tag": "조끼팀 왼쪽에서 빠른 크로스, 원터치로 슛, 절묘하게 골", "min": 19, "sec": 46, "createdBy": "tagger" },
+  { "tag": "조끼팀 무심하게 스루패스한 공을 받아 침착하게 마무리, 골", "min": 21, "sec": 2, "createdBy": "tagger" },
+  { "tag": "조끼팀 골대 앞부터 현란한 단독 드리블 후 슛, 골", "min": 21, "sec": 45, "createdBy": "tagger" },
+  {
+    "tag": "조끼팀 대각 스루패스를 받아 거의 없는 각에서 반대쪽 골대 맞고 골",
+    "min": 47,
+    "sec": 27,
+    "createdBy": "tagger"
+  },
+  {
+    "tag": "조끼팀 4대 2 역습상황에서 한 번은 막혔지만 두번째 좋은 슈팅 후 골",
+    "min": 84,
+    "sec": 34,
+    "createdBy": "tagger"
+  },
+  { "tag": "조끼팀 하프라인에서 공을 빼앗아 단독 드리블 후 마무리 골", "min": 94, "sec": 14, "createdBy": "tagger" },
+  { "tag": "조끼팀 자기 진영부터 드리블 후 강력한 슈팅으로 마무리, 골", "min": 98, "sec": 51, "createdBy": "tagger" },
+  {
+    "tag": "조끼팀 오른쪽 사이드에서 치고 들어오면서 침착하게 마무리. 키퍼 가랑이 사이로 골",
+    "min": 103,
+    "sec": 11,
+    "createdBy": "tagger"
+  },
+  {
+    "tag": "조끼팀 사이드에서 슛-골대-키퍼 뒷꿈치 맞고 굴러가는 공 마무리, 골",
+    "min": 106,
+    "sec": 38,
+    "createdBy": "tagger"
+  },
+  {
+    "tag": "조끼팀 사이드 빠른 돌파 후 나가기 직전 살려서 크로스 후 원터치 슛, 골",
+    "min": 111,
+    "sec": 42,
+    "createdBy": "tagger"
+  },
+  { "tag": "일반팀 골대 앞에서 내주고 원터치로 마무리 골", "min": 114, "sec": 28, "createdBy": "tagger" },
+  { "tag": "****** 경기 종료 ******", "min": 114, "sec": 33, "createdBy": "tagger" }
+]

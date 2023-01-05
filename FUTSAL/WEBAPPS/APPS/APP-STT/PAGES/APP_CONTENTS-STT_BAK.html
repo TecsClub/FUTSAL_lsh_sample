@@ -1,0 +1,156 @@
+<script>
+var DIV_STT_STATUS_LOG = 'DIV_STT_STATUS_LOG';
+	
+function INIT_WIDGETS_FOR_MENU_CONTENTS(OBJ_DIALOG) {
+	$('#VOICE_INPUT_PROGRESSBAR').jqxProgressBar({ animationDuration:0, value:1, max:100, width: '100%', height: '100%'});
+	
+	$(".BTN_PAGES").jqxButton({
+		width: '100%',
+		height: '100%'
+	}).on('click', function () {
+		var ID = $(this).attr('ID');
+		if (ID == 'DUMMY') {
+		} else if (ID == 'BTN_APP_STT_EXIT') {
+			HOW_TO_EXIT_APP();
+		} else if (ID == 'BTN_PAGES_VOICE_INPUT') {
+			START_VOICE_INPUT_SPEECH_RECOGNITION();
+		}
+	});
+	
+	INIT_NAUTES_SoundVisualizer();
+	
+	START_VOICE_INPUT_SPEECH_RECOGNITION();
+
+}
+
+function HOW_TO_EXIT_APP() {
+	_ionicPopup.confirm({
+		title: '종료 확인',
+		cssClass: 'qiip_popup',
+		template: TO_TABLE_CENTER('앱을 종료 하시겠습니까?')
+	}).then(function(res) {
+		if (res) {
+			STOP_VOICE_INPUT_SPEECH_RECOGNITION();
+			APP_FINISH();
+		}
+	});
+}
+
+function APP_FINISH() {
+	QIIP_APPS_NATIVE_ACCESS({
+		REQUEST: 'APP_FINISH',
+	}, function (STR_RESULT) {
+	});
+}
+
+function VOICE_INPUT_ON_TRANSCRIPTION(strJSON_BASE64) {
+	var objParam = JSON.parse(Base64.decode(strJSON_BASE64));
+//	alert(JSON.stringify(objParam));
+//	console.log(JSON.stringify(objParam));
+
+	QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+		DIV_STT_STATUS_LOG,
+		'<pre>' + objParam.CALLBACK_PARAMS + '</pre>',
+		'me',
+		'70%'
+	);
+
+}
+
+function VOICE_INPUT_ON_STT_MESSAGE(strJSON_BASE64) {
+	var objParam = JSON.parse(Base64.decode(strJSON_BASE64));
+//	alert(JSON.stringify(objParam));
+//	console.log(JSON.stringify(objParam));
+
+	QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+		DIV_STT_STATUS_LOG,
+		'<pre>' + objParam.CALLBACK_PARAMS + '</pre>',
+		'you',
+		'70%'
+	);
+
+}
+
+function VOICE_INPUT_ON_RMSCHANGED(strJSON_BASE64) {
+	var objParam = JSON.parse(Base64.decode(strJSON_BASE64));
+//	console.log(JSON.stringify(objParam));
+	$( "#VOICE_INPUT_PROGRESSBAR" ).jqxProgressBar('val', objParam.CALLBACK_PARAMS);
+}
+
+function START_VOICE_INPUT_SPEECH_RECOGNITION() {
+	QIIP_APPS_NATIVE_ACCESS({
+		REQUEST: 'START_SPEECH_RECOGNITION',
+		STT_CALLBACK_SCRIPT: {
+		    CALLBACK_SCRIPT_STT_ON_TRANSCRIPTION:	'VOICE_INPUT_ON_TRANSCRIPTION',
+		    CALLBACK_SCRIPT_STT_ON_RMSCHANGED:		'VOICE_INPUT_ON_RMSCHANGED',
+
+		    CALLBACK_SCRIPT_STT_ON_READY_FOR_SPEECH:	'VOICE_INPUT_ON_STT_MESSAGE',
+		    CALLBACK_SCRIPT_STT_ON_ERROR:				'VOICE_INPUT_ON_STT_MESSAGE',
+		    CALLBACK_SCRIPT_STT_ON_BEGINNING_OF_SPEECH:	'VOICE_INPUT_ON_STT_MESSAGE',
+		    CALLBACK_SCRIPT_STT_ON_END_OF_SPEECH:		'VOICE_INPUT_ON_STT_MESSAGE',
+		    CALLBACK_SCRIPT_STT_ON_BUFFER_RECEIVED:		'VOICE_INPUT_ON_STT_MESSAGE',
+		},
+		LANGUAGE: 'Korean',
+		MUTE_ALL_SOUND: false,
+		FULL_CONTENTS: true,
+	}, function (STR_RESULT) {
+		var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+		if (JSON_RESULT.STATUS != 200) {
+			QIIP_POPUP_FOR_YES_NO(
+				_RS.PHONE_INFO.APP_NAME + ' 안내',[
+					_RS.PHONE_INFO.APP_NAME + ' 를 정상적으로 이용하시려면...',
+					'요청드린 권한을 허용하셔야 합니다.',
+					'권한 허용을 재시도 하시겠습니까?',
+				], function () {
+					DO_POPUP_CAMERA_CAPTURE();
+				}, function () {
+				},
+				95,
+				50
+			);
+		} else {
+		}
+	});
+}
+
+function STOP_VOICE_INPUT_SPEECH_RECOGNITION() {
+	QIIP_APPS_NATIVE_ACCESS({
+		REQUEST: 'STOP_SPEECH_RECOGNITION',
+		FULL_CONTENTS: true,
+	}, function (STR_RESULT) {
+		var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+	});
+}
+
+var _NAUTES_SoundVisualizer = undefined;
+function INIT_NAUTES_SoundVisualizer() {
+	_NAUTES_SoundVisualizer = new NAUTES_SoundVisualizer({
+		DOM_ID_FOR_RENDERING: 'DIV_NAUTES_SoundVisualizer',
+		DOWNLOAD_DISABLE: false,
+		WAVE_DISPLAY_ONLY: true,
+	});
+/*
+	_NAUTES_SoundVisualizer.WAE_PLAYLIST.load([{
+			src: 'http://ask-regard.call-save.biz?PASS=1&cmd=api_YOUTUBE_MP3&YOUTUBE_videoId=yQxB1M0VZLU&EXT=.mp3'
+	}]).then(function() {
+	});
+*/
+}
+
+</script>
+<div class="qiip_box">
+	<div style="width:100%; height:3%; text-align: center;">
+		<div id="VOICE_INPUT_PROGRESSBAR"></div>
+	</div>
+	<div style="width:100%;height:10%;" id="DIV_NAUTES_SoundVisualizer">
+	</div>
+	<div style="width:100%;height:82%;background-color:#c9c9c9;overflow:auto;" id="DIV_STT_STATUS_LOG">
+	</div>
+	<div style="width:100%; height:5%;">
+		<table>
+			<tr>
+				<td><button class="BTN_PAGES" id="BTN_APP_STT_EXIT" >종료</button></td>
+			</tr>
+		</table>
+	</div>
+</div>

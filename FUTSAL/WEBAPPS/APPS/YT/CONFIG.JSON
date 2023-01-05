@@ -1,0 +1,27 @@
+{
+
+	"NO_MENU_CONTENTS" : {
+		"MENU_CONTENTS" : "PAGES/APP_1ST_PAGE.html",
+		"MENU_INIT_FUNC" : "LOAD_SERVICE_PAGE();",
+		"DUMMY": true
+	},
+	
+	"SIDEMENU_APPS": {
+		"HEADER" : "Youtube service",
+		"TEMPLATE" : "PAGES/SIDEMENU_APPS.html",
+		"MENUITEMS" : [
+			{
+				"MENU_STRING"	: "Youtube 영상",
+				"MENU_CONTENTS"	: "PAGES/YT_VIDEO.html",
+				"MENU_INIT_FUNC": "QIIP_SIDEMENU_INIT_WIDGETS();"
+			} ,
+			{
+				"MENU_STRING"	: "Table",
+				"MENU_CONTENTS"	: "PAGES/TABLE.html",
+				"MENU_INIT_FUNC": "QIIP_TABLE_INIT();"
+			}
+
+
+		]
+	}
+}

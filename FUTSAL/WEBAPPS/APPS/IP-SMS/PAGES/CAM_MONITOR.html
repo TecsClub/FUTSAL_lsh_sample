@@ -1,0 +1,935 @@
+<style>
+#CAM_MONITOR div		{box-sizing: border-box;}
+#CAM_MONITOR table	{width:100%; height:100%; font-size:100%; border-collapse: separate; border-spacing: 1px; line-height: 100%;}
+#CAM_MONITOR table th	{text-decoration:bold; text-align: center; white-space:normal; vertical-align: middle; word-break:break-all; background:#bbb;}
+#CAM_MONITOR table td	{text-decoration:none; text-align: left;   white-space:normal; vertical-align: middle;word-break:break-all; background:#fff;}
+#CAM_MONITOR input	{width:100%; height:100%;}
+#CAM_MONITOR button	{width:100%; height:100%;}
+</style>
+<script>
+	var DIV_CONSOLE_SCROLL = 'DIV_DIA_MON_LOG';
+	var FLAG_PROBE_DATA = false;
+//	var LST_WS_SERVER_URL	= window.location.origin + '/LST/API.jsp'
+	var LST_WS_SERVER_URL	= 'ws://localhost';
+	var LST_WS_CHANNEL		= 'ws_serial-service';
+	
+	var CAMERA_STREAM		= null;
+	
+	var CANVAS_CAMERA		= null;
+	var CTX_CAMERA		= null;
+	
+	var CANVAS_IMAGE		= null;
+	var CTX_IMAGE			= null;
+
+	function rgbToHsl( r, g, b ){
+	  r /= 255, g /= 255, b /= 255;
+	  var max = Math.max(r, g, b), min = Math.min(r, g, b);
+	  var h, s, l = (max + min) / 2;
+
+	  if(max == min){
+	      h = s = 0; // achromatic
+	  }else{
+	      var d = max - min;
+	      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+	      switch(max){
+	      case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+	      case g: h = (b - r) / d + 2; break;
+	      case b: h = (r - g) / d + 4; break;
+	      }
+	      h /= 6;
+	  }
+	  return [h, s, l];
+	}
+
+	function thresholdHsl(pixels,lower,upper){
+	  var d = pixels.data;
+	   var createTest = function( lower, upper ){
+	     return lower <= upper
+	            ? function(v){ return lower <= v && v <= upper; }
+	            : function(v){ return lower <= v || v <= upper; };
+	   }
+	   var h = createTest( lower[0], upper[0] );
+	   var s = createTest( lower[1], upper[1] );
+	   var l = createTest( lower[2], upper[2] );
+
+	  for (var i=0; i<d.length; i+=4) {
+	   var hsl = rgbToHsl( d[i], d[i+1], d[i+2] );
+	   if ( !h(hsl[0]) || !s(hsl[1]) || !l(hsl[2]) ){
+	     d[i+3] = 0;
+	   }
+	  }
+	}
+
+
+	function CAMERA_SNAPSHOT_LOOP() {
+		CAMERA_SNAPSHOT();
+		setTimeout(CAMERA_SNAPSHOT_LOOP, 10);
+	}
+	
+	var GRAPH_DATAS = [];
+	
+	var FLAG = false;
+	function CAMERA_SNAPSHOT() {
+		if (CAMERA_STREAM.srcObject != null) {
+			CTX_CAMERA.drawImage(CAMERA_STREAM, 0, 0);
+
+			var ImageData_CAMERA = CTX_CAMERA.getImageData(0, 0, CAMERA_STREAM.width, CAMERA_STREAM.height);
+
+			var TR_X_MIN_POS = ImageData_CAMERA.width * TR_X_MIN / 100;
+			var TR_X_MAX_POS = ImageData_CAMERA.width * TR_X_MAX / 100;
+
+			var TR_Y_MIN_POS = ImageData_CAMERA.height * TR_Y_MIN / 100;
+			var TR_Y_MAX_POS = ImageData_CAMERA.height * TR_Y_MAX / 100;
+
+			for (var x=0; x<ImageData_CAMERA.width; x++) {
+				for (var y=0; y<ImageData_CAMERA.height; y++) {
+					var INDEX_PIXEL = (x + y * ImageData_CAMERA.width) * 4;
+					var r = ImageData_CAMERA.data[INDEX_PIXEL + 0];
+					var g = ImageData_CAMERA.data[INDEX_PIXEL + 1];
+					var b = ImageData_CAMERA.data[INDEX_PIXEL + 2];
+					var a = ImageData_CAMERA.data[INDEX_PIXEL + 3];
+					
+					if ((TR_X_MIN_POS < x) && (x < TR_X_MAX_POS) &&
+						(TR_Y_MIN_POS < y) && (y < TR_Y_MAX_POS)) {
+
+					    // compare rgb levels for green and set alphachannel to 0;
+					    if (r >= THRESHOLD_R && g >= THRESHOLD_G && b >= THRESHOLD_B) {
+					        ImageData_CAMERA.data[INDEX_PIXEL + 3] = 0;
+					    }
+							
+					} else {
+				        ImageData_CAMERA.data[INDEX_PIXEL + 3] = 0;
+					}
+				}
+			}
+
+//			thresholdHsl(ImageData_CAMERA,[0,0.12,0],[1,1,1]);
+			CTX_IMAGE.putImageData(ImageData_CAMERA, 0, 0);
+
+			var LEFT_Y_MIN = -1;
+			var LEFT_Y_MAX = -1;
+			var RIGHT_Y_MIN = -1;
+			var RIGHT_Y_MAX = -1;
+			var PREV_A = 0;
+			
+/*
+			for (var x=TR_X_MIN_POS; x<TR_X_MAX_POS; x++) {
+				var INDEX_PIXEL = (TR_Y_MIN_POS + 1 + x * ImageData_CAMERA.width) * 4;
+				var a = ImageData_CAMERA.data[INDEX_PIXEL + 3];
+				if (PREV_A != a) {
+					if (PREV_A > 0) {
+						LEFT_X_MAX = x; break;
+					} else {
+						LEFT_X_MIN = x;
+					}
+				}
+				PREV_A = a;
+			}
+			PREV_A = 0;
+			for (var x=TR_X_MIN_POS; x<TR_X_MAX_POS; x++) {
+				var INDEX_PIXEL = (TR_Y_MAX_POS - 1 + x * ImageData_CAMERA.width) * 4;
+				var a = ImageData_CAMERA.data[INDEX_PIXEL + 3];
+				if (PREV_A != a) {
+					if (PREV_A > 0) {
+						RIGHT_X_MAX = x; break;
+					} else {
+						RIGHT_X_MIN = x;
+					}
+				}
+				PREV_A = a;
+			}
+*/
+
+			for (var y=TR_Y_MIN_POS; y<TR_Y_MAX_POS; y++) {
+				var INDEX_PIXEL = (TR_X_MIN_POS + 1 + y * ImageData_CAMERA.width) * 4;
+				var a = ImageData_CAMERA.data[INDEX_PIXEL + 3];
+				if (PREV_A != a) {
+					if (PREV_A > 0) {
+						LEFT_Y_MAX = y; break;
+					} else {
+						LEFT_Y_MIN = y;
+					}
+				}
+				PREV_A = a;
+			}
+			PREV_A = 0;
+			for (var y=TR_Y_MIN_POS; y<TR_Y_MAX_POS; y++) {
+				var INDEX_PIXEL = (TR_X_MAX_POS - 1 + y * ImageData_CAMERA.width) * 4;
+				var a = ImageData_CAMERA.data[INDEX_PIXEL + 3];
+				if (PREV_A != a) {
+					if (PREV_A > 0) {
+						RIGHT_Y_MAX = y; break;
+					} else {
+						RIGHT_Y_MIN = y;
+					}
+				}
+				PREV_A = a;
+			}
+			
+			CTX_IMAGE.beginPath();
+			CTX_IMAGE.moveTo(TR_X_MIN_POS, LEFT_Y_MIN);
+			CTX_IMAGE.lineTo(TR_X_MIN_POS, LEFT_Y_MAX);
+			CTX_IMAGE.lineTo(TR_X_MAX_POS, RIGHT_Y_MAX);
+			CTX_IMAGE.lineTo(TR_X_MAX_POS, RIGHT_Y_MIN);
+			CTX_IMAGE.lineTo(TR_X_MIN_POS, LEFT_Y_MIN);
+			CTX_IMAGE.stroke();
+
+			var VALUE = ((LEFT_Y_MAX - LEFT_Y_MIN) + (RIGHT_Y_MAX - RIGHT_Y_MIN)) / 2;
+
+			GRAPH_DATAS.push({
+				DATETIME: new Date(),
+				DIAMETER: VALUE
+			});
+			if (GRAPH_DATAS.length > $('#STR_MAX_DATA_COUNT').val()) {
+				for (var i=$('#STR_MAX_DATA_COUNT').val(); i < GRAPH_DATAS.length; i++) {
+					GRAPH_DATAS.splice(0, 1);
+				}
+			}
+			
+			var VALUE_MIN = ImageData_CAMERA.height;
+			var VALUE_MAX = 0;
+			for (var i=0; i<GRAPH_DATAS.length; i++) {
+				if (VALUE_MIN > VALUE) VALUE_MIN = VALUE;
+				if (VALUE_MAX < VALUE) VALUE_MAX = VALUE;
+			}
+			
+			var WINDOW_W = ImageData_CAMERA.width;
+			var WINDOW_H = ImageData_CAMERA.height;
+			
+			var VALUE_CENTER = WINDOW_H / 2;
+			
+			var VALUE_MID = (VALUE_MAX + VALUE_MIN) / 2;
+			var UNIT_Y	  = WINDOW_H / 50;
+
+			CTX_IMAGE.beginPath();
+			CTX_IMAGE.moveTo(0, WINDOW_H / 2);
+			for (var i=0; i<GRAPH_DATAS.length; i++) {
+				var x = i * (WINDOW_W / GRAPH_DATAS.length);
+				var y = VALUE_CENTER + (GRAPH_DATAS[i].DIAMETER - VALUE_MID) * UNIT_Y;
+				CTX_IMAGE.lineTo(x, y);
+			}
+			CTX_IMAGE.stroke();
+			
+			var MILI_SECOND_DIFF = GRAPH_DATAS[GRAPH_DATAS.length-1].DATETIME.getTime() - GRAPH_DATAS[0].DATETIME.getTime();
+
+			var MILI_SECOND_ONE = MILI_SECOND_DIFF / $('#STR_MAX_DATA_COUNT').val();
+
+			CTX_IMAGE.fillText(sprintf("VALUE = %5.2f, %d ms, %d fps",VALUE, MILI_SECOND_DIFF, 1000 / MILI_SECOND_ONE), 0 , 10);
+			
+			if (FLAG) {
+//				console.log(Object.keys(ImageData_CAMERA));
+				console.log(ImageData_CAMERA);
+				FLAG = false;
+			}
+			// "image/webp" works in Chrome.
+			// Other browsers will fall back to image/png.
+	//		document.querySelector('img').src = canvas.toDataURL('image/webp');
+			
+		}
+
+	}
+	
+	function QIIP_SIDEMENU_INIT_WIDGETS() {
+		TOGGLE_SIDEMENU(function () {
+			QIIP_SIDEMENU_INIT_WIDGETS_SUB();
+		});
+	}
+	
+	var TR_X_MIN	= 30;
+	var TR_X_MAX	= 70;
+	var TR_Y_MIN	= 0;
+	var TR_Y_MAX	= 100;
+	
+	var THRESHOLD_R = 135;
+	var THRESHOLD_G = 135;
+	var THRESHOLD_B = 135;
+	
+	function QIIP_SIDEMENU_INIT_WIDGETS_SUB() {
+		$('#MENU_CONTENTS').css('height', ($('#SIDEMENU_PAGE').height() - 130) / $('#SIDEMENU_PAGE').height() * 100 + '%');
+
+		$('#SLIDE_X_MIN').jqxSlider({
+            showTickLabels: true,
+            tooltip: true,
+            mode: "fixed",
+            width: '100%',
+            height: 60,
+            min: 0,
+            max: 100,
+            value: TR_X_MIN,
+            step: 1,
+            ticksFrequency: 5,
+            tickLabelFormatFunction: function (value) {
+                if (value == 0) return value;
+                if (value == 100) return value;
+                return "";
+            }
+        }).on('change', function (event) {
+        	TR_X_MIN = event.args.value;
+        });
+
+		$('#SLIDE_X_MAX').jqxSlider({
+            showTickLabels: true,
+            tooltip: true,
+            mode: "fixed",
+            width: '100%',
+            height: 60,
+            min: 0,
+            max: 100,
+            value: TR_X_MAX,
+            step: 1,
+            ticksFrequency: 5,
+            tickLabelFormatFunction: function (value) {
+                if (value == 0) return value;
+                if (value == 100) return value;
+                return "";
+            }
+        }).on('change', function (event) {
+        	TR_X_MAX = event.args.value;
+        });
+        
+		$('#SLIDE_Y_MIN').jqxSlider({
+            showTickLabels: true,
+            tooltip: true,
+            mode: "fixed",
+            width: '100%',
+            height: 60,
+            min: 0,
+            max: 100,
+            value: TR_Y_MIN,
+            step: 1,
+            ticksFrequency: 5,
+            tickLabelFormatFunction: function (value) {
+                if (value == 0) return value;
+                if (value == 100) return value;
+                return "";
+            }
+        }).on('change', function (event) {
+        	TR_Y_MIN = event.args.value;
+        });
+
+		$('#SLIDE_Y_MAX').jqxSlider({
+            showTickLabels: true,
+            tooltip: true,
+            mode: "fixed",
+            width: '100%',
+            height: 60,
+            min: 0,
+            max: 100,
+            value: TR_Y_MAX,
+            step: 1,
+            ticksFrequency: 5,
+            tickLabelFormatFunction: function (value) {
+                if (value == 0) return value;
+                if (value == 100) return value;
+                return "";
+            }
+        }).on('change', function (event) {
+        	TR_Y_MAX = event.args.value;
+        });
+
+		$('#SLIDE_A').jqxSlider({
+            showTickLabels: true,
+            tooltip: true,
+            mode: "fixed",
+            width:'100%',
+            height: 60,
+            min: 0,
+            max: 255,
+            value: THRESHOLD_R,
+            step: 1,
+            ticksFrequency: 5,
+            tickLabelFormatFunction: function (value) {
+                if (value == 0) return value;
+                if (value == 255) return value;
+                return "";
+            }
+        }).on('change', function (event) {
+        	THRESHOLD_R = event.args.value;
+        	THRESHOLD_G = event.args.value;
+        	THRESHOLD_B = event.args.value;
+        });
+        
+		$('#SLIDE_R').jqxSlider({
+            showTickLabels: true,
+            tooltip: true,
+            mode: "fixed",
+            width:'100%',
+            height: 60,
+            min: 0,
+            max: 255,
+            value: THRESHOLD_R,
+            step: 1,
+            ticksFrequency: 5,
+            tickLabelFormatFunction: function (value) {
+                if (value == 0) return value;
+                if (value == 255) return value;
+                return "";
+            }
+        }).on('change', function (event) {
+        	THRESHOLD_R = event.args.value;
+        });
+
+		$('#SLIDE_G').jqxSlider({
+            showTickLabels: true,
+            tooltip: true,
+            mode: "fixed",
+            width:'100%',
+            height: 60,
+            min: 0,
+            max: 255,
+            value: THRESHOLD_G,
+            step: 1,
+            ticksFrequency: 5,
+            tickLabelFormatFunction: function (value) {
+                if (value == 0) return value;
+                if (value == 255) return value;
+                return "";
+            }
+        }).on('change', function (event) {
+        	THRESHOLD_G = event.args.value;
+        });
+
+		$('#SLIDE_B').jqxSlider({
+            showTickLabels: true,
+            tooltip: true,
+            mode: "fixed",
+            width:'100%',
+            height: 60,
+            min: 0,
+            max: 255,
+            value: THRESHOLD_B,
+            step: 1,
+            ticksFrequency: 5,
+            tickLabelFormatFunction: function (value) {
+                if (value == 0) return value;
+                if (value == 255) return value;
+                return "";
+            }
+        }).on('change', function (event) {
+        	THRESHOLD_B = event.args.value;
+        });
+
+
+		CAMERA_STREAM	= $('#CAMERA_STREAM')[0];
+
+		CANVAS_CAMERA	= document.getElementById('CANVAS_CAMERA');
+		CTX_CAMERA		= CANVAS_CAMERA.getContext('2d');
+		
+		CANVAS_IMAGE	= document.getElementById('CANVAS_IMAGE');
+		CTX_IMAGE		= CANVAS_IMAGE.getContext('2d');
+
+
+		CANVAS_IMAGE.addEventListener('click', function () {
+			FLAG = true;
+		}, false);
+
+
+		CAMERA_SNAPSHOT_LOOP();
+
+		$('#DIV_CAM_MON_TABS').on('created', function (){
+			INIT_WIDGET_LIST_CAMERA();
+		});
+		$('#DIV_CAM_MON_TABS').jqxTabs({
+			width: '100%',
+			height: '100%',
+		}).on('selected', function (EVENT){
+			if (EVENT.args.item == 0) {
+			} else if (EVENT.args.item == 1) {
+			}
+		});
+		
+		INIT_WS_CONNECTION(LST_WS_SERVER_URL, LST_WS_CHANNEL);
+		setTimeout(function () {
+			
+		}, 100);
+	}
+
+	//creates an object with all HD & SD video ratios between two heights
+	function createAllResolutions(minHeight, maxHeight) {
+	    const ratioHD = 16 / 9;
+	    const ratioSD = 4 / 3;
+
+	    let resolutions = [],
+	        res;
+
+	    for (let y = maxHeight; y >= minHeight; y--) {
+	        //HD
+	        res = {
+	            "label": (y * ratioHD).toFixed() + "x" + y,
+	            "width": parseInt((y * ratioHD).toFixed()), //this was returning a string
+	            "height": y,
+	            "ratio": "16:9"
+	        };
+	        resolutions.push(res);
+
+	        //SD
+	        res = {
+	            "label": (y * ratioSD).toFixed() + "x" + y,
+	            "width": parseInt((y * ratioSD).toFixed()),
+	            "height": y,
+	            "ratio": "4:3"
+	        };
+	        resolutions.push(res);
+
+	        //square
+	        //noinspection JSSuspiciousNameCombination
+	        res = {
+	            "label": y + "x" + y,
+	            "width": y,
+	            "height": y,
+	            "ratio": "1:1"
+	        };
+	        resolutions.push(res);
+
+	    }
+	    console.log("resolutions length: " + resolutions.length);
+	    return resolutions;
+	}
+
+	//Variables to use in the quick scan
+	var quickScan = [
+	    {
+	        "label": "4K(UHD)",
+	        "width": 3840,
+	        "height": 2160,
+	        "ratio": "16:9"
+	    },
+	    {
+	        "label": "1080p(FHD)",
+	        "width": 1920,
+	        "height": 1080,
+	        "ratio": "16:9"
+	    },
+	    {
+	        "label": "UXGA",
+	        "width": 1600,
+	        "height": 1200,
+	        "ratio": "4:3"
+	    },
+	    {
+	        "label": "720p(HD)",
+	        "width": 1280,
+	        "height": 720,
+	        "ratio": "16:9"
+	    },
+	    {
+	        "label": "SVGA",
+	        "width": 800,
+	        "height": 600,
+	        "ratio": "4:3"
+	    },
+	    {
+	        "label": "VGA",
+	        "width": 640,
+	        "height": 480,
+	        "ratio": "4:3"
+	    },
+	    {
+	        "label": "360p(nHD)",
+	        "width": 640,
+	        "height": 360,
+	        "ratio": "16:9"
+	    },
+	    {
+	        "label": "CIF",
+	        "width": 352,
+	        "height": 288,
+	        "ratio": "4:3"
+	    },
+	    {
+	        "label": "QVGA",
+	        "width": 320,
+	        "height": 240,
+	        "ratio": "4:3"
+	    },
+	    {
+	        "label": "QCIF",
+	        "width": 176,
+	        "height": 144,
+	        "ratio": "4:3"
+	    },
+	    {
+	        "label": "QQVGA",
+	        "width": 160,
+	        "height": 120,
+	        "ratio": "4:3"
+	    }
+
+	];
+
+	
+	function FIND_CAPTURE_MODE(ID_MODE, CAMERA_SELECTED, TEST_MODES, INDEX) {
+		if (INDEX < TEST_MODES.length - 1) {
+		    let constraints = {
+		        audio: false,
+		        video: {
+		            deviceId: CAMERA_SELECTED.deviceId ? {exact: CAMERA_SELECTED.deviceId} : undefined,
+		            width: {exact: TEST_MODES[INDEX].width},    //new syntax
+		            height: {exact: TEST_MODES[INDEX].height},   //new syntax
+		            frameRate: {
+		            	ideal: 120, max: 240
+		            }
+		        }
+		    };
+		    
+	        navigator.mediaDevices.getUserMedia(constraints)
+            .then(function (mediaStream) {
+				LIST_CAPTURE_MODE.push(TEST_MODES[INDEX]);
+	            setTimeout(function () {
+	            	FIND_CAPTURE_MODE(ID_MODE, CAMERA_SELECTED, TEST_MODES, INDEX + 1);
+	            }, 10);
+            })
+            .catch((error) => {
+	            setTimeout(function () {
+	            	FIND_CAPTURE_MODE(ID_MODE, CAMERA_SELECTED, TEST_MODES, INDEX + 1);
+	            }, 10);
+//                console.log('getUserMedia error!', error);
+            });
+		} else {
+			console.log('END OF TEST');
+			INIT_WIDGET_LIST_CAPTURE_MODE('LIST_CAPTURE_MODE', LIST_CAPTURE_MODE);
+		}
+	}
+
+	var LIST_CAPTURE_MODE = [];
+	
+	function INIT_WIDGET_LIST_CAPTURE_MODE(ID_MODE, LISTRRAY) {
+//		console.log(JSON.stringify(LIST_CAPTURE_MODE, null, '\t'));
+		$("#" + ID_MODE).unbind();
+		$("#" + ID_MODE).jqxDropDownList({
+			width: '100%',
+			source: LISTRRAY,
+//			displayMember: 'label',
+			selectedIndex: 0,
+		}).on('change', function (event) {
+			var CAMERA_SELECTED;
+				CAMERA_SELECTED			= $("#LIST_CAMERA").jqxDropDownList('getSelectedItem').originalItem;
+			var CAPTURE_MODE_SELEDTED	= $(this).jqxDropDownList('getSelectedItem').originalItem;
+
+		    let constraints = {
+		        audio: false,
+		        video: {
+		            deviceId: CAMERA_SELECTED.deviceId ? {exact: CAMERA_SELECTED.deviceId} : undefined,
+		            width: {exact: CAPTURE_MODE_SELEDTED.width},    //new syntax
+		            height: {exact: CAPTURE_MODE_SELEDTED.height},  //new syntax
+		            frameRate: {
+		            	ideal: 120, max: 240
+		            }
+		        }
+		    };
+
+	        navigator.mediaDevices.getUserMedia(constraints)
+            .then(function (mediaStream) {
+		        //change the video dimensions
+		        console.log("Display size for " + CAPTURE_MODE_SELEDTED.label + ": " + CAPTURE_MODE_SELEDTED.width + "x" + CAPTURE_MODE_SELEDTED.height);
+
+		        CANVAS_CAMERA.width	= CAPTURE_MODE_SELEDTED.width;
+		        CANVAS_CAMERA.height = CAPTURE_MODE_SELEDTED.height;
+
+		        CANVAS_IMAGE.width	= CAPTURE_MODE_SELEDTED.width;
+		        CANVAS_IMAGE.height = CAPTURE_MODE_SELEDTED.height;
+
+		        CAMERA_STREAM.width = CAPTURE_MODE_SELEDTED.width;
+		        CAMERA_STREAM.height = CAPTURE_MODE_SELEDTED.height;
+		        
+		        CAMERA_STREAM.srcObject = mediaStream;
+		        
+            })
+            .catch((error) => {
+                console.log('getUserMedia error!', error);
+            });
+			
+		});
+	}
+	
+	function INIT_WIDGET_LIST_CAMERA() {
+		var LIST_CAMERA = [];
+	    //Now enumerate devices
+	    navigator.mediaDevices.enumerateDevices()
+        .then(function (deviceInfos) {
+		    let camcount = 1;   //used for labeling if the device label is not enumerated
+		    for (let i = 0; i !== deviceInfos.length; ++i) {
+		        let deviceInfo = deviceInfos[i];
+		        if (deviceInfo.kind === 'videoinput') {
+//			        console.log(deviceInfo);
+			        var TEMP_FOR_PUSH = {
+			        	deviceId:	deviceInfo.deviceId,
+			        	groupId:	deviceInfo.groupId,
+			        	kind:		deviceInfo.kind,
+			        	label:		deviceInfo.label || 'Camera ' + camcount,
+			        };
+			        LIST_CAMERA.push(TEMP_FOR_PUSH);
+		            camcount++;
+		        }
+		    }
+			$("#LIST_CAMERA").jqxDropDownList({
+				width: '100%',
+				source: LIST_CAMERA,
+				selectedIndex: 0,
+			}).on('change', function (event) {
+				FIND_CAPTURE_MODE('LIST_CAMERA', $(this).jqxDropDownList('getSelectedItem').originalItem, quickScan, 0);
+			});
+			FIND_CAPTURE_MODE('LIST_CAMERA', $("#LIST_CAMERA").jqxDropDownList('getSelectedItem').originalItem, quickScan, 0);
+
+        })
+        .catch(function (error) {
+        	console.log('navigator.mediaDevices.enumerateDevices error: ', error);
+        });
+	}
+
+
+	function MODAL_TEST() {
+		QIIPPICCESS({
+				REQ: 'api_GET_PAGE',
+				FLDR_TEMPLATE: _FLDR_TEMPLATE,
+				FILE_TEMPLATE: 'PAGES/MODAL_TEST.html',
+			},function(STR_RESULT) {
+				QIIP_MODAL_POPUP({
+					TITLE: 'MODAL TEST',
+					BACKDROP: false,
+					CSS: {
+						width: '90%',
+						height: '90%',
+					},
+					CONTENT: STR_RESULT,
+					INIT_FUNC: function (UNIQUE_ID) {
+						INIT_WIDGETS_FOR_MODAL_TEST(UNIQUE_ID);
+					}
+				});
+			}
+		);
+	}
+
+	var WS_CONNECTION = {};
+
+	function QIIP_WS_SERIAL_REQUEST(JSON_SERIAL_REQUEST) {
+		QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+			DIV_CONSOLE_SCROLL,
+			'<pre>' + JSON.stringify(JSON_SERIAL_REQUEST, null, '\t') + '</pre>',
+			'you',
+			'70%'
+		);
+
+		WS_CONNECTION.send(JSON.stringify(JSON_SERIAL_REQUEST));
+	}
+
+	function INIT_WS_CONNECTION(ws_server, ws_channel) {
+	    // if user is running mozilla then use it's built-in WebSocket
+	    window.WebSocket = window.WebSocket || window.MozWebSocket;
+	  
+	    // if browser doesn't support WebSocket, just show some notification and exit
+	    if (!window.WebSocket) {
+			QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+				DIV_CONSOLE_SCROLL,
+				'죄송합니다, 접속에 사용하신 웹 브라우저가 WebSockets 기능을 지원하지 않습니다.',
+				'you',
+				'70%'
+			);
+	      return;
+	    }
+
+	    // open connection
+	    WS_CONNECTION = new WebSocket(ws_server, ws_channel);
+
+	    WS_CONNECTION.onopen = function () {
+			QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+				DIV_CONSOLE_SCROLL,
+				sprintf( "new WebSocket('%s', '%s') 이 연결되었습니다.", ws_server, ws_channel),
+				'you',
+				'70%'
+			);
+//			QIIP_WS_SERIAL_REQUEST({CMD	: "REGISTS_MONITOR"});
+	    };
+	    
+	    WS_CONNECTION.onerror = function (error) {
+			QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+				DIV_CONSOLE_SCROLL,
+				'WebSocket 연결에 어떤 문제가 있거나 WebSocket 서버가 응답하지 않습니다.',
+				'you',
+				'70%'
+			);
+	    };
+
+	    // most important part - incoming messages
+	    WS_CONNECTION.onmessage = function (message) {
+	        // try to parse JSON message. Because we know that the server always returns
+	        // JSON this should work without any problem but we should make sure that
+	        // the massage is not chunked or otherwise damaged.
+	        try {
+	          var JSON_PARSED = JSON.parse(message.data);
+	        } catch (e) {
+				QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+					DIV_CONSOLE_SCROLL,
+					'이건 JSON 스트링이 아닌것 같아요! : ' + message.data,
+					'you',
+					'70%'
+				);
+	          return;
+	        }
+/*
+			QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+				DIV_CONSOLE_SCROLL,
+				'<pre>' + JSON.stringify(JSON_PARSED, null, '\t') + '</pre>',
+				'me',
+				'70%'
+			);
+*/
+
+	        // NOTE: if you're not sure about the JSON structure
+	        // check the server source code above
+	        if ('DUMMY' in JSON_PARSED) {
+	        } else if ('WS_CONNECTION_ID' in JSON_PARSED) {
+				JSON_LST_REQUEST.WS_CONNECTION_ID = JSON_PARSED.WS_CONNECTION_ID;
+	        } else if ('type' in JSON_PARSED) {
+	        	if (JSON_PARSED.type == 'Buffer') {
+		        	SERIAL_ON_RECEIVE(JSON_PARSED);
+	        	}
+	        } else {
+				QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+					DIV_CONSOLE_SCROLL,
+					'흠..., JSON 스트링이 이런식이면 곤란한데...  필요한 속성이 없쟎아...: ' + JSON.stringify(JSON_PARSED, null, '\t'),
+					'you',
+					'70%'
+				);
+	        }
+	    };
+
+	    WS_CONNECTION.onclose  = function () {
+			QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+				DIV_CONSOLE_SCROLL,
+				'WebSocket 연결이 끊어졌습니다. 1초 이내에 WebSocket 연결을 재시도 합니다.',
+				'you',
+				'70%'
+			);
+			//try to reconnect in 5 seconds
+//			setTimeout(function(){INIT_WS_CONNECTION(LST_WS_SERVER_URL, LST_WS_CHANNEL)}, 1000);
+	    };
+	    
+	}
+	
+</script>
+<div id="CAM_MONITOR">
+	<div style="width:100%;height:100%;" id="DIV_CAM_MON_TABS">
+		<ul>
+	        <li style="margin-left: 10px;">카메라</li>
+	        <li>기타</li>
+		</ul>
+		<div>
+			<div style="width:100%;height:5%;">
+				<table>
+					<col width="20%" />
+					<col width="10%" />
+					<col width="50%" />
+					<col width="20%" />
+					<tr>
+						<th>
+							MAX_DATA_COUNT
+						</th>
+						<td>
+							<input type="number" id="STR_MAX_DATA_COUNT" value=50 style="text-align:right;"/>
+						</td>
+						<td>
+							<div id="LIST_CAMERA"></div>
+						</td>
+						<td>
+							<div id="LIST_CAPTURE_MODE"></div>
+						</td>
+					</tr>
+				</table>
+			</div>
+			<div style="width:100%;height:8%;">
+				<table>
+					<col width="5%" />
+					<col width="20%" />
+					<col width="5%" />
+					<col width="20%" />
+					<col width="5%" />
+					<col width="20%" />
+					<col width="5%" />
+					<col width="20%" />
+					<tr>
+						<th>
+							A
+						</th>
+						<td>
+							<div id='SLIDE_A' />
+						</td>
+						<th>
+							R
+						</th>
+						<td>
+							<div id='SLIDE_R' />
+						</td>
+						<th>
+							G
+						</th>
+						<td>
+							<div id='SLIDE_G' />
+						</td>
+						<th>
+							B
+						</th>
+						<td>
+							<div id='SLIDE_B' />
+						</td>
+					</tr>
+				</table>
+			</div>
+			<div style="width:100%;height:79%;overflow:auto;">
+				<table>
+					<tr>
+						<td style="text-align:center;">
+							<video id="CAMERA_STREAM" autoplay="" style="display:none" ></video>
+							<canvas id="CANVAS_CAMERA" style="display:none"></canvas>
+							<canvas id="CANVAS_IMAGE"></canvas>
+						</td>
+					</tr>
+				</table>
+			</div>
+			<div style="width:100%;height:8%;">
+				<table>
+					<col width="5%" />
+					<col width="20%" />
+					<col width="5%" />
+					<col width="20%" />
+					<col width="5%" />
+					<col width="20%" />
+					<col width="5%" />
+					<col width="20%" />
+					<tr>
+						<th>
+							X<br/>MIN
+						</th>
+						<td>
+							<div id='SLIDE_X_MIN' />
+						</td>
+						<th>
+							X<br/>MAX
+						</th>
+						<td>
+							<div id='SLIDE_X_MAX' />
+						</td>
+						<th>
+							Y<br/>MIN
+						</th>
+						<td>
+							<div id='SLIDE_Y_MIN' />
+						</td>
+						<th>
+							Y<br/>MAX
+						</th>
+						<td>
+							<div id='SLIDE_Y_MAX' />
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		<div>
+			<div style="width:50%;height:100%;float:left;">
+			</div>
+			<div style="width:50%;height:100%;float:left;overflow:auto;" id="DIV_DIA_MON_LOG">
+			</div>
+		</div>
+	</div>
+</div>

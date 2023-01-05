@@ -1,0 +1,220 @@
+<script>
+var OBJ_POPUP_DIALOG_FOR_REGIST_LOCATION = null;
+var IN_DOING_BTN_POPUP = false;
+function INIT_WIDGETS_FOR_POPUP_REGIST_LOCATION(OBJ_DIALOG) {
+	OBJ_POPUP_DIALOG_FOR_REGIST_LOCATION = OBJ_DIALOG;
+	$(".BTN_POPUP").jqxButton({
+		width: '100%',
+		height: '100%'
+	}).on('click', function (e) {
+		if (IN_DOING_BTN_POPUP) return; IN_DOING_BTN_POPUP = true;
+		var ID = $(this).attr('ID');
+		if (ID == 'DUMMY') {
+		} else if (ID == 'BTN_POPUP_CAMERA_CAPTURE') {
+			DO_POPUP_CAMERA_CAPTURE();
+		} else if (ID == 'BTN_POPUP_TRY_SET_LED_LAMP') {
+			DO_POPUP_TRY_SET_LED_LAMP();
+		} else if (ID == 'BTN_POPUP_REGIST_CANCLE') {
+			CLOSE_POPUP_FOR_REGIST_LOCATION();
+		}
+		setTimeout(function () {
+			IN_DOING_BTN_POPUP = false;
+		}, 100);
+	});
+}
+
+function CLOSE_POPUP_FOR_REGIST_LOCATION() {
+	if (OBJ_POPUP_DIALOG_FOR_REGIST_LOCATION != null) {
+		QIIP_JQX_CLOSE_WINDOW(OBJ_POPUP_DIALOG_FOR_REGIST_LOCATION);
+	}
+}
+
+function DO_POPUP_CAMERA_CAPTURE() {
+	QIIP_APPS_NATIVE_ACCESS({
+		REQUEST: 'SELECT_PHOTO_FROM_CAMERA',
+		SCRIPT_ON_CAMERA : {
+			SCRIPT_ON_CAPTURE : "DISPLAY_CAMERA_CAPTURED_PHOTO"
+		},
+		FULL_CONTENTS: true,
+	}, function (STR_RESULT) {
+		var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+		if (JSON_RESULT.STATUS != 200) {
+			QIIP_POPUP_FOR_YES_NO(
+				_RS.PHONE_INFO.APP_NAME + ' 안내',[
+					_RS.PHONE_INFO.APP_NAME + ' 를 정상적으로 이용하시려면...',
+					'요청드린 권한을 허용하셔야 합니다.',
+					'권한 허용을 재시도 하시겠습니까?',
+				], function () {
+					DO_POPUP_CAMERA_CAPTURE();
+				}, function () {
+				},
+				95,
+				50
+			);
+		} else {
+		}
+	});
+}
+
+function DISPLAY_CAMERA_CAPTURED_PHOTO(STR_JSON_ARGS) {
+	var JSON_ARGS = JSON.parse(STR_JSON_ARGS);
+	var STR_HTML = sprintf('<img class="CAMERA_PHOTOS" width="%s" src="%s" PATH="%s" />', '100%', JSON_ARGS.SRC, JSON_ARGS.PATH);
+	$('#CAMERA_CAPTURED_PHOTOS').append(STR_HTML);
+}
+
+function MY_POPUP_FOR_ALERT(TITLE, ARRAY_MESSAGE, FUNC_OK) {
+	QIIP_POPUP_FOR_ALERT(TITLE,ARRAY_MESSAGE,FUNC_OK,95,95,undefined,false,'COMMONS/POPUP/POPUP_FOR_ALERT.html');
+}
+
+function DO_POPUP_TRY_SET_LED_LAMP() {
+	var CAMERA_PHOTOS = [];
+	$('#CAMERA_CAPTURED_PHOTOS').find('.CAMERA_PHOTOS').each(function () {
+		CAMERA_PHOTOS.push({PATH: $(this).attr('PATH')});
+	});
+	var JSON_ARGS = {
+		REQ: 'api_SET_LED_LAMP',
+		SET_LED_ID: $('#TEXT_LED_LAMP_UNIQUE_ID').val(),
+		SET_PLACE_COMMENT: $('#TEXT_LED_LAMP_PLACE_COMMENT').val(),
+		SET_ADDR: $('#TEXT_LOCATION_ADDRESS').html(),
+		SET_GPS: {
+			Longitude: parseFloat($('#TEXT_LOCATION_Longitude').html()),
+			Latitude:  parseFloat($('#TEXT_LOCATION_Latitude').html())
+		},
+		CAMERA_PHOTOS: CAMERA_PHOTOS,
+	};
+	var FLAG_ERROR = false;
+	if (JSON_ARGS.SET_LED_ID.length < 1) {
+		MY_POPUP_FOR_ALERT(
+			'안내',[
+				'LED 램프 고유번호를 입력해 주세요.'
+			],
+			function () {
+			}
+		);
+		FLAG_ERROR = true;
+	}
+	if ((!FLAG_ERROR) && (JSON_ARGS.SET_PLACE_COMMENT.length < 1)) {
+		MY_POPUP_FOR_ALERT(
+			'안내',[
+				'LED 램프 설치장소 명칭을 입력해 주세요.'
+			],
+			function () {
+			}
+		);
+		FLAG_ERROR = true;
+	}
+	if ((!FLAG_ERROR) && (JSON_ARGS.CAMERA_PHOTOS.length < 1)) {
+		MY_POPUP_FOR_ALERT(
+			'안내',[
+				'LED 램프 설치 사진을 촬영해 주세요!'
+			],
+			function () {
+			}
+		);
+		FLAG_ERROR = true;
+	}
+	if (!FLAG_ERROR) {
+		QIIP_APPS_NATIVE_ACCESS({
+				REQUEST: 'HTTP_ACCESS',
+				HttpAccessInformation: {
+					SERVER_URL: _API_SERVER_URL,
+					PARAMS: JSON_ARGS,
+					ATTACHES: CAMERA_PHOTOS,
+				},
+//				FULL_CONTENTS: true,
+			}, function (STR_RESULT) {
+				var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+				if (JSON_RESULT.STATUS == 200) {
+					MY_POPUP_FOR_ALERT(
+						'안내',[
+							'LED 램프 설치 등록을 완료했습니다.'
+						],
+						function () {
+							CLOSE_POPUP_FOR_REGIST_LOCATION();
+						}
+					);
+				} else {
+					MY_POPUP_FOR_ALERT(
+						'안내',[
+							'아래 오류로 인하여 설치 등록이 실패되었습니다.',
+							JSON_RESULT.STATUS_HELP
+						],
+						function () {
+						}
+					);
+				}
+			}
+		);
+	}
+}
+
+
+</script>
+<div class="qiip_box">
+	<div style="width:100%; height:25%;">
+		<table>
+			<col width="20%"/>
+			<tr>
+				<th>주소</th>
+				<td id="TEXT_LOCATION_ADDRESS">{{LOCATION_INFO['주소']}}</td>
+			</tr>
+<!--
+			<tr>
+				<th>상호</th>
+				<td id="TEXT_LOCATION_NAME">{{LOCATION_INFO['상호']}}</td>
+			</tr>
+-->
+			<tr>
+				<th>경도</th>
+				<td id="TEXT_LOCATION_Longitude">{{LOCATION_INFO['경도']}}</td>
+			</tr>
+			<tr>
+				<th>위도</th>
+				<td id="TEXT_LOCATION_Latitude">{{LOCATION_INFO['위도']}}</td>
+			</tr>
+		</table>
+	</div>
+	<div style="width:100%; height:14%;">
+		<table>
+			<col width="25%"/>
+			<tr>
+				<th>LED 램프<br/>고유 번호</th>
+				<td>
+					<input 
+						style="width:100%;height:100%;box-sizing:border-box; border: solid gray 1px; text-align:center;"
+						type="text"
+						id="TEXT_LED_LAMP_UNIQUE_ID"
+						placeholder="LED 램프 고유번호 입력!"/>
+				</td>
+			</tr>
+			<tr>
+				<th>LED 램프<br/>설치 장소 명칭</td></th>
+				<td>
+					<input 
+						style="width:100%;height:100%;box-sizing:border-box; border: solid gray 1px; text-align:center;"
+						type="text"
+						id="TEXT_LED_LAMP_PLACE_COMMENT"
+						placeholder="LED 램프 설치장소 명칭 입력!"/>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div style="width:100%; height:7%;" >
+		<table>
+			<tr>
+				<td><button class="BTN_POPUP" id="BTN_POPUP_CAMERA_CAPTURE"    >사진 촬영 (여러장 가능)</button></td>
+			</tr>
+		</table>
+	</div>
+	<div style="width:100%; height:47%; overflow:auto;"  id="CAMERA_CAPTURED_PHOTOS">
+	</div>
+	<div style="width:100%; height:7%;">
+		<table>
+			<col width="50%"/>
+			<tr>
+				<td><button class="BTN_POPUP" id="BTN_POPUP_TRY_SET_LED_LAMP">등록</button></td>
+				<td><button class="BTN_POPUP" id="BTN_POPUP_REGIST_CANCLE">취소</button></td>
+			</tr>
+		</table>
+	</div>
+</div>

@@ -1,0 +1,76 @@
+{
+	"CHROME_ONLY" : false,
+	"LOGIN_IDPW" : true,
+
+	"IVR_SERVER_IPS" : [
+		{
+			"SERVER_NAME"	: "ASTERISK_43",
+			"SERVER_IP"		: "211.61.220.43"
+		},
+		{
+			"SERVER_NAME"	: "ASTERISK_44",
+			"SERVER_IP"		: "211.61.220.44"
+		},
+		{
+			"SERVER_NAME"	: "ASTERISK_45",
+			"SERVER_IP"		: "211.61.220.45"
+		},
+		{
+			"SERVER_NAME"	: "ASTERISK_49",
+			"SERVER_IP"		: "211.61.220.49"
+		},
+		{
+			"SERVER_NAME"	: "ASTERISK_50",
+			"SERVER_IP"		: "211.61.220.50"
+		}
+	],
+
+	"IVR_LEGACY_SERVER_IPS" : [
+		{
+			"SERVER_NAME"	: "LEGACY_47",
+			"SERVER_IP"		: "211.61.220.47"
+		},
+		{
+			"SERVER_NAME"	: "LEGACY_48",
+			"SERVER_IP"		: "211.61.220.48"
+		}
+	],
+
+	"INITIAL_POST_INFORMATION" : {
+		"GCM_SENDER_ID" : "64222680140",
+		"GCM_API_KEY" : "AIzaSyDNiqGxlZLD2PHeHMMHxUa2DiFT1Wl_PnY"
+	},
+
+	"SIDEMENU": {
+		"HEADER" : "메뉴",
+		"FILE_TEMPLATE_" : "PAGES/SIDEMENU.html",
+		"FILE_TEMPLATE" : "PAGES/SIDEMENU_BOOTSTRAP.html",
+		"MENUITEMS" : [
+			{
+				"MENU_STRING"		: "IVR 통화 상황판",
+				"MENU_CONTENTS"		: "PAGES/APP_CONTENTS_IVR_MONITOR.html",
+				"MENU_INIT_FUNC"	: "INIT_WIDGETS_FOR_MENU_CONTENTS();"
+			},
+			{
+				"MENU_STRING"		: "IVR 통화 목록",
+				"MENU_CONTENTS"		: "PAGES/APP_CONTENTS_IVR_CALL_LIST.html",
+				"MENU_INIT_FUNC"	: "INIT_WIDGETS_FOR_MENU_CONTENTS();"
+			},
+			{
+				"MENU_STRING"		: "LEGACY IVR 통화 상황판",
+				"MENU_CONTENTS"		: "PAGES/APP_CONTENTS_IVR_LEGACY_MONITOR.html",
+				"MENU_INIT_FUNC"	: "INIT_WIDGETS_FOR_MENU_CONTENTS();"
+			}
+		],
+		"DESKTOP_MENU_USERS" : [
+			"01077743438"
+		],
+		"MENUITEMS_FOR_DESKTOP" : [
+			{
+				"MENU_STRING"		: "데스크탑 기능",
+				"MENU_CONTENTS"		: "PAGES/CONTENTS_DESKTOP.html",
+				"MENU_INIT_FUNC"	: "INIT_WIDGETS_FOR_MENU_CONTENTS();"
+			}
+		]
+	}
+}

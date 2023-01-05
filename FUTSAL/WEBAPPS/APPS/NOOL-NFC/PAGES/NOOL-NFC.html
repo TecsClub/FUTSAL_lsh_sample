@@ -1,0 +1,585 @@
+<style>
+	.NOOL_NFC 			{width:100%; height:100%;}
+	.NOOL_NFC table		{width:100%; height:100%; font-size:100%; border-collapse: separate; border-spacing: 1px; line-height: 100%;}
+	.NOOL_NFC table th	{font-weight:bold; text-align: center; white-space:normal; vertical-align: middle; word-break:break-all; word-wrap:break-all; background:#4789b7; color:white; }
+	.NOOL_NFC table td	{text-decoration:none; text-align: left;   white-space:normal; vertical-align: middle; word-break:break-all; word-wrap:break-all; background:#eee; padding:0 10px;}
+</style>
+
+<script>
+	var NOOL_NFC_CONFIG_DEFAULT = {
+		NFC_FUNCTION: '',
+		NFC_MATCHING_ID: '',
+		NFC_MATCHING_MODE: false,
+		NFC_MATCHING_CNT: 1,
+	};
+	var NFC_TAGGING_MODE = 'NORMAL';
+	function QIIP_SIDEMENU_INIT_WIDGETS() {
+		$(".EVENT_NOOL_NFC").on('click', function () {
+			var ID = $(this).attr('ID');
+			if (ID == 'DUMMY') {
+			} else if (ID == 'BTN_SET_NFC_FUNCTION') {
+				MODAL_FOR_SET_NFC_FUNCTION();
+			} else if (ID == 'BTN_NFC_MATCH_ID_REGIST') {
+				MODAL_FOR_NFC_MATCH_ID_REGIST();
+			} else if (ID == 'BTN_NFC_MATCH_ID_CLEAR') {
+				$('#BTN_NFC_MODE_MATCHING').jqxSwitchButton('unCheck');
+				_RS.NOOL_NFC_CONFIG.NFC_MATCHING_ID = '';
+				_RS.NOOL_NFC_CONFIG.NFC_MATCHING_MODE = false;
+				PUT_NOOL_NFC_CONFIG();
+				_RS.$apply();
+			} else if (ID == 'BTN_NFC_MATCH_COUNT_UP') {
+				_RS.NOOL_NFC_CONFIG.NFC_MATCHING_CNT += 1;
+				PUT_NOOL_NFC_CONFIG();
+				_RS.$apply();
+			} else if (ID == 'BTN_NFC_MATCH_COUNT_DOWN') {
+				if (_RS.NOOL_NFC_CONFIG.NFC_MATCHING_CNT > 1) {
+					_RS.NOOL_NFC_CONFIG.NFC_MATCHING_CNT -= 1;
+					PUT_NOOL_NFC_CONFIG();
+					_RS.$apply();
+				}
+			}
+		});
+		
+		TOGGLE_SIDEMENU(function () {
+			$('#MENU_CONTENTS').css('height', ($('#SIDEMENU_PAGE').height() - 132) / $('#SIDEMENU_PAGE').height() * 100 + '%');
+			GET_NOOL_NFC_CONFIG();
+			SET_SCRIPT_ON_BACKPRESSED();
+			INIT_NFC();
+			CREATE_NFC_TAG_HISTORY_TABLE();
+			CREATE_NFC_TAG_MATCHING_TABLE();
+		});
+	}
+	
+	function SET_SCRIPT_ON_BACKPRESSED() {
+		QIIP_APPS_NATIVE_ACCESS({
+			REQUEST: 'SET_SCRIPT_ON_BACKPRESSED',
+			SCRIPT_ON_BACKPRESSED: {
+				SCRIPT_ON_BACKPRESSED: 'SCRIPT_ON_BACKPRESSED'
+			},
+			FULL_CONTENTS: true,
+		}, function (RESULT) {
+			
+		});
+	}
+	
+	function SCRIPT_ON_BACKPRESSED() {
+		QIIP_APP_ALERT({
+			TITLE: _RS.PHONE_INFO.APP_NAME + ' 종료 확인!',
+			MESSAGES: [
+				_RS.PHONE_INFO.APP_NAME + ' 를 종료 하시겠습니까?'
+			],
+			FILE_TEMPLATE: 'POPUP/YES_NO.html',
+		},function () {
+			QIIP_APPS_NATIVE_ACCESS({
+				REQUEST: 'APP_FINISH',
+			}, function (RESULT) {
+			});
+		}, function () {
+		});
+	}
+	
+	function INIT_NFC() {
+		QIIP_APPS_NATIVE_ACCESS({
+			REQUEST: 'NFC_CONTROL',
+			WHAT: 'LAUNCH_NFC_SETUP_SCREEN',
+			WHAT: 'INIT_NFC',
+			FULL_CONTENTS: true,
+		}, function (RESULT) {
+//			console.log(JSON.stringify(RESULT, null, '\t'));
+			if (RESULT.STATUS == 'NFC_ACTIVE_AND_READY') {
+				QIIP_APP_ALERT([
+					RESULT.STATUS_MSG
+				],function () {
+					NFC_SET_CALLBACK_SCRIPT();
+				},function () {
+				},2000
+				);
+			} else if (RESULT.STATUS == 'NFC_NOT_ENABLED') {
+				QIIP_APP_ALERT({
+					TITLE: 'NFC 기능 활성화 필요!',
+					MESSAGES: [
+						RESULT.STATUS_MSG,
+						'NFC 기능을 활성화 하시겠습니까?'
+					],
+					FILE_TEMPLATE: 'POPUP/YES_NO.html',
+				},function () {
+					QIIP_APPS_NATIVE_ACCESS({
+						REQUEST: 'NFC_CONTROL',
+						WHAT: 'LAUNCH_NFC_SETUP_SCREEN',
+						FULL_CONTENTS: true,
+					}, function (RESULT) {
+					});
+				}, function () {
+				});
+			} else {
+				QIIP_APP_ALERT([
+					RESULT.STATUS_MSG
+				],function () {
+				},function () {
+				});
+			}
+		});
+	}
+
+	function NFC_SET_CALLBACK_SCRIPT() {
+		QIIP_APPS_NATIVE_ACCESS({
+			REQUEST: 'NFC_CONTROL',
+			WHAT: 'SET_CALLBACK_SCRIPT',
+			CALLBACK_SCRIPT: {
+			    ON_NFC_TAG_DTECTED:	'ON_NFC_TAG_DTECTED',
+			},
+//			FULL_CONTENTS: true,
+		}, function (RESULT) {
+			INIT_NAUTES_SoundVisualizer_NFC();
+		});
+	}
+	
+	function ON_NFC_TAG_DTECTED(STR_JSON_BASE64) {
+		var objParam = JSON.parse(Base64.decode(STR_JSON_BASE64));
+//		console.log(JSON.stringify(objParam));
+		var JSON_NFC_TAG_INFO = objParam.CALLBACK_PARAMS;
+//		console.log(JSON.stringify(JSON_NFC_TAG_INFO));
+
+		if ('NFC_DETECTED' in _RS) {
+			if (_RS.NFC_DETECTED.ID == JSON_NFC_TAG_INFO.ID) {
+				if ((new Date().getTime() - _RS.NFC_DETECTED.TIME.getTime()) < 10000) {
+					FLAG_DB_INSERT = false;
+				}
+			}
+		}
+		_RS.NFC_DETECTED = {
+			ID: JSON_NFC_TAG_INFO.ID,
+			TIME: new Date()
+		}; _RS.$apply();
+
+		if (NFC_TAGGING_MODE == '') {
+		} else if (NFC_TAGGING_MODE == 'NORMAL') {
+			var FLAG_DB_INSERT = true;
+			if (FLAG_DB_INSERT) {
+				PLAY_TTS(sprintf('%s', _RS.NOOL_NFC_CONFIG.NFC_FUNCTION));
+				INSERT_NFC_TAG_HISTORY({
+					NFC_FUNCTION:	$('#NFC_FUNCTION').val(),
+					NFC_TAG_ID:		JSON_NFC_TAG_INFO.ID,
+					TIME_VALUE:		_RS.NFC_DETECTED.TIME.getTime(),
+					STR_DATE:		_RS.NFC_DETECTED.TIME.format('%Y-%m-%d %H:%M:%S')
+				});
+			} else {
+				PLAY_TTS(sprintf('%s 에 동일한 NFC 태그 %s 를 인식했습니다.', _RS.NOOL_NFC_CONFIG.NFC_FUNCTION, JSON_NFC_TAG_INFO.ID.split('').join(' ')));
+			}
+		} else if (NFC_TAGGING_MODE == 'MATCH_ID_REGIST') {
+			$('#MODAL_NFC_MATCHING_ID').val(JSON_NFC_TAG_INFO.ID);
+		} else if (NFC_TAGGING_MODE == 'NFC_MATCHING') {
+			if (_RS.NOOL_NFC_CONFIG.NFC_MATCHING_ID == JSON_NFC_TAG_INFO.ID) {
+				PLAY_TTS(sprintf('일치하는 태그 입니다.'));
+				setTimeout(function () {
+					MATCHING_TAG_APPEND();
+//					CHECK_ALL_MATCHING_VIA_DB();
+				}, 2500);
+			} else {
+				PLAY_TTS(sprintf('일치하지 않는 태그 입니다.'));
+				setTimeout(function () {
+					MATCHING_TAG_REMOVE();
+//					CHECK_ALL_MATCHING_VIA_DB();
+				}, 2500);
+			}
+		}
+	}
+
+	function MATCHING_TAG_APPEND() {
+		var STR_SQL  = '';
+			STR_SQL += 'SELECT * FROM  NFC_TAG_MATCHING ';
+			STR_SQL += sprintf("	WHERE NFC_FUNCTION = '%s'", _RS.NOOL_NFC_CONFIG.NFC_FUNCTION);
+			STR_SQL += '	LIMIT 1';
+
+		QIIP_API_ACCESS({
+			REQ: 'api_DB_ACCESS',
+			STR_SQL_BASE64: Base64.encode(STR_SQL),
+		},function(STR_RESULT) {
+			var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+			if (JSON_RESULT instanceof Array) {
+				var JSON_ARRAY;
+				var STR_SQL  = '';
+				if (JSON_RESULT.length > 0) {
+					console.log('JSON_RESULT : ' + JSON.stringify(JSON_RESULT, null, '\t'));
+					var JSON_RECORD;
+					JSON_RESULT.forEach(function (ONE_ITEM) {
+						JSON_RECORD = ONE_ITEM;
+					});
+
+					JSON_ARRAY = JSON.parse(JSON_RECORD.JSON_NFC_TAGS);
+
+					var IS_EXIST = false;
+					JSON_ARRAY.forEach(function (ONE_ITEM) {
+						if (ONE_ITEM == _RS.NOOL_NFC_CONFIG.NFC_MATCHING_ID) {
+							IS_EXIST = true;
+						}
+					});
+
+					if (!IS_EXIST) {
+						JSON_ARRAY.push(_RS.NOOL_NFC_CONFIG.NFC_MATCHING_ID);
+
+						STR_SQL += 'UPDATE NFC_TAG_MATCHING ';
+						STR_SQL += sprintf("SET JSON_NFC_TAGS = '%s' ", JSON.stringify(JSON_ARRAY, null, '\t'));
+						STR_SQL += sprintf("WHERE ID = '%s'", JSON_RECORD.ID);
+						STR_SQL += ') VALUES (';
+						STR_SQL += sprintf("'%s', '%s')",
+										_RS.NOOL_NFC_CONFIG.NFC_FUNCTION,
+										JSON.stringify(JSON_ARRAY)
+								   );
+						QIIP_API_ACCESS({
+							REQ: 'api_DB_ACCESS',
+							STR_SQL_BASE64: Base64.encode(STR_SQL),
+						},function(STR_RESULT) {
+							CHECK_ALL_MATCHING_VIA_DB();
+						});
+					} else {
+						CHECK_ALL_MATCHING_VIA_DB();
+					}
+				} else {
+					JSON_ARRAY = [
+						_RS.NOOL_NFC_CONFIG.NFC_MATCHING_ID
+					];
+					STR_SQL += 'INSERT INTO NFC_TAG_MATCHING (';
+					STR_SQL += 'NFC_FUNCTION, ';
+					STR_SQL += 'JSON_NFC_TAGS';
+					STR_SQL += ') VALUES (';
+					STR_SQL += sprintf("'%s', '%s')",
+									_RS.NOOL_NFC_CONFIG.NFC_FUNCTION,
+									JSON.stringify(JSON_ARRAY)
+							   );
+				}
+
+				QIIP_API_ACCESS({
+					REQ: 'api_DB_ACCESS',
+					STR_SQL_BASE64: Base64.encode(STR_SQL),
+				},function(STR_RESULT) {
+					CHECK_ALL_MATCHING_VIA_DB();
+				});
+
+			}
+		});
+	}
+
+	function MATCHING_TAG_REMOVE() {
+		
+	}
+	
+	function CHECK_ALL_MATCHING_VIA_DB() {
+		var STR_SQL  = '';
+			STR_SQL += 'SELECT * FROM  NFC_TAG_MATCHING ';
+			STR_SQL += sprintf("	WHERE NFC_FUNCTION = '%s'", _RS.NOOL_NFC_CONFIG.NFC_FUNCTION);
+			STR_SQL += '	LIMIT 1';
+
+		QIIP_API_ACCESS({
+			REQ: 'api_DB_ACCESS',
+			STR_SQL_BASE64: Base64.encode(STR_SQL),
+		},function(STR_RESULT) {
+			var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+			if (JSON_RESULT instanceof Array) {
+				var JSON_ARRAY;
+				var STR_SQL  = '';
+				if (JSON_RESULT.length > 0) {
+					if (JSON_RESULT.length >= _RS.NOOL_NFC_CONFIG.NFC_MATCHING_CNT) {
+						PLAY_TTS(sprintf('%s 에 대한 태그 %d 개 일치되어 미션을 완료하였습니다.',
+								 	_RS.NOOL_NFC_CONFIG.NFC_FUNCTION,
+								 	_RS.NOOL_NFC_CONFIG.NFC_MATCHING_CNT
+								 )
+						);
+					} else {
+						PLAY_TTS(sprintf('%s 에 대한 태그 %d 개 일치되었고, %d 개 남았습니다.',
+								 	_RS.NOOL_NFC_CONFIG.NFC_FUNCTION,
+								 	JSON_RESULT.length,
+								 	_RS.NOOL_NFC_CONFIG.NFC_MATCHING_CNT - JSON_RESULT.length
+								 )
+						);
+					}
+				}
+			}
+		});
+	}
+
+	function CREATE_NFC_TAG_MATCHING_TABLE() {
+		var STR_SQL  = '';
+			STR_SQL += 'CREATE TABLE IF NOT EXISTS NFC_TAG_MATCHING (';
+			STR_SQL += '	ID				INT(11) UNSIGNED AUTO_INCREMENT,';
+			STR_SQL += '	NFC_FUNCTION	VARCHAR(64) NOT NULL,';
+			STR_SQL += '	JSON_NFC_TAGS	MEDIUMTEXT,';
+			STR_SQL += '	PRIMARY KEY (ID),';
+			STR_SQL += '	INDEX (NFC_FUNCTION)';
+			STR_SQL += ') DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;';
+
+		QIIP_API_ACCESS({
+			REQ: 'api_DB_ACCESS',
+			STR_SQL_BASE64: Base64.encode(STR_SQL),
+		},function(STR_RESULT) {
+		});
+	}
+
+	function CREATE_NFC_TAG_HISTORY_TABLE() {
+		var STR_SQL  = '';
+			STR_SQL += 'CREATE TABLE IF NOT EXISTS NFC_TAG_HISTORY (';
+			STR_SQL += '	ID				INT(11) UNSIGNED AUTO_INCREMENT,';
+			STR_SQL += '	NFC_FUNCTION	VARCHAR(64) NOT NULL,';
+			STR_SQL += '	NFC_TAG_ID 		VARCHAR(64) NOT NULL,';
+			STR_SQL += '	TIME_VALUE 		VARCHAR(64) NOT NULL,';
+			STR_SQL += '	STR_DATE		VARCHAR(64) NOT NULL,';
+			STR_SQL += '	PRIMARY KEY (ID),';
+			STR_SQL += '	INDEX (NFC_FUNCTION, STR_DATE)';
+			STR_SQL += ') DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;';
+
+		QIIP_API_ACCESS({
+			REQ: 'api_DB_ACCESS',
+			STR_SQL_BASE64: Base64.encode(STR_SQL),
+		},function(STR_RESULT) {
+		});
+	}
+
+	function INSERT_NFC_TAG_HISTORY(args_TAG_INFO) {
+
+		PUT_NOOL_NFC_CONFIG('NFC_FUNCTION', args_TAG_INFO.NFC_FUNCTION);
+		
+		var STR_SQL  = '';
+			STR_SQL += 'INSERT INTO NFC_TAG_HISTORY (';
+			STR_SQL += 'NFC_FUNCTION, ';
+			STR_SQL += 'NFC_TAG_ID, ';
+			STR_SQL += 'TIME_VALUE, ';
+			STR_SQL += 'STR_DATE';
+			STR_SQL += ') VALUES (';
+			STR_SQL += sprintf("'%s', '%s', '%d', '%s')",
+							args_TAG_INFO.NFC_FUNCTION,
+							args_TAG_INFO.NFC_TAG_ID,
+							args_TAG_INFO.TIME_VALUE,
+							args_TAG_INFO.STR_DATE
+					   );
+		QIIP_API_ACCESS({
+			REQ: 'api_DB_ACCESS',
+			STR_SQL_BASE64: Base64.encode(STR_SQL),
+		},function(STR_RESULT) {
+		});
+	}
+
+	var _NAUTES_SoundVisualizer_NFC = undefined;
+	function INIT_NAUTES_SoundVisualizer_NFC() {
+		_NAUTES_SoundVisualizer_NFC = new NAUTES_SoundVisualizer({
+			DOM_ID_FOR_RENDERING: 'DIV_NAUTES_SoundVisualizer_NFC',
+			WAVE_DISPLAY_ONLY: true,
+			TRACK_CONTROLLER_ENABLE: false,
+			EDITABLE: false,
+//			CTL_BUTTON: false,
+			MAX_PLAY_SPEED: 400,
+		});
+	}
+	
+	function PLAY_TTS(STR_TTS_TEXT) {
+		if (_NAUTES_SoundVisualizer_NFC != undefined) {
+			_NAUTES_SoundVisualizer_NFC.WAE_EE.emit("stop");
+			_NAUTES_SoundVisualizer_NFC.WAE_EE.emit("clear");
+			var JSON_TTS = {
+				REQUEST: 'TTS_VW',
+				TTS_TEXT: STR_TTS_TEXT
+			};
+			_NAUTES_SoundVisualizer_NFC.WAE_PLAYLIST.load([{
+					src: sprintf('http://pbx.q1p.win:8080/API/?JSON=%s', JSON.stringify(JSON_TTS))
+			}]).then(function() {
+				_NAUTES_SoundVisualizer_NFC.WAE_EE.emit("play");		
+			});
+		}
+	}
+
+	function PUT_NOOL_NFC_CONFIG() {
+		QIIP_APPS_NATIVE_ACCESS({
+			REQUEST: 'PUT_PHONE_CONFIG',
+			CONFIG_KEY: 'NOOL_NFC_CONFIG',
+			CONFIG_VALUE: JSON.stringify(_RS.NOOL_NFC_CONFIG),
+		}, function (RESULT) {
+		});
+	}
+	
+	function GET_NOOL_NFC_CONFIG() {
+		QIIP_APPS_NATIVE_ACCESS({
+			REQUEST: 'GET_PHONE_CONFIG',
+			CONFIG_KEY: 'NOOL_NFC_CONFIG',
+		}, function (STR_RESULT) {
+			var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+			if (JSON_RESULT != undefined) {
+				_RS.NOOL_NFC_CONFIG = JSON_RESULT;
+			} else {
+				_RS.NOOL_NFC_CONFIG = NOOL_NFC_CONFIG_DEFAULT;
+				PUT_NOOL_NFC_CONFIG();
+			}
+			
+			if (_RS.NOOL_NFC_CONFIG.NFC_MATCHING_MODE) {
+				NFC_TAGGING_MODE = 'NFC_MATCHING';
+			}
+
+			$('#BTN_NFC_MODE_MATCHING').unbind();
+			$('#BTN_NFC_MODE_MATCHING').jqxSwitchButton({
+				height: 45, width: 100,  checked: _RS.NOOL_NFC_CONFIG.NFC_MATCHING_MODE
+			}).on('change', function (event) {
+				if (event.args.check) {
+					if (_RS.NOOL_NFC_CONFIG.NFC_MATCHING_ID.length < 1) {
+						$(this).jqxSwitchButton('unCheck');
+						PLAY_TTS('NFC 매칭 기능을 활성화 하시려면 매칭 NFC ID 등록을 먼저 처리해야 합니다!');
+						QIIP_APP_ALERT([
+							'NFC 매칭 기능을 활성화 하시려면,...',
+							'매칭 NFC ID 등록을 먼저 처리해야 합니다!'
+						],function () {
+						},function () {
+						},5000
+						);
+					} else {
+						_RS.NOOL_NFC_CONFIG.NFC_MATCHING_MODE = event.args.check;
+					}
+				} else {
+					_RS.NOOL_NFC_CONFIG.NFC_MATCHING_MODE = event.args.check;
+				}
+
+				PUT_NOOL_NFC_CONFIG();
+
+				if (_RS.NOOL_NFC_CONFIG.NFC_MATCHING_MODE) {
+					NFC_TAGGING_MODE = 'NFC_MATCHING';
+				} else {
+					NFC_TAGGING_MODE = 'NORMAL';
+				}
+				
+			});
+			console.log(JSON.stringify(_RS.NOOL_NFC_CONFIG));
+		});
+	}
+	
+	function MODAL_FOR_NFC_MATCH_ID_REGIST() {
+		QIIP_API_ACCESS({
+				REQ: 'api_GET_PAGE',
+				FLDR_TEMPLATE: _FLDR_TEMPLATE,
+				FILE_TEMPLATE: 'PAGES/MODAL_FOR_NFC_MATCH_ID_REGIST.html',
+			},function(STR_RESULT) {
+				QIIP_APP_MODAL_POPUP({
+					TITLE: '매칭 NFC ID 등록',
+					BACKDROP: false,
+					CSS: {
+						width: '95%',
+						height: 200,
+					},
+					CONTENT: STR_RESULT,
+					INIT_FUNC: function (UNIQUE_ID) {
+						INIT_WIDGETS_FOR_NFC_MATCH_ID_REGIST(UNIQUE_ID);
+					}
+				});
+			}
+		);
+	}
+
+	function MODAL_FOR_SET_NFC_FUNCTION() {
+		QIIP_API_ACCESS({
+				REQ: 'api_GET_PAGE',
+				FLDR_TEMPLATE: _FLDR_TEMPLATE,
+				FILE_TEMPLATE: 'PAGES/MODAL_FOR_SET_NFC_FUNCTION.html',
+			},function(STR_RESULT) {
+				QIIP_APP_MODAL_POPUP({
+					TITLE: 'NFC 기능문구 수정',
+					BACKDROP: false,
+					CSS: {
+						width: '95%',
+						height: 200,
+					},
+					CONTENT: STR_RESULT,
+					INIT_FUNC: function (UNIQUE_ID) {
+						INIT_WIDGETS_FOR_SET_NFC_FUNCTION(UNIQUE_ID);
+					}
+				});
+			}
+		);
+	}
+	
+</script>
+<div class="NOOL_NFC">
+	<div style="height:15%;" id="DIV_NAUTES_SoundVisualizer_NFC">
+	</div>
+	<div style="height:10%;">
+		<table>
+			<col width="25%" />
+			<col width="35%" />
+			<col width="40%" />
+			<tr>
+				<th>
+					최종 인식<br/>NFC ID
+				</th>
+				<td style="text-align:center">
+					{{NFC_DETECTED.TIME.format('%Y-%m-%d')}}<br/>
+					{{NFC_DETECTED.TIME.format('%H:%M:%S.%L')}}
+				</td>
+				<td style="text-align:center">
+					{{NFC_DETECTED.ID}}
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div style="height:10%;">
+		<table>
+			<col width="25%" />
+			<col width="55%" />
+			<col width="20%" />
+			<tr>
+				<th>
+					NFC<br/>기능 문구
+				</th>
+				<td style="text-align:center">
+					<input type="text" readonly style="width:100%;text-align:center;" id="NFC_FUNCTION" value="{{NOOL_NFC_CONFIG.NFC_FUNCTION}}" />
+				</td>
+				<td style="text-align:center">
+					<button class="btn btn-primary EVENT_NOOL_NFC" id="BTN_SET_NFC_FUNCTION">수정</button>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div style="height:10%;">
+		<table>
+			<col width="70%" />
+			<col width="30%" />
+			<tr>
+				<th>
+					NFC 매칭 기능
+				</th>
+				<td>
+					<div id="BTN_NFC_MODE_MATCHING"></div>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div style="height:20%;">
+		<table>
+			<col width="25%" />
+			<col width="35%" />
+			<col width="20%" />
+			<col width="20%" />
+			<tr>
+				<th>
+				매칭<br/>NFC ID
+				</th>
+				<td style="text-align:center">
+					{{NOOL_NFC_CONFIG.NFC_MATCHING_ID}}
+				</td>
+				<td>
+					<button class="btn btn-primary EVENT_NOOL_NFC" id="BTN_NFC_MATCH_ID_REGIST">등록</button>
+				</td>
+				<td>
+					<button class="btn btn-primary EVENT_NOOL_NFC" id="BTN_NFC_MATCH_ID_CLEAR">삭제</button>
+				</td>
+			</tr>
+			<tr>
+				<th>
+				매칭 갯수
+				</th>
+				<td style="text-align:center">
+					{{NOOL_NFC_CONFIG.NFC_MATCHING_CNT}}
+				</td>
+				<td>
+					<button class="btn btn-primary EVENT_NOOL_NFC" id="BTN_NFC_MATCH_COUNT_UP">증가</button>
+				</td>
+				<td>
+					<button class="btn btn-primary EVENT_NOOL_NFC" id="BTN_NFC_MATCH_COUNT_DOWN">감소</button>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>

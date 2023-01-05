@@ -1,0 +1,101 @@
+<style>
+#DIV_STATISTICS_TABS iframe	{width:100%; height:100%;}
+</style>
+
+<script>
+	function QIIP_SIDEMENU_INIT_WIDGETS() {
+		TOGGLE_SIDEMENU(function () {
+			QIIP_SIDEMENU_INIT_WIDGETS_SUB();
+		});
+	}
+	
+	function LOAD_SCHOOL_INFO_PAGE() {
+
+		var FLAG_VALID = false;
+		var FILE_TEMPLATE = 'SALES/SUB_CONTENTS_NO_VALID_BIZ_INFO.html';
+		if ('BIZ_INFO' in _RS.OBJ_POST_ROOT) {
+			if (_RS.OBJ_POST_ROOT.BIZ_INFO.BIZ_RELATION != '대표자') {
+				FLAG_VALID = true;
+			} else if (_RS.OBJ_POST_ROOT.BIZ_INFO.BIZ_NO_VALIDATION.REG_STAT) {
+				FLAG_VALID = true;
+			}
+		}
+		if (_RS.LOGIN_INFO.allcaps.administrator) {
+			FLAG_VALID = true;
+		}
+		if (FLAG_VALID) {
+			FILE_TEMPLATE = 'SALES/SUB_CONTENTS_SCHOOL_LIST.html';
+		}
+
+		QIIP_API_ACCESS({
+				REQ: 'api_GET_PAGE',
+				FLDR_TEMPLATE: _FLDR_TEMPLATE,
+				FILE_TEMPLATE: FILE_TEMPLATE,
+			},function(STR_RESULT) {
+				$('#DIV_SCHOOL_LIST').html(_AC(STR_RESULT)(_RS)); _RS.$apply();
+				if (FLAG_VALID) {
+					INIT_WIDGETS_FOR_SCHOOL_LIST();
+				}
+			}
+		);
+	}
+	
+	function GET_ROOT_INFO() {
+		QIIP_APP_DO_JOB_WITH_INITIAL_POST_INFORMATION(function () {
+			LOAD_SCHOOL_INFO_PAGE();
+		});
+	}
+
+	function GET_LOG_INFO() {
+		QIIP_API_ACCESS({
+				REQ: 'post_GET_LOG_LIST',
+				PHONE_NO: _RS.PHONE_INFO.PHONE_NO,
+				PHONE_ID: _RS.PHONE_INFO.PHONE_ID,
+				SVC_CATEGORY: _RS.PHONE_INFO.APP_NAME,
+			},function(STR_RESULT) {
+
+				var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+				if (JSON_RESULT instanceof Object) {
+					_RS.LOG_INFO = JSON_RESULT;
+					_RS.$apply();
+				} else {
+					QIIP_APP_ALERT([
+						STR_RESULT
+					]);
+				}
+			}
+		);
+	}
+	
+	function QIIP_SIDEMENU_INIT_WIDGETS_SUB() {
+		$('#MENU_CONTENTS').css('height', ($('#SIDEMENU_PAGE').height() - 130) / $('#SIDEMENU_PAGE').height() * 100 + '%');
+
+		$('#DIV_STATISTICS_TABS').on('created', function (){
+			GET_ROOT_INFO();
+		});
+		$('#DIV_STATISTICS_TABS').jqxTabs({
+			width: '100%',
+			height: '100%',
+		}).on('selected', function (EVENT){
+			if (EVENT.args.item == 0) {
+				GET_ROOT_INFO();
+			} else if (EVENT.args.item == 1) {
+//				GET_LOG_INFO();
+			}
+		});
+
+	}
+</script>
+<div id='DIV_STATISTICS_TABS'>
+    <ul>
+        <li style="margin-left: 10px;">학교별 전담 방문배송 업체</li>
+        <li>JSON</li>
+    </ul>
+    <div style="overflow:auto;" id="DIV_SCHOOL_LIST">
+    </div>
+    <div style="overflow:auto;">
+    	<pre>{{OBJ_POST_ROOT | prettyJSON}}</pre>
+    	<pre>{{LOGIN_INFO | prettyJSON}}</pre>
+    </div>
+</div>
+        

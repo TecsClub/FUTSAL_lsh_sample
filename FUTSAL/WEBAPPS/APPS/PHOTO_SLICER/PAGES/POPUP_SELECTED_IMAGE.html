@@ -1,0 +1,267 @@
+#PAGE_ARGS#
+<script>
+var OBJ_POPUP_DIALOG_FOR_SELECTED_IMAGE = null;
+
+function INIT_WIDGETS_FOR_POPUP_SELECTED_IMAGE(OBJ_DIALOG) {
+	OBJ_POPUP_DIALOG_FOR_SELECTED_IMAGE = OBJ_DIALOG;
+	INIT_WIDGETS_FOR_POPUP_SELECTED_IMAGE_AFTER_DOCUMENT_LOAD();
+}
+
+function INIT_WIDGETS_FOR_POPUP_SELECTED_IMAGE_AFTER_DOCUMENT_LOAD() {
+
+	$('#IMAGE').width($('#IMAGE_PARENT').width());
+	$('#IMAGE').attr('src',JSON_ARGS.SRC);
+
+	$("#IMAGE").panzoom({
+        panOnlyWhenZoomed: true,
+        minScale: 1,
+        increment: 2,
+        onEnd: function( e, panzoom ) {
+//			$(this).panzoom("resetDimensions");
+        }
+	});
+
+}
+
+function CLOSE_POPUP_FOR_SELECTED_IMAGE() {
+	if (OBJ_POPUP_DIALOG_FOR_SELECTED_IMAGE != null) {
+		QIIP_JQX_CLOSE_WINDOW(OBJ_POPUP_DIALOG_FOR_SELECTED_IMAGE);
+	}
+}
+
+function SLIDE_TO_PAGE_PRINT_HELP() {
+	NC({
+		CMD: 'PAGE_SELECT',
+		PAGE_NO: 1,
+	});
+}
+
+function GET_IMAGE_ATTRIBUTE_BY_URL(STR_URL) {
+	var NATIVE_ACCESS_INFORMATION = {
+			"REQUEST" : "GET_IMAGE_ATTRIBUTE_BY_URL",
+			"STR_URL" : STR_URL,
+		};
+//	var result = JSON.parse(QIIP_APPS_NATIVE_ACCESS(NATIVE_ACCESS_INFORMATION)).RESULT.RESULT_CONTENTS;
+//	alert(JSON.stringify(result, null, '\t'));
+	var result = QIIP_APPS_NATIVE_ACCESS(NATIVE_ACCESS_INFORMATION).RESULT.RESULT_CONTENTS;
+	alert(JSON.stringify(result, null, '\t'));
+	return result;
+}
+
+
+function POPUP_IMAGE_PRINT_STICKER() {
+	QIIP_APPS_NATIVE_ACCESS({
+		REQUEST: 'GET_IMAGE_ATTRIBUTE_BY_URL',
+		STR_URL: ($('#IMAGE').attr('src')),
+	}, function (STR_RESULT) {
+		var IMAGE_ATTRIBUTE = JSON_PARSE_IF_CAN(STR_RESULT);
+		POPUP_IMAGE_PRINT('LABEL', IMAGE_ATTRIBUTE);
+	});
+}
+
+function POPUP_IMAGE_PRINT_PANORAMA() {
+	QIIP_APPS_NATIVE_ACCESS({
+		REQUEST: 'GET_IMAGE_ATTRIBUTE_BY_URL',
+		STR_URL: ($('#IMAGE').attr('src')),
+	}, function (STR_RESULT) {
+		var IMAGE_ATTRIBUTE = JSON_PARSE_IF_CAN(STR_RESULT);
+		POPUP_IMAGE_PRINT('SLICE', IMAGE_ATTRIBUTE);
+	});
+}
+
+//var FLAG_IN_DOING_POPUP_IMAGE_PRINT = false;
+function POPUP_IMAGE_PRINT(MODE, JSON_IMAGE_ATTRIBUTE) {
+//	if (FLAG_IN_DOING_POPUP_IMAGE_PRINT) return;
+//	FLAG_IN_DOING_POPUP_IMAGE_PRINT = true;
+	var FILE_TEMPLATE = '';
+	var JSON_ARGS = {};
+	if (MODE == 'LABEL') {
+		FILE_TEMPLATE = 'PAGES/POPUP_IMAGE_PRINT_LABEL.html';
+		JSON_ARGS = {
+			"PRINT_MODE" : MODE,
+			"TITLE" : "스티커 - 용지 한장에 여러 개의 사진 인쇄",
+			"IMAGE_URL" : JSON_IMAGE_ATTRIBUTE.STR_URL,
+			"IMAGE_SIZE" : JSON_IMAGE_ATTRIBUTE.STR_SIZE,
+			"bLandscape" : false,
+			"bSavePDF" : false,
+			"nRows" : 3,
+			"nCols" : 3,
+			"n_rows_gap" : 5,
+			"n_cols_gap" : 5,
+			"n_left_gap" : 10,
+			"n_right_gap" :10,
+			"n_top_gap" : 10,
+			"n_bottom_gap" : 10,
+		};
+	} else {
+		FILE_TEMPLATE = 'PAGES/POPUP_IMAGE_PRINT_SLICE.html';
+		JSON_ARGS = {
+			"PRINT_MODE" : MODE,
+			"TITLE" : "파노라마 - 용지를 이어 붙일 수 있도록 나누어 인쇄",
+			"IMAGE_URL" : JSON_IMAGE_ATTRIBUTE.STR_URL,
+			"IMAGE_SIZE" : JSON_IMAGE_ATTRIBUTE.STR_SIZE,
+			"bLandscape" : false,
+			"bSavePDF" : false,
+			"marginPDF" : 30,
+			"sliceRows" : 3,
+			"sliceCols" : 3,
+		};
+	}
+	
+	_RS.PS_ARGS = JSON_ARGS;
+
+	QIIP_API_ACCESS({
+			REQ: 'api_GET_PAGE',
+			FLDR_TEMPLATE: _FLDR_TEMPLATE,
+			FILE_TEMPLATE: FILE_TEMPLATE,
+		},function(STR_RESULT) {
+			var HTML_COMPILED = QIIP_STATIC_HTML(JSON_ARGS, STR_RESULT);
+			var OBJ_POPUP = QIIP_JQX_POPUP_WINDOW({
+	            showCollapseButton: true, 
+	            height: '95%',
+	            width: '90%',
+	            minHeight: 100,
+	            minWidth: 100,
+				},
+				JSON_ARGS.TITLE,
+				HTML_COMPILED
+			);
+			_RS.$apply();
+		  	INIT_WIDGETS_FOR_POPUP_IMAGE_PRINT(OBJ_POPUP);
+		}
+	);
+
+}
+
+function POPUP_IMAGE_PRINT_PREVIEW(STR_JSON_ARGS) {
+	var JSON_ARGS = JSON.parse(STR_JSON_ARGS);
+	QIIP_API_ACCESS({
+			REQ: 'api_GET_PAGE',
+			FLDR_TEMPLATE: _FLDR_TEMPLATE,
+			FILE_TEMPLATE: 'PAGES/POPUP_IMAGE_PRINT_PREVIEW.html',
+		},function(STR_RESULT) {
+			var HTML_COMPILED = QIIP_STATIC_HTML(JSON_ARGS, STR_RESULT);
+			var OBJ_POPUP = QIIP_JQX_POPUP_WINDOW({
+	            showCollapseButton: true, 
+	            height: '95%',
+	            width: '90%',
+	            minHeight: 100,
+	            minWidth: 100,
+				},
+				'PREVIEW',
+				HTML_COMPILED
+			);
+			_RS.$apply();
+		  	INIT_WIDGETS_FOR_IMAGE_PRINT_PREVIEW(OBJ_POPUP);
+		}
+	);
+
+}
+
+function DO_SELECT_PHOTO_FROM_PHONE() {
+
+	QIIP_APPS_NATIVE_ACCESS({
+		REQUEST: 'SELECT_PHOTO_FROM_PHONE',
+		SCRIPT_ON_CAMERA : {
+			SCRIPT_ON_SELECT : "REPLACE_IMAGE"
+		},
+		FULL_CONTENTS: true,
+	}, function (STR_RESULT) {
+		var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+		if (JSON_RESULT.STATUS != 200) {
+		} else {
+		}
+	});
+/*
+	var NATIVE_ACCESS_INFORMATION = {
+			"REQUEST" : "SELECT_PHOTO_FROM_PHONE",
+		};
+	var result = JSON.parse(QIIP_APP_NATIVE_ACCESS(NATIVE_ACCESS_INFORMATION));
+*/
+}
+
+function DO_SELECT_PHOTO_FROM_CAMERA() {
+	QIIP_APPS_NATIVE_ACCESS({
+		REQUEST: 'SELECT_PHOTO_FROM_CAMERA',
+		SCRIPT_ON_CAMERA : {
+			SCRIPT_ON_CAPTURE : "REPLACE_IMAGE"
+		},
+		FULL_CONTENTS: true,
+	}, function (STR_RESULT) {
+		var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+		if (JSON_RESULT.STATUS != 200) {
+			QIIP_POPUP_FOR_YES_NO(
+				_RS.PHONE_INFO.APP_NAME + ' 안내',[
+					_RS.PHONE_INFO.APP_NAME + ' 를 정상적으로 이용하시려면...',
+					'요청드린 권한을 허용하셔야 합니다.',
+					'권한 허용을 재시도 하시겠습니까?',
+				], function () {
+					DO_SELECT_PHOTO_FROM_CAMERA();
+				}, function () {
+				},
+				95,
+				50
+			);
+		} else {
+		}
+	});
+/*
+	var NATIVE_ACCESS_INFORMATION = {
+			"REQUEST" : "SELECT_PHOTO_FROM_CAMERA",
+		};
+	var result = JSON.parse(QIIP_APP_NATIVE_ACCESS(NATIVE_ACCESS_INFORMATION));
+*/
+}
+
+function REPLACE_IMAGE(STR_JSON_ARGS) {
+	var JSON_ARGS = JSON.parse(STR_JSON_ARGS);
+	$('#IMAGE').attr('src', JSON_ARGS.SRC);
+}
+
+</script>
+
+<div style="width:100%; height:13%; text-align: center;" >
+  <div class="row" style="padding:0;">
+    <div class="col">
+      <div class="button button-small button-positive" style="width:100%;" onclick="DO_SELECT_PHOTO_FROM_PHONE()">
+        폰사진
+      </div>
+    </div>
+    <div class="col">
+      <div class="button button-small button-positive" style="width:100%;" onclick="DO_SELECT_PHOTO_FROM_CAMERA()">
+        촬영
+      </div>
+    </div>
+  </div>
+  <div class="row" style="padding:0;">
+    <div class="col">
+      <div class="button button-small button-positive" style="width:100%;" onclick="POPUP_IMAGE_PRINT_STICKER()">
+        스티커 인쇄
+      </div>
+    </div>
+    <div class="col">
+      <div class="button button-small button-positive" style="width:100%;" onclick="POPUP_IMAGE_PRINT_PANORAMA()">
+        파노라마 인쇄
+      </div>
+    </div>
+    <div class="col">
+      <div class="button button-small button-positive" style="width:100%;" onclick="SLIDE_TO_PAGE_PRINT_HELP()">
+        인쇄설정
+      </div>
+    </div>
+  </div>
+</div>
+<div style="width:100%; height:80%; overflow: auto;">
+	<div style="width:100%; height:100%;" id="IMAGE_PARENT">
+		<img id="IMAGE" />
+	</div>
+</div>
+<div style="width:100%; height:7%; overflow: auto;">
+  <div class="row" style="padding:0;">
+    <div class="col">
+      <div class="button button-positive" style="width:100%;" onclick="CLOSE_POPUP_FOR_SELECTED_IMAGE()">
+        닫기
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,2209 @@
+
+[25-Nov-2022 21:33:56 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_WP_ROOT",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:33:57 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE": "CONFIG.JSON",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:33:57 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/CONFIG.JSON
+[25-Nov-2022 21:33:57 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE_TEMPLATE": "PAGES\/APP_1ST_PAGE.html",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:33:57 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE_TEMPLATE": "PAGES\/SIDEMENU_APPS.html",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:33:57 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE_TEMPLATE": "PAGES\/MATCH-LIST.html",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:33:57 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBPUkRFUiBCWSBJRCBERVNDIExJTUlUIDUwIA==",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:33:57 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 ORDER BY ID DESC LIMIT 50 
+[25-Nov-2022 21:33:57 Asia/Seoul] WordPress database error Unknown column 'ID' in 'where clause' for query SELECT * FROM MATCH_LIST WHERE ID > 0 ORDER BY ID DESC LIMIT 50  made by require('wp-blog-header.php'), require_once('wp-load.php'), require_once('wp-config.php'), require_once('wp-settings.php'), do_action('init'), WP_Hook->do_action, WP_Hook->apply_filters, TECS_CLUB_API, ext_class_api->DO_JOB, ext_class_api->api_DB_ACCESS
+[25-Nov-2022 21:35:29 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_WP_ROOT",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:35:29 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE": "CONFIG.JSON",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:35:29 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/CONFIG.JSON
+[25-Nov-2022 21:35:29 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE_TEMPLATE": "PAGES\/APP_1ST_PAGE.html",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:35:29 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE_TEMPLATE": "PAGES\/SIDEMENU_APPS.html",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:35:29 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE_TEMPLATE": "PAGES\/MATCH-LIST.html",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:35:30 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBPUkRFUiBCWSBJRCBERVNDIExJTUlUIDUwIA==",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:35:30 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 ORDER BY ID DESC LIMIT 50 
+[25-Nov-2022 21:35:33 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE_TEMPLATE": "PAGES\/MODAL_FOR_ADD_MATCH_ITEM.html",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:35:33 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE_TEMPLATE": "POPUP\/MODAL_POPUP.html",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:38:21 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "SU5TRVJUIElOVE8gTUFUQ0hfTElTVCAoSEFTSCwgREFURSwgVEVBTSwgQ0FNRVJBX0FOR0xFLCBBUkVOQV9OQU1FLCBBUkVOQV9OVU0sIEdBTUVfU1RBUlRfVElNRSwgR0FNRV9FTkRfVElNRSwgVVJMLCBBUkVOQV9DT0RFLCBNQU5BR0VSX1BIT05FICwgVEVBTV9OQU1FX0xFRlQsIFRFQU1fTkFNRV9SSUdIVCwgVEFHR0lOR19ET05FLCBWQUxJRF9VTlRJTCwgSVNfTElOS19TSEFSRUQsIFlPVVRVQkVfVVJMUyApIFZBTFVFUyAoJzdlNWUxOGU0NGFhZWQwMGI1ZDliZDFiZjc1NDkzMThkJywgJzIxMTAyNCcsICdLQUlTVCcsICdsZWZ0JmNlbnRlciZyaWdodCcsICfrjIDsoIQg7Jil64WA67SJJywgJzEnLCAnMTg6MDAnLCAnMjA6MDAnLCAnMCcsICcwJywgJzAnLCAnVEVBTV9MRUZUJywgJ1RFQU1fUklHSFQnLCAnVFJVRScsICc5OTEyMzEnLCAnWCcsICd7ICJsZWZ0IjogIklna0N1N3lPSWpBIiwgImNlbnRlciI6ICJHbVFBMG41cldLZyIsICJyaWdodCI6ICJ4dVFqOWRRdDR0SSIgfScpIA==",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:38:21 Asia/Seoul] STR_QUERY => INSERT INTO MATCH_LIST (HASH, DATE, TEAM, CAMERA_ANGLE, ARENA_NAME, ARENA_NUM, GAME_START_TIME, GAME_END_TIME, URL, ARENA_CODE, MANAGER_PHONE , TEAM_NAME_LEFT, TEAM_NAME_RIGHT, TAGGING_DONE, VALID_UNTIL, IS_LINK_SHARED, YOUTUBE_URLS ) VALUES ('7e5e18e44aaed00b5d9bd1bf7549318d', '211024', 'KAIST', 'left&center&right', '대전 옥녀봉', '1', '18:00', '20:00', '0', '0', '0', 'TEAM_LEFT', 'TEAM_RIGHT', 'TRUE', '991231', 'X', '{ "left": "IgkCu7yOIjA", "center": "GmQA0n5rWKg", "right": "xuQj9dQt4tI" }') 
+[25-Nov-2022 21:38:21 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBPUkRFUiBCWSBJRCBERVNDIExJTUlUIDUwIA==",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:38:21 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 ORDER BY ID DESC LIMIT 50 
+[25-Nov-2022 21:38:30 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_WP_ROOT",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:38:30 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBBTkQgSEFTSCBsaWtlICclJScgT1JERVIgQlkgSUQgREVTQyBMSU1JVCA1MCA=",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:38:30 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 AND HASH like '%%' ORDER BY ID DESC LIMIT 50 
+[25-Nov-2022 21:38:30 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS",
+    "FILE": "FS\/tags\/211024\/KAIST.json",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:38:30 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/tags/211024/KAIST.json
+[25-Nov-2022 21:39:22 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_WP_ROOT",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:39:22 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBBTkQgSEFTSCBsaWtlICclJScgT1JERVIgQlkgSUQgREVTQyBMSU1JVCA1MCA=",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:39:22 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 AND HASH like '%%' ORDER BY ID DESC LIMIT 50 
+[25-Nov-2022 21:39:22 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS",
+    "FILE": "FS\/tags\/211024\/KAIST.json",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:39:22 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/tags/211024/KAIST.json
+[25-Nov-2022 21:39:38 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE_TEMPLATE": "PAGES\/MODAL_FOR_ADD_MATCH_ITEM.html",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:39:38 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE_TEMPLATE": "POPUP\/MODAL_POPUP.html",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:40:21 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_WP_ROOT",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:40:21 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBBTkQgSEFTSCBsaWtlICclJScgT1JERVIgQlkgSUQgREVTQyBMSU1JVCA1MCA=",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:40:21 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 AND HASH like '%%' ORDER BY ID DESC LIMIT 50 
+[25-Nov-2022 21:40:21 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS",
+    "FILE": "FS\/tags\/211024\/KAIST.json",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:40:21 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/tags/211024/KAIST.json
+[25-Nov-2022 21:41:00 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_WP_ROOT",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:00 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBBTkQgSEFTSCBsaWtlICclN2U1ZTE4ZTQ0YWFlZDAwYjVkOWJkMWJmNzU0OTMxOGQlJyBPUkRFUiBCWSBJRCBERVNDIExJTUlUIDUwIA==",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:00 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 AND HASH like '%7e5e18e44aaed00b5d9bd1bf7549318d%' ORDER BY ID DESC LIMIT 50 
+[25-Nov-2022 21:41:00 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS",
+    "FILE": "FS\/tags\/211024\/KAIST.json",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:00 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/tags/211024/KAIST.json
+[25-Nov-2022 21:41:06 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_WP_ROOT",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:06 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBBTkQgSEFTSCBsaWtlICclN2U1ZTE4ZTQ0YWFlZDAwYjVkOWJkMWJmNzU0OTMxOGQlJyBPUkRFUiBCWSBJRCBERVNDIExJTUlUIDUwIA==",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:06 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 AND HASH like '%7e5e18e44aaed00b5d9bd1bf7549318d%' ORDER BY ID DESC LIMIT 50 
+[25-Nov-2022 21:41:06 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS",
+    "FILE": "FS\/tags\/211024\/KAIST.json",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:06 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/tags/211024/KAIST.json
+[25-Nov-2022 21:41:06 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBBTkQgSEFTSCBsaWtlICclN2U1ZTE4ZTQ0YWFlZDAwYjVkOWJkMWJmNzU0OTMxOGQlJyBPUkRFUiBCWSBJRCBERVNDIExJTUlUIDUwIA==",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:06 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 AND HASH like '%7e5e18e44aaed00b5d9bd1bf7549318d%' ORDER BY ID DESC LIMIT 50 
+[25-Nov-2022 21:41:06 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS",
+    "FILE": "FS\/tags\/211024\/KAIST.json",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:06 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/tags/211024/KAIST.json
+[25-Nov-2022 21:41:07 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBBTkQgSEFTSCBsaWtlICclN2U1ZTE4ZTQ0YWFlZDAwYjVkOWJkMWJmNzU0OTMxOGQlJyBPUkRFUiBCWSBJRCBERVNDIExJTUlUIDUwIA==",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:07 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 AND HASH like '%7e5e18e44aaed00b5d9bd1bf7549318d%' ORDER BY ID DESC LIMIT 50 
+[25-Nov-2022 21:41:07 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS",
+    "FILE": "FS\/tags\/211024\/KAIST.json",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:07 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/tags/211024/KAIST.json
+[25-Nov-2022 21:41:07 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBBTkQgSEFTSCBsaWtlICclN2U1ZTE4ZTQ0YWFlZDAwYjVkOWJkMWJmNzU0OTMxOGQlJyBPUkRFUiBCWSBJRCBERVNDIExJTUlUIDUwIA==",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:07 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 AND HASH like '%7e5e18e44aaed00b5d9bd1bf7549318d%' ORDER BY ID DESC LIMIT 50 
+[25-Nov-2022 21:41:07 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS",
+    "FILE": "FS\/tags\/211024\/KAIST.json",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:07 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/tags/211024/KAIST.json
+[25-Nov-2022 21:41:07 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBBTkQgSEFTSCBsaWtlICclN2U1ZTE4ZTQ0YWFlZDAwYjVkOWJkMWJmNzU0OTMxOGQlJyBPUkRFUiBCWSBJRCBERVNDIExJTUlUIDUwIA==",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:07 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 AND HASH like '%7e5e18e44aaed00b5d9bd1bf7549318d%' ORDER BY ID DESC LIMIT 50 
+[25-Nov-2022 21:41:07 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS",
+    "FILE": "FS\/tags\/211024\/KAIST.json",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:07 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/tags/211024/KAIST.json
+[25-Nov-2022 21:41:07 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBBTkQgSEFTSCBsaWtlICclN2U1ZTE4ZTQ0YWFlZDAwYjVkOWJkMWJmNzU0OTMxOGQlJyBPUkRFUiBCWSBJRCBERVNDIExJTUlUIDUwIA==",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:07 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 AND HASH like '%7e5e18e44aaed00b5d9bd1bf7549318d%' ORDER BY ID DESC LIMIT 50 
+[25-Nov-2022 21:41:07 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS",
+    "FILE": "FS\/tags\/211024\/KAIST.json",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:07 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/tags/211024/KAIST.json
+[25-Nov-2022 21:41:07 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBBTkQgSEFTSCBsaWtlICclN2U1ZTE4ZTQ0YWFlZDAwYjVkOWJkMWJmNzU0OTMxOGQlJyBPUkRFUiBCWSBJRCBERVNDIExJTUlUIDUwIA==",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:07 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 AND HASH like '%7e5e18e44aaed00b5d9bd1bf7549318d%' ORDER BY ID DESC LIMIT 50 
+[25-Nov-2022 21:41:07 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS",
+    "FILE": "FS\/tags\/211024\/KAIST.json",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:07 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/tags/211024/KAIST.json
+[25-Nov-2022 21:41:07 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBBTkQgSEFTSCBsaWtlICclN2U1ZTE4ZTQ0YWFlZDAwYjVkOWJkMWJmNzU0OTMxOGQlJyBPUkRFUiBCWSBJRCBERVNDIExJTUlUIDUwIA==",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:07 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 AND HASH like '%7e5e18e44aaed00b5d9bd1bf7549318d%' ORDER BY ID DESC LIMIT 50 
+[25-Nov-2022 21:41:07 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS",
+    "FILE": "FS\/tags\/211024\/KAIST.json",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:07 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/tags/211024/KAIST.json
+[25-Nov-2022 21:41:07 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBBTkQgSEFTSCBsaWtlICclN2U1ZTE4ZTQ0YWFlZDAwYjVkOWJkMWJmNzU0OTMxOGQlJyBPUkRFUiBCWSBJRCBERVNDIExJTUlUIDUwIA==",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:07 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 AND HASH like '%7e5e18e44aaed00b5d9bd1bf7549318d%' ORDER BY ID DESC LIMIT 50 
+[25-Nov-2022 21:41:07 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS",
+    "FILE": "FS\/tags\/211024\/KAIST.json",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:07 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/tags/211024/KAIST.json
+[25-Nov-2022 21:41:07 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBBTkQgSEFTSCBsaWtlICclN2U1ZTE4ZTQ0YWFlZDAwYjVkOWJkMWJmNzU0OTMxOGQlJyBPUkRFUiBCWSBJRCBERVNDIExJTUlUIDUwIA==",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:07 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 AND HASH like '%7e5e18e44aaed00b5d9bd1bf7549318d%' ORDER BY ID DESC LIMIT 50 
+[25-Nov-2022 21:41:07 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS",
+    "FILE": "FS\/tags\/211024\/KAIST.json",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:07 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/tags/211024/KAIST.json
+[25-Nov-2022 21:41:08 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBBTkQgSEFTSCBsaWtlICclN2U1ZTE4ZTQ0YWFlZDAwYjVkOWJkMWJmNzU0OTMxOGQlJyBPUkRFUiBCWSBJRCBERVNDIExJTUlUIDUwIA==",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:08 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 AND HASH like '%7e5e18e44aaed00b5d9bd1bf7549318d%' ORDER BY ID DESC LIMIT 50 
+[25-Nov-2022 21:41:08 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS",
+    "FILE": "FS\/tags\/211024\/KAIST.json",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:08 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/tags/211024/KAIST.json
+[25-Nov-2022 21:41:08 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBBTkQgSEFTSCBsaWtlICclN2U1ZTE4ZTQ0YWFlZDAwYjVkOWJkMWJmNzU0OTMxOGQlJyBPUkRFUiBCWSBJRCBERVNDIExJTUlUIDUwIA==",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:08 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 AND HASH like '%7e5e18e44aaed00b5d9bd1bf7549318d%' ORDER BY ID DESC LIMIT 50 
+[25-Nov-2022 21:41:08 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS",
+    "FILE": "FS\/tags\/211024\/KAIST.json",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:08 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/tags/211024/KAIST.json
+[25-Nov-2022 21:41:08 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBBTkQgSEFTSCBsaWtlICclN2U1ZTE4ZTQ0YWFlZDAwYjVkOWJkMWJmNzU0OTMxOGQlJyBPUkRFUiBCWSBJRCBERVNDIExJTUlUIDUwIA==",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:08 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 AND HASH like '%7e5e18e44aaed00b5d9bd1bf7549318d%' ORDER BY ID DESC LIMIT 50 
+[25-Nov-2022 21:41:08 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS",
+    "FILE": "FS\/tags\/211024\/KAIST.json",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:08 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/tags/211024/KAIST.json
+[25-Nov-2022 21:41:08 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBBTkQgSEFTSCBsaWtlICclN2U1ZTE4ZTQ0YWFlZDAwYjVkOWJkMWJmNzU0OTMxOGQlJyBPUkRFUiBCWSBJRCBERVNDIExJTUlUIDUwIA==",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:08 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 AND HASH like '%7e5e18e44aaed00b5d9bd1bf7549318d%' ORDER BY ID DESC LIMIT 50 
+[25-Nov-2022 21:41:08 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS",
+    "FILE": "FS\/tags\/211024\/KAIST.json",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:08 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/tags/211024/KAIST.json
+[25-Nov-2022 21:41:08 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBBTkQgSEFTSCBsaWtlICclN2U1ZTE4ZTQ0YWFlZDAwYjVkOWJkMWJmNzU0OTMxOGQlJyBPUkRFUiBCWSBJRCBERVNDIExJTUlUIDUwIA==",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:08 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 AND HASH like '%7e5e18e44aaed00b5d9bd1bf7549318d%' ORDER BY ID DESC LIMIT 50 
+[25-Nov-2022 21:41:08 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS",
+    "FILE": "FS\/tags\/211024\/KAIST.json",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:08 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/tags/211024/KAIST.json
+[25-Nov-2022 21:41:08 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBBTkQgSEFTSCBsaWtlICclN2U1ZTE4ZTQ0YWFlZDAwYjVkOWJkMWJmNzU0OTMxOGQlJyBPUkRFUiBCWSBJRCBERVNDIExJTUlUIDUwIA==",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:08 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 AND HASH like '%7e5e18e44aaed00b5d9bd1bf7549318d%' ORDER BY ID DESC LIMIT 50 
+[25-Nov-2022 21:41:08 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS",
+    "FILE": "FS\/tags\/211024\/KAIST.json",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:08 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/tags/211024/KAIST.json
+[25-Nov-2022 21:41:08 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBBTkQgSEFTSCBsaWtlICclN2U1ZTE4ZTQ0YWFlZDAwYjVkOWJkMWJmNzU0OTMxOGQlJyBPUkRFUiBCWSBJRCBERVNDIExJTUlUIDUwIA==",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:08 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 AND HASH like '%7e5e18e44aaed00b5d9bd1bf7549318d%' ORDER BY ID DESC LIMIT 50 
+[25-Nov-2022 21:41:08 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS",
+    "FILE": "FS\/tags\/211024\/KAIST.json",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:08 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/tags/211024/KAIST.json
+[25-Nov-2022 21:41:09 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBBTkQgSEFTSCBsaWtlICclN2U1ZTE4ZTQ0YWFlZDAwYjVkOWJkMWJmNzU0OTMxOGQlJyBPUkRFUiBCWSBJRCBERVNDIExJTUlUIDUwIA==",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:09 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 AND HASH like '%7e5e18e44aaed00b5d9bd1bf7549318d%' ORDER BY ID DESC LIMIT 50 
+[25-Nov-2022 21:41:09 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS",
+    "FILE": "FS\/tags\/211024\/KAIST.json",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:09 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/tags/211024/KAIST.json
+[25-Nov-2022 21:41:09 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBBTkQgSEFTSCBsaWtlICclN2U1ZTE4ZTQ0YWFlZDAwYjVkOWJkMWJmNzU0OTMxOGQlJyBPUkRFUiBCWSBJRCBERVNDIExJTUlUIDUwIA==",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:09 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 AND HASH like '%7e5e18e44aaed00b5d9bd1bf7549318d%' ORDER BY ID DESC LIMIT 50 
+[25-Nov-2022 21:41:09 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS",
+    "FILE": "FS\/tags\/211024\/KAIST.json",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:09 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/tags/211024/KAIST.json
+[25-Nov-2022 21:41:09 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBBTkQgSEFTSCBsaWtlICclN2U1ZTE4ZTQ0YWFlZDAwYjVkOWJkMWJmNzU0OTMxOGQlJyBPUkRFUiBCWSBJRCBERVNDIExJTUlUIDUwIA==",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:09 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 AND HASH like '%7e5e18e44aaed00b5d9bd1bf7549318d%' ORDER BY ID DESC LIMIT 50 
+[25-Nov-2022 21:41:09 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS",
+    "FILE": "FS\/tags\/211024\/KAIST.json",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:09 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/tags/211024/KAIST.json
+[25-Nov-2022 21:41:09 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBBTkQgSEFTSCBsaWtlICclN2U1ZTE4ZTQ0YWFlZDAwYjVkOWJkMWJmNzU0OTMxOGQlJyBPUkRFUiBCWSBJRCBERVNDIExJTUlUIDUwIA==",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:09 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 AND HASH like '%7e5e18e44aaed00b5d9bd1bf7549318d%' ORDER BY ID DESC LIMIT 50 
+[25-Nov-2022 21:41:09 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS",
+    "FILE": "FS\/tags\/211024\/KAIST.json",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:09 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/tags/211024/KAIST.json
+[25-Nov-2022 21:41:09 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBBTkQgSEFTSCBsaWtlICclN2U1ZTE4ZTQ0YWFlZDAwYjVkOWJkMWJmNzU0OTMxOGQlJyBPUkRFUiBCWSBJRCBERVNDIExJTUlUIDUwIA==",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:09 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 AND HASH like '%7e5e18e44aaed00b5d9bd1bf7549318d%' ORDER BY ID DESC LIMIT 50 
+[25-Nov-2022 21:41:09 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS",
+    "FILE": "FS\/tags\/211024\/KAIST.json",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:09 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/tags/211024/KAIST.json
+[25-Nov-2022 21:41:09 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBBTkQgSEFTSCBsaWtlICclN2U1ZTE4ZTQ0YWFlZDAwYjVkOWJkMWJmNzU0OTMxOGQlJyBPUkRFUiBCWSBJRCBERVNDIExJTUlUIDUwIA==",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:09 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 AND HASH like '%7e5e18e44aaed00b5d9bd1bf7549318d%' ORDER BY ID DESC LIMIT 50 
+[25-Nov-2022 21:41:09 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS",
+    "FILE": "FS\/tags\/211024\/KAIST.json",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:09 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/tags/211024/KAIST.json
+[25-Nov-2022 21:41:09 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBBTkQgSEFTSCBsaWtlICclN2U1ZTE4ZTQ0YWFlZDAwYjVkOWJkMWJmNzU0OTMxOGQlJyBPUkRFUiBCWSBJRCBERVNDIExJTUlUIDUwIA==",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:09 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 AND HASH like '%7e5e18e44aaed00b5d9bd1bf7549318d%' ORDER BY ID DESC LIMIT 50 
+[25-Nov-2022 21:41:09 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS",
+    "FILE": "FS\/tags\/211024\/KAIST.json",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:09 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/tags/211024/KAIST.json
+[25-Nov-2022 21:41:10 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBBTkQgSEFTSCBsaWtlICclN2U1ZTE4ZTQ0YWFlZDAwYjVkOWJkMWJmNzU0OTMxOGQlJyBPUkRFUiBCWSBJRCBERVNDIExJTUlUIDUwIA==",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:10 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 AND HASH like '%7e5e18e44aaed00b5d9bd1bf7549318d%' ORDER BY ID DESC LIMIT 50 
+[25-Nov-2022 21:41:10 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS",
+    "FILE": "FS\/tags\/211024\/KAIST.json",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:10 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/tags/211024/KAIST.json
+[25-Nov-2022 21:41:10 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBBTkQgSEFTSCBsaWtlICclN2U1ZTE4ZTQ0YWFlZDAwYjVkOWJkMWJmNzU0OTMxOGQlJyBPUkRFUiBCWSBJRCBERVNDIExJTUlUIDUwIA==",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:10 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 AND HASH like '%7e5e18e44aaed00b5d9bd1bf7549318d%' ORDER BY ID DESC LIMIT 50 
+[25-Nov-2022 21:41:10 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS",
+    "FILE": "FS\/tags\/211024\/KAIST.json",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:10 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/tags/211024/KAIST.json
+[25-Nov-2022 21:41:10 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBBTkQgSEFTSCBsaWtlICclN2U1ZTE4ZTQ0YWFlZDAwYjVkOWJkMWJmNzU0OTMxOGQlJyBPUkRFUiBCWSBJRCBERVNDIExJTUlUIDUwIA==",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:10 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 AND HASH like '%7e5e18e44aaed00b5d9bd1bf7549318d%' ORDER BY ID DESC LIMIT 50 
+[25-Nov-2022 21:41:10 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS",
+    "FILE": "FS\/tags\/211024\/KAIST.json",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:10 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/tags/211024/KAIST.json
+[25-Nov-2022 21:41:10 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBBTkQgSEFTSCBsaWtlICclN2U1ZTE4ZTQ0YWFlZDAwYjVkOWJkMWJmNzU0OTMxOGQlJyBPUkRFUiBCWSBJRCBERVNDIExJTUlUIDUwIA==",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:10 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 AND HASH like '%7e5e18e44aaed00b5d9bd1bf7549318d%' ORDER BY ID DESC LIMIT 50 
+[25-Nov-2022 21:41:10 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS",
+    "FILE": "FS\/tags\/211024\/KAIST.json",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:10 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/tags/211024/KAIST.json
+[25-Nov-2022 21:41:10 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBBTkQgSEFTSCBsaWtlICclN2U1ZTE4ZTQ0YWFlZDAwYjVkOWJkMWJmNzU0OTMxOGQlJyBPUkRFUiBCWSBJRCBERVNDIExJTUlUIDUwIA==",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:10 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 AND HASH like '%7e5e18e44aaed00b5d9bd1bf7549318d%' ORDER BY ID DESC LIMIT 50 
+[25-Nov-2022 21:41:10 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS",
+    "FILE": "FS\/tags\/211024\/KAIST.json",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:10 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/tags/211024/KAIST.json
+[25-Nov-2022 21:41:10 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBBTkQgSEFTSCBsaWtlICclN2U1ZTE4ZTQ0YWFlZDAwYjVkOWJkMWJmNzU0OTMxOGQlJyBPUkRFUiBCWSBJRCBERVNDIExJTUlUIDUwIA==",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:10 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 AND HASH like '%7e5e18e44aaed00b5d9bd1bf7549318d%' ORDER BY ID DESC LIMIT 50 
+[25-Nov-2022 21:41:10 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS",
+    "FILE": "FS\/tags\/211024\/KAIST.json",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:10 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/tags/211024/KAIST.json
+[25-Nov-2022 21:41:10 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBBTkQgSEFTSCBsaWtlICclN2U1ZTE4ZTQ0YWFlZDAwYjVkOWJkMWJmNzU0OTMxOGQlJyBPUkRFUiBCWSBJRCBERVNDIExJTUlUIDUwIA==",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:10 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 AND HASH like '%7e5e18e44aaed00b5d9bd1bf7549318d%' ORDER BY ID DESC LIMIT 50 
+[25-Nov-2022 21:41:10 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS",
+    "FILE": "FS\/tags\/211024\/KAIST.json",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:10 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/tags/211024/KAIST.json
+[25-Nov-2022 21:41:10 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBBTkQgSEFTSCBsaWtlICclN2U1ZTE4ZTQ0YWFlZDAwYjVkOWJkMWJmNzU0OTMxOGQlJyBPUkRFUiBCWSBJRCBERVNDIExJTUlUIDUwIA==",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:10 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 AND HASH like '%7e5e18e44aaed00b5d9bd1bf7549318d%' ORDER BY ID DESC LIMIT 50 
+[25-Nov-2022 21:41:10 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS",
+    "FILE": "FS\/tags\/211024\/KAIST.json",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:10 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/tags/211024/KAIST.json
+[25-Nov-2022 21:41:11 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBBTkQgSEFTSCBsaWtlICclN2U1ZTE4ZTQ0YWFlZDAwYjVkOWJkMWJmNzU0OTMxOGQlJyBPUkRFUiBCWSBJRCBERVNDIExJTUlUIDUwIA==",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:11 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 AND HASH like '%7e5e18e44aaed00b5d9bd1bf7549318d%' ORDER BY ID DESC LIMIT 50 
+[25-Nov-2022 21:41:11 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS",
+    "FILE": "FS\/tags\/211024\/KAIST.json",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:11 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/tags/211024/KAIST.json
+[25-Nov-2022 21:41:11 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBBTkQgSEFTSCBsaWtlICclN2U1ZTE4ZTQ0YWFlZDAwYjVkOWJkMWJmNzU0OTMxOGQlJyBPUkRFUiBCWSBJRCBERVNDIExJTUlUIDUwIA==",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:11 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 AND HASH like '%7e5e18e44aaed00b5d9bd1bf7549318d%' ORDER BY ID DESC LIMIT 50 
+[25-Nov-2022 21:41:11 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS",
+    "FILE": "FS\/tags\/211024\/KAIST.json",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:11 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/tags/211024/KAIST.json
+[25-Nov-2022 21:41:11 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBBTkQgSEFTSCBsaWtlICclN2U1ZTE4ZTQ0YWFlZDAwYjVkOWJkMWJmNzU0OTMxOGQlJyBPUkRFUiBCWSBJRCBERVNDIExJTUlUIDUwIA==",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:11 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 AND HASH like '%7e5e18e44aaed00b5d9bd1bf7549318d%' ORDER BY ID DESC LIMIT 50 
+[25-Nov-2022 21:41:11 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS",
+    "FILE": "FS\/tags\/211024\/KAIST.json",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:11 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/tags/211024/KAIST.json
+[25-Nov-2022 21:41:11 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBBTkQgSEFTSCBsaWtlICclN2U1ZTE4ZTQ0YWFlZDAwYjVkOWJkMWJmNzU0OTMxOGQlJyBPUkRFUiBCWSBJRCBERVNDIExJTUlUIDUwIA==",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:11 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 AND HASH like '%7e5e18e44aaed00b5d9bd1bf7549318d%' ORDER BY ID DESC LIMIT 50 
+[25-Nov-2022 21:41:11 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS",
+    "FILE": "FS\/tags\/211024\/KAIST.json",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:11 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/tags/211024/KAIST.json
+[25-Nov-2022 21:41:11 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBBTkQgSEFTSCBsaWtlICclN2U1ZTE4ZTQ0YWFlZDAwYjVkOWJkMWJmNzU0OTMxOGQlJyBPUkRFUiBCWSBJRCBERVNDIExJTUlUIDUwIA==",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:11 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 AND HASH like '%7e5e18e44aaed00b5d9bd1bf7549318d%' ORDER BY ID DESC LIMIT 50 
+[25-Nov-2022 21:41:11 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_WP_ROOT",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:11 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBBTkQgSEFTSCBsaWtlICclN2U1ZTE4ZTQ0YWFlZDAwYjVkOWJkMWJmNzU0OTMxOGQlJyBPUkRFUiBCWSBJRCBERVNDIExJTUlUIDUwIA==",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:11 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 AND HASH like '%7e5e18e44aaed00b5d9bd1bf7549318d%' ORDER BY ID DESC LIMIT 50 
+[25-Nov-2022 21:41:11 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS",
+    "FILE": "FS\/tags\/211024\/KAIST.json",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:11 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/tags/211024/KAIST.json
+[25-Nov-2022 21:41:43 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_WP_ROOT",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:43 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBBTkQgSEFTSCBsaWtlICclN2U1ZTE4ZTQ0YWFlZDAwYjVkOWJkMWJmNzU0OTMxOGQlJyBPUkRFUiBCWSBJRCBERVNDIExJTUlUIDUwIA==",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:43 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 AND HASH like '%7e5e18e44aaed00b5d9bd1bf7549318d%' ORDER BY ID DESC LIMIT 50 
+[25-Nov-2022 21:41:43 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS",
+    "FILE": "FS\/tags\/211024\/KAIST.json",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:43 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/tags/211024/KAIST.json
+[25-Nov-2022 21:41:48 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_WP_ROOT",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:48 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE": "CONFIG.JSON",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:48 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/CONFIG.JSON
+[25-Nov-2022 21:41:48 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE_TEMPLATE": "PAGES\/APP_1ST_PAGE.html",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:48 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE_TEMPLATE": "PAGES\/SIDEMENU_APPS.html",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:48 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE_TEMPLATE": "PAGES\/MATCH-LIST.html",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:49 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBPUkRFUiBCWSBJRCBERVNDIExJTUlUIDUwIA==",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:49 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 ORDER BY ID DESC LIMIT 50 
+[25-Nov-2022 21:41:56 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_WP_ROOT",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:56 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBBTkQgSEFTSCBsaWtlICclN2U1ZTE4ZTQ0YWFlZDAwYjVkOWJkMWJmNzU0OTMxOGQlJyBPUkRFUiBCWSBJRCBERVNDIExJTUlUIDUwIA==",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:56 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 AND HASH like '%7e5e18e44aaed00b5d9bd1bf7549318d%' ORDER BY ID DESC LIMIT 50 
+[25-Nov-2022 21:41:56 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS",
+    "FILE": "FS\/tags\/211024\/KAIST.json",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:41:56 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/tags/211024/KAIST.json
+[25-Nov-2022 21:42:06 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_WP_ROOT",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:42:06 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBBTkQgSEFTSCBsaWtlICclN2U1ZTE4ZTQ0YWFlZDAwYjVkOWJkMWJmNzU0OTMxOGQlJyBPUkRFUiBCWSBJRCBERVNDIExJTUlUIDUwIA==",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:42:06 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 AND HASH like '%7e5e18e44aaed00b5d9bd1bf7549318d%' ORDER BY ID DESC LIMIT 50 
+[25-Nov-2022 21:42:06 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS",
+    "FILE": "FS\/tags\/211024\/KAIST.json",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:42:06 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/tags/211024/KAIST.json
+[25-Nov-2022 21:42:52 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_WP_ROOT",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:42:52 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBBTkQgSEFTSCBsaWtlICclN2U1ZTE4ZTQ0YWFlZDAwYjVkOWJkMWJmNzU0OTMxOGQlJyBPUkRFUiBCWSBJRCBERVNDIExJTUlUIDUwIA==",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:42:52 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 AND HASH like '%7e5e18e44aaed00b5d9bd1bf7549318d%' ORDER BY ID DESC LIMIT 50 
+[25-Nov-2022 21:42:53 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS",
+    "FILE": "FS\/tags\/211024\/KAIST.json",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:42:53 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/tags/211024/KAIST.json
+[25-Nov-2022 21:44:30 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_WP_ROOT",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:44:30 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBBTkQgSEFTSCBsaWtlICclN2U1ZTE4ZTQ0YWFlZDAwYjVkOWJkMWJmNzU0OTMxOGQlJyBPUkRFUiBCWSBJRCBERVNDIExJTUlUIDUwIA==",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:44:30 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 AND HASH like '%7e5e18e44aaed00b5d9bd1bf7549318d%' ORDER BY ID DESC LIMIT 50 
+[25-Nov-2022 21:44:38 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS",
+    "FILE": "FS\/tags\/211024\/KAIST.json",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:44:38 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/tags/211024/KAIST.json
+[25-Nov-2022 21:46:50 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE_TEMPLATE": "PAGES\/MODAL_FOR_ADD_MATCH_ITEM.html",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:46:50 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE_TEMPLATE": "POPUP\/MODAL_POPUP.html",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:47:00 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "VVBEQVRFIE1BVENIX0xJU1QgU0VUIEhBU0ggPSAnN2U1ZTE4ZTQ0YWFlZDAwYjVkOWJkMWJmNzU0OTMxOGQnLERBVEUgPSAnMjExMDI0JyxURUFNID0gJ0tBSVNUJyxDQU1FUkFfQU5HTEUgPSAnbGVmdCZjZW50ZXImcmlnaHQnLEFSRU5BX05BTUUgPSAn64yA7KCEIOyYpeuFgOu0iScsQVJFTkFfTlVNID0gJzEnLEdBTUVfU1RBUlRfVElNRSA9ICcxODowMCcsR0FNRV9FTkRfVElNRSA9ICcyMDowMCcsVVJMID0gJzAnLCBBUkVOQV9DT0RFID0gJzAnLCBNQU5BR0VSX1BIT05FID0gJzAnLCBURUFNX05BTUVfTEVGVCA9ICdURUFNX0xFRlQnLCBURUFNX05BTUVfUklHSFQgPSAnVEVBTV9SSUdIVCcsIFRBR0dJTkdfRE9ORSA9ICdUUlVFJywgVkFMSURfVU5USUwgPSAnOTkxMjMxJywgSVNfTElOS19TSEFSRUQgPSAnWCcsIFlPVVRVQkVfVVJMUyA9ICd7ICJsZWZ0IjogIklna0N1N3lPSWpBIiwgImNlbnRlciI6ICJHbVFBMG41cldLZyIsICJyaWdodCI6ICJ4dVFqOWRRdDR0SSIgfScgV0hFUkUgSUQgPSAxIA==",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:47:00 Asia/Seoul] STR_QUERY => UPDATE MATCH_LIST SET HASH = '7e5e18e44aaed00b5d9bd1bf7549318d',DATE = '211024',TEAM = 'KAIST',CAMERA_ANGLE = 'left&center&right',ARENA_NAME = '대전 옥녀봉',ARENA_NUM = '1',GAME_START_TIME = '18:00',GAME_END_TIME = '20:00',URL = '0', ARENA_CODE = '0', MANAGER_PHONE = '0', TEAM_NAME_LEFT = 'TEAM_LEFT', TEAM_NAME_RIGHT = 'TEAM_RIGHT', TAGGING_DONE = 'TRUE', VALID_UNTIL = '991231', IS_LINK_SHARED = 'X', YOUTUBE_URLS = '{ "left": "IgkCu7yOIjA", "center": "GmQA0n5rWKg", "right": "xuQj9dQt4tI" }' WHERE ID = 1 
+[25-Nov-2022 21:47:00 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBPUkRFUiBCWSBJRCBERVNDIExJTUlUIDUwIA==",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:47:00 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 ORDER BY ID DESC LIMIT 50 
+[25-Nov-2022 21:47:06 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_WP_ROOT",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:47:06 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBBTkQgSEFTSCBsaWtlICclN2U1ZTE4ZTQ0YWFlZDAwYjVkOWJkMWJmNzU0OTMxOGQlJyBPUkRFUiBCWSBJRCBERVNDIExJTUlUIDUwIA==",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:47:06 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 AND HASH like '%7e5e18e44aaed00b5d9bd1bf7549318d%' ORDER BY ID DESC LIMIT 50 
+[25-Nov-2022 21:47:07 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS",
+    "FILE": "FS\/tags\/211024\/KAIST.json",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:47:07 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/tags/211024/KAIST.json
+[25-Nov-2022 21:47:22 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_WP_ROOT",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:47:22 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBBTkQgSEFTSCBsaWtlICclN2U1ZTE4ZTQ0YWFlZDAwYjVkOWJkMWJmNzU0OTMxOGQlJyBPUkRFUiBCWSBJRCBERVNDIExJTUlUIDUwIA==",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:47:22 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 AND HASH like '%7e5e18e44aaed00b5d9bd1bf7549318d%' ORDER BY ID DESC LIMIT 50 
+[25-Nov-2022 21:47:24 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS",
+    "FILE": "FS\/tags\/211024\/KAIST.json",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:47:24 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/tags/211024/KAIST.json
+[25-Nov-2022 21:47:43 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_WP_ROOT",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:47:43 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBBTkQgSEFTSCBsaWtlICclN2U1ZTE4ZTQ0YWFlZDAwYjVkOWJkMWJmNzU0OTMxOGQlJyBPUkRFUiBCWSBJRCBERVNDIExJTUlUIDUwIA==",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:47:43 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 AND HASH like '%7e5e18e44aaed00b5d9bd1bf7549318d%' ORDER BY ID DESC LIMIT 50 
+[25-Nov-2022 21:47:43 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS",
+    "FILE": "FS\/tags\/211024\/KAIST.json",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:47:43 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/tags/211024/KAIST.json
+[25-Nov-2022 21:47:49 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_WP_ROOT",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:47:49 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBBTkQgSEFTSCBsaWtlICclJScgT1JERVIgQlkgSUQgREVTQyBMSU1JVCA1MCA=",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:47:49 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 AND HASH like '%%' ORDER BY ID DESC LIMIT 50 
+[25-Nov-2022 21:47:49 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS",
+    "FILE": "FS\/tags\/211024\/KAIST.json",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[25-Nov-2022 21:47:49 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/tags/211024/KAIST.json
+[26-Nov-2022 13:00:31 Asia/Seoul] ARGS => {
+    "REMOTE_ADDR": "125.142.232.8",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/106.0.5249.114 Whale\/3.17.145.12 Safari\/537.36"
+}
+[26-Nov-2022 13:00:31 Asia/Seoul] ARGS => {
+    "doing_wp_cron": "1669435231.6435310840606689453125",
+    "REMOTE_ADDR": "3.38.153.166",
+    "HTTP_USER_AGENT": "WordPress\/6.1.1; http:\/\/futsal.tecs.club"
+}
+[26-Nov-2022 13:00:32 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_WP_ROOT",
+    "REMOTE_ADDR": "125.142.232.8",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/106.0.5249.114 Whale\/3.17.145.12 Safari\/537.36"
+}
+[26-Nov-2022 13:00:32 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE": "CONFIG.JSON",
+    "REMOTE_ADDR": "125.142.232.8",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/106.0.5249.114 Whale\/3.17.145.12 Safari\/537.36"
+}
+[26-Nov-2022 13:00:32 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/CONFIG.JSON
+[26-Nov-2022 13:00:33 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE_TEMPLATE": "PAGES\/APP_1ST_PAGE.html",
+    "REMOTE_ADDR": "125.142.232.8",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/106.0.5249.114 Whale\/3.17.145.12 Safari\/537.36"
+}
+[26-Nov-2022 13:00:33 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE_TEMPLATE": "PAGES\/SIDEMENU_APPS.html",
+    "REMOTE_ADDR": "125.142.232.8",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/106.0.5249.114 Whale\/3.17.145.12 Safari\/537.36"
+}
+[26-Nov-2022 13:00:33 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE_TEMPLATE": "PAGES\/MATCH-LIST.html",
+    "REMOTE_ADDR": "125.142.232.8",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/106.0.5249.114 Whale\/3.17.145.12 Safari\/537.36"
+}
+[26-Nov-2022 13:00:33 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBPUkRFUiBCWSBJRCBERVNDIExJTUlUIDUwIA==",
+    "REMOTE_ADDR": "125.142.232.8",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/106.0.5249.114 Whale\/3.17.145.12 Safari\/537.36"
+}
+[26-Nov-2022 13:00:33 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 ORDER BY ID DESC LIMIT 50 
+[26-Nov-2022 13:00:38 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE_TEMPLATE": "PAGES\/APP-GEN-TTS.html",
+    "REMOTE_ADDR": "125.142.232.8",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/106.0.5249.114 Whale\/3.17.145.12 Safari\/537.36"
+}
+[26-Nov-2022 13:00:44 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE_TEMPLATE": "PAGES\/MATCH-LIST.html",
+    "REMOTE_ADDR": "125.142.232.8",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/106.0.5249.114 Whale\/3.17.145.12 Safari\/537.36"
+}
+[26-Nov-2022 13:00:45 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBPUkRFUiBCWSBJRCBERVNDIExJTUlUIDUwIA==",
+    "REMOTE_ADDR": "125.142.232.8",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/106.0.5249.114 Whale\/3.17.145.12 Safari\/537.36"
+}
+[26-Nov-2022 13:00:45 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 ORDER BY ID DESC LIMIT 50 
+[26-Nov-2022 13:00:58 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE_TEMPLATE": "PAGES\/MODAL_FOR_ADD_MATCH_ITEM.html",
+    "REMOTE_ADDR": "125.142.232.8",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/106.0.5249.114 Whale\/3.17.145.12 Safari\/537.36"
+}
+[26-Nov-2022 13:00:58 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE_TEMPLATE": "POPUP\/MODAL_POPUP.html",
+    "REMOTE_ADDR": "125.142.232.8",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/106.0.5249.114 Whale\/3.17.145.12 Safari\/537.36"
+}
+[26-Nov-2022 13:01:01 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "SU5TRVJUIElOVE8gTUFUQ0hfTElTVCAoSEFTSCwgREFURSwgVEVBTSwgQ0FNRVJBX0FOR0xFLCBBUkVOQV9OQU1FLCBBUkVOQV9OVU0sIEdBTUVfU1RBUlRfVElNRSwgR0FNRV9FTkRfVElNRSwgVVJMLCBBUkVOQV9DT0RFLCBNQU5BR0VSX1BIT05FICwgVEVBTV9OQU1FX0xFRlQsIFRFQU1fTkFNRV9SSUdIVCwgVEFHR0lOR19ET05FLCBWQUxJRF9VTlRJTCwgSVNfTElOS19TSEFSRUQsIFlPVVRVQkVfVVJMUyApIFZBTFVFUyAoJycsICcnLCAnJywgJycsICcnLCAnJywgJycsICcnLCAnJywgJycsICcnLCAnJywgJycsICcnLCAnJywgJycsICcnKSA=",
+    "REMOTE_ADDR": "125.142.232.8",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/106.0.5249.114 Whale\/3.17.145.12 Safari\/537.36"
+}
+[26-Nov-2022 13:01:01 Asia/Seoul] STR_QUERY => INSERT INTO MATCH_LIST (HASH, DATE, TEAM, CAMERA_ANGLE, ARENA_NAME, ARENA_NUM, GAME_START_TIME, GAME_END_TIME, URL, ARENA_CODE, MANAGER_PHONE , TEAM_NAME_LEFT, TEAM_NAME_RIGHT, TAGGING_DONE, VALID_UNTIL, IS_LINK_SHARED, YOUTUBE_URLS ) VALUES ('', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '') 
+[26-Nov-2022 13:01:01 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBPUkRFUiBCWSBJRCBERVNDIExJTUlUIDUwIA==",
+    "REMOTE_ADDR": "125.142.232.8",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/106.0.5249.114 Whale\/3.17.145.12 Safari\/537.36"
+}
+[26-Nov-2022 13:01:01 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 ORDER BY ID DESC LIMIT 50 
+[26-Nov-2022 13:01:04 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "REVMRVRFIEZST00gTUFUQ0hfTElTVCBXSEVSRSBJRCA9IDIg",
+    "REMOTE_ADDR": "125.142.232.8",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/106.0.5249.114 Whale\/3.17.145.12 Safari\/537.36"
+}
+[26-Nov-2022 13:01:04 Asia/Seoul] STR_QUERY => DELETE FROM MATCH_LIST WHERE ID = 2 
+[26-Nov-2022 13:01:04 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBPUkRFUiBCWSBJRCBERVNDIExJTUlUIDUwIA==",
+    "REMOTE_ADDR": "125.142.232.8",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/106.0.5249.114 Whale\/3.17.145.12 Safari\/537.36"
+}
+[26-Nov-2022 13:01:04 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 ORDER BY ID DESC LIMIT 50 
+[26-Nov-2022 13:01:09 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE_TEMPLATE": "PAGES\/APP-GEN-TTS.html",
+    "REMOTE_ADDR": "125.142.232.8",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/106.0.5249.114 Whale\/3.17.145.12 Safari\/537.36"
+}
+[26-Nov-2022 13:01:22 Asia/Seoul] ARGS => {
+    "REQ": "api_TTS_VW",
+    "TTS_URL": "http:\/\/apps.tecs.club:8080\/API\/",
+    "TTS_TEXT": "안녕하세요 홍길동님!",
+    "REMOTE_ADDR": "125.142.232.8",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/106.0.5249.114 Whale\/3.17.145.12 Safari\/537.36"
+}
+[26-Nov-2022 13:01:22 Asia/Seoul] api_API_ACCESS => {
+    "API_REQUEST": {
+        "REQUEST": "TTS_VW",
+        "TTS_SPEED": 100,
+        "TTS_TEXT": "안녕하세요 홍길동님!",
+        "URL": "http:\/\/apps.tecs.club:8080\/API\/"
+    }
+}
+[26-Nov-2022 13:01:29 Asia/Seoul] ARGS => {
+    "REQ": "api_TTS_VW",
+    "TTS_URL": "http:\/\/apps.tecs.club:8080\/API\/",
+    "TTS_TEXT": "안녕하세요 홍길동님!",
+    "REMOTE_ADDR": "125.142.232.8",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/106.0.5249.114 Whale\/3.17.145.12 Safari\/537.36"
+}
+[26-Nov-2022 13:01:29 Asia/Seoul] api_API_ACCESS => {
+    "API_REQUEST": {
+        "REQUEST": "TTS_VW",
+        "TTS_SPEED": 100,
+        "TTS_TEXT": "안녕하세요 홍길동님!",
+        "URL": "http:\/\/apps.tecs.club:8080\/API\/"
+    }
+}
+[26-Nov-2022 13:02:03 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE_TEMPLATE": "PAGES\/MATCH-LIST.html",
+    "REMOTE_ADDR": "125.142.232.8",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/106.0.5249.114 Whale\/3.17.145.12 Safari\/537.36"
+}
+[26-Nov-2022 13:02:04 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBPUkRFUiBCWSBJRCBERVNDIExJTUlUIDUwIA==",
+    "REMOTE_ADDR": "125.142.232.8",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/106.0.5249.114 Whale\/3.17.145.12 Safari\/537.36"
+}
+[26-Nov-2022 13:02:04 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 ORDER BY ID DESC LIMIT 50 
+[26-Nov-2022 13:02:08 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE_TEMPLATE": "PAGES\/MATCH-LIST.html",
+    "REMOTE_ADDR": "125.142.232.8",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/106.0.5249.114 Whale\/3.17.145.12 Safari\/537.36"
+}
+[26-Nov-2022 13:02:09 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBPUkRFUiBCWSBJRCBERVNDIExJTUlUIDUwIA==",
+    "REMOTE_ADDR": "125.142.232.8",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/106.0.5249.114 Whale\/3.17.145.12 Safari\/537.36"
+}
+[26-Nov-2022 13:02:09 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 ORDER BY ID DESC LIMIT 50 
+[26-Nov-2022 13:02:11 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE_TEMPLATE": "PAGES\/YT_VIDEO.html",
+    "REMOTE_ADDR": "125.142.232.8",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/106.0.5249.114 Whale\/3.17.145.12 Safari\/537.36"
+}
+[26-Nov-2022 13:02:29 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE_TEMPLATE": "PAGES\/MATCH-LIST.html",
+    "REMOTE_ADDR": "125.142.232.8",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/106.0.5249.114 Whale\/3.17.145.12 Safari\/537.36"
+}
+[26-Nov-2022 13:02:29 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBPUkRFUiBCWSBJRCBERVNDIExJTUlUIDUwIA==",
+    "REMOTE_ADDR": "125.142.232.8",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/106.0.5249.114 Whale\/3.17.145.12 Safari\/537.36"
+}
+[26-Nov-2022 13:02:29 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 ORDER BY ID DESC LIMIT 50 
+[27-Nov-2022 10:29:05 Asia/Seoul] ARGS => {
+    "REMOTE_ADDR": "211.249.40.9",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit\/604.1.38 (KHTML, like Gecko) Version\/11.0 Mobile\/15A372 Safari\/604.1"
+}
+[27-Nov-2022 10:29:05 Asia/Seoul] ARGS => {
+    "doing_wp_cron": "1669512545.3587179183959960937500",
+    "REMOTE_ADDR": "3.38.153.166",
+    "HTTP_USER_AGENT": "WordPress\/6.1.1; http:\/\/futsal.tecs.club"
+}
+[27-Nov-2022 10:29:06 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_WP_ROOT",
+    "REMOTE_ADDR": "211.249.40.9",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit\/604.1.38 (KHTML, like Gecko) Version\/11.0 Mobile\/15A372 Safari\/604.1"
+}
+[27-Nov-2022 10:29:06 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE": "CONFIG.JSON",
+    "REMOTE_ADDR": "211.249.40.9",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit\/604.1.38 (KHTML, like Gecko) Version\/11.0 Mobile\/15A372 Safari\/604.1"
+}
+[27-Nov-2022 10:29:06 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/CONFIG.JSON
+[27-Nov-2022 10:29:06 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE_TEMPLATE": "PAGES\/APP_1ST_PAGE.html",
+    "REMOTE_ADDR": "211.249.40.9",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit\/604.1.38 (KHTML, like Gecko) Version\/11.0 Mobile\/15A372 Safari\/604.1"
+}
+[27-Nov-2022 10:29:06 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE_TEMPLATE": "PAGES\/SIDEMENU_APPS.html",
+    "REMOTE_ADDR": "211.249.40.9",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit\/604.1.38 (KHTML, like Gecko) Version\/11.0 Mobile\/15A372 Safari\/604.1"
+}
+[27-Nov-2022 10:29:07 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE_TEMPLATE": "PAGES\/MATCH-LIST.html",
+    "REMOTE_ADDR": "211.249.40.9",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit\/604.1.38 (KHTML, like Gecko) Version\/11.0 Mobile\/15A372 Safari\/604.1"
+}
+[27-Nov-2022 10:29:07 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBPUkRFUiBCWSBJRCBERVNDIExJTUlUIDUwIA==",
+    "REMOTE_ADDR": "211.249.40.9",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit\/604.1.38 (KHTML, like Gecko) Version\/11.0 Mobile\/15A372 Safari\/604.1"
+}
+[27-Nov-2022 10:29:07 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 ORDER BY ID DESC LIMIT 50 
+[27-Nov-2022 10:29:17 Asia/Seoul] ARGS => {
+    "REMOTE_ADDR": "3.38.153.166",
+    "HTTP_USER_AGENT": "WordPress\/6.1.1; http:\/\/futsal.tecs.club"
+}
+[27-Nov-2022 10:29:17 Asia/Seoul] ARGS => {
+    "REMOTE_ADDR": "3.38.153.166",
+    "HTTP_USER_AGENT": "WordPress\/6.1.1; http:\/\/futsal.tecs.club"
+}
+[27-Nov-2022 10:29:17 Asia/Seoul] ARGS => {
+    "REMOTE_ADDR": "3.38.153.166",
+    "HTTP_USER_AGENT": "WordPress\/6.1.1; http:\/\/futsal.tecs.club"
+}
+[27-Nov-2022 10:34:25 Asia/Seoul] ARGS => {
+    "REMOTE_ADDR": "211.249.40.16",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit\/604.1.38 (KHTML, like Gecko) Version\/11.0 Mobile\/15A372 Safari\/604.1"
+}
+[27-Nov-2022 10:34:26 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_WP_ROOT",
+    "REMOTE_ADDR": "211.249.40.16",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit\/604.1.38 (KHTML, like Gecko) Version\/11.0 Mobile\/15A372 Safari\/604.1"
+}
+[27-Nov-2022 10:34:26 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE": "CONFIG.JSON",
+    "REMOTE_ADDR": "211.249.40.16",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit\/604.1.38 (KHTML, like Gecko) Version\/11.0 Mobile\/15A372 Safari\/604.1"
+}
+[27-Nov-2022 10:34:26 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/CONFIG.JSON
+[27-Nov-2022 10:34:26 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE_TEMPLATE": "PAGES\/APP_1ST_PAGE.html",
+    "REMOTE_ADDR": "211.249.40.16",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit\/604.1.38 (KHTML, like Gecko) Version\/11.0 Mobile\/15A372 Safari\/604.1"
+}
+[27-Nov-2022 10:34:26 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE_TEMPLATE": "PAGES\/SIDEMENU_APPS.html",
+    "REMOTE_ADDR": "211.249.40.16",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit\/604.1.38 (KHTML, like Gecko) Version\/11.0 Mobile\/15A372 Safari\/604.1"
+}
+[27-Nov-2022 10:34:26 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE_TEMPLATE": "PAGES\/MATCH-LIST.html",
+    "REMOTE_ADDR": "211.249.40.16",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit\/604.1.38 (KHTML, like Gecko) Version\/11.0 Mobile\/15A372 Safari\/604.1"
+}
+[27-Nov-2022 10:34:27 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBPUkRFUiBCWSBJRCBERVNDIExJTUlUIDUwIA==",
+    "REMOTE_ADDR": "211.249.40.16",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit\/604.1.38 (KHTML, like Gecko) Version\/11.0 Mobile\/15A372 Safari\/604.1"
+}
+[27-Nov-2022 10:34:27 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 ORDER BY ID DESC LIMIT 50 
+[29-Nov-2022 22:35:44 Asia/Seoul] ARGS => {
+    "S": "Green-Line",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[29-Nov-2022 22:35:44 Asia/Seoul] ARGS => {
+    "doing_wp_cron": "1669728944.2010390758514404296875",
+    "REMOTE_ADDR": "3.38.153.166",
+    "HTTP_USER_AGENT": "WordPress\/6.1.1; http:\/\/futsal.tecs.club"
+}
+[29-Nov-2022 22:35:45 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_WP_ROOT",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[29-Nov-2022 22:35:45 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/Green-Line",
+    "FILE": "CONFIG.JSON",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[29-Nov-2022 22:35:45 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/Green-Line/CONFIG.JSON
+[29-Nov-2022 22:35:45 Asia/Seoul] ARGS => {
+    "REQ": "api_WP_ACCESS",
+    "PHP_CODES_BASE64": "aWYgKGlzX3VzZXJfbG9nZ2VkX2luKCkpIHsgICRSRVNVTFQgPSBqc29uX2VuY29kZSh3cF9nZXRfY3VycmVudF91c2VyKCkpO30gZWxzZSB7ICAkT0JKX1JFU1VMVCA9IG5ldyBzdGRDbGFzcygpOyAgJE9CSl9SRVNVTFQtPlVTRVJTX0NBTl9SRUdJU1RFUiA9IGdldF9vcHRpb24oJ3VzZXJzX2Nhbl9yZWdpc3RlcicpOyAgJFJFU1VMVCA9IGpzb25fZW5jb2RlKCRPQkpfUkVTVUxUKTt9cmV0dXJuICRSRVNVTFQ7",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[29-Nov-2022 22:35:45 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/Green-Line",
+    "FILE_TEMPLATE": "LOGIN\/APP_CONTENTS_IDPW_LOGIN_FORM.html",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[29-Nov-2022 22:35:50 Asia/Seoul] ARGS => {
+    "REQ": "api_WP_ACCESS",
+    "PHP_CODES_BASE64": "JGNyZWRlbnRpYWxzID0gYXJyYXkoCSJ1c2VyX2xvZ2luIiA9PiAibHN5IiwJInVzZXJfcGFzc3dvcmQiID0+ICJkbHRrZGRicyIsCSJyZW1lbWJlciIgPT4gImZhbHNlIik7cmV0dXJuIHdwX3NpZ25vbigkY3JlZGVudGlhbHMpOw==",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[29-Nov-2022 22:35:50 Asia/Seoul] ARGS => {
+    "S": "Green-Line",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[29-Nov-2022 22:35:50 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_WP_ROOT",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[29-Nov-2022 22:35:50 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/Green-Line",
+    "FILE": "CONFIG.JSON",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[29-Nov-2022 22:35:50 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/Green-Line/CONFIG.JSON
+[29-Nov-2022 22:35:50 Asia/Seoul] ARGS => {
+    "REQ": "api_WP_ACCESS",
+    "PHP_CODES_BASE64": "aWYgKGlzX3VzZXJfbG9nZ2VkX2luKCkpIHsgICRSRVNVTFQgPSBqc29uX2VuY29kZSh3cF9nZXRfY3VycmVudF91c2VyKCkpO30gZWxzZSB7ICAkT0JKX1JFU1VMVCA9IG5ldyBzdGRDbGFzcygpOyAgJE9CSl9SRVNVTFQtPlVTRVJTX0NBTl9SRUdJU1RFUiA9IGdldF9vcHRpb24oJ3VzZXJzX2Nhbl9yZWdpc3RlcicpOyAgJFJFU1VMVCA9IGpzb25fZW5jb2RlKCRPQkpfUkVTVUxUKTt9cmV0dXJuICRSRVNVTFQ7",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[29-Nov-2022 22:35:50 Asia/Seoul] ARGS => {
+    "REQ": "api_WP_ACCESS",
+    "PHP_CODES_BASE64": "cmV0dXJuIGFycmF5X21hcCggZnVuY3Rpb24oICRhICl7IHJldHVybiAkYVswXTsgfSwgZ2V0X3VzZXJfbWV0YSggMSApICk7",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[29-Nov-2022 22:35:50 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/Green-Line",
+    "FILE_TEMPLATE": "PAGES\/APP_1ST_PAGE.html",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[29-Nov-2022 22:35:50 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/Green-Line",
+    "FILE_TEMPLATE": "PAGES\/SIDEMENU_APPS.html",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[29-Nov-2022 22:35:50 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/Green-Line",
+    "FILE_TEMPLATE": "PAGES\/APP_Green-Line.html",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[29-Nov-2022 22:35:50 Asia/Seoul] ARGS => {
+    "REQ": "api_GreenLine",
+    "WHAT": "LIST_VIDEO_FILES",
+    "TITLE": "CAM_02",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[29-Nov-2022 22:35:50 Asia/Seoul] ARGS => {
+    "REQ": "api_GreenLine",
+    "WHAT": "LIST_VIDEO_FILES",
+    "TITLE": "CAM_01",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[29-Nov-2022 22:39:24 Asia/Seoul] ARGS => {
+    "REQ": "api_WP_ACCESS",
+    "PHP_CODES_BASE64": "cmV0dXJuIHdwX2xvZ291dCgpOw==",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[29-Nov-2022 22:39:24 Asia/Seoul] ARGS => {
+    "S": "Green-Line",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[29-Nov-2022 22:39:24 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_WP_ROOT",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[29-Nov-2022 22:39:24 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/Green-Line",
+    "FILE": "CONFIG.JSON",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[29-Nov-2022 22:39:24 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/Green-Line/CONFIG.JSON
+[29-Nov-2022 22:39:24 Asia/Seoul] ARGS => {
+    "REQ": "api_WP_ACCESS",
+    "PHP_CODES_BASE64": "aWYgKGlzX3VzZXJfbG9nZ2VkX2luKCkpIHsgICRSRVNVTFQgPSBqc29uX2VuY29kZSh3cF9nZXRfY3VycmVudF91c2VyKCkpO30gZWxzZSB7ICAkT0JKX1JFU1VMVCA9IG5ldyBzdGRDbGFzcygpOyAgJE9CSl9SRVNVTFQtPlVTRVJTX0NBTl9SRUdJU1RFUiA9IGdldF9vcHRpb24oJ3VzZXJzX2Nhbl9yZWdpc3RlcicpOyAgJFJFU1VMVCA9IGpzb25fZW5jb2RlKCRPQkpfUkVTVUxUKTt9cmV0dXJuICRSRVNVTFQ7",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[29-Nov-2022 22:39:24 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/Green-Line",
+    "FILE_TEMPLATE": "LOGIN\/APP_CONTENTS_IDPW_LOGIN_FORM.html",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[29-Nov-2022 22:39:31 Asia/Seoul] ARGS => {
+    "REQ": "api_WP_ACCESS",
+    "PHP_CODES_BASE64": "JGNyZWRlbnRpYWxzID0gYXJyYXkoCSJ1c2VyX2xvZ2luIiA9PiAibHN5IiwJInVzZXJfcGFzc3dvcmQiID0+ICJkbHRrZGRicyIsCSJyZW1lbWJlciIgPT4gImZhbHNlIik7cmV0dXJuIHdwX3NpZ25vbigkY3JlZGVudGlhbHMpOw==",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[29-Nov-2022 22:39:31 Asia/Seoul] ARGS => {
+    "S": "Green-Line",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[29-Nov-2022 22:39:31 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_WP_ROOT",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[29-Nov-2022 22:39:31 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/Green-Line",
+    "FILE": "CONFIG.JSON",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[29-Nov-2022 22:39:31 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/Green-Line/CONFIG.JSON
+[29-Nov-2022 22:39:31 Asia/Seoul] ARGS => {
+    "REQ": "api_WP_ACCESS",
+    "PHP_CODES_BASE64": "aWYgKGlzX3VzZXJfbG9nZ2VkX2luKCkpIHsgICRSRVNVTFQgPSBqc29uX2VuY29kZSh3cF9nZXRfY3VycmVudF91c2VyKCkpO30gZWxzZSB7ICAkT0JKX1JFU1VMVCA9IG5ldyBzdGRDbGFzcygpOyAgJE9CSl9SRVNVTFQtPlVTRVJTX0NBTl9SRUdJU1RFUiA9IGdldF9vcHRpb24oJ3VzZXJzX2Nhbl9yZWdpc3RlcicpOyAgJFJFU1VMVCA9IGpzb25fZW5jb2RlKCRPQkpfUkVTVUxUKTt9cmV0dXJuICRSRVNVTFQ7",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[29-Nov-2022 22:39:31 Asia/Seoul] ARGS => {
+    "REQ": "api_WP_ACCESS",
+    "PHP_CODES_BASE64": "cmV0dXJuIGFycmF5X21hcCggZnVuY3Rpb24oICRhICl7IHJldHVybiAkYVswXTsgfSwgZ2V0X3VzZXJfbWV0YSggMSApICk7",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[29-Nov-2022 22:39:31 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/Green-Line",
+    "FILE_TEMPLATE": "PAGES\/APP_1ST_PAGE.html",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[29-Nov-2022 22:39:31 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/Green-Line",
+    "FILE_TEMPLATE": "PAGES\/SIDEMENU_APPS.html",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[29-Nov-2022 22:39:31 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/Green-Line",
+    "FILE_TEMPLATE": "PAGES\/APP_Green-Line.html",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[29-Nov-2022 22:39:31 Asia/Seoul] ARGS => {
+    "REQ": "api_GreenLine",
+    "WHAT": "LIST_VIDEO_FILES",
+    "TITLE": "CAM_01",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[29-Nov-2022 22:39:31 Asia/Seoul] ARGS => {
+    "REQ": "api_GreenLine",
+    "WHAT": "LIST_VIDEO_FILES",
+    "TITLE": "CAM_02",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[29-Nov-2022 22:39:36 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/Green-Line",
+    "FILE_TEMPLATE": "PAGES\/APP_Green-Line.html",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[29-Nov-2022 22:39:36 Asia/Seoul] ARGS => {
+    "REQ": "api_GreenLine",
+    "WHAT": "LIST_VIDEO_FILES",
+    "TITLE": "CAM_02",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[29-Nov-2022 22:39:36 Asia/Seoul] ARGS => {
+    "REQ": "api_GreenLine",
+    "WHAT": "LIST_VIDEO_FILES",
+    "TITLE": "CAM_01",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[29-Nov-2022 22:40:47 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_WP_ROOT",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[29-Nov-2022 22:40:47 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBBTkQgSEFTSCBsaWtlICclJScgT1JERVIgQlkgSUQgREVTQyBMSU1JVCA1MCA=",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[29-Nov-2022 22:40:47 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 AND HASH like '%%' ORDER BY ID DESC LIMIT 50 
+[29-Nov-2022 22:40:47 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS",
+    "FILE": "FS\/tags\/211024\/KAIST.json",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/107.0.0.0 Safari\/537.36"
+}
+[29-Nov-2022 22:40:47 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/tags/211024/KAIST.json
+[01-Dec-2022 13:31:01 Asia/Seoul] ARGS => {
+    "REQ": "api_ECHO",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[01-Dec-2022 13:31:02 Asia/Seoul] ARGS => {
+    "req": "api_echo",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/4.0 (compatible; MSIE 7.0; Windows NT 6.2; WOW64; Trident\/7.0; .NET4.0C; .NET4.0E; .NET CLR 2.0.50727; .NET CLR 3.0.30729; .NET CLR 3.5.30729; InfoPath.3; Zoom 3.6.0; printmade=3.0.2.6)"
+}
+[01-Dec-2022 13:31:02 Asia/Seoul] ARGS => {
+    "doing_wp_cron": "1669869062.3813889026641845703125",
+    "REMOTE_ADDR": "3.38.153.166",
+    "HTTP_USER_AGENT": "WordPress\/6.1.1; http:\/\/futsal.tecs.club"
+}
+[01-Dec-2022 18:06:30 Asia/Seoul] ARGS => {
+    "REQ": "api_ECHO",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[01-Dec-2022 18:06:57 Asia/Seoul] PHP Warning:  simplexml_load_string(): Entity: line 1: parser error : Start tag expected, '&lt;' not found in /home/ubuntu/WEB/FUTSAL/wp-content/plugins/TECS_CLUB_API/TECS_CLUB_API.php on line 224
+[01-Dec-2022 18:06:57 Asia/Seoul] PHP Warning:  simplexml_load_string(): REQ=api_ECHO&amp;GG=89.32&amp;gfd={}&amp;sf=23&amp; in /home/ubuntu/WEB/FUTSAL/wp-content/plugins/TECS_CLUB_API/TECS_CLUB_API.php on line 224
+[01-Dec-2022 18:06:57 Asia/Seoul] PHP Warning:  simplexml_load_string(): ^ in /home/ubuntu/WEB/FUTSAL/wp-content/plugins/TECS_CLUB_API/TECS_CLUB_API.php on line 224
+[01-Dec-2022 18:06:57 Asia/Seoul] ARGS => {
+    "REQ": "api_ECHO",
+    "GG": "89.32",
+    "gfd": {},
+    "sf": "23",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Arduino\/2.2.0"
+}
+[05-Dec-2022 19:04:04 Asia/Seoul] ARGS => {
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Dec-2022 19:04:04 Asia/Seoul] ARGS => {
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Dec-2022 19:04:04 Asia/Seoul] ARGS => {
+    "doing_wp_cron": "1670234644.6077740192413330078125",
+    "REMOTE_ADDR": "3.38.153.166",
+    "HTTP_USER_AGENT": "WordPress\/6.1.1; http:\/\/futsal.tecs.club"
+}
+[05-Dec-2022 19:04:05 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_WP_ROOT",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Dec-2022 19:04:05 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE": "CONFIG.JSON",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Dec-2022 19:04:05 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/CONFIG.JSON
+[05-Dec-2022 19:04:05 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE_TEMPLATE": "PAGES\/APP_1ST_PAGE.html",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Dec-2022 19:04:05 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE_TEMPLATE": "PAGES\/SIDEMENU_APPS.html",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Dec-2022 19:04:05 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE_TEMPLATE": "PAGES\/MATCH-LIST.html",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Dec-2022 19:04:06 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBPUkRFUiBCWSBJRCBERVNDIExJTUlUIDUwIA==",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Dec-2022 19:04:06 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 ORDER BY ID DESC LIMIT 50 
+[05-Dec-2022 19:04:14 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_WP_ROOT",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Dec-2022 19:04:14 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBBTkQgSEFTSCBsaWtlICclJScgT1JERVIgQlkgSUQgREVTQyBMSU1JVCA1MCA=",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Dec-2022 19:04:14 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 AND HASH like '%%' ORDER BY ID DESC LIMIT 50 
+[05-Dec-2022 19:04:14 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS",
+    "FILE": "FS\/tags\/211024\/KAIST.json",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Dec-2022 19:04:14 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/tags/211024/KAIST.json
+[05-Dec-2022 19:04:35 Asia/Seoul] ARGS => {
+    "REMOTE_ADDR": "3.38.153.166",
+    "HTTP_USER_AGENT": "WordPress\/6.1.1; http:\/\/futsal.tecs.club"
+}
+[05-Dec-2022 19:04:35 Asia/Seoul] ARGS => {
+    "REMOTE_ADDR": "3.38.153.166",
+    "HTTP_USER_AGENT": "WordPress\/6.1.1; http:\/\/futsal.tecs.club"
+}
+[05-Dec-2022 19:04:35 Asia/Seoul] ARGS => {
+    "REMOTE_ADDR": "3.38.153.166",
+    "HTTP_USER_AGENT": "WordPress\/6.1.1; http:\/\/futsal.tecs.club"
+}
+[05-Dec-2022 19:05:27 Asia/Seoul] ARGS => {
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Dec-2022 19:05:28 Asia/Seoul] ARGS => {
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Dec-2022 19:05:28 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_WP_ROOT",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Dec-2022 19:05:28 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE": "CONFIG.JSON",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Dec-2022 19:05:28 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/CONFIG.JSON
+[05-Dec-2022 19:05:29 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE_TEMPLATE": "PAGES\/APP_1ST_PAGE.html",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Dec-2022 19:05:29 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE_TEMPLATE": "PAGES\/SIDEMENU_APPS.html",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Dec-2022 19:05:29 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE_TEMPLATE": "PAGES\/MATCH-LIST.html",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Dec-2022 19:05:29 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBPUkRFUiBCWSBJRCBERVNDIExJTUlUIDUwIA==",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Dec-2022 19:05:29 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 ORDER BY ID DESC LIMIT 50 
+[05-Dec-2022 19:05:37 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE_TEMPLATE": "PAGES\/MODAL_FOR_ADD_MATCH_ITEM.html",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Dec-2022 19:05:37 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE_TEMPLATE": "POPUP\/MODAL_POPUP.html",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Dec-2022 19:05:49 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE_TEMPLATE": "PAGES\/MODAL_FOR_ADD_MATCH_ITEM.html",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Dec-2022 19:05:49 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE_TEMPLATE": "POPUP\/MODAL_POPUP.html",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Dec-2022 20:17:15 Asia/Seoul] ARGS => {
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Dec-2022 20:17:15 Asia/Seoul] ARGS => {
+    "doing_wp_cron": "1670239035.6199259757995605468750",
+    "REMOTE_ADDR": "3.38.153.166",
+    "HTTP_USER_AGENT": "WordPress\/6.1.1; http:\/\/futsal.tecs.club"
+}
+[05-Dec-2022 20:17:16 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_WP_ROOT",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Dec-2022 20:17:16 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE": "CONFIG.JSON",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Dec-2022 20:17:16 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/CONFIG.JSON
+[05-Dec-2022 20:17:16 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE_TEMPLATE": "PAGES\/APP_1ST_PAGE.html",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Dec-2022 20:17:16 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE_TEMPLATE": "PAGES\/SIDEMENU_APPS.html",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Dec-2022 20:17:16 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE_TEMPLATE": "PAGES\/MATCH-LIST.html",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Dec-2022 20:17:16 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBPUkRFUiBCWSBJRCBERVNDIExJTUlUIDUwIA==",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Dec-2022 20:17:16 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 ORDER BY ID DESC LIMIT 50 
+[05-Dec-2022 20:18:48 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE_TEMPLATE": "PAGES\/MATCH-LIST.html",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Dec-2022 20:18:49 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBPUkRFUiBCWSBJRCBERVNDIExJTUlUIDUwIA==",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Dec-2022 20:18:49 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 ORDER BY ID DESC LIMIT 50 
+[05-Dec-2022 21:50:03 Asia/Seoul] ARGS => {
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Dec-2022 21:50:03 Asia/Seoul] ARGS => {
+    "doing_wp_cron": "1670244603.7852780818939208984375",
+    "REMOTE_ADDR": "3.38.153.166",
+    "HTTP_USER_AGENT": "WordPress\/6.1.1; http:\/\/futsal.tecs.club"
+}
+[05-Dec-2022 21:50:04 Asia/Seoul] ARGS => {
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Dec-2022 21:50:04 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_WP_ROOT",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Dec-2022 21:50:04 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE": "CONFIG.JSON",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Dec-2022 21:50:04 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/CONFIG.JSON
+[05-Dec-2022 21:50:04 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE_TEMPLATE": "PAGES\/APP_1ST_PAGE.html",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Dec-2022 21:50:04 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE_TEMPLATE": "PAGES\/SIDEMENU_APPS.html",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Dec-2022 21:50:05 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE_TEMPLATE": "PAGES\/MATCH-LIST.html",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Dec-2022 21:50:05 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBPUkRFUiBCWSBJRCBERVNDIExJTUlUIDUwIA==",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Dec-2022 21:50:05 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 ORDER BY ID DESC LIMIT 50 
+[05-Dec-2022 21:50:43 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE_TEMPLATE": "PAGES\/YT_VIDEO.html",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Dec-2022 21:50:47 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE_TEMPLATE": "PAGES\/MATCH-LIST.html",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Dec-2022 21:50:48 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBPUkRFUiBCWSBJRCBERVNDIExJTUlUIDUwIA==",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Dec-2022 21:50:48 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 ORDER BY ID DESC LIMIT 50 
+[05-Dec-2022 22:30:56 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_WP_ROOT",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Dec-2022 22:30:56 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBBTkQgSEFTSCBsaWtlICclJScgT1JERVIgQlkgSUQgREVTQyBMSU1JVCA1MCA=",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Dec-2022 22:30:56 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 AND HASH like '%%' ORDER BY ID DESC LIMIT 50 
+[05-Dec-2022 22:30:56 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS",
+    "FILE": "FS\/tags\/211024\/KAIST.json",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Dec-2022 22:30:56 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/tags/211024/KAIST.json
+[05-Dec-2022 22:59:08 Asia/Seoul] ARGS => {
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Dec-2022 22:59:08 Asia/Seoul] ARGS => {
+    "doing_wp_cron": "1670248748.3583331108093261718750",
+    "REMOTE_ADDR": "3.38.153.166",
+    "HTTP_USER_AGENT": "WordPress\/6.1.1; http:\/\/futsal.tecs.club"
+}
+[05-Dec-2022 22:59:08 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_WP_ROOT",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Dec-2022 22:59:08 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE": "CONFIG.JSON",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Dec-2022 22:59:08 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/CONFIG.JSON
+[05-Dec-2022 22:59:08 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE_TEMPLATE": "PAGES\/APP_1ST_PAGE.html",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Dec-2022 22:59:09 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE_TEMPLATE": "PAGES\/SIDEMENU_APPS.html",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Dec-2022 22:59:09 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE_TEMPLATE": "PAGES\/MATCH-LIST.html",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Dec-2022 22:59:09 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBPUkRFUiBCWSBJRCBERVNDIExJTUlUIDUwIA==",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Dec-2022 22:59:09 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 ORDER BY ID DESC LIMIT 50 
+[05-Dec-2022 22:59:11 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE_TEMPLATE": "PAGES\/MODAL_FOR_ADD_MATCH_ITEM.html",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Dec-2022 22:59:11 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE_TEMPLATE": "POPUP\/MODAL_POPUP.html",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Dec-2022 23:22:13 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE_TEMPLATE": "PAGES\/MODAL_FOR_ADD_MATCH_ITEM.html",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Dec-2022 23:22:13 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE_TEMPLATE": "POPUP\/MODAL_POPUP.html",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[12-Dec-2022 13:03:11 Asia/Seoul] ARGS => {
+    "REMOTE_ADDR": "210.120.112.60",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[12-Dec-2022 13:03:11 Asia/Seoul] ARGS => {
+    "doing_wp_cron": "1670817791.3687748908996582031250",
+    "REMOTE_ADDR": "3.38.153.166",
+    "HTTP_USER_AGENT": "WordPress\/6.1.1; http:\/\/futsal.tecs.club"
+}
+[12-Dec-2022 13:03:13 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_WP_ROOT",
+    "REMOTE_ADDR": "210.120.112.60",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[12-Dec-2022 13:03:13 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE": "CONFIG.JSON",
+    "REMOTE_ADDR": "210.120.112.60",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[12-Dec-2022 13:03:13 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/CONFIG.JSON
+[12-Dec-2022 13:03:13 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE_TEMPLATE": "PAGES\/APP_1ST_PAGE.html",
+    "REMOTE_ADDR": "210.120.112.60",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[12-Dec-2022 13:03:13 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE_TEMPLATE": "PAGES\/SIDEMENU_APPS.html",
+    "REMOTE_ADDR": "210.120.112.60",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[12-Dec-2022 13:03:13 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE_TEMPLATE": "PAGES\/MATCH-LIST.html",
+    "REMOTE_ADDR": "210.120.112.60",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[12-Dec-2022 13:03:14 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBPUkRFUiBCWSBJRCBERVNDIExJTUlUIDUwIA==",
+    "REMOTE_ADDR": "210.120.112.60",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[12-Dec-2022 13:03:14 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 ORDER BY ID DESC LIMIT 50 
+[12-Dec-2022 13:03:19 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_PAGE",
+    "FLDR_TEMPLATE": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS\/FS",
+    "FILE_TEMPLATE": "PAGES\/APP-GEN-TTS.html",
+    "REMOTE_ADDR": "210.120.112.60",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[12-Dec-2022 13:03:36 Asia/Seoul] ARGS => {
+    "REMOTE_ADDR": "3.38.153.166",
+    "HTTP_USER_AGENT": "WordPress\/6.1.1; http:\/\/futsal.tecs.club"
+}
+[12-Dec-2022 13:03:36 Asia/Seoul] ARGS => {
+    "REMOTE_ADDR": "3.38.153.166",
+    "HTTP_USER_AGENT": "WordPress\/6.1.1; http:\/\/futsal.tecs.club"
+}
+[12-Dec-2022 13:03:36 Asia/Seoul] ARGS => {
+    "REMOTE_ADDR": "3.38.153.166",
+    "HTTP_USER_AGENT": "WordPress\/6.1.1; http:\/\/futsal.tecs.club"
+}
+[04-Jan-2023 20:51:45 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_WP_ROOT",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[04-Jan-2023 20:51:45 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBBTkQgSEFTSCBsaWtlICclJScgT1JERVIgQlkgSUQgREVTQyBMSU1JVCA1MCA=",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[04-Jan-2023 20:51:45 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 AND HASH like '%%' ORDER BY ID DESC LIMIT 50 
+[04-Jan-2023 20:51:45 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS",
+    "FILE": "FS\/tags\/211024\/KAIST.json",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[04-Jan-2023 20:51:45 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/tags/211024/KAIST.json
+[05-Jan-2023 11:22:16 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_WP_ROOT",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Jan-2023 11:22:16 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBBTkQgSEFTSCBsaWtlICclJScgT1JERVIgQlkgSUQgREVTQyBMSU1JVCA1MCA=",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Jan-2023 11:22:16 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 AND HASH like '%%' ORDER BY ID DESC LIMIT 50 
+[05-Jan-2023 11:22:16 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS",
+    "FILE": "FS\/tags\/211024\/KAIST.json",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Jan-2023 11:22:16 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/tags/211024/KAIST.json
+[05-Jan-2023 11:22:43 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_WP_ROOT",
+    "REMOTE_ADDR": "183.98.32.67",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Jan-2023 11:22:43 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBBTkQgSEFTSCBsaWtlICclJScgT1JERVIgQlkgSUQgREVTQyBMSU1JVCA1MCA=",
+    "REMOTE_ADDR": "183.98.32.67",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Jan-2023 11:22:43 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 AND HASH like '%%' ORDER BY ID DESC LIMIT 50 
+[05-Jan-2023 11:22:43 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS",
+    "FILE": "FS\/tags\/211024\/KAIST.json",
+    "REMOTE_ADDR": "183.98.32.67",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Jan-2023 11:22:43 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/tags/211024/KAIST.json
+[05-Jan-2023 12:17:29 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_WP_ROOT",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Jan-2023 12:17:29 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBBTkQgSEFTSCBsaWtlICclJScgT1JERVIgQlkgSUQgREVTQyBMSU1JVCA1MCA=",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Jan-2023 12:17:29 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 AND HASH like '%%' ORDER BY ID DESC LIMIT 50 
+[05-Jan-2023 12:17:29 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS",
+    "FILE": "FS\/tags\/211024\/KAIST.json",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Jan-2023 12:17:29 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/tags/211024/KAIST.json
+[05-Jan-2023 12:19:12 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_WP_ROOT",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Jan-2023 12:19:12 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBBTkQgSEFTSCBsaWtlICclJScgT1JERVIgQlkgSUQgREVTQyBMSU1JVCA1MCA=",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Jan-2023 12:19:12 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 AND HASH like '%%' ORDER BY ID DESC LIMIT 50 
+[05-Jan-2023 12:19:12 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS",
+    "FILE": "FS\/tags\/211024\/KAIST.json",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Jan-2023 12:19:12 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/tags/211024/KAIST.json
+[05-Jan-2023 12:36:04 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_WP_ROOT",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Jan-2023 12:36:04 Asia/Seoul] ARGS => {
+    "REQ": "api_DB_ACCESS",
+    "STR_SQL_BASE64": "U0VMRUNUICogRlJPTSBNQVRDSF9MSVNUIFdIRVJFIElEID4gMCBBTkQgSEFTSCBsaWtlICclJScgT1JERVIgQlkgSUQgREVTQyBMSU1JVCA1MCA=",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Jan-2023 12:36:04 Asia/Seoul] STR_QUERY => SELECT * FROM MATCH_LIST WHERE ID > 0 AND HASH like '%%' ORDER BY ID DESC LIMIT 50 
+[05-Jan-2023 12:36:04 Asia/Seoul] ARGS => {
+    "REQ": "api_GET_FILE",
+    "FLDR": "\/home\/ubuntu\/WEB\/FUTSAL\/WEBAPPS\/APPS",
+    "FILE": "FS\/tags\/211024\/KAIST.json",
+    "REMOTE_ADDR": "125.133.44.184",
+    "HTTP_USER_AGENT": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/108.0.0.0 Safari\/537.36"
+}
+[05-Jan-2023 12:36:04 Asia/Seoul] GET_FILE_EX -> /home/ubuntu/WEB/FUTSAL/WEBAPPS/APPS/FS/tags/211024/KAIST.json

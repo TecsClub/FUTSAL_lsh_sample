@@ -1,0 +1,92 @@
+{@ $JSON_ARGS = json_decode(base64_decode($ARGS->JSON_ARGS_BASE64)); }
+<style>
+	.login_table 			{width:100%; height:100%;}
+	.login_table table		{width:100%; height:100%; font-size:100%; border-collapse: separate; border-spacing: 1px; line-height: 100%;}
+	.login_table table th	{text-decoration:bold; text-align: center; white-space:normal; vertical-align: middle; word-break:break-all; background:#ccc;}
+	.login_table table td	{text-decoration:none; text-align: left;   white-space:normal; vertical-align: middle;word-break:break-all;}
+</style>
+<script>
+
+function INIT_WIDGETS_FOR_CHROME_ONLY() {
+
+	$('#ID_LINK_REDIRECT_EDGE').attr('href', 'microsoft-edge:' + window.location.origin);
+	$('#ID_LINK_REDIRECT_CHROME').attr('href', 'https://www.google.co.kr/chrome/browser/desktop/index.html');
+	$('#ID_LINK_REDIRECT_FIREFOX').attr('href', 'https://www.mozilla.org/ko/firefox/new/');
+	return;
+}
+
+
+
+</script>
+<div class="login_table">
+	<!--@if($JSON_ARGS->IS_MOBILE)-->
+	<table style="height:150px;">
+		<col width="30%"/>
+		<col width="30%"/>
+	<!--@else-->
+	<div style="height:30%;"></div>
+	<table style="height:30%;">
+		<col width="20%"/>
+		<col width="30%"/>
+		<col width="30%"/>
+		<col width="20%"/>
+	<!--@end-->
+		<tr style="height:33%;">
+			<!--@if(!$JSON_ARGS->IS_MOBILE)-->
+			<td></td>
+			<!--@end-->
+			<th colspan="2">
+				<b>{{PHONE_INFO.APP_NAME}} 안내</b>
+			</th>
+			<!--@if(!$JSON_ARGS->IS_MOBILE)-->
+			<td></td>
+			<!--@end-->
+		</tr>
+		<tr style="height:33%;">
+			<!--@if(!$JSON_ARGS->IS_MOBILE)-->
+			<td></td>
+			<!--@end-->
+			<th colspan="2">
+				<b>
+					죄송합니다!<br/>
+					{{PHONE_INFO.APP_NAME}} 서비스를 이용하시려면,...<br/>
+					크롬(Chrome), 에지(Edge), 파이어 폭스(FireFox) 등,...<br/>
+					WebAudio 기능을 지원하는 브라우저를 이용하여 접속하셔야 합니다!
+				</b>
+			</th>
+			<!--@if(!$JSON_ARGS->IS_MOBILE)-->
+			<td></td>
+			<!--@end-->
+		</tr>
+		<tr style="height:34%;">
+			<!--@if(!$JSON_ARGS->IS_MOBILE)-->
+			<td></td>
+			<!--@end-->
+			<td colspan="2">
+				<table>
+					<tr>
+						<th>
+							<a id="ID_LINK_REDIRECT_EDGE"><span>에지(Edge) 로 접속</span></a>
+						</th>
+					</tr>
+					<tr>
+						<th>
+							<a id="ID_LINK_REDIRECT_CHROME"><span>크롬(Chrome) 다운로드</span></a>
+						</th>
+					</tr>
+					<tr>
+						<th>
+							<a id="ID_LINK_REDIRECT_FIREFOX"><span>파이어폭스(FireFox) 다운로드</span></a>
+						</th>
+					</tr>
+				</table>
+			</td>
+			<!--@if(!$JSON_ARGS->IS_MOBILE)-->
+			<td></td>
+			<!--@end-->
+		</tr>
+	</table>
+	<!--@if(!$JSON_ARGS->IS_MOBILE)-->
+	<div style="height:50%;""></div>
+	<!--@end-->
+</div>

@@ -1,0 +1,95 @@
+
+<style>
+	.YT_STYLE 			{width:100%; height:100%;box-sizing:border-box;}
+	.YT_STYLE table		{width:100%; height:100%; font-size:100%; border-collapse: separate; border-spacing: 1px; line-height: 100%;}
+	.YT_STYLE table th	{font-weight:bold; text-align: center; white-space:normal; vertical-align: middle; word-break:break-all; word-wrap:break-all; background:#4789b7; color:white; }
+	.YT_STYLE table td	{text-decoration:none; text-align: center;   white-space:normal; vertical-align: middle; word-break:break-all; word-wrap:break-all; background:#eee; padding:0 10px;}
+</style>
+
+<script>
+
+    var player;
+    var VIDEO_Duration = 0;
+/*
+	function QIIP_SIDEMENU_INIT_WIDGETS() {
+		INIT_BUTTON_WIDGETS();
+		YT_VIDEO_DISP();
+	}
+//*/
+//*
+	function QIIP_SIDEMENU_INIT_WIDGETS() {
+		TOGGLE_SIDEMENU(function () {
+			$('#MENU_CONTENTS').css('height', ($('#SIDEMENU_PAGE').height() - 70) / $('#SIDEMENU_PAGE').height() * 100 + '%');
+
+			INIT_BUTTON_WIDGETS();
+			YT_VIDEO_DISP();
+
+		});
+	}
+//*/
+	function INIT_BUTTON_WIDGETS() {
+		$(".EVENT_BUTTON").unbind();
+		$(".EVENT_BUTTON").on('click', function () {
+			var ID = $(this).attr('id');
+			if (ID == 'DUMMY') {
+			} else if (ID == 'BTN_PLAY_0') {
+				player.seekTo(0);
+			} else if (ID == 'BTN_PLAY_1') {
+				player.seekTo(VIDEO_Duration / 3);
+			} else if (ID == 'BTN_PLAY_2') {
+				player.seekTo(VIDEO_Duration * 2 / 3);
+			} else if (ID == 'BTN_PLAY_3') {
+				player.seekTo(VIDEO_Duration - 1);
+			}
+			
+		});
+	}
+	
+	function YT_VIDEO_DISP(){
+		if(onYouTubeIframeAPIReady_flag){
+		    player = new YT.Player('DIV_YT_VIDEO', {
+		        events: {
+		            onReady: function() {
+		                console.log('player ready')
+		                player.playVideo()
+						VIDEO_Duration = player.getDuration();
+//		                console.log(player.getDuration())
+		            }
+		        },
+				width: '100%',
+		        height: '100%',
+				videoId: 'M7lc1UVf-VE'
+		    });
+
+		} else {
+			setTimeout(function(){
+				YT_VIDEO_DISP();
+			}, 100);
+		}
+	}
+
+</script>
+
+
+<div class="YT_STYLE" style="overflow:auto;">
+	<div style="width:100%;height:80%;" id="DIV_YT_VIDEO">
+	</div>
+	<div style="height:20%;">
+		<table>
+			<tr>
+				<td>
+					<button class="btn btn-primary EVENT_BUTTON" id="BTN_PLAY_0" style="width:90%;height:60%;">시작</button>
+				</td>
+				<td>
+					<button class="btn btn-primary EVENT_BUTTON" id="BTN_PLAY_1" style="width:90%;height:60%;">1/3</button>
+				</td>
+				<td>
+					<button class="btn btn-primary EVENT_BUTTON" id="BTN_PLAY_2" style="width:90%;height:60%;">2/3</button>
+				</td>
+				<td>
+					<button class="btn btn-primary EVENT_BUTTON" id="BTN_PLAY_3" style="width:90%;height:60%;">끝</button>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>

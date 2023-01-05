@@ -1,0 +1,32 @@
+<script>
+	var PREV_NFC_TAGGING_MODE;
+	function INIT_WIDGETS_FOR_NFC_MATCH_ID_REGIST(MODAL_ID) {
+		PREV_NFC_TAGGING_MODE = NFC_TAGGING_MODE;
+		NFC_TAGGING_MODE = 'MATCH_ID_REGIST';
+		$(".EVENT_NFC_MATCH_ID_REGIST").on('click', function () {
+			var ID = $(this).attr('ID');
+			if (ID == 'DUMMY') {
+			} else if (ID == 'BTN_CANCLE_NFC_MATCH_ID_REGIST') {
+				NFC_TAGGING_MODE = PREV_NFC_TAGGING_MODE;
+				if (MODAL_ID != undefined) $('#'+MODAL_ID).modal('hide');
+			} else if (ID == 'BTN_APPLY_NFC_MATCH_ID_REGIST') {
+				NFC_TAGGING_MODE = PREV_NFC_TAGGING_MODE;
+				_RS.NOOL_NFC_CONFIG.NFC_MATCHING_ID = $('#MODAL_NFC_MATCHING_ID').val();
+				PUT_NOOL_NFC_CONFIG();
+				_RS.$apply();
+				if (MODAL_ID != undefined) $('#'+MODAL_ID).modal('hide');
+			}
+		});
+	}
+</script>
+<div style="height:45%;">
+	<input type="text" readonly style="width:100%;height:80%;text-align:center;" id="MODAL_NFC_MATCHING_ID" value="{{NOOL_NFC_CONFIG.NFC_MATCHING_ID}}" />
+</div>
+<div style="height:55%;">
+	<div style="width:50%;float:left;">
+		<button class="btn btn-primary btn-lg btn-block login-btn EVENT_NFC_MATCH_ID_REGIST" id="BTN_APPLY_NFC_MATCH_ID_REGIST">저장</button>
+	</div>
+	<div style="width:50%;float:left;">
+		<button class="btn btn-primary btn-lg btn-block login-btn EVENT_NFC_MATCH_ID_REGIST" id="BTN_CANCLE_NFC_MATCH_ID_REGIST">취소</button>
+	</div>
+</div>

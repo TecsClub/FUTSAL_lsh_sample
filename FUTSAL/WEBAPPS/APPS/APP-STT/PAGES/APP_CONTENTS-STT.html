@@ -1,0 +1,401 @@
+<script>
+var DIV_STT_STATUS_LOG = 'DIV_STT_STATUS_LOG';
+var ARSAUTH_WS_SERVER_URL	= 'ws://' + window.location.hostname + ':2366';
+//var ARSAUTH_WS_CHANNEL		= 'stt-service';
+// var ARSAUTH_WS_SERVER_URL	= 'ws://pbx.q1p.win:2366';
+var ARSAUTH_WS_CHANNEL		= 'stt-service';
+var STT_UDP_HOST = '';
+var STT_UDP_PORT = -1;
+var FLAG_I_AM_IDLE = false;
+	
+function INIT_WIDGETS_FOR_MENU_CONTENTS(OBJ_DIALOG) {
+
+	INIT_WS_CONNECTION_FOR_STT_SERVICE(ARSAUTH_WS_SERVER_URL, ARSAUTH_WS_CHANNEL);	
+	
+	$('#VOICE_INPUT_PROGRESSBAR').jqxProgressBar({ animationDuration:0, value:1, max:100, width: '100%', height: '100%'});
+	
+	$(".BTN_PAGES").jqxButton({
+		width: '100%',
+		height: '100%'
+	}).on('click', function () {
+		var ID = $(this).attr('ID');
+		if (ID == 'DUMMY') {
+		} else if (ID == 'BTN_APP_STT_EXIT') {
+			HOW_TO_EXIT_APP();
+		}
+	});
+	
+	if (_RS._ACCESS_FROM_APP) {
+		$('#DIV_NAUTES_SoundVisualizer').css('height', 0);
+		$('#DIV_STT_STATUS_LOG').css('height', '89%');
+//		START_SPEECH_RECOGNITION();
+	} else {
+		INIT_NAUTES_SoundVisualizer();
+	}
+}
+
+function HOW_TO_EXIT_APP() {
+	_ionicPopup.confirm({
+		title: '종료 확인',
+		cssClass: 'qiip_popup',
+		template: TO_TABLE_CENTER('앱을 종료 하시겠습니까?')
+	}).then(function(res) {
+		if (res) {
+			STOP_VOICE_INPUT_SPEECH_RECOGNITION();
+			APP_FINISH();
+		}
+	});
+}
+
+function APP_FINISH() {
+	QIIP_APPS_NATIVE_ACCESS({
+		REQUEST: 'APP_FINISH',
+	}, function (STR_RESULT) {
+	});
+}
+
+function ON_TRANSCRIPTION(strJSON_BASE64) {
+	var objParam = JSON.parse(Base64.decode(strJSON_BASE64));
+//	alert(JSON.stringify(objParam));
+//	console.log(JSON.stringify(objParam));
+
+	var MSG_TO_SERVER = {
+		CMD: 'STT_STATUS',
+		STT_STATUS: 'ON_TRANSCRIPTION',
+		TRANSCRIPTION: objParam.CALLBACK_PARAMS,
+  		WS_CONNECTION_ID: MY_WS_CONNECTION_ID
+	};
+
+  	SEND_MESSAGE_TO_WS_STT(MSG_TO_SERVER);
+
+	QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+		DIV_STT_STATUS_LOG,
+		'<pre>' + objParam.CALLBACK_PARAMS + '</pre>',
+		'me',
+		'70%'
+	);
+
+	setTimeout(function () {
+		SEND_ON_IDLE_MESSAGE_TO_WS_STT();
+	},1000);
+}
+
+function SEND_ON_IDLE_MESSAGE_TO_WS_STT() {
+	if (!FLAG_I_AM_IDLE) {
+		FLAG_I_AM_IDLE = true;
+		SEND_MESSAGE_TO_WS_STT({
+			CMD: 'STT_STATUS',
+			STT_STATUS: 'ON_IDLE',
+	  		WS_CONNECTION_ID: MY_WS_CONNECTION_ID
+		});
+	}
+}
+
+function SEND_MESSAGE_TO_WS_STT(JSON_MESSAGE) {
+
+	JSON_MESSAGE.UDP_HOST = STT_UDP_HOST;
+	JSON_MESSAGE.UDP_PORT = STT_UDP_PORT;
+
+	QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+		DIV_STT_STATUS_LOG,
+		'<pre>' + JSON.stringify(JSON_MESSAGE, null, '  ') + '</pre>',
+		'me',
+		'70%'
+	);
+
+	WS_CONNECTION_FOR_STT_SERVICE.send(JSON.stringify(JSON_MESSAGE));
+}
+
+function ON_STT_MESSAGE(strJSON_BASE64) {
+	var objParam = JSON.parse(Base64.decode(strJSON_BASE64));
+//	alert(JSON.stringify(objParam));
+//	console.log(JSON.stringify(objParam));
+
+	var MSG_TO_SERVER = {};
+	if (objParam.CALLBACK_PARAMS.indexOf('on') !== -1) {
+		MSG_TO_SERVER = {
+			CMD: 'STT_STATUS',
+			STT_STATUS: objParam.CALLBACK_PARAMS,
+	  		WS_CONNECTION_ID: MY_WS_CONNECTION_ID
+		};
+	} else {
+		MSG_TO_SERVER = {
+			CMD: 'STT_STATUS',
+			STT_STATUS: 'STT_TRANSCRIPTION_ERROR',
+			ERROR_MESSAGE: objParam.CALLBACK_PARAMS,
+	  		WS_CONNECTION_ID: MY_WS_CONNECTION_ID
+		};
+		setTimeout(function () {
+			SEND_ON_IDLE_MESSAGE_TO_WS_STT();
+		},1000);
+	}
+
+  	SEND_MESSAGE_TO_WS_STT(MSG_TO_SERVER);
+
+	QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+		DIV_STT_STATUS_LOG,
+		'<pre>' + objParam.CALLBACK_PARAMS + '</pre>',
+		'you',
+		'70%'
+	);
+
+}
+
+function ON_RMSCHANGED(strJSON_BASE64) {
+	var objParam = JSON.parse(Base64.decode(strJSON_BASE64));
+//	console.log(JSON.stringify(objParam));
+	$( "#VOICE_INPUT_PROGRESSBAR" ).jqxProgressBar('val', objParam.CALLBACK_PARAMS);
+}
+
+function START_SPEECH_RECOGNITION() {
+	QIIP_APPS_NATIVE_ACCESS({
+		REQUEST: 'START_SPEECH_RECOGNITION',
+		STT_CALLBACK_SCRIPT: {
+		    CALLBACK_SCRIPT_STT_ON_TRANSCRIPTION:	'ON_TRANSCRIPTION',
+		    CALLBACK_SCRIPT_STT_ON_RMSCHANGED:		'ON_RMSCHANGED',
+
+		    CALLBACK_SCRIPT_STT_ON_READY_FOR_SPEECH:	'ON_STT_MESSAGE',
+		    CALLBACK_SCRIPT_STT_ON_ERROR:				'ON_STT_MESSAGE',
+		    CALLBACK_SCRIPT_STT_ON_BEGINNING_OF_SPEECH:	'ON_STT_MESSAGE',
+		    CALLBACK_SCRIPT_STT_ON_END_OF_SPEECH:		'ON_STT_MESSAGE',
+		    CALLBACK_SCRIPT_STT_ON_BUFFER_RECEIVED:		'ON_STT_MESSAGE',
+		    CALLBACK_SCRIPT_STT_ON_PARTIAL_RESULTS:		'ON_STT_MESSAGE',
+		    CALLBACK_SCRIPT_STT_ON_EVENT:				'ON_STT_MESSAGE',
+		},
+		LANGUAGE: 'Korean',
+		MUTE_ALL_SOUND: false,
+		STT_CONTINUE: false,
+		SILENCE_LENGTH_MILLIS: 5000,
+		FULL_CONTENTS: true,
+	}, function (STR_RESULT) {
+		var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+		if (JSON_RESULT.STATUS != 200) {
+			QIIP_POPUP_FOR_YES_NO(
+				_RS.PHONE_INFO.APP_NAME + ' 안내',[
+					_RS.PHONE_INFO.APP_NAME + ' 를 정상적으로 이용하시려면...',
+					'요청드린 권한을 허용하셔야 합니다.',
+					'권한 허용을 재시도 하시겠습니까?',
+				], function () {
+					START_SPEECH_RECOGNITION();
+				}, function () {
+				},
+				95,
+				50
+			);
+		} else {
+		}
+	});
+}
+
+function STOP_VOICE_INPUT_SPEECH_RECOGNITION() {
+	QIIP_APPS_NATIVE_ACCESS({
+		REQUEST: 'STOP_SPEECH_RECOGNITION',
+		FULL_CONTENTS: true,
+	}, function (STR_RESULT) {
+		var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+	});
+}
+
+var _NAUTES_SoundVisualizer = undefined;
+function INIT_NAUTES_SoundVisualizer() {
+	_NAUTES_SoundVisualizer = new NAUTES_SoundVisualizer({
+		DOM_ID_FOR_RENDERING: 'DIV_NAUTES_SoundVisualizer',
+		DOWNLOAD_DISABLE: false,
+		WAVE_DISPLAY_ONLY: true,
+	});
+/*
+	_NAUTES_SoundVisualizer.WAE_PLAYLIST.load([{
+			src: 'http://ask-regard.call-save.biz?PASS=1&cmd=api_YOUTUBE_MP3&YOUTUBE_videoId=yQxB1M0VZLU&EXT=.mp3'
+	}]).then(function() {
+	});
+*/
+}
+var MY_WS_CONNECTION_ID = '';
+var WS_CONNECTION_FOR_STT_SERVICE = undefined;
+function INIT_WS_CONNECTION_FOR_STT_SERVICE(ws_server, ws_channel) {
+
+	WS_CONNECTION_FOR_STT_SERVICE = {};
+    // if user is running mozilla then use it's built-in WebSocket
+    window.WebSocket = window.WebSocket || window.MozWebSocket;
+  
+    // if browser doesn't support WebSocket, just show some notification and exit
+    if (!window.WebSocket) {
+    	QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+    		DIV_STT_STATUS_LOG,
+    		'죄송합니다, 접속에 사용하신 웹 브라우저가 WebSockets 기능을 지원하지 않습니다.',
+    		'me',
+    		'70%'
+    	);
+      return;
+    }
+
+    // open connection
+    WS_CONNECTION_FOR_STT_SERVICE = new WebSocket(ws_server, ws_channel);
+
+    WS_CONNECTION_FOR_STT_SERVICE.onopen = function () {
+    	QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+    		DIV_STT_STATUS_LOG,
+    		sprintf( "ASTERISK STT 시스템에 연결되었습니다."),
+    		'me',
+    		'70%'
+    	);
+    };
+    
+    WS_CONNECTION_FOR_STT_SERVICE.onerror = function (error) {
+    	QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+    		DIV_STT_STATUS_LOG,
+    		'ASTERISK STT 시스템에 어떤 문제가 있거나 ASTERISK STT 시스템이 응답하지 않습니다.',
+    		'you',
+    		'70%'
+    	);
+    };
+
+    // most important part - incoming messages
+    WS_CONNECTION_FOR_STT_SERVICE.onmessage = function (message) {
+        // try to parse JSON message. Because we know that the server always returns
+        // JSON this should work without any problem but we should make sure that
+        // the massage is not chunked or otherwise damaged.
+        try {
+          var JSON_PARSED = JSON.parse(message.data);
+        } catch (e) {
+	    	QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+	    		DIV_STT_STATUS_LOG,
+	    		'이건 JSON 스트링이 아닌것 같아요! : ' + message.data,
+	    		'me',
+	    		'70%'
+	    	);
+			return;
+        }
+
+        // NOTE: if you're not sure about the JSON structure
+        // check the server source code above
+        if ('TYPE' in JSON_PARSED) {
+	    	QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+	    		DIV_STT_STATUS_LOG,
+	    		'<pre>' + JSON.stringify(JSON_PARSED, null, '  ') + '</pre>',
+	    		'you',
+	    		'70%'
+	    	);
+		  
+			var TYPE = JSON_PARSED.TYPE;
+			if (TYPE == 'WS_CONNECTION_ID') {			// 대소문자 구분!
+				MY_WS_CONNECTION_ID = JSON_PARSED.WS_CONNECTION_ID;
+				if (!_RS._ACCESS_FROM_APP) {
+				  	SEND_MESSAGE_TO_WS_STT({
+				  		CMD: 'REGIST_AS_MONITOR',
+				  		WS_CONNECTION_ID: JSON_PARSED.WS_CONNECTION_ID
+			  		});
+				} else {
+					setTimeout(function () {
+						SEND_ON_IDLE_MESSAGE_TO_WS_STT();
+					},1000);
+				}
+		    	
+		    }
+		} else if ('DETECT_ID' in JSON_PARSED) {
+	    	QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+	    		DIV_STT_STATUS_LOG,
+	    		'<pre>' + JSON.stringify(JSON_PARSED, null, '  ') + '</pre>',
+	    		'you',
+	    		'70%'
+	    	);
+		} else if ('CMD' in JSON_PARSED) {
+			if (JSON_PARSED.CMD == 'DUMMY') {
+			} else if (JSON_PARSED.CMD == 'START_STT') {
+				STT_UDP_HOST = JSON_PARSED.UDP_HOST;
+				STT_UDP_PORT = JSON_PARSED.UDP_PORT;
+				START_SPEECH_RECOGNITION();
+			}
+		} else if ('SAMPLE_BYTES' in JSON_PARSED) {
+/*
+	    	QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+	    		DIV_STT_STATUS_LOG,
+	    		'<pre>' + JSON.stringify(JSON_PARSED, null, '  ') + '</pre>',
+	    		'me',
+	    		'70%'
+	    	);
+*/
+
+			if (FLAG_I_AM_IDLE) {
+				FLAG_I_AM_IDLE = false;
+				SEND_MESSAGE_TO_WS_STT({
+					CMD: 'STT_STATUS',
+					STT_STATUS: 'ON_SAMPLE_BYTES',
+			  		WS_CONNECTION_ID: MY_WS_CONNECTION_ID
+				});
+			}
+
+			if (_RS._ACCESS_FROM_APP) {
+				QIIP_APPS_NATIVE_ACCESS({
+					REQUEST: 'FEED_AUDIO_TRACK',
+					SAMPLE_BASE64: JSON_PARSED.SAMPLE_BASE64,
+				}, function (STR_RESULT) {
+					var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+				});
+			} else {
+		    	if (JSON_PARSED.SAMPLE_INDEX < 1) {
+			    	QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+			    		DIV_STT_STATUS_LOG,
+			    		'새로운거 발견! 큐를 지우고 시작..',
+			    		'me',
+			    		'70%'
+			    	);
+		    		_NAUTES_SoundVisualizer.CLEAR_SOUND_QUEUE();
+		    	}
+
+		    	_NAUTES_SoundVisualizer.PUT_UDP_JSON_SAMPLES_TO_SOUND_QUEUE(JSON_PARSED);
+			}
+
+        } else {
+/*
+	    	QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+	    		DIV_STT_STATUS_LOG,
+	    		'흠..., JSON 스트링이 이런식이면 곤란한데...  TYPE 속성이 없쟎아...: ' + JSON.stringify(JSON_PARSED, null, '\t'),
+	    		'me',
+	    		'70%'
+	    	);
+*/
+        }
+    };
+
+    WS_CONNECTION_FOR_STT_SERVICE.onclose  = function () {
+    	QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+    		DIV_STT_STATUS_LOG,
+    		'ASTERISK STT 시스템과 연결이 끊어졌습니다. 1초 이내에 연결을 재시도 합니다.',
+    		'me',
+    		'70%'
+    	);
+		//try to reconnect in 1 seconds
+		setTimeout(function(){INIT_WS_CONNECTION_FOR_STT_SERVICE(ARSAUTH_WS_SERVER_URL, ARSAUTH_WS_CHANNEL)}, 1000);
+    };
+
+    WS_CONNECTION_FOR_STT_SERVICE.CLOSE_FORCE  = function () {
+    	QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+    		DIV_STT_STATUS_LOG,
+    		'ASTERISK STT 시스템과 연결을 정상적으로 종료 합니다.',
+    		'me',
+    		'70%'
+    	);
+    	WS_CONNECTION_FOR_STT_SERVICE.onclose  = function () {}; // disable onclose handler first
+    	WS_CONNECTION_FOR_STT_SERVICE.close();
+    	WS_CONNECTION_FOR_STT_SERVICE = undefined;
+    }
+}
+
+</script>
+<div class="qiip_box">
+	<div style="width:100%; height:3%; text-align: center;">
+		<div id="VOICE_INPUT_PROGRESSBAR"></div>
+	</div>
+	<div style="width:100%;height:10%;" id="DIV_NAUTES_SoundVisualizer">
+	</div>
+	<div style="width:100%;height:79%;background-color:#c9c9c9;overflow:auto;" id="DIV_STT_STATUS_LOG">
+	</div>
+	<div style="width:100%; height:8%;">
+		<table>
+			<tr>
+				<td><button class="BTN_PAGES" id="BTN_APP_STT_EXIT" >종료</button></td>
+			</tr>
+		</table>
+	</div>
+</div>

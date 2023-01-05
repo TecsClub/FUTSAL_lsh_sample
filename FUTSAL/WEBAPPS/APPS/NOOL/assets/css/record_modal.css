@@ -1,0 +1,177 @@
+@charset "utf-8";
+/* 지난 기록 css */
+/* 모달 */
+#record_popup .motion_data ul.nav{
+		width: 33%;
+		margin: 0 auto;
+}
+#record_popup #wrap{
+	height: 100%;
+	margin: 0;
+}
+#record_popup .modal-body{
+	overflow: hidden;
+}
+
+#record_popup #wrap #content{
+	height: 100%;
+}
+#record_popup .tab-content{
+	    
+}
+#record_popup .modal-header{
+	padding-bottom: 0;
+}
+#record_popup div.modal-dialog{
+	width: 1700px;
+}
+#record_popup .tab-pane{
+	    margin: 0;
+    width: 100%;
+}
+#record_popup .tab-pane #wrap{
+	width: 100%;
+}
+
+#record_popup header{
+	overflow: hidden;
+}
+#record_popup header >nav {
+	padding: 0;
+}
+#record_popup header >nav >div{
+	margin:0;
+	padding-top: 15px;
+	width: 100%;
+}
+#record_popup .navbar-header{
+	width: 40%;
+	float: left;
+}
+#record_popup div.navbar-collapse{
+	width: 60%;
+	float: left;
+	margin: 0;
+}
+
+#record_popup #content{
+	margin: 0;
+	width: 100%;
+}
+
+/* 왼쪽 */
+#record_popup #content .left_con{
+	width: 40%;
+	
+	padding: 0;
+	margin: 0;
+
+    display: inline-block;
+    float: none;
+}
+#record_popup .tab-content .result{
+margin: 0 auto;
+    width: 85%;
+}
+#record_popup .tab-content .result >p{
+	margin-top: 10px;
+}
+#record_popup .tab-content .result h2{
+	margin-top: 5px;
+}
+#record_popup .tab-content div p{
+
+        padding: 0;
+    margin: 0;
+}
+#record_popup .left_con .result div{
+	    margin: 0 auto;
+    margin-top: 10px;
+}
+#record_popup .left_con .tab-content div img{
+	width: 70%;
+}
+ #record_popup .time{
+ 	margin: 0 auto;
+    width: 85%;
+    padding: 0;
+ }
+ #record_popup .time h2{
+ 	margin: 5px;
+ }
+  #record_popup .time p{
+  	margin: 0;
+  }
+#record_popup .time p span{
+	line-height: 1.2;
+}
+
+/* 오른쪽 */
+#record_popup #content .right_con{
+	width: 60%;
+	margin: 0;
+	padding: 0;
+}
+#record_popup #content .right_con .video_con{
+	    width: 90%;
+    margin: 0 auto;
+    padding: 0;
+}
+#record_popup .right_con .video_frame >div{
+    margin: 0 auto;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    width: 100%;
+}
+#record_popup #content .right_con .video_con h2{
+	margin-top: 5px;
+}
+#record_popup #content .right_con .video_con .video_frame{
+	margin: 0 auto;
+	    max-width: 82%;
+}
+
+
+#record_popup .video_clip{
+	    width: 90%;
+    margin: 0 auto;
+        margin-top: 25px;
+}
+#record_popup .video_clip h2{
+	margin-top: 0;
+}
+
+#record_popup .video_clip h2 button{
+	margin-right: 10%;
+}
+#record_popup .right_con .carousel_list {
+	width: 85%;
+	margin-top: 12px;
+}
+#record_popup .right_con .carousel_list ul {
+	    margin-top: 15px;
+}
+#record_popup .right_con .carousel_list ul li{
+	position: static;
+	    margin-bottom: 8px;
+
+}
+#record_popup .video_clip .thumbnail{
+	padding: 0;
+}
+#record_popup .video_clip .thumbnail .caption{
+	margin: 0 auto;
+}
+
+/* 정확도 (컨텐츠2) */
+#record_popup .left_con .user_data li{
+position: static;
+}
+
+#record_popup .left_con ul.user_data li span {
+    display: block;
+    color: #999;
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 1.7;
+}

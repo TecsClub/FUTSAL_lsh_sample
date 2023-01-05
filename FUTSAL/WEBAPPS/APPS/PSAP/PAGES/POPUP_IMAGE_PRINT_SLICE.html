@@ -1,0 +1,149 @@
+{@ $PARAMS = json_decode(base64_decode($ARGS->JSON_ARGS_BASE64)); }
+<script>
+var ARR_PAPER_OPTIONS = [
+	{	"PAPER_VALUE":false,	"PAPER_DISP":"세로 방향"},
+	{	"PAPER_VALUE":true,		"PAPER_DISP":"가로 방향"},
+];
+var PAPER_DIRECTION_VALUE = false;
+var OBJ_POPUP_DIALOG_FOR_IMAGE_PRINT = null;
+function INIT_WIDGETS_FOR_POPUP_IMAGE_PRINT(OBJ_DIALOG) {
+	OBJ_POPUP_DIALOG_FOR_IMAGE_PRINT = OBJ_DIALOG;
+}
+function CLOSE_POPUP_FOR_IMAGE_PRINT() {
+	if (OBJ_POPUP_DIALOG_FOR_IMAGE_PRINT != null) {
+		QIIP_JQX_CLOSE_WINDOW(OBJ_POPUP_DIALOG_FOR_IMAGE_PRINT);
+	}
+}
+
+$(document).ready(function(){
+	INIT_WIDGETS_FOR_POPUP_IMAGE_PRINT_AFTER_DOCUMENT_LOAD();
+});
+
+function INIT_WIDGETS_FOR_POPUP_IMAGE_PRINT_AFTER_DOCUMENT_LOAD() {
+
+	$('#SELECTOR_PAPER_DIRECTION').jqxDropDownList({
+		width: '100%',
+		source: ARR_PAPER_OPTIONS,
+		selectedIndex: 0,
+		displayMember: 'PAPER_DISP'
+	}).on('select', function (event){
+		PAPER_DIRECTION_VALUE = $(this).jqxDropDownList('getSelectedItem').originalItem.PAPER_VALUE;
+	});
+	$('#slider_marginPDF').jqxSlider({ width: "94%", height: 40, sliderButtonSize: 15, min: 0, max: 100, value: {$PARAMS->marginPDF}, step: 1});
+	$('#slider_marginPDF').on('change', function (event) {
+		$('#marginPDF').html(sprintf("%3d", $(this).jqxSlider('value')));
+	});
+	$('#slider_nRows').jqxSlider({ width: "94%", height: 40, sliderButtonSize: 15, min: 1, max: 25, value: {$PARAMS->sliceRows}, step: 1});
+	$('#slider_nRows').on('change', function (event) {
+		$('#nRows').html(sprintf("%3d", $(this).jqxSlider('value')));
+	});
+	$('#slider_nCols').jqxSlider({ width: "94%", height: 40, sliderButtonSize: 15, min: 1, max: 25, value: {$PARAMS->sliceCols}, step: 1});
+	$('#slider_nCols').on('change', function (event) {
+		$('#nCols').html(sprintf("%3d", $(this).jqxSlider('value')));
+	});
+      	
+}
+
+function EXEC_IMAGE_PRINT() {
+	var JSON_ARGS = {
+		"bLandscape"	: PAPER_DIRECTION_VALUE,
+		"bSavePDF"		: false,
+		"IMAGE_URL"		: $("#IMAGE_URL").val(),
+		"PRINT_MODE"	: $("#PRINT_MODE").val(),
+		"marginPDF"		: $("#slider_marginPDF").jqxSlider('value'),
+		"sliceRows"		: $("#slider_nRows").jqxSlider('value'),
+		"sliceCols"		: $("#slider_nCols").jqxSlider('value'),
+	};
+//	QIIP_APP_JSON_TO_TABLE_DIALOG(JSON_ARGS);
+	var NATIVE_ACCESS_INFORMATION = {
+			"REQUEST" : "MAKE_PDF_AND_PREVIEW",
+			"JSON_ARGS" : JSON_ARGS,
+		};
+	var result = JSON.parse(QIIP_APP_NATIVE_ACCESS(NATIVE_ACCESS_INFORMATION));
+}
+
+</script>
+
+<div style="width:100%; height:20%;">
+  <div class="row" style="padding:0;">
+    <div class="col">
+      <div class="button button-positive" style="width:100%;">
+        처리 원본 이미지 크기 : {$PARAMS->IMAGE_SIZE}
+      </div>
+    </div>
+  </div>
+  </div>
+</div>
+<div style="width:100%; height:65%;">
+	<input type="hidden" id="IMAGE_URL" value="{$PARAMS->IMAGE_URL}"/>
+	<input type="hidden" id="PRINT_MODE" value="{$PARAMS->PRINT_MODE}"/>
+	<div class="row" style="padding:0;">
+	    <div class="col col-75">
+			<div class="button button-small button-lignt" style="width:100%;">
+				용지 방향
+			</div>
+	    </div>
+	    <div class="col">
+	    	<div id='SELECTOR_PAPER_DIRECTION' style="margin-left: 3%;" />
+	    </div>
+	</div>
+	<div class="row" style="padding:0;">
+	    <div class="col col-20">
+			<div class="button button-small button-lignt" style="width:100%;">
+				용지 여백
+			</div>
+	    </div>
+	    <div class="col col-20">
+			<div class="button button-small button-lignt" style="width:100%;">
+				<span id="marginPDF">{$PARAMS->marginPDF}</span>
+			</div>
+	    </div>
+	    <div class="col">
+	    	<div id='slider_marginPDF' style="margin-left: 3%;" />
+	    </div>
+	</div>
+	<div class="row" style="padding:0;">
+	    <div class="col col-20">
+			<div class="button button-small button-lignt" style="width:100%;">
+				행 갯수
+			</div>
+	    </div>
+	    <div class="col col-20">
+			<div class="button button-small button-lignt" style="width:100%;">
+				<span id="nRows">{$PARAMS->sliceRows}</span>
+			</div>
+	    </div>
+	    <div class="col">
+	    	<div id='slider_nRows' style="margin-left: 3%;" />
+	    </div>
+	</div>
+	<div class="row" style="padding:0;">
+	    <div class="col col-20">
+			<div class="button button-small button-lignt" style="width:100%;">
+				열 갯수
+			</div>
+	    </div>
+	    <div class="col col-20">
+			<div class="button button-small button-lignt" style="width:100%;">
+				<span id="nCols">{$PARAMS->sliceCols}</span>
+			</div>
+	    </div>
+	    <div class="col">
+	    	<div id='slider_nCols' style="margin-left: 3%;" />
+	    </div>
+	</div>
+</div>
+<div style="width:100%; height:15%;">
+  <div class="row" style="padding:0;">
+    <div class="col">
+      <div class="button button-positive" style="width:100%;" onclick="EXEC_IMAGE_PRINT()">
+        모바일 인쇄
+      </div>
+    </div>
+    <div class="col">
+      <div class="button button-positive" style="width:100%;" onclick="CLOSE_POPUP_FOR_IMAGE_PRINT()">
+        닫기
+      </div>
+    </div>
+  </div>
+</div>

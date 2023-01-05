@@ -1,0 +1,400 @@
+<script>
+var WHERE_IS_MAIN_MAP = null;
+var MARKER_FOR_G_MAP = null;
+
+function INIT_WIDGETS_FOR_MENU_CONTENTS() {
+	$(".PAGE_BUTTONS").on('click', function () {
+		var ID = $(this).attr('ID');
+		if (ID == 'DUMMY') {
+		} else if (ID == 'BTN_WHERE_IS_HELP') {
+			QIIP_POPUP_FOR_ALERT(
+				'안내',[
+					'준비중 입니다.'
+				],
+				function () {
+					
+				}
+			);
+		} else if (ID == 'BTN_WHERE_IS_EXIT') {
+			HOW_TO_EXIT_APP();
+		} else if (ID == 'BTN_WHERE_IS_TO_MY_LOCATION') {
+			GPS_LOCATION_REPORT();
+		} else if (ID == 'BTN_WHERE_IS_SEARCH_LOCATION') {
+			EXEC_WITH_GEOCODE_ADRESS_VIA_MARKER(
+				MARKER_FOR_G_MAP,
+				function (MY_LOCATION_INFO) {
+					POPUP_SEARCH_LOCATION(MY_LOCATION_INFO)
+				}
+			);
+		} else if (ID == 'BTN_WHERE_IS_REGIST_LOCATION') {
+			EXEC_WITH_GEOCODE_ADRESS_VIA_MARKER(
+				MARKER_FOR_G_MAP,
+				function (MY_LOCATION_INFO) {
+					POPUP_REGIST_LOCATION(MY_LOCATION_INFO)
+				}
+			);
+		}
+	});
+
+	GET_GPS_STATUS(function (STR_RESULT) {
+		if (STR_RESULT != 'ON') {
+			GPS_ON_YESNO();
+		}
+//		alert(JSON.stringify(JSON_RESULT, null, '\t'));
+	});
+//	GPS_AUTO_UPDATE_VIA_ALARM(60 * 1);
+	SET_GPS_CALLBACK_SCRIPT();
+	GPS_LOCATION_UPDATE();	
+}
+
+function POPUP_SEARCH_LOCATION (MY_LOCATION_INFO) {
+
+//	alert(JSON.stringify(MY_LOCATION_INFO, null, '\t'));
+	
+	_RS.LOCATION_INFO = MY_LOCATION_INFO;
+	
+	QIIP_API_ACCESS({
+			REQ: 'api_GET_PAGE',
+			FLDR_TEMPLATE: _FLDR_TEMPLATE,
+			FILE_TEMPLATE: 'PAGES/POPUP_SEARCH_LOCATION.html',
+		},function(STR_RESULT) {
+			var HTML_COMPILED = _AC(STR_RESULT)(_RS);
+			OBJ_POPUP = QIIP_JQX_POPUP_WINDOW({
+	            showCollapseButton: true, 
+	            height: '95%',
+	            width: '90%',
+	            minHeight: 100,
+	            minWidth: 100,
+				},
+				'장소 찾기',
+				HTML_COMPILED
+			);
+			_RS.$apply();
+		  	INIT_WIDGETS_FOR_POPUP_SEARCH_LOCATION(OBJ_POPUP);
+		}
+	);
+}
+
+function POPUP_REGIST_LOCATION(MY_LOCATION_INFO) {
+	_RS.LOCATION_INFO = MY_LOCATION_INFO;
+	
+	QIIP_API_ACCESS({
+			REQ: 'api_GET_PAGE',
+			FLDR_TEMPLATE: _FLDR_TEMPLATE,
+			FILE_TEMPLATE: 'PAGES/POPUP_REGIST_LOCATION.html',
+		},function(STR_RESULT) {
+			var HTML_COMPILED = _AC(STR_RESULT)(_RS);
+			OBJ_POPUP = QIIP_JQX_POPUP_WINDOW({
+	            showCollapseButton: true, 
+	            height: '95%',
+	            width: '90%',
+	            minHeight: 100,
+	            minWidth: 100,
+				},
+				'현 위치에 LED 램프 등록',
+				HTML_COMPILED
+			);
+			_RS.$apply();
+		  	INIT_WIDGETS_FOR_POPUP_REGIST_LOCATION(OBJ_POPUP);
+		}
+	);
+	
+}
+
+function HOW_TO_EXIT_APP() {
+	_ionicPopup.confirm({
+		title: '종료 확인',
+		cssClass: 'qiip_popup',
+		template: TO_TABLE_CENTER('앱을 종료 하시겠습니까?')
+	}).then(function(res) {
+		if (res) {
+			GPS_CLEAR();
+			APP_FINISH();
+		}
+	});
+}
+
+function APP_FINISH() {
+	QIIP_APPS_NATIVE_ACCESS({
+		REQUEST: 'APP_FINISH',
+	}, function (STR_RESULT) {
+	});
+}
+
+function GPS_CLEAR() {
+	QIIP_APPS_NATIVE_ACCESS({
+		REQUEST: 'GPS_CONTROL',
+		WHAT: 'SET_CALLBACK_SCRIPT',
+		CALLBACK_SCRIPT: 'NONE'
+	}, function (STR_RESULT) {
+	});
+	QIIP_APPS_NATIVE_ACCESS({
+		REQUEST: 'GPS_CONTROL',
+		WHAT: 'AUTO_UPDATE_STOP'
+	}, function (STR_RESULT) {
+	});
+}
+
+function EXEC_WITH_GEOCODE_ADRESS_VIA_MARKER (MARKER_FOR_G_MAP, FUNC_AFTER_GET_GEOCODE) {
+	var lat = MARKER_FOR_G_MAP.getPosition().lat();
+	var lng = MARKER_FOR_G_MAP.getPosition().lng();
+	var latlng = new google.maps.LatLng(lat, lng);
+	var geocoder = new google.maps.Geocoder();
+	geocoder.geocode(
+		{
+			'latLng': latlng,
+			'language': 'ko',
+		}, 
+		function(results, status) {
+			var MY_LOCATION_INFO = {};
+			MY_LOCATION_INFO.현재시각	= new Date().format('%Y-%m-%d %H:%M:%S');
+			MY_LOCATION_INFO.경도	= lng;
+			MY_LOCATION_INFO.위도	= lat;
+			MY_LOCATION_INFO.주소	= "주소 정보를 얻을 수 없습니다.";
+			if (status == google.maps.GeocoderStatus.OK) {
+				if (results[0]) {
+					MY_LOCATION_INFO.주소 = results[0].formatted_address;
+				}
+			}
+			FUNC_AFTER_GET_GEOCODE(MY_LOCATION_INFO);
+		}
+	);
+}
+
+var FLAG_IN_DOING_MOVE_CENTER_FOR_NFC= false;
+function MOVE_CENTER_FOR_NFC(OBJ_LOCATION) {
+	if (FLAG_IN_DOING_MOVE_CENTER_FOR_NFC) return; FLAG_IN_DOING_MOVE_CENTER_FOR_NFC = true;
+	var LAT_LNG = new google.maps.LatLng(OBJ_LOCATION.Latitude, OBJ_LOCATION.Longitude);
+	WHERE_IS_MAIN_MAP.setCenter(LAT_LNG);
+	MARKER_FOR_G_MAP.setPosition(LAT_LNG);
+//		MARKER_FOR_G_MAP.setAnimation(google.maps.Animation.BOUNCE);
+
+	var geocoder = new google.maps.Geocoder();
+	geocoder.geocode({
+			'latLng': LAT_LNG,
+			'language': 'ko',
+		}, 
+		function(results, status) {
+			var MY_LOCATION_INFO = {};
+			MY_LOCATION_INFO.현재시각	= new Date().format('%Y-%m-%d %H:%M:%S');
+			MY_LOCATION_INFO.경도	= OBJ_LOCATION.Longitude;
+			MY_LOCATION_INFO.위도	= OBJ_LOCATION.Latitude;
+			MY_LOCATION_INFO.주소	= "주소 정보를 얻을 수 없습니다.";
+			if (status == google.maps.GeocoderStatus.OK) {
+				if (results[0]) {
+					MY_LOCATION_INFO.주소 = results[0].formatted_address;
+				}
+			}
+			SHOW_ADDRESS_WITH_LOCATION_INFO(MY_LOCATION_INFO);
+		}
+	);
+}
+
+var INTERVAL_SHOW_ADDRESS_WITH_LOCATION_INFO = 60 * 1000;
+var TIME_VALUE_LAST_ADDRESS_POPUP = 0;
+function SHOW_ADDRESS_WITH_LOCATION_INFO(MY_LOCATION_INFO, args_SHOW_TIME) {
+	var DIFF_VALUE_LAST_ADDRESS_POPUP = (new Date()).getTime() - TIME_VALUE_LAST_ADDRESS_POPUP;
+	if (DIFF_VALUE_LAST_ADDRESS_POPUP < INTERVAL_SHOW_ADDRESS_WITH_LOCATION_INFO) {
+		FLAG_IN_DOING_MOVE_CENTER_FOR_NFC = false;			
+		return;
+	}
+	var SHOW_TIME = 1500;
+	if (args_SHOW_TIME != undefined) SHOW_TIME = args_SHOW_TIME;
+	QIIP_APP_ALERT(
+		MY_LOCATION_INFO_TO_TABLE(MY_LOCATION_INFO),
+		function () {
+			FLAG_IN_DOING_MOVE_CENTER_FOR_NFC = false;
+			TIME_VALUE_LAST_ADDRESS_POPUP = (new Date()).getTime();
+		},
+		SHOW_TIME
+	);
+}
+
+function MY_LOCATION_INFO_TO_TABLE(MY_LOCATION_INFO) {
+    var str_HTML  = '';
+        str_HTML += '<div class="qiip_index">';
+        str_HTML += '<table>';
+        str_HTML += '<col width="20%"/>';
+    Object.keys(MY_LOCATION_INFO).forEach( function(ONE_KEY) {
+        str_HTML += '<tr>';
+        str_HTML += '<th>';
+        str_HTML += ONE_KEY;
+        str_HTML += '</th>';
+        str_HTML += '<td>';
+        str_HTML += MY_LOCATION_INFO[ONE_KEY];
+        str_HTML += '</td>';
+        str_HTML += '</tr>';
+    });
+        str_HTML += '</table>';
+        str_HTML += '</div>';
+    return str_HTML;
+}
+
+
+function GPS_LOCATION_UPDATE() {
+	QIIP_APPS_NATIVE_ACCESS({
+		REQUEST: 'GPS_CONTROL',
+		WHAT: 'LOCATION_UPDATE'
+	}, function (STR_RESULT) {
+		GPS_LOCATION_REPORT();
+	});
+}
+
+function GPS_LOCATION_REPORT() {
+	TIME_VALUE_LAST_ADDRESS_POPUP = (new Date()).getTime() - INTERVAL_SHOW_ADDRESS_WITH_LOCATION_INFO - 1000;
+	QIIP_APPS_NATIVE_ACCESS({
+		REQUEST: 'GPS_CONTROL',
+		WHAT: 'LOCATION_REPORT'
+	}, function (STR_RESULT) {
+	});
+}
+
+function GPS_AUTO_UPDATE_VIA_ALARM(INTERVAL) {
+	QIIP_APPS_NATIVE_ACCESS({
+		REQUEST: 'GPS_CONTROL',
+		WHAT: 'AUTO_UPDATE_VIA_ALARM',
+		VALUE: INTERVAL
+	}, function (STR_RESULT) {
+	});
+}
+
+function GPS_ON_YESNO() {
+	_ionicPopup.confirm({
+		title: '핸드폰 설정 : GPS 기능 활성화 필요!',
+		cssClass: 'qiip_popup',
+		template: ARR_TO_TABLE_CENTER([
+			"GPS 기능이 꺼져 있습니다.",
+			"GPS 기능이 꺼져 있으면 정확한 현재 위치를 얻을 수 없고,...",
+			"마지막으로 GPS 기능이 활성화 된 시점의 위치가,...",
+			"지도에 표시됩니다.",
+			"GPS 기능을 활성화 하시겠습니까?",
+		])
+	}).then(function(res) {
+		if (res) {
+			LAUNCH_GPS_SETUP_SCREEN();
+		}
+	});
+}
+
+function LAUNCH_GPS_SETUP_SCREEN() {
+	QIIP_APPS_NATIVE_ACCESS({
+		REQUEST: 'GPS_CONTROL',
+		WHAT: 'LAUNCH_GPS_SETUP_SCREEN',
+	}, function (STR_RESULT) {
+	});
+}
+
+function GET_GPS_STATUS(FUNC_RESULT) {
+	QIIP_APPS_NATIVE_ACCESS({
+		REQUEST: 'GPS_CONTROL',
+		WHAT: 'GET_GPS_STATUS',
+//		FULL_CONTENTS: true,
+	}, function (STR_RESULT) {
+//		var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+//		if (FUNC_RESULT != undefined) FUNC_RESULT(JSON_RESULT);
+		if (FUNC_RESULT != undefined) FUNC_RESULT(STR_RESULT);
+	});
+}
+
+function SET_GPS_CALLBACK_SCRIPT() {
+	QIIP_APPS_NATIVE_ACCESS({
+		REQUEST: 'GPS_CONTROL',
+		WHAT: 'SET_CALLBACK_SCRIPT',
+		CALLBACK_SCRIPT: {
+		    CALLBACK_SCRIPT_ON_LOCATION_UPDATE:		'LOCATION_UPDATE_CALLBACK',
+		    CALLBACK_SCRIPT_ON_LOCATION_SAME:		'LOCATION_UPDATE_CALLBACK',
+		    CALLBACK_SCRIPT_ON_REMOTE_LOCATON_REQ:	'ON_REMOTE_LOCATON_REQ',
+		    CALLBACK_SCRIPT_ON_REMOTE_LOCATON_RES:	'ON_REMOTE_LOCATON_RES',
+		}
+	}, function (STR_RESULT) {
+		var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+	});
+	
+}
+
+function LOCATION_UPDATE_CALLBACK(strJSON_BASE64) {
+	var objParam = JSON.parse(Base64.decode(strJSON_BASE64));
+//	alert(JSON.stringify(objParam));
+//	console.log(JSON.stringify(objParam));
+	var JSON_LOCATION_INFO = objParam.CALLBACK_PARAMS;
+	MAKE_AND_SHOW_G_MAP(JSON_LOCATION_INFO); // MAKE_AND_SHOW_G_MAP 에서 이미 초기화 된 경우 더이상 처리하지 않게 조치해 둠
+	MOVE_CENTER_FOR_NFC(JSON_LOCATION_INFO);
+}
+
+function MAKE_AND_SHOW_G_MAP(OBJ_LOCATION) {
+	if (WHERE_IS_MAIN_MAP != null) return;
+	var LAT_LNG = new google.maps.LatLng(OBJ_LOCATION.Latitude, OBJ_LOCATION.Longitude);
+	var myOptions={
+		center: LAT_LNG,
+		zoom: 16,
+		mapTypeId: google.maps.MapTypeId.ROADMAP,
+//		mapTypeControl: false,
+		mapTypeControl: true,
+		navigationControlOptions:{
+			style:google.maps.NavigationControlStyle.SMALL
+		}
+	};
+
+	WHERE_IS_MAIN_MAP = new google.maps.Map(document.querySelector('#WHERE_IS_MAP_HOLDER'), myOptions);
+
+	INIT_MARKER_FOR_G_MAP(LAT_LNG);
+}
+
+function INIT_MARKER_FOR_G_MAP(LAT_LNG) {
+	MARKER_FOR_G_MAP=new google.maps.Marker({
+		position: LAT_LNG,
+		map: WHERE_IS_MAIN_MAP,
+		draggable:true,
+		animation: google.maps.Animation.BOUNCE,
+	});
+//	MARKER_FOR_G_MAP.setMap(WHERE_IS_MAIN_MAP);
+//	MARKER_FOR_G_MAP.setTitle("HERE");
+	MARKER_FOR_G_MAP.setAnimation(google.maps.Animation.BOUNCE);
+	google.maps.event.addListener(
+			MARKER_FOR_G_MAP,
+			'click',
+			function() {
+		  		SHOW_GEOCODE_ADRESS_VIA_MARKER(MARKER_FOR_G_MAP);
+			}
+	);
+	google.maps.event.addListener(
+			MARKER_FOR_G_MAP,
+			'dragend',
+			function() {
+		  		SHOW_GEOCODE_ADRESS_VIA_MARKER(MARKER_FOR_G_MAP);
+			}
+	);
+}
+
+</script>
+
+<div class="qiip_box">
+	<div style="width:100%; height:100%;">
+		<div style="width:100%; height:88%;" id="WHERE_IS_MAP_HOLDER">
+		</div>
+		<div style="width:100%; height:6%;">
+			<table style="border-style: none;">
+				<col width="25"/>
+				<col width="25%"/>
+				<col width="50%"/>
+				<tr>
+					<td ><button class="PAGE_BUTTONS" id="BTN_WHERE_IS_TO_MY_LOCATION" style="width:100%;height:100%;">내 위치 갱신</button></td>
+					<td ><button class="PAGE_BUTTONS" id="BTN_WHERE_IS_SEARCH_LOCATION" style="width:100%;height:100%;">장소 찾기</button></td>
+					<td ><button class="PAGE_BUTTONS" id="BTN_WHERE_IS_REGIST_LOCATION" style="width:100%;height:100%;">현 위치에 LED LAMP 등록</button></td>
+				</tr>
+			</table>
+		</div>
+		<div style="width:100%; height:6%;">
+			<table style="border-style: none;">
+				<col width="50%"/>
+				<tr>
+					<td ><button class="PAGE_BUTTONS" id="BTN_WHERE_IS_HELP" style="width:100%;height:100%;">사용법</button></td>
+					<td ><button class="PAGE_BUTTONS" id="BTN_WHERE_IS_EXIT" style="width:100%;height:100%;">종료</button></td>
+				</tr>
+			</table>
+		</div>
+		
+	</div>
+	<div style="width:100%; height:7%;">
+	</div>
+</div>

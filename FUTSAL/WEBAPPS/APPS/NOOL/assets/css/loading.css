@@ -1,0 +1,205 @@
+@charset "uth-8";
+.dis_none{
+	display: none !important;
+}
+
+/* 메인화면 */
+div#wrap{
+	height: 100vh;
+
+background-color: #292929;
+
+position: relative;
+
+text-align: center;
+padding-bottom: 100vh;
+
+height: 0;
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: -1;
+	width: 100%;
+	animation-delay: 0s;
+	animation-duration: 8s;
+	animation-name: wrap_ani;
+}
+
+@keyframes wrap_ani{
+	from{
+		opacity: 1;
+		z-index: 1;
+	}
+	60%{
+		opacity: 1;
+		z-index: 1;
+	}	
+	95%{
+		opacity: 0;
+		z-index: 1;
+	}	
+	to{
+		opacity: 0;
+		z-index: -1;		
+	}
+
+	
+}
+
+.main_text{
+	position: absolute;
+
+left: 50%;
+
+transform: translate(-50%, -50%);
+
+top: 48%;
+}
+
+.main_text h1{
+	margin: 0;
+
+font-size: 100px;
+
+font-weight: bold;
+
+color: #E06731;
+}
+
+.main_text h1 em{
+	font-style: italic;
+}
+.main_text h2{
+	color: #eee;
+	font-size: 34px;
+}
+
+.logo{
+	bottom: 2%;
+
+position: absolute;
+
+left: 50%;
+
+transform: translate(-50%, -50%);
+}
+
+
+/* css animate */
+.main_text h1{
+	animation-delay: 0s;
+	animation-duration: 1s;
+	animation-name: slide_i
+}
+@keyframes slide_i{
+	from{
+		opacity: 0;
+	}
+	to{
+		opacity: 1;
+	}
+}
+
+.main_text h1 em{
+	position: relative;
+	animation-delay: 0s;
+	animation-duration: 2s;
+	animation-name: slide_em;
+}
+
+@keyframes slide_em{
+	from{
+		left: 30%;
+		opacity: 0; 
+	}
+	to{
+		left: 0;
+		opacity: 1;
+	}
+}
+
+.main_text h2{
+	animation-delay: 0s;
+	animation-duration: 3s;
+	animation-name: slide_p;
+}
+
+@keyframes slide_p{
+	from{
+		opacity: 0;
+	}
+	60%{
+		opacity: 0;
+	}
+	to{
+		opacity: 1;
+	}
+}
+
+.logo{
+	animation-delay: 0s;
+	animation-duration: 4s;
+	animation-name: logo_ani;
+}
+@keyframes logo_ani{
+	from{
+		opacity: 0;
+		bottom: -3%;
+	}
+	60%{
+		opacity: 0;
+		bottom: -3%;
+	}
+	to{
+		opacity: 1;
+		bottom: 2%;
+	}
+
+}
+
+
+
+/* log_in */
+
+#wrap_2{
+	height: 100vh;
+
+position: relative;
+
+text-align: center;
+
+}
+.welcome{
+position: absolute;
+
+left: 50%;
+
+transform: translate(-50%, -50%);
+
+top: 52%;
+}
+
+.welcome h1{
+color: #f36731;
+font-size: 48px;
+}
+.welcome h1 small{
+	color: #eee;
+}
+.advice{
+line-height: 5;
+color: #eee;
+font-size: 17px;
+}
+
+
+/* 이미지 출처표기 */
+
+a.source_link{
+	    position: absolute;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    bottom: 0;
+    color: #777;
+text-decoration:none;
+}

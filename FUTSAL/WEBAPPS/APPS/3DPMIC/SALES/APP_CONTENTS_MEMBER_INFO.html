@@ -1,0 +1,87 @@
+<style>
+#DIV_MEMBER_INFO_TABS iframe	{width:100%; height:100%;}
+</style>
+
+<script>
+	function QIIP_SIDEMENU_INIT_WIDGETS() {
+		TOGGLE_SIDEMENU(function () {
+			QIIP_SIDEMENU_INIT_WIDGETS_SUB();
+		});
+	}
+	
+	function LOAD_BIZ_INFO_PAGE() {
+		QIIP_API_ACCESS({
+				REQ: 'api_GET_PAGE',
+				FLDR_TEMPLATE: _FLDR_TEMPLATE,
+				FILE_TEMPLATE: 'SALES/SUB_CONTENTS_BIZ_INFO.html',
+			},function(STR_RESULT) {
+				$('#DIV_BIZ_INFO').html(_AC(STR_RESULT)(_RS)); _RS.$apply();
+				QIIP_INIT_WIDGETS_BIZ_INFO();
+			}
+		);
+	}
+	
+	function GET_ROOT_INFO() {
+		QIIP_APP_DO_JOB_WITH_INITIAL_POST_INFORMATION(function () {
+			LOAD_BIZ_INFO_PAGE();
+		});
+	}
+
+	function GET_LOG_INFO() {
+		QIIP_API_ACCESS({
+				REQ: 'post_GET_LOG_LIST',
+				PHONE_NO: _RS.PHONE_INFO.PHONE_NO,
+				PHONE_ID: _RS.PHONE_INFO.PHONE_ID,
+				SVC_CATEGORY: _RS.PHONE_INFO.APP_NAME,
+			},function(STR_RESULT) {
+
+				var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+				if (JSON_RESULT instanceof Object) {
+					_RS.LOG_INFO = JSON_RESULT;
+					_RS.$apply();
+				} else {
+					QIIP_APP_ALERT([
+						STR_RESULT
+					]);
+				}
+			}
+		);
+	}
+	
+	function QIIP_SIDEMENU_INIT_WIDGETS_SUB() {
+		$('#MENU_CONTENTS').css('height', ($('#SIDEMENU_PAGE').height() - 130) / $('#SIDEMENU_PAGE').height() * 100 + '%');
+
+		$('#DIV_MEMBER_INFO_TABS').on('created', function (){
+			GET_ROOT_INFO();
+		});
+		$('#DIV_MEMBER_INFO_TABS').jqxTabs({
+			width: '100%',
+			height: '100%',
+		}).on('selected', function (EVENT){
+			if (EVENT.args.item == 0) {
+				GET_ROOT_INFO();
+			} else if (EVENT.args.item == 2) {
+				GET_LOG_INFO();
+			}
+		});
+
+	}
+</script>
+<div id='DIV_MEMBER_INFO_TABS'>
+    <ul>
+        <li style="margin-left: 10px;">사업자 정보</li>
+        <li>기본정보</li>
+        <li>JSON</li>
+    </ul>
+    <div style="overflow:auto;" id="DIV_BIZ_INFO">
+    </div>
+    <div style="overflow:auto;">
+    	<iframe src="/wp-admin/profile.php?NOMENU=true" ></iframe>
+    </div>
+    <div style="overflow:auto;">
+    	<pre>{{OBJ_POST_ROOT | prettyJSON}}</pre>
+    	<pre>{{LOG_INFO | prettyJSON}}</pre>
+    	<pre>{{LOGIN_INFO | prettyJSON}}</pre>
+    </div>
+</div>
+        

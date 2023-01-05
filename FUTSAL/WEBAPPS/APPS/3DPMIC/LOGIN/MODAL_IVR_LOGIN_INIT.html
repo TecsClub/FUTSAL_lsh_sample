@@ -1,0 +1,545 @@
+<link href="LOGIN/MODAL_IVR_LOGIN.css" rel="stylesheet" />
+<link href="LOGIN/QIIP_BUBBLE.css" rel="stylesheet" />
+
+<script>
+	
+	function UPDATE_QIIP_LOGIN_EVENT(FUNC_ENTER) {
+
+		if (FUNC_ENTER != undefined) {
+			$(window).unbind();
+			$(window).keypress(function (EVENT) {
+				if ( event.which == 13 ) {
+				     event.preventDefault();
+				     FUNC_ENTER();
+				}
+			});
+		}
+		
+		$(".QIIP_LOGIN_EVENT").unbind('click');
+		$(".QIIP_LOGIN_EVENT").on('click', function () {
+			var ID = $(this).attr('ID');
+			if (ID == 'DUMMY') {
+			} else if (ID == 'BTN_DO_LOGIN') {
+				DO_TRY_TO_LOGIN({
+					USER_ID: $('#USER_ID').val(),
+					REMEMBER: $('#CHK_REMEMBER').is(":checked")
+				});
+	//			alert('DO_TRY_TO_LOGIN');
+			} else if (ID == 'BTN_LOAD_LOGIN_FORM') {
+				DO_LOAD_LOGIN_FORM();
+			} else if (ID == 'BTN_LOAD_REGIST_FORM') {
+				DO_LOAD_REGIST_FORM();
+			} else if (ID == 'BTN_LOAD_PW_RESET_FORM') {
+				DO_LOAD_PW_RESET_FORM();
+			} else if (ID == 'BTN_DO_PW_RESET') {
+				DO_PW_RESET(
+					$('#PW_RESET_INFO').val()
+				);
+			} else if (ID == 'BTN_DO_REGIST') {
+				DO_TRY_REGIST_1ST({
+					USER_ID:	$('#USER_ID').val(),
+					USER_EMAIL:	$('#USER_EMAIL').val(),
+				});
+			}
+			
+		});
+
+		$("#CHK_REMEMBER").unbind('change');
+		$("#CHK_REMEMBER").on('change', function () {
+			if ($('#CHK_REMEMBER').is(":checked")) {
+				QIIP_APP_ALERT([
+					'공용 장소에서는 가능한 한,...',
+					'이 기능을 사용하지 않을 것을 권유드립니다.'
+				]);
+			}
+		});
+		
+	}
+
+	function INIT_WIDGETS_QIIP_LOGIN_INIT() {
+		DO_LOAD_LOGIN_FORM();
+		$('#QIIP_LOGIN').modal('show');
+	}
+	
+	function DO_TRY_TO_LOGIN(LOGIN_DATA) {
+		if (LOGIN_DATA.USER_ID.length <= 0) {
+			QIIP_APP_ALERT([
+				'핸드폰 번호를 입력하지 않았습니다!',
+			],function () {
+			});
+			return;
+		}
+
+		if (!QIIP_IS_VALID_M_PHONE_NO(LOGIN_DATA.USER_ID)) {
+			QIIP_APP_ALERT([
+				'[' + LOGIN_DATA.USER_ID + '] 는 적절한 핸드폰 번호가 아닙니다!',
+			],function () {
+			});
+			return;
+		}
+
+		var PHP_CODES  = "";
+			PHP_CODES += "return username_exists('" + LOGIN_DATA.USER_ID + "');";
+
+		QIIP_API_ACCESS({
+				REQ: 'api_WP_ACCESS',
+				PHP_CODES_BASE64: Base64.encode(PHP_CODES),
+			},function(STR_RESULT) {
+			    var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+	/*		    
+					QIIP_APP_ALERT([
+						'<xmp>' + JSON.stringify(JSON_RESULT, null, '\t') + '</xmp>',
+					],function () {
+					});
+	*/
+				if (STR_RESULT.indexOf('false') >= 0) {
+					QIIP_APP_ALERT([
+						{
+							안내: '입력하신 전화번호 [' + LOGIN_DATA.USER_ID + '] 는 아직 회원으로 가입되지 않았습니다!'
+						}
+					],function () {
+					});
+				} else {
+					POPUP_FOR_EXEC_IVR_SCENARIO({
+						APIKEY:				IVR_APIKEY,
+						CMD:				'ARSAUTH_WAIT',
+						TITLE:				'[' + LOGIN_DATA.USER_ID + '] 님 - ARS 인증을 통한 로그인',
+						CALL_SCENARIO:		'ARS_USER_INPUT',
+	        			CALL_IN_ANSWER:		true,
+						
+						STR_SCENARIO_HELP:	ARR_TO_TABLE_CENTER([
+							'[다음 단계] 버튼을 클릭하신 후,...',
+							'아래와 같이 전화를 걸어, ARS 안내 음성에 따라 비밀번호를 입력 하시면,...',
+							'로그인 절차가 완료됩니다.',
+						]),
+						MENT_INTRO:			'로그인 하시려면 인증번호 여섯자리를 입력해주세요.',
+						MENT_NO_INPUT:		'아무 입력도 없었습니다.',
+						MENT_SOME_INPUT:	'입력하신 인증번호를 적용하여 로그인을 시도합니다.',
+						MENT_LACK_INPUT:	'입력하신 인증번호의 갯수가 부족합니다.',
+						MENT_RETRY:			'인증번호 여섯자리를 다시 입력해 주십시오.',
+						MENT_RETRY_EXAUST:	'허용된 재시도 횟수를 초과하여 인증을 실패하셨습니다.',
+						CALL_TO:			IVR_NUMBER,
+						CALL_FROM:			LOGIN_DATA.USER_ID,
+						AUTH_NUMBER:		'??????',
+						AUTH_RETRY:			3,
+						FUNC_CALLBACK:		'ARS_PW_INPUT_RESULT',
+						LOGIN_DATA:			LOGIN_DATA
+					});
+				}
+			}
+		);
+		
+	}
+
+	function POPUP_FOR_EXEC_IVR_SCENARIO(SCENARIO_PARAM) {
+		QIIP_API_ACCESS({
+				REQ: 'api_GET_PAGE',
+				FLDR_TEMPLATE: _FLDR_TEMPLATE,
+				FILE_TEMPLATE: 'LOGIN/MODAL_FOR_EXEC_IVR_SCENARIO.html',
+			},function(STR_RESULT) {
+				QIIP_APP_MODAL_POPUP({
+					TITLE: SCENARIO_PARAM.TITLE,
+					BACKDROP: false,
+					CSS: {
+						width: '50%',
+						height: '80%',
+					},
+					CONTENT: STR_RESULT,
+					INIT_FUNC: function (UNIQUE_ID) {
+						INIT_WIDGETS_FOR_EXEC_IVR_SCENARIO(SCENARIO_PARAM, UNIQUE_ID);
+					}
+				});
+			}
+		);
+	}
+
+	function ARS_PW_REGIST_RESULT(STR_JSON_BASE64) {
+		var JSON_ARS_AUTH_RESULT = JSON.parse(Base64.decode(STR_JSON_BASE64));
+		console.log(JSON.stringify(JSON_ARS_AUTH_RESULT, null, '\t'));
+		if (('CALL_ARGS' in JSON_ARS_AUTH_RESULT) && 
+			('CALL_STATUS' in JSON_ARS_AUTH_RESULT) && 
+			('USER_DTMF_INPUTS' in JSON_ARS_AUTH_RESULT)) {
+			if ((JSON_ARS_AUTH_RESULT.USER_DTMF_INPUTS.length >= 2) && 
+				(JSON_ARS_AUTH_RESULT.CALL_STATUS.CODE == 200) && 
+				(JSON_ARS_AUTH_RESULT.CALL_STATUS.CODE_STR == 'AUTH_OK')) {
+				var USER_AUTH = JSON_ARS_AUTH_RESULT.USER_DTMF_INPUTS.pop();
+				DO_USER_REGIST({
+					USER_ID:	JSON_ARS_AUTH_RESULT.CALL_ARGS.CALL_FROM,
+					USER_PW:	USER_AUTH,
+					USER_EMAIL:	$('#USER_EMAIL').val()
+				});
+			} else {
+				QIIP_APP_ALERT([
+					'아래와 같이 ARS 시나리오가 전개되어, 회원가입을 처리 할 수 없습니다.',
+					'<table style="width:100%;text-align:left;">' + 
+					'<tr>' + 
+					'<td>' + 
+					'<pre>' + 
+						JSON.stringify(JSON_ARS_AUTH_RESULT.SCENARIO_HISTORY, null, '\t') + 
+					'</pre>' +
+					'</tr>' + 
+					'</td>' + 
+					'</table>'
+				],function () {
+				});
+			}
+		}
+	}
+
+	function DO_USER_REGIST(REGIST_DATA) {
+	//	alert(JSON.stringify(REGIST_DATA, null, '\t'));
+		var PHP_CODES  = "";
+			PHP_CODES += "return wp_create_user('" + REGIST_DATA.USER_ID + "','" + REGIST_DATA.USER_PW + "','" + REGIST_DATA.USER_EMAIL + "');";
+
+		QIIP_API_ACCESS({
+				REQ: 'api_WP_ACCESS',
+				PHP_CODES_BASE64: Base64.encode(PHP_CODES),
+			},function(STR_RESULT) {
+	//			alert(JSON.stringify(STR_RESULT, null, '\t'));
+				var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+
+				if ((typeof JSON_RESULT === 'object') && ('errors' in JSON_RESULT)) {
+					QIIP_APP_ALERT([
+						JSON.stringify(JSON_RESULT.errors, null, '\t')
+					]);
+				} else {
+					QIIP_APP_ALERT([
+						'아래와 같은 회윈정보를 적용하여 회원가입을 처리했습니다.',
+						'[ 핸드폰 번호 : ' + REGIST_DATA.USER_ID + ', ARS 인증번호 : ' + REGIST_DATA.USER_PW + ', EMAIL 주소 : ' + REGIST_DATA.USER_EMAIL + ']',
+					],function () {
+						window.location.replace(window.location.origin);
+					});
+				}
+			}
+		);
+
+	}
+
+	function ARS_PW_INPUT_RESULT(STR_JSON_BASE64) {
+		var JSON_ARS_AUTH_RESULT = JSON.parse(Base64.decode(STR_JSON_BASE64));
+		console.log(JSON.stringify(JSON_ARS_AUTH_RESULT, null, '\t'));
+		if (('CALL_ARGS' in JSON_ARS_AUTH_RESULT) && 
+			('CALL_STATUS' in JSON_ARS_AUTH_RESULT) && 
+			('USER_DTMF_INPUTS' in JSON_ARS_AUTH_RESULT)) {
+	//		if ((JSON_ARS_AUTH_RESULT.USER_DTMF_INPUTS.length >= 1) && 
+	//			(JSON_ARS_AUTH_RESULT.CALL_STATUS.CODE == 201) && 
+	//			(JSON_ARS_AUTH_RESULT.CALL_STATUS.CODE_STR == 'AUTH_USER_INPUT')) {
+					
+			if (JSON_ARS_AUTH_RESULT.USER_DTMF_INPUTS.length >= 1) {
+				var USER_AUTH = JSON_ARS_AUTH_RESULT.USER_DTMF_INPUTS.pop();
+				JSON_ARS_AUTH_RESULT.CALL_ARGS.LOGIN_DATA.USER_PW = USER_AUTH;
+				DO_LOGIN(
+					JSON_ARS_AUTH_RESULT.CALL_ARGS.LOGIN_DATA
+				);
+			} else {
+				QIIP_APP_ALERT([
+					'아래와 같이 ARS 시나리오가 전개되어, 로그인을 할 수 없습니다.',
+					'<table style="width:100%;text-align:left;">' + 
+					'<tr>' + 
+					'<td>' + 
+					'<pre>' + 
+						JSON.stringify(JSON_ARS_AUTH_RESULT.SCENARIO_HISTORY, null, '\t') + 
+					'</pre>' +
+					'</tr>' + 
+					'</td>' + 
+					'</table>'
+				],function () {
+				});
+			}
+		}
+	}
+
+	function DO_LOGIN(LOGIN_DATA) {
+	//	alert(JSON.stringify(LOGIN_DATA, null, '\t'));
+		
+		var PHP_CODES  = '';
+			PHP_CODES += '$credentials = array(';
+			PHP_CODES += '	"user_login" => "' + LOGIN_DATA.USER_ID + '",';
+			PHP_CODES += '	"user_password" => "' + LOGIN_DATA.USER_PW + '",';
+			PHP_CODES += '	"remember" => "' + LOGIN_DATA.REMEMBER + '"';
+			PHP_CODES += ');';
+			PHP_CODES += 'return wp_signon($credentials);';
+
+		QIIP_API_ACCESS({
+				REQ: 'api_WP_ACCESS',
+				PHP_CODES_BASE64: Base64.encode(PHP_CODES),
+			},function(STR_RESULT) {
+	//			alert(JSON.stringify(STR_RESULT, null, '\t'));
+				var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+				if ('errors' in JSON_RESULT) {
+					QIIP_APP_ALERT([
+						JSON_RESULT.errors
+//						JSON.stringify(JSON_RESULT.errors, null, '\t')
+					]);
+				} else {
+					$('#QIIP_LOGIN').modal('hide');
+					_RS.LOGIN_INFO = JSON_RESULT; // GLOBAL 변수에 저장
+					QIIP_ADD_USER_META_DATA(AFTER_LOGIN_OK());
+/*
+					window.location.replace(
+						sprintf('%s?S=%s', window.location.origin, _RS.PHONE_INFO.APP_NAME)
+					);
+*/
+				}
+			}
+		);
+	}
+	
+	function DO_PW_RESET(PW_RESET_INFO) {
+		var PHP_CODES  = '';
+			PHP_CODES += '';
+			PHP_CODES += '$errors = new WP_Error();';
+			PHP_CODES += "if ( strpos( '" + PW_RESET_INFO + "' , '@' ) ) {";
+			PHP_CODES += "	$user_data = get_user_by( 'email', trim( wp_unslash( '" + PW_RESET_INFO + "' ) ) );";
+			PHP_CODES += "	if ( empty( $user_data ) )";
+			PHP_CODES += "		$errors->add('invalid_email', __('<strong>ERROR</strong>: There is no user registered with that email address.'));";
+			PHP_CODES += "} else {";
+			PHP_CODES += "	$login = trim( '" + PW_RESET_INFO + "');";
+			PHP_CODES += "	$user_data = get_user_by('login', $login);";
+			PHP_CODES += "}";
+			PHP_CODES += "if ( $errors->get_error_code() ) return $errors;";
+			PHP_CODES += "if ( !$user_data ) {";
+			PHP_CODES += "	$errors->add('invalidcombo', __('<strong>ERROR</strong>: Invalid username or email.'));";
+			PHP_CODES += "	return $errors;";
+			PHP_CODES += "}";
+			PHP_CODES += "$user_login = $user_data->user_login;";
+			PHP_CODES += "$user_email = $user_data->user_email;";
+			PHP_CODES += "$key = get_password_reset_key( $user_data );";
+			PHP_CODES += "if ( is_wp_error( $key ) ) return $key;";
+			PHP_CODES += "$message = __('Someone has requested a password reset for the following account:') . " + '"\r\n";';
+			PHP_CODES += "$message .= network_home_url( '/' ) . " + '"\r\n";';
+			PHP_CODES += "$message .= sprintf(__('Username: %s'), $user_login) . " + '"\r\n";';
+			PHP_CODES += "$message .= __('If this was a mistake, just ignore this email and nothing will happen.') . " + '"\r\n";';
+			PHP_CODES += "$message .= __('To reset your password, visit the following address:') . " + '"\r\n";';
+			PHP_CODES += "$message .= network_site_url(" + '"' + "wp-login.php?action=rp&key=$key&login=" + '"' + " . rawurlencode($user_login), 'login') . " + '"\r\n";';
+			PHP_CODES += "if ( is_multisite() ) {";
+			PHP_CODES += "	$blogname = get_network()->site_name;";
+			PHP_CODES += "} else {";
+			PHP_CODES += "	$blogname = wp_specialchars_decode(get_option('blogname'), ENT_QUOTES);";
+			PHP_CODES += "}";
+			PHP_CODES += "$title = sprintf( __('[%s] Password Reset'), $blogname );";
+			PHP_CODES += "$title = apply_filters( 'retrieve_password_title', $title, $user_login, $user_data );";
+			PHP_CODES += "$message = apply_filters( 'retrieve_password_message', $message, $key, $user_login, $user_data );";
+			PHP_CODES += "if ( $message && !wp_mail( $user_email, wp_specialchars_decode( $title ), $message ) )";
+			PHP_CODES += "wp_die( __('The email could not be sent.') . " + '"<br />\n"' + " . __('Possible reason: your host may have disabled the mail() function.') );";
+			PHP_CODES += "return true;";
+
+		QIIP_API_ACCESS({
+				REQ: 'api_WP_ACCESS',
+				PHP_CODES_BASE64: Base64.encode(PHP_CODES),
+			},function(STR_RESULT) {
+				var JSON_RESULT = {};
+			    try { JSON_RESULT = JSON.parse(STR_RESULT); } catch(e) { }
+				if ((typeof JSON_RESULT === 'object') && ('errors' in JSON_RESULT)) {
+					QIIP_APP_ALERT([
+						'<xmp>' +
+						JSON.stringify(JSON_RESULT.errors, null, '\t') +
+						'</xmp>'
+					]);
+				} else {
+					QIIP_APP_ALERT([
+						'입력하신 [' + PW_RESET_INFO + '] 회원정보에 지정된 E-MAIL 주소로 도착한 메일에서 비밀번호를 설정하세요!'
+					],function () {
+						window.location.replace(window.location.origin + '?S=' + _RS.PHONE_INFO.APP_NAME);
+					});
+				}
+			}
+		);
+		
+	}
+
+	function DO_TRY_REGIST_1ST(REGIST_DATA) {
+		if (!QIIP_IS_VALID_M_PHONE_NO(REGIST_DATA.USER_ID)) {
+			if (REGIST_DATA.USER_ID.length > 0) {
+				QIIP_APP_ALERT([
+					'[' + REGIST_DATA.USER_ID + '] 는 핸드폰 번호가 아닙니다!',
+				],function () {
+				});
+			} else {
+				QIIP_APP_ALERT([
+					'핸드폰 번호를 입력하지 않았습니다!',
+				],function () {
+				});
+			}
+			return;
+		}
+		if (!QIIP_IS_VALID_EMAIL(REGIST_DATA.USER_EMAIL)) {
+			if (REGIST_DATA.USER_EMAIL.length > 0) {
+				QIIP_APP_ALERT([
+					'[' + REGIST_DATA.USER_EMAIL + '] 는 이메일 주소가 아닙니다!',
+				],function () {
+				});
+			} else {
+				QIIP_APP_ALERT([
+					'이메일 주소를 입력하지 않았습니다!',
+				],function () {
+				});
+			}
+			return;
+		}
+		var PHP_CODES  = "";
+			PHP_CODES += "return username_exists('" + REGIST_DATA.USER_ID + "');";
+
+	//email_exists( string $email )
+
+		QIIP_API_ACCESS({
+				REQ: 'api_WP_ACCESS',
+				PHP_CODES_BASE64: Base64.encode(PHP_CODES),
+			},function(STR_RESULT) {
+	//			alert(JSON.stringify(STR_RESULT, null, '\t'));
+				var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+
+				if (STR_RESULT.indexOf('false') >= 0) {
+					DO_TRY_REGIST_2ND(REGIST_DATA);
+				} else {
+					QIIP_APP_ALERT([
+						'핸드폰 번호 [' + REGIST_DATA.USER_ID + '] 는 이미 가입되어 있습니다!',
+					],function () {
+					});
+				}
+			}
+		);
+	}
+
+	function DO_TRY_REGIST_2ND(REGIST_DATA) {
+		var PHP_CODES  = "";
+			PHP_CODES += "return email_exists('" + REGIST_DATA.USER_EMAIL + "');";
+
+		QIIP_API_ACCESS({
+				REQ: 'api_WP_ACCESS',
+				PHP_CODES_BASE64: Base64.encode(PHP_CODES),
+			},function(STR_RESULT) {
+	//			alert(JSON.stringify(STR_RESULT, null, '\t'));
+				var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+
+				if (STR_RESULT.indexOf('false') >= 0) {
+					POPUP_FOR_EXEC_IVR_SCENARIO({
+						APIKEY:				IVR_APIKEY,
+						CMD:				'ARSAUTH_WAIT',
+						TITLE:				'[' + REGIST_DATA.USER_ID + '] 님 - 회원가입',
+						CALL_SCENARIO:		'AUTH_PW_REGIST',
+	        			CALL_IN_ANSWER:		true,
+
+						STR_SCENARIO_HELP:	ARR_TO_TABLE_CENTER([
+							'[다음 단계] 버튼을 클릭하신 후,...',
+							'아래와 같이 전화를 걸어, 안내 음성에 따라 비밀번호를 설정 하시면,...',
+							'회원 가입이 완료됩니다.',
+						]),
+						MENT_1ST_INTRO:			'ARS 인증에 사용하실 인증번호 여섯자리를 결정하셔서 입력해주세요.',
+						MENT_1ST_NO_INPUT:		'아무 입력도 없었습니다.',
+						MENT_1ST_LACK_INPUT:	'입력하신 인증번호의 갯수가 부족합니다.',
+						MENT_1ST_RETRY:			'ARS 인증에 사용하실 인증번호 여섯자리를 결정하셔서 다시 입력해주세요.',
+						MENT_1ST_RETRY_EXAUST:	'허용된 재시도 횟수를 초과하여 인증번호 설정을 실패하셨습니다.',
+						MENT_2ND_INTRO:			'첫번째 입력하신 인증번호 여섯자리를 다시 한번 입력해주세요.',
+						MENT_2ND_NO_INPUT:		'아무 입력도 없었습니다.',
+						MENT_2ND_SOME_INPUT:	'첫번째 입력하신 인증번호와, 두번째 입력하신 인증번호가 서로 다릅니다.',
+						MENT_2ND_LACK_INPUT:	'입력하신 인증번호의 갯수가 부족합니다.',
+						MENT_2ND_AUTH_INPUT:	'인증번호 설정이 완료되었습니다.',
+						MENT_2ND_RETRY:			'첫번째 입력하신 인증번호 여섯자리를 다시 한번 입력해주세요.',
+						MENT_2ND_RETRY_EXAUST:	'허용된 재시도 횟수를 초과하여 인증번호 설정을 실패하셨습니다.',
+						CALL_TO:			IVR_NUMBER,
+						CALL_FROM:			REGIST_DATA.USER_ID,
+						AUTH_NUMBER:		'??????',
+						PW_CANDIDATE:		'??????',
+						RETRY_STEP_1:		3,
+						RETRY_STEP_2:		3,
+						FUNC_CALLBACK:		'ARS_PW_REGIST_RESULT'
+					});
+				} else {
+					QIIP_APP_ALERT([
+						'이메일 주소 [' + REGIST_DATA.USER_EMAIL + '] 는 이미 가입되어 있습니다!',
+					],function () {
+					});
+				}
+			}
+		);
+	}
+	function DO_TRY_REGIST(REGIST_DATA) {
+	//	alert(JSON.stringify(REGIST_DATA, null, '\t'));
+		var PHP_CODES  = '';
+			PHP_CODES += 'return register_new_user("' + REGIST_DATA.USER_ID + '","' + REGIST_DATA.USER_EMAIL + '");';
+
+		QIIP_API_ACCESS({
+				REQ: 'api_WP_ACCESS',
+				PHP_CODES_BASE64: Base64.encode(PHP_CODES),
+			},function(STR_RESULT) {
+				var JSON_RESULT = {};
+			    try { JSON_RESULT = JSON.parse(STR_RESULT); } catch(e) { }
+				if ((typeof JSON_RESULT === 'object') && ('errors' in JSON_RESULT)) {
+					QIIP_APP_ALERT([
+						JSON.stringify(JSON_RESULT.errors, null, '\t')
+					]);
+				} else {
+					QIIP_APP_ALERT([
+						'다음 정보를 적용하여 회원가입 요청을 완료했습니다.',
+						'[' + REGIST_DATA.USER_ID + ', ' + REGIST_DATA.USER_EMAIL + ']',
+						'지정하신 E-MAIL [' + REGIST_DATA.USER_EMAIL + ']로 도착한 메일에서 비밀번호를 설정하세요!',
+					],function () {
+						window.location.replace(window.location.origin + '?S=' + _RS.PHONE_INFO.APP_NAME);
+					});
+				}
+			}
+		);
+
+	}
+
+
+	function DO_LOAD_LOGIN_FORM() {
+		QIIP_API_ACCESS({
+				REQ: 'api_GET_PAGE',
+				FLDR_TEMPLATE: _FLDR_TEMPLATE,
+				FILE_TEMPLATE: 'LOGIN/MODAL_IVR_LOGIN_FORM.html',
+			},function(STR_RESULT) {
+				$('#QIIP_LOGIN').html(_AC(STR_RESULT)(_RS)); _RS.$apply();
+				UPDATE_QIIP_LOGIN_EVENT(function () {
+					DO_TRY_TO_LOGIN({
+						USER_ID: $('#USER_ID').val(),
+						USER_PW: $('#USER_PW').val(),
+						REMEMBER: $('#CHK_REMEMBER').is(":checked")
+					});
+				});
+				$('#QIIP_LOGIN').on('hidden.bs.modal', function () {
+					$('#QIIP_LOGIN').parent().remove();
+				});
+				
+			}
+		);
+	}
+
+	function DO_LOAD_PW_RESET_FORM() {
+		QIIP_API_ACCESS({
+				REQ: 'api_GET_PAGE',
+				FLDR_TEMPLATE: _FLDR_TEMPLATE,
+				FILE_TEMPLATE: 'LOGIN/MODAL_IVR_PW_RESET_FORM.html',
+			},function(STR_RESULT) {
+				$('#QIIP_LOGIN').html(_AC(STR_RESULT)(_RS)); _RS.$apply();
+				UPDATE_QIIP_LOGIN_EVENT(function () {
+					DO_PW_RESET(
+						$('#PW_RESET_INFO').val()
+					);
+				});
+			}
+		);
+	}
+
+	function DO_LOAD_REGIST_FORM() {
+		QIIP_API_ACCESS({
+				REQ: 'api_GET_PAGE',
+				FLDR_TEMPLATE: _FLDR_TEMPLATE,
+				FILE_TEMPLATE: 'LOGIN/MODAL_IVR_REGIST_FORM.html',
+			},function(STR_RESULT) {
+				$('#QIIP_LOGIN').html(_AC(STR_RESULT)(_RS)); _RS.$apply();
+				UPDATE_QIIP_LOGIN_EVENT(function () {
+					DO_TRY_REGIST({
+						USER_ID: $('#USER_ID').val(),
+						USER_EMAIL: $('#USER_EMAIL').val()
+					});
+				});
+			}
+		);
+	}
+	
+</script>
+<!-- Modal HTML -->
+<div id="QIIP_LOGIN" class="modal fade">
+</div>     

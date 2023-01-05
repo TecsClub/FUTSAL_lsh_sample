@@ -1,0 +1,194 @@
+@charset "utf-8";
+/* 컨텐츠 전체영역 */
+.con_wrap{
+	width:100%; height:88%;
+}
+/* left_con 영역 */
+.left_con{
+	width: 35%;
+	height: 100%;
+	float: left;
+	padding: 15px;
+}
+
+/* 사용자 정보 영역 */
+.left_con .info ul{
+list-style: none;
+padding: 0;
+margin:0;
+}
+.left_con .info ul li{
+width: 33.3333%;
+float: left;
+text-align: center;
+font-size: 15px;
+border-right: 1px solid #f3b599;
+color: #555;
+	border-bottom: 1px solid #f3b599;
+	border-top: 2px solid #e06731;
+}
+.left_con .info ul li:nth-child(1){
+	border-bottom: 1px solid #e06731;
+}
+.left_con .info ul li:nth-child(3){
+	border:none;
+	border-bottom: 1px solid #f3b599;
+	border-top: 2px solid #e06731;
+}
+.left_con .info ul li:nth-child(4){
+	border:none;
+	border-right: 1px solid #e06731;
+	line-height: 2;
+	background-color: #e06731;
+border-bottom: 1px solid #e06731;
+
+color: white;
+}
+ .left_con .info ul li:last-child{
+	width: 66.6666%;
+	border:none;
+	text-align:center;
+	border-bottom: 2px solid #e06731;
+
+}
+ .left_con .info ul li span{
+	display: block;
+font-size: 17px;
+font-weight: bold;
+color: #999;
+line-height: 1.7;
+
+}
+#BTN_INFO_MODIFY{
+	 width: 100%;height: 100%;background-color: #333; border-color: #222;color: #eee;
+}
+#BTN_INFO_MODIFY:hover{
+	background-color: #222;
+	cursor: pointer;
+}
+
+
+/* 모션데이터 영역 */
+ .left_con .motion_data{
+clear: both;
+padding-top: 3%;
+}
+ .left_con .motion_data h2{
+font-size: 21px;
+
+border-bottom: 2px solid #e06731;
+
+line-height: 1.6;
+
+padding-left: 20px;
+
+color: #e06731;
+}
+
+/* 모션데이터 영역_탭 */
+ .left_con .motion_data ul.nav-tabs{
+	
+}
+ .left_con .motion_data ul.nav-tabs li{
+width: 20%;
+text-align: center;
+line-height: 2;
+box-sizing: border-box;
+}
+ .left_con .motion_data ul.nav-tabs li a{
+	color: #777;
+	width: 100%;
+	height: 100%;
+	display: inline-block;
+}
+ .left_con .motion_data ul.nav li.active a {
+    background-color: #eee;
+}
+ .left_con .nav-tabs > li.active > a, .nav-tabs > li.active > a:focus, .nav-tabs > li.active > a:hover{
+	border: 1px solid #ddd;
+	color: #666; 
+	border-bottom-color: transparent;
+	border-radius: 4px 4px 0px 0px;	
+}
+/* 모션데이터 영역_inner */
+.left_con .tab-content{
+width: 85%;
+margin: 0 auto;
+margin-top: 2%;
+margin-bottom: 3%;
+position: relative;
+text-align: center;
+ }
+.left_con .tab-content p{
+margin: 0 0 1%;
+font-size: 15px;
+text-align: left;
+}
+.left_con .tab-content ul{
+list-style: none;
+padding: 0;
+margin: 0;
+}
+.left_con .tab-content ul li{
+font-weight: bold;
+color: #777;
+}
+.left_con .tab-content ul li:nth-child(1){
+position: absolute;
+top: 10%;
+left: 0;
+}
+.left_con .tab-content ul li:nth-child(2){
+position: absolute;
+top: 10%;
+right: 0;
+}
+.left_con .tab-content ul li:nth-child(3){
+position: absolute;
+bottom: 10%;
+left: 0;
+}
+.left_con .tab-content ul li:nth-child(4){
+position: absolute;
+bottom: 10%;
+right: 0;
+}
+.left_con .tab-content ul li span {
+    display: block;
+    font-weight: bold;
+    color: #e06731;
+    font-size: 30px;
+}
+/* 유저데이터 영역 */
+.left_con .user_data h2{
+font-size: 21px;
+border-bottom: 2px solid #e06731;
+line-height: 1.6;
+padding-left: 20px;
+color: #e06731;
+}
+.left_con .user_data ul{
+height: auto;
+display: inline-block;
+width: 100%;
+margin: 0;
+list-style: none;
+padding: 0;
+}
+.left_con .user_data ul li{
+float: left;
+width: 33.333%;
+text-align: center;
+border-right: 1px solid #f3b599;
+color: #555;
+}
+.left_con .user_data ul li:last-child{
+	border:none;
+}
+.left_con .user_data ul li span {
+    display: block;
+    color: #999;
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 1.7;
+}

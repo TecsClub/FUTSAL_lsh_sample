@@ -1,0 +1,268 @@
+<style>
+	#SCHOOL_LIST 			{width:100%; height:100%;}
+	#SCHOOL_LIST input		{width:100%; height:100%; text-align:center;}
+	#SCHOOL_LIST table		{width:100%; height:100%; font-size:100%; border-collapse: separate; border-spacing: 1px; line-height: 100%;}
+	#SCHOOL_LIST table th	{font-weight:bold; text-align: center; white-space:normal; vertical-align: middle; word-break:break-all; word-wrap:break-all; background:#4789b7; color:white; }
+	#SCHOOL_LIST table td	{text-decoration:none; text-align: left;   white-space:normal; vertical-align: middle; word-break:break-all; word-wrap:break-all; background:#eee; padding:0 10px;}
+</style>
+
+<script>
+var IVR_SERVER_SELECTED		= null;
+
+function REGIST_BUTTON_EVENT() {
+	$(".BTN_SCHOOL_LIST").jqxButton({
+		width: '100%',
+		height: '100%'
+	}).on('click', function () {
+		var ID = $(this).attr('ID');
+		if (ID == 'DUMMY') {
+		} else if(ID == 'BTN_CANCLE_CLOSE') {
+			if (MODAL_ID != undefined) $('#'+MODAL_ID).modal('hide');
+		} else if(ID == 'BTN_GET_SCHOOL_LIST') {
+			QUERY_SCHOOL_LIST();
+		}
+	});
+}
+
+function ON_CLICK_BTN_SCHOOL_ROW(OBJ_DOM) {
+	var ATTR = QIIP_GET_DOM_ATTRIBUTES(OBJ_DOM);
+	var STR_CMD = ATTR.cmd;
+	var ROW_DATA = $('#DIV_GRID_SCHOOL_LIST').jqxGrid('getrowdata', ATTR.row);
+
+	if (STR_CMD == 'DUMMY') {
+	} else if (STR_CMD == 'UPD') {
+	} else if (STR_CMD == 'DEL') {
+	} else if (STR_CMD == 'SEL') {
+		$('#TXT_SALES_TARGET_CODE').val(sprintf('SCHOOL_%s-%s', ROW_DATA.POST_NO, ROW_DATA.PHONE_NO));
+		$('#TXT_SALES_TARGET_NAME').val(ROW_DATA.SCHOOL_NAME);
+		if (MODAL_ID != undefined) $('#'+MODAL_ID).modal('hide');
+	} else if (STR_CMD == 'VIEW') {
+		MODAL_FOR_SCHOOL_DETAIL(ROW_DATA);
+	}
+}
+
+function MODAL_FOR_SCHOOL_DETAIL(JSON_ARGS) {
+	QIIP_API_ACCESS({
+			REQ: 'api_GET_PAGE',
+			FLDR_TEMPLATE: _FLDR_TEMPLATE,
+			FILE_TEMPLATE: 'SALES/MODAL_FOR_SCHOOL_DETAIL.html',
+		},function(STR_RESULT) {
+			var HTML_COMPILED = QIIP_STATIC_HTML(JSON_ARGS, STR_RESULT);
+			QIIP_APP_MODAL_POPUP({
+				TITLE: 'SCHOOL DETAIL INFORMATION',
+				BACKDROP: false,
+				CSS: {
+//					width: '1050px',
+//					height: '900px',
+					width: '50%',
+					height: '90%',
+				},
+				CONTENT: HTML_COMPILED,
+				INIT_FUNC: function (UNIQUE_ID) {
+					INIT_WIDGETS_FOR_SCHOOL_DETAIL(UNIQUE_ID);
+				}
+			});
+		}
+	);
+}
+
+var MODAL_ID = null;
+function INIT_WIDGETS_FOR_SCHOOL_LIST(args_MODAL_ID) {
+	MODAL_ID = args_MODAL_ID;
+	REGIST_BUTTON_EVENT();
+	QUERY_SCHOOL_LIST();
+}
+
+function QUERY_SCHOOL_LIST() {
+
+	var STR_POST_ADDRESS = $('#STR_POST_ADDRESS').val();
+	var STR_SCHOOL_NAME = $('#STR_SCHOOL_NAME').val();
+	var MAX_LIST = parseInt($('#MAX_LIST').val());
+	
+	var STR_PHP_COND  = sprintf("$COND_CHECK = true;");
+		if (STR_POST_ADDRESS.length > 0)
+		    STR_PHP_COND += sprintf("$COND_CHECK = $COND_CHECK && (strpos($ONE_ROOT_CONTENTES->$ATTR_KEY->POST_ADDRESS, '%s') !== false);", STR_POST_ADDRESS);
+		if (STR_SCHOOL_NAME.length > 0)
+		    STR_PHP_COND += sprintf("$COND_CHECK = $COND_CHECK && (strpos($ONE_ROOT_CONTENTES->$ATTR_KEY->SCHOOL_NAME, '%s') !== false);", STR_SCHOOL_NAME);
+	    STR_PHP_COND += sprintf("return $COND_CHECK;");
+
+	QIIP_API_ACCESS({
+			REQ: 'post_GET_ALL_ROOT_ATTRIBUTE',
+			SVC_CATEGORY: _RS.PHONE_INFO.APP_NAME,
+			ATTR_KEY: 'SCHOOL_INFO',
+			SEARCH_KEY: 'SCHOOL',
+			LIMIT: MAX_LIST,
+			PHP_COND: [
+				"if (isset($ONE_ROOT_CONTENTES->$ATTR_KEY)) { ",
+					STR_PHP_COND,
+				"} else { ",
+				"   return false;",
+				"}"
+			]
+		},function(STR_RESULT) {
+			var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+			if ((JSON_RESULT instanceof Array)) {
+				REFRESH_GRID_SCHOOL_LIST(JSON_RESULT);
+			}
+		}
+	);		
+	
+}
+
+function REFRESH_GRID_SCHOOL_LIST(args_SQL_RESULT) {
+
+//	QIIP_APP_ALERT([args_SQL_RESULT[0]]); return;
+//	QIIP_APP_ALERT([args_SQL_RESULT]); return;
+
+	var SQL_RESULT = Array();
+	args_SQL_RESULT.forEach(function (ONE_ITEM) {
+		SQL_RESULT.push(ONE_ITEM.SCHOOL_INFO);
+	});
+
+/*
+	SQL_RESULT.forEach(function (ONE_ITEM) {
+	});
+*/
+    var source = {
+        localdata: SQL_RESULT,
+        datatype: "json",
+        datafields:[
+//            { name: 'ID',			type: 'string' },
+            { name: 'HOME_PAGE',	type: 'string' },
+            { name: 'SCHOOL_GRADE',	type: 'string' },
+            { name: 'SCHOOL_DETAIL',type: 'string' },
+            { name: 'HS_TYPE',		type: 'string' },
+            { name: 'AREA',			type: 'string' },
+            { name: 'EDU_OFFICE',	type: 'string' },
+            { name: 'AREA_SUB',		type: 'string' },
+            { name: 'SCHOOL_NAME',	type: 'string' },
+            { name: 'BRANCH_INFO',	type: 'string' },
+            { name: 'BRANCH_STATUS',type: 'string' },
+            { name: 'FOUNDER',		type: 'string' },
+            { name: 'GENDER_INFO',	type: 'string' },
+            { name: 'POST_NO',		type: 'string' },
+            { name: 'POST_ADDRESS',	type: 'string' },
+            { name: 'PHONE_NO',		type: 'string' },
+            { name: 'FAX_NO',		type: 'string' },
+        ]                     
+    };
+
+    var dataAdapter = new $.jqx.dataAdapter(source);
+	$("#DIV_GRID_SCHOOL_LIST").jqxGrid({
+        width: '100%',
+        height: '100%',
+        source: dataAdapter,                
+//        pageable: true,
+//        autoheight: true,
+        sortable: true,
+        altrows: true,
+        enabletooltips: true,
+        editable: true,
+        pagesize: 15,
+        selectionmode: 'multiplecellsadvanced',
+        columns: [
+          { text: '버튼', align: 'center',	width: '7%', cellsalign: 'center',
+          	cellsrenderer: function (row, column, value) {
+                var STR_HTML  = '';
+                	STR_HTML += '<div style="width:100%;height:100%;text-align:center;">';
+/*
+          		if (row > 0) {
+                	STR_HTML += '<button style="height:100%;" CMD="UPD" ROW="' + row + '" onclick="ON_CLICK_BTN_SCHOOL_ROW(this);">';
+                	STR_HTML += '갱신';
+                	STR_HTML += '</button>';
+                	STR_HTML += ' ';
+                	STR_HTML += '<button style="height:100%;" CMD="DEL" ROW="' + row + '" onclick="ON_CLICK_BTN_SCHOOL_ROW(this);">';
+                	STR_HTML += '삭제';
+                	STR_HTML += '</button>';
+          		} else {
+                	STR_HTML += '<button style="height:100%;" CMD="ADD" ROW="' + row + '" onclick="ON_CLICK_BTN_SCHOOL_ROW(this);">';
+                	STR_HTML += '추가';
+                	STR_HTML += '</button>';
+          		}
+*/
+                	STR_HTML += '<button style="height:100%;background-color:blue;color:white;" CMD="SEL" ROW="' + row + '" onclick="ON_CLICK_BTN_SCHOOL_ROW(this);">';
+                	STR_HTML += '선택';
+                	STR_HTML += '</button>';
+                	STR_HTML += ' ';
+                	STR_HTML += '<button style="height:100%;" CMD="VIEW" ROW="' + row + '" onclick="ON_CLICK_BTN_SCHOOL_ROW(this);">';
+                	STR_HTML += '자세히';
+                	STR_HTML += '</button>';
+                	STR_HTML += '</div>';
+                return STR_HTML;
+            }
+          },
+//          { text: 'ID',			columngroup: 'SCHOOL_INFO', datafield: 'ID'},
+
+          { text: '학교명',	columngroup: 'SCHOOL_INFO', datafield: 'SCHOOL_NAME',	width: '10%',	align: 'center',	cellsalign: 'left'},
+          { text: '연락처',	columngroup: 'SCHOOL_INFO', datafield: 'PHONE_NO',	width: '7%',	align: 'center',	cellsalign: 'center'},
+          { text: '팩스번호',	columngroup: 'SCHOOL_INFO', datafield: 'FAX_NO',	width: '7%',	align: 'center',	cellsalign: 'center'},
+          { text: '우편번호',	columngroup: 'SCHOOL_INFO', datafield: 'POST_NO',		align: 'center',	cellsalign: 'center'},
+          { text: '도로명주소',	columngroup: 'SCHOOL_INFO', datafield: 'POST_ADDRESS',	width: '22%',	align: 'center',	cellsalign: 'left'},
+          { text: '홈페이지',	columngroup: 'SCHOOL_INFO', datafield: 'HOME_PAGE',	width: '10%',	align: 'center',	cellsalign: 'left'},
+          { text: '학제',	columngroup: 'SCHOOL_INFO', datafield: 'SCHOOL_GRADE',	width: '3%',	align: 'center',	cellsalign: 'center'},
+          { text: '유형',	columngroup: 'SCHOOL_INFO', datafield: 'SCHOOL_DETAIL',	width: '3%',	align: 'center',	cellsalign: 'center'},
+          { text: '고교유형',	columngroup: 'SCHOOL_INFO', datafield: 'HS_TYPE',	width: '4%',	align: 'center',	cellsalign: 'center'},
+          { text: '시도',	columngroup: 'SCHOOL_INFO', datafield: 'AREA',		align: 'center',	cellsalign: 'center'},
+          { text: '교육청',	columngroup: 'SCHOOL_INFO', datafield: 'EDU_OFFICE',		align: 'center',	cellsalign: 'center'},
+          { text: '행정구',	columngroup: 'SCHOOL_INFO', datafield: 'AREA_SUB',		align: 'center',	cellsalign: 'center'},
+          { text: '본분교',	columngroup: 'SCHOOL_INFO', datafield: 'BRANCH_INFO',		align: 'center',	cellsalign: 'center'},
+          { text: '학교상태',	columngroup: 'SCHOOL_INFO', datafield: 'BRANCH_STATUS',		align: 'center',	cellsalign: 'center'},
+          { text: '설립',	columngroup: 'SCHOOL_INFO', datafield: 'FOUNDER',		align: 'center',	cellsalign: 'center'},
+          { text: '남여공학',	columngroup: 'SCHOOL_INFO', datafield: 'GENDER_INFO',		align: 'center',	cellsalign: 'center'},
+        ],
+        columngroups: [
+            { text: 'SCHOOL LIST', align: 'center', name: 'SCHOOL_INFO' },
+        ]
+    });	
+    
+}
+
+</script>
+<div id="SCHOOL_LIST">
+	<div style="height:10%; overflow:auto;">
+		<table>
+			<col width="12%" />
+			<col width="12%" />
+			<col width="12%" />
+			<col width="12%" />
+			<col width="12%" />
+			<col width="12%" />
+			<col width="14%" />
+			<col width="14%" />
+			<tr>
+
+				<th style="background:#94bbd6; color:#333;">학교명</th>
+				<td>
+					<input type="text" id="STR_SCHOOL_NAME"/>
+				</td>
+
+				<th style="background:#94bbd6; color:#333;">도로명 주소</th>
+				<td>
+					<input type="text" id="STR_POST_ADDRESS" />
+				</td>
+
+				<th style="background:#94bbd6; color:#333;">LIMIT</th>
+				<td>
+					<input type="text" id="MAX_LIST" value="15"/>
+				</td>
+
+				<td>
+					<button class="BTN_SCHOOL_LIST" id="BTN_GET_SCHOOL_LIST">
+						목록갱신
+					</button>
+				</td>
+
+				<td>
+					<button class="BTN_SCHOOL_LIST" id="BTN_CANCLE_CLOSE">
+						취소 & 닫기
+					</button>
+				</td>
+
+			</tr>
+		</table>
+	</div>
+	<div style="height:90%;">
+		<div id="DIV_GRID_SCHOOL_LIST" style="box-sizing:border-box;">
+		</div>
+	</div>
+</div>

@@ -1,0 +1,662 @@
+<style>
+button:focus{
+outline: none;
+}
+QIIP_MENU *{
+	box-sizing: border-box;
+	display: block;
+}
+QIIP_MENU {
+	position:fixed;
+	top: 0px;
+	left: 0px;
+	height:70px;
+	width:100%;
+	background: none;
+	transition: all 0.5s;
+	z-index: 11;
+	border-bottom: 1px solid #fff;
+}
+QIIP_MENU:hover{
+background-color: #fff !important;	
+border-color: #ddd !important;
+}
+QIIP_MENU DIV_LEFT {
+	height:100%;
+	width:15%;
+	background: none;
+	float:left;
+	text-align: center;
+	font-size: 44px;
+	line-height: 70px;
+	color: #fff;
+	transition: all 0.5s;
+}
+QIIP_MENU:hover DIV_LEFT{
+	color: #333 !important;	
+	cursor: pointer;
+}
+QIIP_MENU  DIV_CENTER{
+position: absolute;
+left: 50%;
+max-width: 1000px;
+transform: translateX(-50%);
+width: 100%;
+}
+QIIP_MENU DIV_RIGHT {
+	height:100%;
+	width:15%;
+	background: none;
+	float:right;
+	text-align: center;
+	font-size: 38px;
+	line-height: 70px;
+}
+
+QIIP_MENU MENU_1ST_TEXT {
+	float: left;
+	position: relative;
+	transition: all 0.5s;
+	cursor: pointer;
+}
+QIIP_MENU:hover MENU_1ST_TEXT{
+	color: #333 !important;
+}
+
+QIIP_MENU MENU_1ST_TEXT:first-child:nth-last-child(1) {
+	width: 100%;
+}
+
+QIIP_MENU MENU_1ST_TEXT:first-child:nth-last-child(2),  QIIP_MENU MENU_1ST_TEXT:first-child:nth-last-child(2) ~ MENU_1ST_TEXT {
+	width: 50%;
+}
+
+QIIP_MENU MENU_1ST_TEXT:first-child:nth-last-child(3),  QIIP_MENU MENU_1ST_TEXT:first-child:nth-last-child(3) ~ MENU_1ST_TEXT {
+	width: 33.33%;
+}
+
+QIIP_MENU MENU_1ST_TEXT:first-child:nth-last-child(4),  QIIP_MENU MENU_1ST_TEXT:first-child:nth-last-child(4) ~ MENU_1ST_TEXT {
+	width: 25%;
+}
+
+QIIP_MENU MENU_1ST_TEXT:first-child:nth-last-child(5),  QIIP_MENU MENU_1ST_TEXT:first-child:nth-last-child(5) ~ MENU_1ST_TEXT {
+	width: 20%;
+}
+
+QIIP_MENU MENU_1ST_TEXT:first-child:nth-last-child(6),  QIIP_MENU MENU_1ST_TEXT:first-child:nth-last-child(6) ~ MENU_1ST_TEXT {
+	width: 16.66%;
+}
+
+QIIP_MENU MENU_1ST_TEXT:first-child:nth-last-child(7),  QIIP_MENU MENU_1ST_TEXT:first-child:nth-last-child(7) ~ MENU_1ST_TEXT {
+	width: 14.285%;
+}
+
+QIIP_MENU MENU_1ST_TEXT {
+	display: inline-block;
+	text-align: center;
+	font-size: 22px;
+	line-height: 70px;
+	color: rgba(255,255,255,0.85);
+	text-decoration: none;
+	text-shadow: 1px 1px 1px rgba(0,0,0,0.2);
+	transition: all 0.5s;
+	font-weight: bold;
+}
+QIIP_MENU MENU_1ST_SUB{
+background-color: #fff;
+max-height: 0;
+transition: max-height 0.5s ease;
+overflow: hidden;
+opacity: 0.95;
+font-size: 18px;
+color: #777;
+line-height: 50px;
+border-radius: 0px 0px 4px 4px;
+box-shadow: 0px 0px 3px #888;
+font-weight: 500;
+}
+QIIP_MENU MENU_1ST_TEXT:hover{
+	color: #114991 !important;
+}
+QIIP_MENU MENU_1ST_TEXT:hover MENU_1ST_SUB{
+max-height: 1000px;
+transition: max-height 0.5s ease;
+border-top: 4px solid #114991;
+margin-top: -4px;
+}
+QIIP_MENU MENU_2ND_SUB{
+	max-height: 0;
+    transition: max-height 0.5s ease;
+    overflow: hidden;
+    background: #f5f5f5;
+    
+}
+QIIP_MENU MENU_2ND_SUB MENU_3RD:first-child{
+border-top: 1px solid #eee;
+}
+QIIP_MENU MENU_2ND_SUB MENU_3RD:last-child{
+border-bottom: 1px solid #eee;	
+}
+
+QIIP_MENU MENU_2ND_SUB MENU_3RD_TEXT{
+cursor: pointer;
+font-size: 16px;
+text-align: left;
+padding-left: 10px;
+border-left: 2px solid #114991;
+background-color: #f5f5f5;
+line-height: 50px;
+color: #777;
+}
+QIIP_MENU MENU_2ND_SUB MENU_3RD_TEXT:hover{
+color: #114991;
+transition: all 0.5s;
+background-color: #eee;
+}
+QIIP_MENU MENU_2ND > MENU_2ND_TEXT{
+	position:relative;
+	border-bottom: 1px solid #f4f4f4;
+}
+QIIP_MENU MENU_2ND > MENU_2ND_TEXT span{
+position: absolute !important;
+top: 20px !important;
+font-size: 12px;
+color: #777;
+margin-left: 10px; 	
+transition: all 0.2s;
+}
+QIIP_MENU MENU_2ND > MENU_2ND_TEXT:hover{
+	transition: all 0.5s;
+	color: #114991;
+	background-color: #fafafa;
+}
+
+QIIP_MENU DIV_RIGHT button{
+background: none;
+border: none;
+float: right;
+width: 70px;
+height: 70px;
+border-left: 1px solid #fff;
+}
+QIIP_MENU DIV_RIGHT button span{
+color: #fff;
+transition: all 0.5s;
+}
+QIIP_MENU:hover DIV_RIGHT button{
+border-color: #ddd;
+}
+QIIP_MENU:hover DIV_RIGHT button span{
+	color: #333;
+}
+/* all Menu */
+QIIP_MENU_ALL *{
+display: block;
+}
+
+QIIP_MENU_ALL{
+height: 100%;
+background-color: #000;
+z-index: 111;
+position: fixed;
+overflow-x:hidden;
+right: 0;
+width: 0;
+background-color: rgba( 0, 0, 0, 0.9);
+top: 0;
+}
+QIIP_MENU_ALL MENU_ALL_TOP{
+height: 70px;
+border-bottom: 1px solid #fff;	
+position: fixed;
+width: 100%;
+}
+QIIP_MENU_ALL DIV_LEFT {
+	height:100%;
+	width:15%;
+	background: none;
+	float:left;
+	text-align: center;
+	font-size: 44px;
+	line-height: 70px;
+	color: #fff;
+}
+QIIP_MENU_ALL DIV_RIGHT button{
+background: none;
+border: none;
+float: right;
+width: 70px;
+height: 70px;
+border-left: 1px solid #fff;
+font-size: 32px;
+color: #fff;
+transition: all 0.5s;
+}
+QIIP_MENU_ALL DIV_RIGHT button:hover{
+color: #bbb;
+}
+
+QIIP_MENU_ALL MENU_1ST{
+max-width: 1200px;
+position: absolute;
+left: 50%;
+top: 50%;
+transform: translate(-50%, -50%);
+color: #fff;
+cursor: default;
+min-width: 780px;
+width: 100%;
+}
+QIIP_MENU_ALL MENU_1ST_TEXT{
+float: left;
+font-size: 27px;
+font-weight: bold;
+padding-left: 20px;
+line-height: 60px;
+margin-top: 30px;
+
+}
+QIIP_MENU_ALL MENU_2ND_TEXT{
+	font-size: 18px;
+	font-weight: 400;	
+	line-height: 32px;
+	display: inline-block;
+	cursor: pointer;
+	width: 100%;
+}
+QIIP_MENU_ALL MENU_2ND_TEXT:hover{
+	color: #114991;	
+}
+QIIP_MENU_ALL MENU_3RD_TEXT{
+	font-size: 16px;
+	color: #ccc;
+	border-left: 2px solid #114991;
+	padding-left: 15px;
+}
+QIIP_MENU_ALL MENU_3RD_TEXT:hover{
+	color: #fff;	
+}
+QIIP_MENU_ALL MENU_1ST_TEXT:first-child:nth-last-child(1) {
+	width: 100%;
+}
+
+QIIP_MENU_ALL MENU_1ST_TEXT:first-child:nth-last-child(2),  QIIP_MENU_ALL MENU_1ST_TEXT:first-child:nth-last-child(2) ~ MENU_1ST_TEXT {
+	width: 50%;
+}
+
+QIIP_MENU_ALL MENU_1ST_TEXT:first-child:nth-last-child(3),  QIIP_MENU_ALL MENU_1ST_TEXT:first-child:nth-last-child(3) ~ MENU_1ST_TEXT {
+	width: 33.33%;
+}
+
+QIIP_MENU_ALL MENU_1ST_TEXT:first-child:nth-last-child(4),  QIIP_MENU_ALL MENU_1ST_TEXT:first-child:nth-last-child(4) ~ MENU_1ST_TEXT {
+	width: 25%;
+}
+
+QIIP_MENU_ALL MENU_1ST_TEXT:first-child:nth-last-child(5),  QIIP_MENU_ALL MENU_1ST_TEXT:first-child:nth-last-child(5) ~ MENU_1ST_TEXT {
+	width: 20%;
+}
+
+QIIP_MENU_ALL MENU_1ST_TEXT:first-child:nth-last-child(6),  QIIP_MENU_ALL MENU_1ST_TEXT:first-child:nth-last-child(6) ~ MENU_1ST_TEXT {
+	width: 33.33%;
+}
+QIIP_MENU_ALL MENU_1ST_TEXT:first-child:nth-last-child(6),  QIIP_MENU_ALL MENU_1ST_TEXT:first-child:nth-last-child(6) ~ MENU_1ST_TEXT:nth-child(3n+1){
+clear: both;	
+}
+QIIP_MENU_ALL MENU_1ST_TEXT:first-child:nth-last-child(7),  QIIP_MENU_ALL MENU_1ST_TEXT:first-child:nth-last-child(7) ~ MENU_1ST_TEXT {
+	width: 25%;
+}
+QIIP_MENU_ALL MENU_1ST_TEXT:first-child:nth-last-child(7),  QIIP_MENU_ALL MENU_1ST_TEXT:first-child:nth-last-child(7) ~ MENU_1ST_TEXT:nth-child(4n+1){
+	clear: both;
+}
+
+@media (max-width: 1450px){
+		QIIP_MENU DIV_CENTER{
+			max-width: 840px;	
+		}
+		QIIP_MENU MENU_1ST_TEXT{
+			font-size: 19px;
+		}
+		QIIP_MENU MENU_1ST_SUB{
+			font-size: 17px;	
+		}
+		QIIP_MENU MENU_2ND_SUB MENU_3RD_TEXT{
+			font-size: 15px;
+		}
+		QIIP_MENU MENU_2ND > MENU_2ND_TEXT span{
+			margin-left: 5px;	
+		}
+}
+@media (max-width: 1200px){
+		QIIP_MENU DIV_CENTER{
+			display: none;	
+		}
+		QIIP_MENU DIV_LEFT{
+				width: calc(100% - 70px);
+				text-align: left;
+				padding-left: 20px;
+		}
+		QIIP_MENU_ALL DIV_LEFT{
+				width: calc(100% - 70px);
+				text-align: left;
+				padding-left: 20px;
+		}
+		QIIP_MENU DIV_RIGHT{
+			width: 70px;	
+		}
+		QIIP_MENU_ALL DIV_RIGHT{
+			width: 70px;	
+			float: left;
+		}
+}
+@media (max-width: 1000px){
+	QIIP_MENU_ALL MENU_1ST_TEXT:first-child:nth-last-child(5),  QIIP_MENU_ALL MENU_1ST_TEXT:first-child:nth-last-child(5) ~ MENU_1ST_TEXT {
+	width: 33.3333%;
+}
+QIIP_MENU_ALL MENU_1ST_TEXT:first-child:nth-last-child(5),  QIIP_MENU_ALL MENU_1ST_TEXT:first-child:nth-last-child(5) ~ MENU_1ST_TEXT:nth-child(3n+1){
+	clear: both;
+}
+}
+@media (max-width: 780px){
+		QIIP_MENU{
+			height: 60px;	
+		}
+		QIIP_MENU DIV_LEFT{
+			width: calc(100% - 60px);
+			line-height: 60px;	
+			font-weight: bold;
+			font-size: 35px;
+		}
+		QIIP_MENU DIV_RIGHT{
+			width: 60px;	
+		}
+		
+		QIIP_MENU DIV_RIGHT button{
+			width: 60px;
+			height: 60px;
+		}
+		QIIP_MENU_ALL{
+		 	background-color: #fff;
+		}
+		QIIP_MENU_ALL MENU_ALL_TOP{
+			background-color: #fff;
+			border-color: #ccc;
+			height: 60px;
+		}
+		
+		QIIP_MENU_ALL MENU_1ST{
+				position: unset;
+				min-width: unset;
+				width: 100%;
+				transform: none;
+				color: #333;
+				padding: 2%;
+				margin-top: 60px;
+		}
+		QIIP_MENU_ALL MENU_1ST_TEXT{
+			width: 100% !important;	
+			margin-top: 0;
+			border-bottom: 1px solid #555;
+			float: none;
+			border-color: #ccc;
+			font-size: 19px;
+			line-height: 50px;
+			cursor: pointer;
+			position: relative;
+			transition: all 0.5s;
+		}
+		QIIP_MENU_ALL MENU_1ST_TEXT:hover{
+			color: #114991;	
+		}
+		QIIP_MENU_ALL MENU_1ST_TEXT MENU_2ND:last-child{
+			margin-bottom: 15px;
+		}
+		QIIP_MENU_ALL MENU_1ST_TEXT MENU_2ND_TEXT{
+			color: #555;
+			transition: all 0.3s;	
+			font-size: 17px;
+		}
+		QIIP_MENU_ALL MENU_1ST_TEXT MENU_2ND_TEXT:hover{
+			color: #114991;
+		}
+		QIIP_MENU_ALL MENU_3RD_TEXT{
+				color: #777;
+				transition: all 0.3s;
+				font-size: 15px;
+		}
+		QIIP_MENU_ALL MENU_3RD_TEXT:hover{
+				color: #114991;
+		}
+		QIIP_MENU_ALL DIV_LEFT{
+			color: #333;	
+			width: calc(100% - 60px);
+			line-height: 60px;
+			font-weight: bold;
+			font-size: 35px;
+		}
+		QIIP_MENU_ALL DIV_RIGHT{
+			width: 60px;	
+		}
+		QIIP_MENU_ALL DIV_RIGHT button{
+				color: #555;
+				border-color: #ddd;
+				width: 60px;
+				height: 60px;	
+		}
+		QIIP_MENU_ALL DIV_RIGHT button:hover{
+			color: #114991;	
+		}
+		QIIP_MENU_ALL MENU_1ST_SUB{
+			overflow: hidden;
+			max-height: 0;
+			transition: all 0.5s;	
+		}
+		
+		QIIP_MENU_ALL MENU_1ST_TEXT_ICON{
+				display: inline-block;
+				position: absolute;
+				top: 14.5px;
+				right: 20px;
+				width: 22px;
+				height: 22px;
+				border: 1px solid;
+				border-radius: 22px;
+		}
+		QIIP_MENU_ALL MENU_1ST_TEXT_ICON::before{
+				display: block;
+        position: absolute;
+        content: '';
+        top: 9px;
+        left: 5px;
+        width: 10px;
+        height: 2px;
+        background: currentColor;
+		}
+		QIIP_MENU_ALL MENU_1ST_TEXT_ICON::after{
+			display: block;
+        position: absolute;
+        content: '';
+        top: 5px;
+        left: 9px;
+        width: 2px;
+        height: 10px;
+        background: currentColor;
+		}
+		QIIP_MENU_ALL MENU_1ST_TEXT[aria-expanded='true']{
+			color: #114991;
+		}
+		QIIP_MENU_ALL MENU_1ST_TEXT[aria-expanded='true'] MENU_1ST_TEXT_ICON::after{
+				width: 0;
+		}
+    
+		QIIP_MENU_ALL MENU_1ST_SUB{
+			opacity: 0;
+	    max-height: 0;
+	    overflow: hidden;
+	    transition: opacity 200ms linear, max-height 200ms linear;
+	    will-change: opacity, max-height;	
+		}
+		QIIP_MENU_ALL MENU_1ST_TEXT[aria-expanded='true'] MENU_1ST_SUB{
+      opacity: 1;
+      max-height: 1000px;
+      transition: all 200ms linear;
+      will-change: opacity, max-height;
+    }
+}
+</style>
+<script>
+	function ON_MENU_CLICK(JSON_MENU) {
+//		alert(JSON.stringify(JSON_MENU, null, '\t'));
+		QIIP_API_ACCESS({
+				REQ: 'api_GET_PAGE',
+				FLDR_TEMPLATE: _FLDR_TEMPLATE,
+				FILE_TEMPLATE: JSON_MENU.MENU_CONTENTS,
+			},function(STR_RESULT) {
+				$('#APPS_CONTENTS').html(_AC(STR_RESULT)(_RS)); _RS.$apply();
+				if ('MENU_INIT_FUNC' in JSON_MENU) {
+					eval(JSON_MENU.MENU_INIT_FUNC);
+				}
+			}
+		);
+	}
+	
+	function QIIP_MENU_INIT_WIDGETS_SUB_A() {
+		$("QIIP_MENU DIV_RIGHT BUTTON").click(
+			function(){
+				$("QIIP_MENU_ALL").animate({width: "100%"}, 300, 'swing' );	
+				$("QIIP_MENU_ALL MENU_1ST").animate({"opacity" : "100%"}, 200, 'swing');
+			}
+		);
+		$("QIIP_MENU_ALL DIV_RIGHT BUTTON").click(
+			function(){
+				$("QIIP_MENU_ALL").animate({width: "0%"}, 300, 'swing' );	
+				$("QIIP_MENU_ALL MENU_1ST").animate({"opacity" : "0%"}, 100, 'swing');
+			}
+		);
+		$("QIIP_MENU MENU_2ND_TEXT").hover(
+			function(){
+					$(this).children("MENU_2ND_SUB").css({'max-height':'1000px'});		
+					$(this).find("span").css({'color':'#114991', 'transform' : 'rotate(180deg)'});		
+			}
+		);
+		$("QIIP_MENU MENU_1ST_TEXT").hover(
+			function(){
+			},
+			function(){
+				$(this).find("MENU_2ND_SUB").css({'max-height':'0px'});			
+				$(this).find("span").css({'color':'#777', 'transform' : 'rotate(0deg)'});	
+			}
+		);
+		$("QIIP_MENU_ALL MENU_1ST_TEXT MENU_2ND").click(
+			function(){
+				$("QIIP_MENU_ALL").animate({width: "0%"}, 300, 'swing' );	
+				$("QIIP_MENU_ALL MENU_1ST").animate({"opacity" : "0%"}, 100, 'swing');
+			}
+		);
+		$(window).resize(function(){
+			var width = parseInt($(this).width()); 
+			if (width < 780) {
+			 $("MENU_1ST_SUB").before("<MENU_1ST_TEXT_ICON></MENU_1ST_TEXT_ICON>");
+			 const items = document.querySelectorAll("MENU_1ST_TEXT");
+				function toggleAccordion() {
+				  const itemToggle = this.getAttribute('aria-expanded');
+				  
+				  for (i = 0; i < items.length; i++) {
+				    items[i].setAttribute('aria-expanded', 'false');
+				  }
+				  
+				  if (itemToggle == 'false') {
+				    this.setAttribute('aria-expanded', 'true');
+				  }
+				}
+				items.forEach(item => item.addEventListener('click', toggleAccordion));
+			}
+		}).resize();
+	}
+	
+	function QIIP_MENU_INIT_WIDGETS() {
+		QIIP_MENU_INIT_WIDGETS_SUB_A();
+		$('BTN_MENU_ITEM').on('click', function () {
+			var BTN_MENU_ITEM_ATTR = QIIP_GET_DOM_ATTRIBUTES(this);
+			var MENU_PAGE = $(this).attr('MENU_PAGE');
+			if (MENU_PAGE.length > 0) {
+				QIIP_API_ACCESS({
+						REQ: 'api_GET_PAGE',
+						FLDR_TEMPLATE: _FLDR_TEMPLATE,
+						FILE_TEMPLATE: MENU_PAGE,
+					},function(STR_RESULT) {
+						var HTML_COMPILED = QIIP_STATIC_HTML(BTN_MENU_ITEM_ATTR, STR_RESULT);
+						$('#' + _RS.APP_CONFIG.QIIP_MENU_INFORMATION.DIV_ID_CONTENT).html(HTML_COMPILED);
+						if ('MENU_CONTENTS_INIT_FUNC' in _RS.APP_CONFIG.QIIP_MENU_INFORMATION) {
+							eval(_RS.APP_CONFIG.QIIP_MENU_INFORMATION.MENU_CONTENTS_INIT_FUNC);
+						}
+					}
+				);
+			}
+		});
+
+	}
+
+</script>
+<QIIP_MENU>
+	<DIV_LEFT>
+		<a href="">K3DPMIC</a>
+	</DIV_LEFT>
+
+	<DIV_CENTER>
+		<MENU_1ST>
+			<MENU_1ST_TEXT ng-repeat="MENU_ITEM_1ST in JSON_ARGS">
+				<BTN_MENU_ITEM MENU_TEXT="{{MENU_ITEM_1ST.MENU_TEXT}}" MENU_PAGE="{{MENU_ITEM_1ST.MENU_PAGE}}">{{MENU_ITEM_1ST.MENU_TEXT}}</BTN_MENU_ITEM>
+				<MENU_1ST_SUB ng-if="MENU_ITEM_1ST.MENU_SUB">
+					<MENU_2ND ng-repeat="MENU_ITEM_2ND in MENU_ITEM_1ST.MENU_SUB" >
+						<MENU_2ND_TEXT>
+							<BTN_MENU_ITEM MENU_P1="{{MENU_ITEM_1ST.MENU_TEXT}}" MENU_TEXT="{{MENU_ITEM_2ND.MENU_TEXT}}" MENU_PAGE="{{MENU_ITEM_2ND.MENU_PAGE}}" >
+								{{MENU_ITEM_2ND.MENU_TEXT}}
+								<span class="glyphicon glyphicon-menu-down" ng-if="MENU_ITEM_2ND.MENU_SUB"></span>
+							</BTN_MENU_ITEM>
+							<MENU_2ND_SUB ng-if="MENU_ITEM_2ND.MENU_SUB">
+								<MENU_3RD ng-repeat="MENU_ITEM_3RD in MENU_ITEM_2ND.MENU_SUB">
+									<MENU_3RD_TEXT>
+										<BTN_MENU_ITEM MENU_P1="{{MENU_ITEM_1ST.MENU_TEXT}}" MENU_P2="{{MENU_ITEM_2ND.MENU_TEXT}}" MENU_TEXT="{{MENU_ITEM_3RD.MENU_TEXT}}" MENU_PAGE="{{MENU_ITEM_3RD.MENU_PAGE}}" >{{MENU_ITEM_3RD.MENU_TEXT}}</BTN_MENU_ITEM>
+									</MENU_3RD_TEXT>
+								</MENU_3RD>
+							</MENU_2ND_SUB>
+						</MENU_2ND_TEXT>
+					</MENU_2ND>
+				</MENU_1ST_SUB>
+			</MENU_1ST_TEXT>
+		</MENU_1ST>
+	</DIV_CENTER>
+
+	<DIV_RIGHT>
+		<button><span class="glyphicon glyphicon-menu-hamburger"></span></button>
+	</DIV_RIGHT>
+</QIIP_MENU>
+<QIIP_MENU_ALL>
+	<MENU_ALL_TOP>
+		<DIV_LEFT>
+			LOGO
+		</DIV_LEFT>
+		<DIV_RIGHT>
+			<button><span class="glyphicon glyphicon-remove"></span></button>
+		</DIV_RIGHT>
+	</MENU_ALL_TOP>
+	<MENU_1ST>
+		<MENU_1ST_TEXT ng-repeat="MENU_ITEM_1ST in JSON_ARGS">
+			<BTN_MENU_ITEM MENU_PAGE="{{MENU_ITEM_1ST.MENU_PAGE}}" >{{MENU_ITEM_1ST.MENU_TEXT}}</<BTN_MENU_ITEM>
+			<MENU_1ST_SUB ng-if="MENU_ITEM_1ST.MENU_SUB">
+				<MENU_2ND ng-repeat="MENU_ITEM_2ND in MENU_ITEM_1ST.MENU_SUB" >
+					<MENU_2ND_TEXT>
+						<BTN_MENU_ITEM MENU_PAGE="{{MENU_ITEM_2ND.MENU_PAGE}}" >{{MENU_ITEM_2ND.MENU_TEXT}}</BTN_MENU_ITEM>
+						<MENU_2ND_SUB ng-if="MENU_ITEM_2ND.MENU_SUB">
+							<MENU_3RD ng-repeat="MENU_ITEM_3RD in MENU_ITEM_2ND.MENU_SUB">
+								<MENU_3RD_TEXT>
+									<BTN_MENU_ITEM MENU_PAGE="{{MENU_ITEM_3RD.MENU_PAGE}}" >{{MENU_ITEM_3RD.MENU_TEXT}}</BTN_MENU_ITEM>
+								</MENU_3RD_TEXT>
+							</MENU_3RD>
+						</MENU_2ND_SUB>
+					</MENU_2ND_TEXT>
+				</MENU_2ND>
+			</MENU_1ST_SUB>
+		</MENU_1ST_TEXT>
+	</MENU_1ST>
+</QIIP_MENU_ALL>

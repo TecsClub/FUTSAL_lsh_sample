@@ -1,0 +1,15 @@
+@charset "utf-8";
+
+.jqx-popup #info_data{
+	height: 100%;
+	padding: 0;
+	background-color: unset;
+}
+.jqx-popup .info_form{
+	width: 100%;
+    height: 100%;
+    border:none;
+    box-shadow: none;
+ 	border-radius: 0;
+}    
+

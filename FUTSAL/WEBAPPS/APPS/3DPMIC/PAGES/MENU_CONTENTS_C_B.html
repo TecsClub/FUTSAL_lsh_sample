@@ -1,0 +1,257 @@
+<link href="assets/css/font-awesome.css" rel="stylesheet" />
+
+<style>
+body{
+overflow-y: auto !important;
+height: 100%;
+}
+ul{
+padding: 0;
+list-style: none;	
+}
+#remote{
+	display: none;
+}
+#DIV_CONTENT{
+margin-top: -70px;
+}
+.detail_content {
+	width: 100%;
+	margin-top: -60px;
+	position: relative;
+}
+.detail_content .sub_bg{
+height: 400px;
+background: #0F2027;  /* fallback for old browsers */
+background: -webkit-linear-gradient(to bottom, #2C5364, #203A43, #0F2027);  /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to bottom, #2C5364, #203A43, #0F2027); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+text-align: center;
+	position: relative;	
+}
+.detail_content .sub_bg > div{
+	position: absolute;
+	top: calc(50% + 35px);
+	left: 50%;
+	transform: translate(-50%, -50%);
+	padding-top: 70px;
+}
+.detail_content .sub_bg > div h2{
+	font-size: 48px;
+	font-weight: 700;
+	margin-bottom: 15px;
+	margin-top: 0;
+	color: #fff;
+}
+.detail_content .sub_bg > div p{
+	font-size: 17px;
+	font-weight: 500;
+	color: #fff;
+}
+
+button#move_top_btn {
+    position: fixed;
+    right: 2%;
+    bottom: 50px;
+    display: none;
+    z-index: 999;
+    text-align: center;
+    background-color: #114991;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    color: #fff;
+    font-weight: 500;
+    border: none;
+    right: 50px;
+}
+button#move_top_btn:hover, button#move_top_btn:focus{
+	background-color: #049DCC;
+}
+button#move_top_btn.stop_move{
+display: block;
+position: absolute;
+bottom: 250px;
+}
+.breadcrumb_wrap{
+	 border-bottom: 1px solid #ddd;
+	 box-shadow: 0px 5px aliceblue;
+}
+.breadcrumb{
+	  background: none;
+   margin-bottom: 0;
+    border-radius: 0;
+    text-align: right;
+    padding: 15px 0px;
+}
+.exe_officer .officer_wrap{
+	margin-top: 40px;	
+} 
+.exe_officer{
+text-align: center;
+margin-top: 50px;
+margin-bottom: 100px;
+}
+.exe_officer h3 {
+		text-align: center;
+    font-weight: bold;
+    display: inline-block;
+    border-bottom: 4px solid #114991;
+    padding-bottom: 8px;
+    font-size: 32px;
+  }
+  
+  
+  .exe_officer a{
+  text-decoration: none;
+  }
+ .exe_officer .img_box{
+ height: 200px;
+border: 1px solid #eee;
+transition: all 0.5s ease;
+background-size: 100%;
+opacity: 0.7;
+ }
+ 
+ .exe_officer h4{
+ font-weight: bold;
+ }
+ .officer_wrap > ul > li:nth-child(1) .img_box{
+ 		background: url("assets/img/officer_logo1.jpg") no-repeat 50% 50%;
+ }
+.officer_wrap > ul > li:nth-child(2) .img_box{
+ 		background: url("assets/img/officer_logo2.png") no-repeat 50% 50%;
+ }
+ .officer_wrap > ul > li:nth-child(3) .img_box{
+ 		background: url("assets/img/officer_logo3.png") no-repeat 50% 50%;
+ }
+ .officer_wrap > ul > li:nth-child(4) .img_box{
+ 		background: url("assets/img/officer_logo4.png") no-repeat 50% 50%;
+ }
+ .officer_wrap > ul > li a:hover .img_box{
+opacity: 1;
+ }
+</style>
+<script>
+	
+	function QIIP_MENU_CONTENTS_INIT_WIDGETS() {
+//		alert('QIIP_MENU_CONTENTS_INIT_WIDGETS');
+		$("#move_top_btn").click(function() {
+	        $('html, body').animate({
+	            scrollTop : 0
+	        }, 400);
+	        return false;
+	  });
+		$("body").scroll(function(){
+			if ($(this).scrollTop() > 0) {
+		        $('#move_top_btn').fadeIn();
+	    } else {
+	        $('#move_top_btn').fadeOut();
+	    }
+	    
+	    if($(this).scrollTop() > 260){
+	    		$('QIIP_MENU').animate({"background-color":"#fff", "border-color": "#eee"}, 10);	
+	    		$('DIV_LEFT, QIIP_MENU MENU_1ST_TEXT, QIIP_MENU DIV_RIGHT button, QIIP_MENU DIV_RIGHT button span').animate({"color":"#444", "border-color": "#eee"}, 10);	
+	    }else{
+	    		$('QIIP_MENU').animate({"background-color":"rgb(255, 255, 255, 0)", "border-color": "#fff"}, 10);	
+	    		$('DIV_LEFT, QIIP_MENU MENU_1ST_TEXT, QIIP_MENU DIV_RIGHT button, QIIP_MENU DIV_RIGHT button span').animate({"color":"#fff", "border-color": "#fff"}, 10);	
+	    }
+		});
+		
+		$(window).resize(function(){
+	      	var width = parseInt($(this).width());
+			if (width > 960){
+				$("body").scroll(function(){
+				    if($(this).scrollTop() + $(this).height() > $(document).height() - 200) {
+						$("button#move_top_btn").addClass("stop_move");
+				   	} else {
+				   		$("button#move_top_btn").removeClass("stop_move");
+				   	}
+				});
+			} else {
+			  	$("body").scroll(function(){
+					if($(this).scrollTop() + $(this).height() > $(document).height() - 200) {
+						$("button#move_top_btn").addClass("stop_move");
+					} else {
+						$("button#move_top_btn").removeClass("stop_move");
+					}
+				});
+			}
+	    }).resize();
+	}
+	
+</script>
+<!-- DETAIL_CONTENT START -->
+<div class="detail_content">
+	<div class="sub_bg">
+		<div>
+			<h2>ORGANIZATION</h2>
+			<p>한국 쓰리디프린팅 소재산업 협동조합의 조합구성을 소개합니다.</p>
+		</div>
+	</div>
+	<div class="breadcrumb_wrap">
+		<ol class="breadcrumb container">
+			  <li>Home</li>
+			  <li>조합구성</li>
+			  <li class="active">조합임원사</li>
+		</ol>	
+	</div>
+	<div class="container exe_officer">	
+		<h3>조합임원사</h3>
+		<div class="officer_wrap">
+			<ul>
+				<li class="col-sm-3">
+					<a href="https://3dk.or.kr/" alt="(주)쓰리디코리아 바로가기" target="_blank">
+						<div class="thumbnail">
+							<div class="img_box">
+				      </div>
+				      <div class="caption">
+				        <h4>(주)쓰리디코리아</h4>
+				      </div>
+				    </div>
+			  	</a>
+				</li>
+				<li class="col-sm-3">
+					<a href="http://han-il.co.kr/" alt="(주)한일산업사 바로가기" target="_blank">
+						<div class="thumbnail">
+							<div class="img_box">
+				     	</div>
+				      <div class="caption">
+				        <h4>(주)한일산업사</h4>
+				      </div>
+				    </div>
+			  	</a>
+				</li>
+				<li class="col-sm-3">
+					<a href="http://www.xn--o30bs6o0wv.com/03/01.php" alt="(주)선진환경 바로가기" target="_blank">
+						<div class="thumbnail">
+				      <div class="img_box">
+				      </div>
+				      <div class="caption">
+				        <h4>(주)선진환경</h4>
+				      </div>
+				    </div>
+			  	</a>
+				</li>
+				<li class="col-sm-3">
+					<a href="http://www.saramin.co.kr/zf_user/company-info/view?csn=4828101516" alt="(주)디제이산업 바로가기" target="_blank">
+						<div class="thumbnail">
+				      <div class="img_box">
+				      </div>
+				      <div class="caption">
+				        <h4>(주)디제이산업</h4>
+				      </div>
+				    </div>
+			  	</a>
+				</li>
+				
+			</ul>
+		</div>
+	</div>
+	<div class="footer" style="background-color: #333;">
+	    <div style="height: 200px;">footer</div>
+	</div>
+	<button id="move_top_btn" alt="MOVE TOP"><span class="glyphicon glyphicon-chevron-up"></span><br>TOP</button>
+
+</div>
+<!-- DETAIL_CONTENT END -->
+	

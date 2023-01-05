@@ -1,0 +1,46 @@
+{
+	"CHROME_ONLY" : false,
+	"LOGIN_BASE" : true,
+	"LOGIN_IDPW" : true,
+
+	"IVR_SERVER_IPS" : [
+		{
+			"SERVER_NAME"	: "PBX.1KEY.KR",
+			"SERVER_IP"		: "222.239.78.249"
+		},
+		{
+			"SERVER_NAME"	: "VOICE 개발",
+			"SERVER_IP"		: "211.109.9.23"
+		}
+	],
+	
+	"NO_MENU_CONTENTS" : {
+		"MENU_CONTENTS" : "PAGES/APP_1ST_PAGE.html",
+		"MENU_INIT_FUNC" : "LOAD_SERVICE_PAGE();",
+		"DUMMY": true
+	},
+	
+	"SIDEMENU_APPS": {
+		"HEADER" : "AICE-STT",
+		"TEMPLATE" : "PAGES/SIDEMENU_APPS.html",
+		"MENUITEMS" : [
+			{
+				"MENU_STRING"		: "OnAir - AICE-STT 통화 상황판",
+				"MENU_CONTENTS"		: "PAGES/APP_CONTENTS_OnAir_MONITOR.html",
+				"MENU_INIT_FUNC"	: "INIT_WIDGETS_FOR_MENU_CONTENTS();"
+			},
+			{
+				"MENU_STRING"	: "TTS 생성",
+				"MENU_CONTENTS"	: "PAGES/APP-GEN-TTS.html",
+				"MENU_INIT_FUNC": "QIIP_SIDEMENU_INIT_WIDGETS();"
+			}
+		],
+		"MENUITEMS_FOR_DESKTOP" : [
+			{
+				"MENU_STRING"		: "데스크탑 기능",
+				"MENU_CONTENTS"		: "PAGES/CONTENTS_DESKTOP.html",
+				"MENU_INIT_FUNC"	: "INIT_WIDGETS_FOR_MENU_CONTENTS();"
+			}
+		]
+	}
+}

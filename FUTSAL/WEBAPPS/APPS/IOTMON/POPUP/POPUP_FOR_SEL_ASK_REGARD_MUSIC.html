@@ -1,0 +1,143 @@
+{@ $ARGS = json_decode(base64_decode($ARGS->JSON_ARGS_BASE64)); }
+#PAGE_ARGS# <!-- <script>var JSON_ARGS=JSON.parse(Base64.decode($ARGS->JSON_ARGS_BASE64));</script> -->
+<script>
+
+var OBJ_POPUP_FOR_SEL_ASK_REGARD_MUSIC = null;
+
+function INIT_WIDGETS_POPUP_FOR_SEL_ASK_REGARD_MUSIC(OBJ_DIALOG) {
+	OBJ_POPUP_FOR_SEL_ASK_REGARD_MUSIC = OBJ_DIALOG;
+	
+	$(".BTN_POPUP_FOR_SEL_ASK_REGARD_MUSIC").jqxButton({
+		width: '100%',
+		height: '100%'
+	}).on('click', function () {
+		var ID = $(this).attr('ID');
+		if (ID == 'DUMMY') {
+		} else if (ID == 'BTN_FOR_ADD_ASK_REGARD_MUSIC') {
+			POPUP_FOR_EXEC_ADD_ASK_REGARD_MUSIC();
+		} else if (ID == 'BTN_FOR_CLOSE_ASK_REGARD_MUSIC_POPUP') {
+			CLOSE_POPUP_FOR_SEL_ASK_REGARD_MUSIC();
+		}
+	});
+
+	REFRESH_ASK_REGARD_MUSICS(true);
+}
+
+function CLOSE_POPUP_FOR_SEL_ASK_REGARD_MUSIC() {
+	if (OBJ_POPUP_FOR_SEL_ASK_REGARD_MUSIC != null) {
+		QIIP_JQX_CLOSE_WINDOW(OBJ_POPUP_FOR_SEL_ASK_REGARD_MUSIC);
+	}
+}
+
+function REFRESH_ASK_REGARD_MUSICS(FLAG_FORCE) {
+	
+	var OLD_YOUTUBE_MEDIA_LIST = [];
+	if ('YOUTUBE_MEDIA_LIST' in _RS.OBJ_POST_ROOT) OLD_YOUTUBE_MEDIA_LIST = _RS.OBJ_POST_ROOT.YOUTUBE_MEDIA_LIST;
+
+	QIIP_API_ACCESS({
+			REQ: 'post_GET_ROOT_INFO',
+			PHONE_ID: _RS.PHONE_INFO.PHONE_ID,
+			PHONE_NO: _RS.PHONE_INFO.PHONE_NO,
+			SVC_CATEGORY: _RS.PHONE_INFO.APP_NAME,
+		},function(RESULT) {
+			var JSON_RESULT = JSON_PARSE_IF_CAN(RESULT);
+			_RS.OBJ_POST_ROOT = JSON_RESULT;
+
+			if ((FLAG_FORCE) || (OLD_YOUTUBE_MEDIA_LIST.length != _RS.OBJ_POST_ROOT.YOUTUBE_MEDIA_LIST.length)) {
+
+//				alert(JSON.stringify(_RS.OBJ_POST_ROOT, null, '\t'));
+				
+				var YOUTUBE_MEDIA_LIST = [];
+				if ('YOUTUBE_MEDIA_LIST' in _RS.OBJ_POST_ROOT) YOUTUBE_MEDIA_LIST = _RS.OBJ_POST_ROOT.YOUTUBE_MEDIA_LIST;
+
+				var JSON_ARGS_BASE64 = Base64.encode(JSON.stringify(YOUTUBE_MEDIA_LIST));
+
+				QIIP_API_ACCESS({
+						REQ: 'api_GET_PAGE',
+						FLDR_TEMPLATE: _FLDR_TEMPLATE,
+						FILE_TEMPLATE: 'POPUP/HTML_FOR_ASK_REGARD_MUSIC_LIST.html',
+						JSON_ARGS_BASE64: JSON_ARGS_BASE64,
+						PHONE_ID: _RS.PHONE_INFO.PHONE_ID,
+						PHONE_NO: _RS.PHONE_INFO.PHONE_NO,
+						CATEGORY: _RS.PHONE_INFO.APP_NAME,
+					},function(RESULT) {
+						$('#DIV_ASK_REGARD_MUSIC_LIST').html(RESULT);
+						INIT_WIDGETS_FOR_ASK_REGARD_MUSIC_LIST();
+					},{
+						QIIP_JQX_WINDOW: true,
+						title: _RS.PHONE_INFO.APP_NAME + ' 안내',
+						template: ARR_TO_TABLE_CENTER([
+							'노래 선물 목록을 구성하고 있습니다.',
+							'잠시만 기다려 주십시오!'
+						]),
+						cssClass: 'qiip_popup'
+					}
+				);
+
+//				alert(JSON.stringify(YOUTUBE_MEDIA_LIST, null, '\t'));
+
+			}
+		}
+	);
+
+}
+
+function POPUP_FOR_EXEC_ADD_ASK_REGARD_MUSIC() {
+	
+	var JSON_ARGS_BASE64 = Base64.encode(JSON.stringify({}));
+
+	QIIP_API_ACCESS({
+			REQ: 'api_GET_PAGE',
+			FLDR_TEMPLATE: _FLDR_TEMPLATE,
+			FILE_TEMPLATE: 'POPUP/POPUP_FOR_EXEC_ADD_ASK_REGARD_MUSIC.html',
+			PHONE_ID: _RS.PHONE_INFO.PHONE_ID,
+			PHONE_NO: _RS.PHONE_INFO.PHONE_NO,
+			CATEGORY: _RS.PHONE_INFO.APP_NAME,
+			JSON_ARGS_BASE64: JSON_ARGS_BASE64,
+		},function(STR_RESULT) {
+			var OBJ_POPUP = QIIP_JQX_POPUP_WINDOW({
+	            showCollapseButton: true, 
+	            height: '95%',
+	            width: '90%',
+	            minHeight: 100,
+	            minWidth: 100,
+				},
+				'유투브에서 노래 찾아서 추가하기',
+				STR_RESULT
+			);
+		  	INIT_WIDGETS_POPUP_FOR_EXEC_ADD_ASK_REGARD_MUSIC(OBJ_POPUP);
+		},{
+			QIIP_JQX_WINDOW: true,
+			title: _RS.PHONE_INFO.APP_NAME + ' 안내',
+			template: ARR_TO_TABLE_CENTER([
+				'노래선물 목록 추가를 위한 화면을 구성하고 있습니다.',
+				'잠시만 기다려 주십시오!'
+			]),
+			cssClass: 'qiip_popup'
+		}
+	);
+
+}
+
+</script>
+
+<div class="qiip_index" style="width:100%;height:90%;padding:0px;" id="DIV_ASK_REGARD_MUSIC_LIST">
+</div>
+<div class="qiip_index" style="width:100%;height:10%;padding:0px;">
+	<table>
+		<col width="50%"/>
+		<tr>
+			<td>
+		      	<button class="BTN_POPUP_FOR_SEL_ASK_REGARD_MUSIC" id="BTN_FOR_CLOSE_ASK_REGARD_MUSIC_POPUP" >
+		        	취소 & 닫기
+		    	</button>
+			</td>
+			<td>
+		      	<button class="BTN_POPUP_FOR_SEL_ASK_REGARD_MUSIC" id="BTN_FOR_ADD_ASK_REGARD_MUSIC" >
+		        	유투브에서 노래 찾아서 추가
+		    	</button>
+			</td>
+		</tr>
+	</table>
+</div>
+

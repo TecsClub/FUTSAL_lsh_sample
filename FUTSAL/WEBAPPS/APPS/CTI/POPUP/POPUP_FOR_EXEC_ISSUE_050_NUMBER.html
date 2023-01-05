@@ -1,0 +1,291 @@
+{@ $JSON_ARGS = json_decode(base64_decode($ARGS->JSON_ARGS_BASE64)); }
+#PAGE_ARGS# <!-- <script>var JSON_ARGS=JSON.parse(Base64.decode($ARGS->JSON_ARGS_BASE64));</script> -->
+<script>
+var IS_MOBILE = '{$ARGS->IS_MOBILE}';
+var OBJ_POPUP_FOR_EXEC_ISSUE_050_NUMBER = null;
+
+var JSON_IVR_PARAM	= JSON.parse(JSON.stringify(JSON_ARGS));
+var DEFAULT_CALL_WAIT_TIME	= 60;
+
+var STEP_OF_EXEC_ISSUE_050_NUMBER = 0;
+function INIT_WIDGETS_POPUP_FOR_EXEC_ISSUE_050_NUMBER(OBJ_DIALOG) {
+	OBJ_POPUP_FOR_EXEC_ISSUE_050_NUMBER = OBJ_DIALOG;
+	
+	$(".BTN_POPUP").jqxButton({
+		width: '100%',
+		height: '100%'
+	}).on('click', function () {
+		var ID = $(this).attr('ID');
+		if (ID == 'DUMMY') {
+		} else if (ID == 'BTN_CLOSE_POPUP_FOR_EXEC_ISSUE_050_NUMBER') {
+			CLOSE_POPUP_FOR_EXEC_ISSUE_050_NUMBER();
+		} else if (ID == 'BTN_STEP_FORWARD_FOR_EXEC_ISSUE_050_NUMBER') {
+			STEP_FORWARD_FOR_EXEC_ISSUE_050_NUMBER();
+		}
+	});
+	
+	$("#ACCORDION_FOR_EXEC_ISSUE_050_NUMBER").accordion({
+		heightStyle: "fill",
+		active: STEP_OF_EXEC_ISSUE_050_NUMBER,
+//		animate: false,
+        create: function( event, ui ) {
+        },
+        activate: function( event, ui ) {
+            var HEADER_TEXT = ui.newHeader.text();
+            if (HEADER_TEXT.indexOf('1') >= 0) {
+		    	STEP_OF_EXEC_ISSUE_050_NUMBER = 0;
+            } else if (HEADER_TEXT.indexOf('2') >= 0) {
+		    	STEP_OF_EXEC_ISSUE_050_NUMBER = 1;
+            } else if (HEADER_TEXT.indexOf('3') >= 0) {
+		    	STEP_OF_EXEC_ISSUE_050_NUMBER = 2;
+            } else if (HEADER_TEXT.indexOf('4') >= 0) {
+		    	STEP_OF_EXEC_ISSUE_050_NUMBER = 3;
+            }
+            
+        }
+	});
+	
+	INIT_WIDGETS_FOR_ISSUE_050_NUMBER();
+}
+
+function INIT_WIDGETS_FOR_ISSUE_050_NUMBER() {
+	$(".BTN_050_NUMBER").jqxButton({
+		width: '100%',
+		height: '100%'
+	}).on('click', function () {
+		var ID = $(this).attr('ID');
+		if (ID == 'DUMMY') {
+		} else if (ID == 'BTN_050_NUMBER_FIND') {
+			FIND_050_NUMBER();
+		}
+	});
+
+    $('#SELECT_050_NUMBER').jqxDropDownList({
+        selectedIndex: 0,
+        autoDropDownHeight: true,
+        source: ["희망 번호 찾아 보기 필요함"],
+	}).on('click', function () {
+		$(this).jqxDropDownList('open');
+    });
+	
+}
+
+function FIND_050_NUMBER() {
+	var QUERY_050_NUMBER = $('#QUERY_050_NUMBER').val();
+	if (QUERY_050_NUMBER.length < 4) {
+		QIIP_POPUP_FOR_ALERT(
+			'안내',[
+				'희망 번호는 네자리 이상 입력하셔야 합니다.'
+			],function() {
+			},
+			90,
+			95
+		);
+		return;
+	} else {
+		
+		QIIP_API_ACCESS({
+				REQ: 'api_HTTP_ACCESS',
+				CURLOPT_URL: 'http://pbx.q1p.win/api.php',
+				CURLOPT_POSTFIELDS : {
+					CLASS: 'Arsauth',
+					METHOD: 'QUERY_050_NUMBER',
+					QUERY_050_NUMBER: QUERY_050_NUMBER,
+				},
+			},function(STR_RESULT) {
+				var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+				if (typeof JSON_RESULT === 'object') {
+					if (JSON_RESULT.JSON_RESULT.CODE == 200) {
+			            $("#SELECT_050_NUMBER").jqxDropDownList('clear');
+			            if (JSON_RESULT.JSON_RESULT.AVAILABLE_050_NUMBERS.length > 0) {
+			                JSON_RESULT.JSON_RESULT.AVAILABLE_050_NUMBERS.forEach(function(ONE_NUMBER){
+			                    $("#SELECT_050_NUMBER").jqxDropDownList('addItem', ONE_NUMBER);
+			                });
+			            } else {
+			                $("#SELECT_050_NUMBER").jqxDropDownList('addItem', '모두 사용 중');
+			            }
+			            $("#SELECT_050_NUMBER").jqxDropDownList('selectIndex', 0 );
+					} else {
+						QIIP_POPUP_FOR_ALERT(
+							'안내',[
+								'<pre>' + JSON.stringify(JSON_RESULT, null, '\t') + '</pre>'
+							],function() {
+							},
+							90,
+							95
+						);
+					}
+				} else {
+					$('#DIV_SELECT_050_NUMBER').html(JSON_RESULT);
+				}
+	/*
+			},{
+				title: _RS.PHONE_INFO.APP_NAME + ' 안내',
+				template: ARR_TO_TABLE_CENTER([
+					'팝업 화면을 구성하고 있습니다.'
+				]),
+				cssClass: 'qiip_popup'
+	*/
+			}
+		);
+
+	}
+}
+
+
+function CLOSE_POPUP_FOR_EXEC_ISSUE_050_NUMBER() {
+	if (OBJ_POPUP_FOR_EXEC_ISSUE_050_NUMBER != null) {
+		QIIP_JQX_CLOSE_WINDOW(OBJ_POPUP_FOR_EXEC_ISSUE_050_NUMBER);
+	}
+}
+
+function STEP_FORWARD_FOR_EXEC_ISSUE_050_NUMBER() {
+	var ITEM_SELECTED = $("#SELECT_050_NUMBER").jqxDropDownList('getSelectedItem');
+    if (!QIIP_IS_VALID_PHONE_NO(ITEM_SELECTED.label)) {
+		QIIP_POPUP_FOR_ALERT(
+			'안내',[
+				'희망 번호 찾아 보기를 먼저 처리 하십시오!'
+			],function() {
+			},
+			90,
+			95
+		);
+		return;
+    }
+
+	if (STEP_OF_EXEC_ISSUE_050_NUMBER < 3) {
+		STEP_OF_EXEC_ISSUE_050_NUMBER += 1;
+		$("#ACCORDION_FOR_EXEC_ISSUE_050_NUMBER").accordion( "option", "active", STEP_OF_EXEC_ISSUE_050_NUMBER );
+		if (STEP_OF_EXEC_ISSUE_050_NUMBER == 1) {
+			DO_EXEC_ISSUE_050_NUMBER();
+		}
+	}
+}
+
+function DO_EXEC_ISSUE_050_NUMBER() {
+
+	var SELECTED_050_NUMBER = $("#SELECT_050_NUMBER").jqxDropDownList('getSelectedItem').label;
+
+	JSON_ARGS.CALL_TO		= SELECTED_050_NUMBER;
+	JSON_ARGS.CALL_TO_OWNER	= JSON_ARGS.CALL_FROM;
+	delete JSON_ARGS.TITLE;
+	delete JSON_ARGS.CALL_FROM;
+	delete JSON_ARGS.STR_SCENARIO_HELP;
+	delete JSON_ARGS.CALL_WAIT_TIME;
+	delete JSON_ARGS.CALL_FROM;
+
+	QIIP_API_ACCESS({
+			REQ: 'api_HTTP_ACCESS',
+			CURLOPT_URL: 'http://pbx.q1p.win/api.php',
+			CURLOPT_POSTFIELDS : {
+				CLASS: 'Arsauth',
+				METHOD: 'ISSUE_050_NUMBER',
+				SELECTED_050_NUMBER: SELECTED_050_NUMBER,
+				CALL_ARGS: JSON_ARGS
+			},
+		},function(STR_RESULT) {
+			var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+			if (typeof JSON_RESULT === 'object') {
+				if (JSON_RESULT.JSON_RESULT.CODE == 200) {
+				    $("#SELECT_050_NUMBER").jqxDropDownList('removeAt', SELECTED_050_NUMBER.index );
+				    if ($("#SELECT_050_NUMBER").jqxDropDownList('getItems').length < 1) {
+				        $("#SELECT_050_NUMBER").jqxDropDownList('addItem', '모두 사용 중');
+				    }
+				    $('#DIV_ISSUED_050_NUMBER').html(
+						'<table><tr><td style="text-align:left;">' +
+						'<pre>' + JSON.stringify(JSON_RESULT, null, '\t') + '</pre>' +
+						'</td></tr></table>'
+				    );
+				    $('#BTN_CLOSE_POPUP_FOR_EXEC_ISSUE_050_NUMBER').html('확인 & 닫기');
+				    $('#BTN_STEP_FORWARD_FOR_EXEC_ISSUE_050_NUMBER').jqxButton({disabled: true });
+				} else {
+					QIIP_POPUP_FOR_ALERT(
+						'안내',[
+							'<table><tr><td style="text-align:left;">' +
+							'<pre>' + JSON.stringify(JSON_RESULT, null, '\t') + '</pre>' +
+							'</td></tr></table>'
+						],function() {
+						},
+						90,
+						95
+					);
+				}
+			} else {
+				$('#DIV_ISSUED_050_NUMBER').html(JSON_RESULT);
+			}
+/*
+		},{
+			title: _RS.PHONE_INFO.APP_NAME + ' 안내',
+			template: ARR_TO_TABLE_CENTER([
+				'팝업 화면을 구성하고 있습니다.'
+			]),
+			cssClass: 'qiip_popup'
+*/
+		}
+	);
+
+
+}
+
+</script>
+
+<div class="qiip_index" style="width:100%;height:90%;" id="ACCORDION_FOR_EXEC_ISSUE_050_NUMBER">
+	<h3>단계 1 : 희망하는 전화번호 결정하기</h3>
+    <div style="height:100%;overflow:auto;padding:0;" id="DIV_SELECT_050_NUMBER">
+		<table style="height:30%">
+			<col width="50%"/>
+			<tr>
+				<td>
+					<input
+					      style="width:100%;text-align:center;"
+					      type="number"
+					      placeholder="희망 번호 4자리"
+					      id="QUERY_050_NUMBER"
+					/>
+				</td>
+				<td>
+			      	<button
+			      		class="BTN_050_NUMBER"
+			      		ID="BTN_050_NUMBER_FIND"
+			      		>
+			        	희망 번호 찾아보기
+			    	</button>
+				</td>
+			</tr>
+			<tr>
+				<th>
+		        	희망 번호 선택
+				</th>
+				<td>
+					<div style="width:100%;" id="SELECT_050_NUMBER"></div>
+				</td>
+			</tr>
+		</table>
+		<!--@if(isset($JSON_ARGS->STR_SCENARIO_HELP))-->
+		<div style="height:70%;overflow:auto;padding:0;">
+			{$JSON_ARGS->STR_SCENARIO_HELP}
+		</div>
+		<!--@end-->
+    </div>
+	<h3>단계 2 : 결과 확인 하기</h3>
+    <div style="height:100%;padding:0;overflow:auto;" id='DIV_ISSUED_050_NUMBER'>
+    </div>
+</div>
+<div class="qiip_index" style="width:100%;height:10%;padding:0;">
+	<table>
+		<col width="50%"/>
+		<tr>
+			<td>
+		      	<button class="BTN_POPUP" id="BTN_CLOSE_POPUP_FOR_EXEC_ISSUE_050_NUMBER" >
+		        	취소 하기
+		    	</button>
+			</td>
+			<td>
+		      	<button class="BTN_POPUP" id="BTN_STEP_FORWARD_FOR_EXEC_ISSUE_050_NUMBER" >
+		        	다음 단계
+		    	</button>
+			</td>
+		</tr>
+	</table>
+</div>
+

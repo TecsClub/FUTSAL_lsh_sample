@@ -1,0 +1,29 @@
+{
+	"CHROME_ONLY" : false,
+	"LOGIN_BASE" : false,
+	"LOGIN_IDPW" : true,
+	
+	"NO_MENU_CONTENTS" : {
+		"MENU_CONTENTS" : "PAGES/APP_1ST_PAGE.html",
+		"MENU_INIT_FUNC" : "LOAD_SERVICE_PAGE();"
+	},
+	
+	"SIDEMENU_APPS": {
+		"HEADER" : "NOOL NFC",
+		"TEMPLATE" : "PAGES/SIDEMENU_APPS.html",
+		"MENUITEMS" : [
+			{
+				"MENU_STRING"	: "NOOL NFC",
+				"MENU_CONTENTS"	: "PAGES/NOOL-NFC.html",
+				"MENU_INIT_FUNC": "QIIP_SIDEMENU_INIT_WIDGETS();"
+			}
+		],
+		"MENUITEMS_FOR_DESKTOP" : [
+			{
+				"MENU_STRING"		: "데스크탑 기능",
+				"MENU_CONTENTS"		: "PAGES/CONTENTS_DESKTOP.html",
+				"MENU_INIT_FUNC"	: "INIT_WIDGETS_FOR_MENU_CONTENTS();"
+			}
+		]
+	}
+}

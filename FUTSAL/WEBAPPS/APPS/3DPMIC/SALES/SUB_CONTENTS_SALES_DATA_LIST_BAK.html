@@ -1,0 +1,275 @@
+<style>
+	#SALES_DATA_LIST 			{width:100%; height:100%;}
+	#SALES_DATA_LIST table		{width:100%; height:100%; font-size:100%; border-collapse: separate; border-spacing: 1px; line-height: 100%;}
+	#SALES_DATA_LIST table th	{font-weight:bold; text-align: center; white-space:normal; vertical-align: middle; word-break:break-all; word-wrap:break-all; background:#4789b7; color:white; }
+	#SALES_DATA_LIST table td	{text-decoration:none; text-align: left;   white-space:normal; vertical-align: middle; word-break:break-all; word-wrap:break-all; background:#eee; padding:0 10px;}
+</style>
+
+<script>
+var IVR_SERVER_SELECTED		= null;
+
+function REGIST_BUTTON_EVENT() {
+	$(".BTN_SALES_DATA_LIST").jqxButton({
+		width: '100%',
+		height: '100%'
+	}).on('click', function () {
+		var ID = $(this).attr('ID');
+		if (ID == 'DUMMY') {
+		} else if(ID == 'BTN_GET_SALES_DATA_LIST') {
+			QUERY_SALES_DATA_LIST();
+		}
+	});
+}
+
+function ON_CLICK_BTN_SALES_ROW(OBJ_DOM) {
+	var ATTR = QIIP_GET_DOM_ATTRIBUTES(OBJ_DOM);
+	var STR_CMD = ATTR.cmd;
+	var ROW_DATA = $('#DIV_GRID_SALES_DATA_LIST').jqxGrid('getrowdata', ATTR.row);
+
+	if (STR_CMD == 'DUMMY') {
+	} else if (STR_CMD == 'VIEW') {
+	} else if ((STR_CMD == 'NEW') || (STR_CMD == 'ADD')) {
+		MODAL_FOR_ADD_SALES_DATA(ROW_DATA);
+	}
+}
+
+function MODAL_FOR_ADD_SALES_DATA(JSON_ARGS) {
+	QIIP_API_ACCESS({
+			REQ: 'api_GET_PAGE',
+			FLDR_TEMPLATE: _FLDR_TEMPLATE,
+			FILE_TEMPLATE: 'SALES/MODAL_FOR_ADD_SALES_DATA.html',
+		},function(STR_RESULT) {
+			var HTML_COMPILED = QIIP_STATIC_HTML(JSON_ARGS, STR_RESULT);
+			QIIP_APP_MODAL_POPUP({
+				TITLE: '영업자료 추가 등록',
+				BACKDROP: false,
+				CSS: {
+//					width: '1050px',
+//					height: '900px',
+					width: '50%',
+					height: '90%',
+				},
+				CONTENT: HTML_COMPILED,
+				INIT_FUNC: function (UNIQUE_ID) {
+					INIT_WIDGETS_FOR_ADD_SALES_DATA(UNIQUE_ID);
+				}
+			});
+		}
+	);
+}
+
+function INIT_DATE_RANGE_WIDGET() {
+    // create Date object for current location
+    var d = new Date();
+    // convert to msec
+    // add local time zone offset 
+    // get UTC time in msec
+    var utc_today = d.getTime() + (-1 * d.getTimezoneOffset() * 60000);
+    var utc_day_ago = d.getTime() + (-1 * d.getTimezoneOffset() * 60000) - (1000 * 60 * 60 * 24 * 1);
+    var utc_week_ago = d.getTime() + (-1 * d.getTimezoneOffset() * 60000) - (1000 * 60 * 60 * 24 * 7);
+    var utc_month_ago = d.getTime() + (-1 * d.getTimezoneOffset() * 60000) - (1000 * 60 * 60 * 24 * 30);
+    
+	var FIRST_DAY_OF_THIS_MONTH = new Date(d.getFullYear(), d.getMonth(), 1);
+	var LAST__DAY_OF_THIS_MONTH = new Date(d.getFullYear(), d.getMonth() + 1, 0);
+    
+    var TODAY = new Date(utc_today);
+    var ONE_MONTH_AGO = new Date(utc_month_ago);
+    var ONE_WEEK_AGO = new Date(utc_week_ago);
+    var ONE_DAY_AGO = new Date(utc_day_ago);
+
+    $('#DATE_RANGE_FOR_SALES_DATA_LIST').jqxDateTimeInput({
+    	width: '100%',
+    	selectionMode: 'range',
+    	formatString: 'yyyy-MM-dd',
+    	readonly: true,
+//	}).on('click', function () {
+//		$(this).jqxDateTimeInput('open');
+    }).on('change', function (event) {
+//		FILL_HTML_FOR_USE_VOUCHER_LIST();
+    });		
+    $('#DATE_RANGE_FOR_SALES_DATA_LIST').jqxDateTimeInput('setRange', FIRST_DAY_OF_THIS_MONTH, LAST__DAY_OF_THIS_MONTH);
+}
+
+function INIT_WIDGETS_FOR_SALES_DATA_LIST() {
+//	REGIST_BUTTON_EVENT();
+	INIT_DATE_RANGE_WIDGET();
+	QUERY_SALES_DATA_LIST();
+}
+
+function QUERY_SALES_DATA_LIST() {
+	QIIP_API_ACCESS({
+			REQ: 'post_GET_LOG_LIST',
+			STR_DATE_FROM: $('#DATE_RANGE_FOR_SALES_DATA_LIST').jqxDateTimeInput('getText').substring(0,10),
+			STR_DATE_TO: $('#DATE_RANGE_FOR_SALES_DATA_LIST').jqxDateTimeInput('getText').substring(13),
+			STR_FILTER: 'SALES_DATA',
+			PHONE_ID: _RS.PHONE_INFO.PHONE_ID,
+			PHONE_NO: _RS.PHONE_INFO.PHONE_NO,
+			CATEGORY: _RS.PHONE_INFO.APP_NAME,
+		},function(STR_RESULT) {
+			var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+			if ((JSON_RESULT instanceof Array)) {
+				REFRESH_GRID_SALES_DATA_LIST(JSON_RESULT);
+			}
+		}
+	);
+	
+	return;
+
+	var STR_POST_ADDRESS = $('#STR_POST_ADDRESS').val();
+	var STR_SCHOOL_NAME = $('#STR_SCHOOL_NAME').val();
+	var MAX_LIST = parseInt($('#MAX_LIST').val());
+	
+	var STR_PHP_COND  = sprintf("$COND_CHECK = true;");
+		if (STR_POST_ADDRESS.length > 0)
+		    STR_PHP_COND += sprintf("$COND_CHECK = $COND_CHECK && (strpos($ONE_ROOT_CONTENTES->$ATTR_KEY->POST_ADDRESS, '%s') !== false);", STR_POST_ADDRESS);
+		if (STR_SCHOOL_NAME.length > 0)
+		    STR_PHP_COND += sprintf("$COND_CHECK = $COND_CHECK && (strpos($ONE_ROOT_CONTENTES->$ATTR_KEY->SCHOOL_NAME, '%s') !== false);", STR_SCHOOL_NAME);
+	    STR_PHP_COND += sprintf("return $COND_CHECK;");
+
+	QIIP_API_ACCESS({
+			REQ: 'post_GET_ALL_ROOT_ATTRIBUTE',
+			SVC_CATEGORY: _RS.PHONE_INFO.APP_NAME,
+			ATTR_KEY: 'SALES_INFO',
+			SEARCH_KEY: 'SCHOOL',
+			LIMIT: MAX_LIST,
+			PHP_COND: [
+				"if (isset($ONE_ROOT_CONTENTES->$ATTR_KEY)) { ",
+					STR_PHP_COND,
+				"} else { ",
+				"   return false;",
+				"}"
+			]
+		},function(STR_RESULT) {
+			var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+			if ((JSON_RESULT instanceof Array)) {
+				REFRESH_GRID_SALES_DATA_LIST(JSON_RESULT);
+			}
+		}
+	);		
+	
+}
+
+function REFRESH_GRID_SALES_DATA_LIST(args_SQL_RESULT) {
+
+//	QIIP_APP_ALERT([args_SQL_RESULT[0]]); return;
+//	QIIP_APP_ALERT([args_SQL_RESULT]); return;
+
+	var SQL_RESULT = Array();
+	args_SQL_RESULT.forEach(function (ONE_ITEM) {
+		var SALES_DATA = ONE_ITEM.OBJ_LOG.SALES_DATA;
+			SALES_DATA.DATE_TIME = ONE_ITEM.DATE_TIME;
+		SQL_RESULT.push(SALES_DATA);
+	});
+
+	SQL_RESULT.unshift({
+	    "DATE_TIME": "",
+	    "SALES_TARGET_CODE": "",
+	    "SALES_TARGET_NAME": "",
+	    "SALES_IN_CHARGE_NAME": "",
+	    "SALES_IN_CHARGE_PHONE_NO": "",
+	    "SALES_IN_CHARGE_EMAIL": "",
+	    "SALES_ACTION_KEYWORD": "",
+	    "SALES_ACTION_MEMO": "",
+	});
+
+/*
+	SQL_RESULT.forEach(function (ONE_ITEM) {
+	});
+*/
+    var source = {
+        localdata: SQL_RESULT,
+        datatype: "json",
+        datafields:[
+            { name: 'DATE_TIME',				type: 'string' },
+            { name: 'SALES_TARGET_CODE',		type: 'string' },
+            { name: 'SALES_TARGET_NAME',		type: 'string' },
+            { name: 'SALES_IN_CHARGE_NAME',		type: 'string' },
+            { name: 'SALES_IN_CHARGE_PHONE_NO',	type: 'string' },
+            { name: 'SALES_IN_CHARGE_EMAIL',	type: 'string' },
+            { name: 'SALES_ACTION_KEYWORD',		type: 'string' },
+            { name: 'SALES_ACTION_MEMO',		type: 'string' },
+        ]                     
+    };
+
+    var dataAdapter = new $.jqx.dataAdapter(source);
+	$("#DIV_GRID_SALES_DATA_LIST").jqxGrid({
+        width: '100%',
+        height: '100%',
+        source: dataAdapter,                
+//        pageable: true,
+//        autoheight: true,
+        sortable: true,
+        altrows: true,
+        enabletooltips: true,
+        editable: true,
+        pagesize: 15,
+        selectionmode: 'multiplecellsadvanced',
+        columns: [
+          { text: '버튼', align: 'center',	width: '7%', cellsalign: 'center',
+          	cellsrenderer: function (row, column, value) {
+                var STR_HTML  = '';
+                	STR_HTML += '<div style="width:100%;height:100%;text-align:center;">';
+          		if (row > 0) {
+                	STR_HTML += '<button style="height:100%;" CMD="VIEW" ROW="' + row + '" onclick="ON_CLICK_BTN_SALES_ROW(this);">';
+                	STR_HTML += '자세히';
+                	STR_HTML += '</button>';
+                	STR_HTML += ' ';
+                	STR_HTML += '<button style="height:100%;" CMD="ADD" ROW="' + row + '" onclick="ON_CLICK_BTN_SALES_ROW(this);">';
+                	STR_HTML += '추가';
+                	STR_HTML += '</button>';
+          		} else {
+                	STR_HTML += '<button style="height:100%;" CMD="NEW" ROW="' + row + '" onclick="ON_CLICK_BTN_SALES_ROW(this);">';
+                	STR_HTML += '신규';
+                	STR_HTML += '</button>';
+          		}
+                	STR_HTML += '</div>';
+                return STR_HTML;
+            }
+          },
+          { text: '일시',	columngroup: 'SALES_DATA_INFO', datafield: 'DATE_TIME',	width: '10%',	editable: false, align: 'center',	cellsalign: 'center'},
+          { text: '영업대상 기관 코드',	columngroup: 'SALES_DATA_INFO', datafield: 'SALES_TARGET_CODE',	editable: false, align: 'center',	cellsalign: 'center'},
+          { text: '영업대상 기관 이름',	columngroup: 'SALES_DATA_INFO', datafield: 'SALES_TARGET_NAME',	editable: false, align: 'center',	cellsalign: 'center'},
+          { text: '영업대상 담당자 이름',	columngroup: 'SALES_DATA_INFO', datafield: 'SALES_IN_CHARGE_NAME', editable: false, align: 'center',	cellsalign: 'center'},
+          { text: '영업대상 담당자 폰번호',	columngroup: 'SALES_DATA_INFO', datafield: 'SALES_IN_CHARGE_PHONE_NO',	editable: false, 	align: 'center',	cellsalign: 'center'},
+          { text: '영업대상 담당자 이메일',	columngroup: 'SALES_DATA_INFO', datafield: 'SALES_IN_CHARGE_EMAIL',	editable: false, align: 'center',	cellsalign: 'center'},
+          { text: '영업활동 키워드',	columngroup: 'SALES_DATA_INFO', datafield: 'SALES_ACTION_KEYWORD',	editable: false, align: 'center',	cellsalign: 'center'},
+          { text: '영업활동 메모',	columngroup: 'SALES_DATA_INFO', datafield: 'SALES_ACTION_MEMO',	width: '30%',	editable: false,  align: 'center',	cellsalign: 'center'},
+        ],
+        columngroups: [
+            { text: '영업 자료 목록', align: 'center', name: 'SALES_DATA_INFO' },
+        ]
+    });	
+    
+}
+
+</script>
+<div id="SALES_DATA_LIST">
+	<div style="height:5%; overflow:auto;">
+		<table>
+			<col width="10%"/>
+			<col width="15%"/>
+			<col width="10%"/>
+			<col width="15%"/>
+			<col width="50%"/>
+			<tr>
+				<th>
+		        	영업 종류
+				</th>
+				<td>
+					<div id="SELECT_LIST_FILTER"></div>
+				</td>
+				<th>
+		        	날짜 구간
+				</th>
+				<td id="DATE_RANGE_FOR_SALES_DATA_LIST" >
+				</td>
+				<td>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div style="height:95%;">
+		<div id="DIV_GRID_SALES_DATA_LIST" style="box-sizing:border-box;">
+		</div>
+	</div>
+</div>

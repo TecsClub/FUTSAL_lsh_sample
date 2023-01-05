@@ -1,0 +1,364 @@
+<style>
+	#SCHOOL_LIST 			{width:100%; height:100%;}
+	#SCHOOL_LIST div		{box-sizing:border-box;}
+	#SCHOOL_LIST input		{width:100%; height:100%; text-align:center;}
+	#SCHOOL_LIST table		{width:100%; height:100%; font-size:100%; border-collapse: separate; border-spacing: 1px; line-height: 100%;}
+	#SCHOOL_LIST table th	{font-weight:bold; text-align: center; white-space:normal; vertical-align: middle; word-break:break-all; word-wrap:break-all; background:#4789b7; color:white; }
+	#SCHOOL_LIST table td	{text-decoration:none; text-align: left;   white-space:normal; vertical-align: middle; word-break:break-all; word-wrap:break-all; background:#eee; padding:0 10px;}
+</style>
+
+<script>
+
+function REGIST_BUTTON_EVENT() {
+	$(".BTN_SCHOOL_LIST").jqxButton({
+		width: '100%',
+		height: '100%'
+	}).on('click', function () {
+		var ID = $(this).attr('ID');
+		if (ID == 'DUMMY') {
+		} else if(ID == 'BTN_GET_SCHOOL_LIST') {
+			QUERY_SCHOOL_LIST();
+		}
+	});
+}
+
+function MODAL_FOR_SCHOOL_DETAIL(JSON_ARGS) {
+	QIIP_API_ACCESS({
+			REQ: 'api_GET_PAGE',
+			FLDR_TEMPLATE: _FLDR_TEMPLATE,
+			FILE_TEMPLATE: 'SALES/MODAL_FOR_SCHOOL_DETAIL.html',
+		},function(STR_RESULT) {
+			var HTML_COMPILED = QIIP_STATIC_HTML(JSON_ARGS, STR_RESULT);
+			QIIP_APP_MODAL_POPUP({
+				TITLE: 'SCHOOL DETAIL INFORMATION',
+				BACKDROP: false,
+				CSS: {
+//					width: '1050px',
+//					height: '900px',
+					width: '50%',
+					height: '90%',
+				},
+				CONTENT: HTML_COMPILED,
+				INIT_FUNC: function (UNIQUE_ID) {
+					INIT_WIDGETS_FOR_SCHOOL_DETAIL(UNIQUE_ID);
+				}
+			});
+		}
+	);
+}
+
+
+function INIT_WIDGETS_FOR_SCHOOL_LIST() {
+	REGIST_BUTTON_EVENT();
+	QUERY_SCHOOL_LIST();
+}
+
+function QUERY_SCHOOL_LIST() {
+
+	var STR_POST_ADDRESS = $('#STR_POST_ADDRESS').val();
+	var STR_SCHOOL_NAME = $('#STR_SCHOOL_NAME').val();
+	var STR_SALER_BIZ_NAME = $('#STR_SALER_BIZ_NAME').val();
+	var MAX_LIST = parseInt($('#MAX_LIST').val());
+	
+	var STR_PHP_COND  = sprintf("$COND_CHECK = true;");
+		if (STR_POST_ADDRESS.length > 0)
+		    STR_PHP_COND += sprintf("$COND_CHECK = $COND_CHECK && (strpos($ONE_ROOT_CONTENTES->SCHOOL_INFO->POST_ADDRESS, '%s') !== false);", STR_POST_ADDRESS);
+		if (STR_SCHOOL_NAME.length > 0)
+		    STR_PHP_COND += sprintf("$COND_CHECK = $COND_CHECK && (strpos($ONE_ROOT_CONTENTES->SCHOOL_INFO->SCHOOL_NAME, '%s') !== false);", STR_SCHOOL_NAME);
+		if (STR_SALER_BIZ_NAME.length > 0)
+		    STR_PHP_COND += sprintf("$COND_CHECK = $COND_CHECK && (isset($ONE_ROOT_CONTENTES->SALERS_INFO)) && (strpos($ONE_ROOT_CONTENTES->SALERS_INFO->SALER_BIZ_NAME, '%s') !== false);", STR_SALER_BIZ_NAME);
+	    STR_PHP_COND += sprintf("return $COND_CHECK;");
+
+	QIIP_API_ACCESS({
+			REQ: 'post_GET_ALL_ROOT_ATTRIBUTE',
+			SVC_CATEGORY: _RS.PHONE_INFO.APP_NAME,
+			ATTR_KEY: [
+				'SCHOOL_INFO',
+				'SALERS_INFO'
+			],
+			SEARCH_KEY: 'SCHOOL',
+			LIMIT: MAX_LIST,
+			PHP_COND: [
+				STR_PHP_COND,
+			]
+		},function(STR_RESULT) {
+			var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+			if ((JSON_RESULT instanceof Array)) {
+				REFRESH_GRID_SCHOOL_LIST(JSON_RESULT);
+			}
+		}
+	);		
+	
+}
+
+function REFRESH_GRID_SCHOOL_LIST(args_SQL_RESULT) {
+
+//	QIIP_APP_ALERT([args_SQL_RESULT[0], args_SQL_RESULT[1]]); return;
+//	QIIP_APP_ALERT([args_SQL_RESULT]); return;
+
+	REFRESH_GRID_SALES_LOG_LIST([]);
+
+	var SQL_RESULT = Array();
+	args_SQL_RESULT.forEach(function (ONE_ITEM) {
+		var DATA_FOR_PUSH = ONE_ITEM.SCHOOL_INFO;
+		if ('SALERS_INFO' in ONE_ITEM) {
+			DATA_FOR_PUSH.SALERS_INFO = ONE_ITEM.SALERS_INFO
+		} else {
+			DATA_FOR_PUSH.SALERS_INFO = {};
+		}
+		SQL_RESULT.push(ONE_ITEM.SCHOOL_INFO);
+	});
+
+/*
+	SQL_RESULT.forEach(function (ONE_ITEM) {
+	});
+*/
+    var source = {
+        localdata: SQL_RESULT,
+        datatype: "json",
+        datafields:[
+//            { name: 'ID',			type: 'string' },
+            { name: 'HOME_PAGE',	type: 'string' },
+            { name: 'SCHOOL_GRADE',	type: 'string' },
+            { name: 'SCHOOL_DETAIL',type: 'string' },
+            { name: 'HS_TYPE',		type: 'string' },
+            { name: 'AREA',			type: 'string' },
+            { name: 'EDU_OFFICE',	type: 'string' },
+            { name: 'AREA_SUB',		type: 'string' },
+            { name: 'SCHOOL_NAME',	type: 'string' },
+            { name: 'BRANCH_INFO',	type: 'string' },
+            { name: 'BRANCH_STATUS',type: 'string' },
+            { name: 'FOUNDER',		type: 'string' },
+            { name: 'GENDER_INFO',	type: 'string' },
+            { name: 'POST_NO',		type: 'string' },
+            { name: 'POST_ADDRESS',	type: 'string' },
+            { name: 'PHONE_NO',		type: 'string' },
+            { name: 'FAX_NO',		type: 'string' },
+            { name: 'SALERS_INFO',	type: 'object' },
+        ]                     
+    };
+
+    var dataAdapter = new $.jqx.dataAdapter(source);
+	$("#DIV_GRID_SCHOOL_LIST").unbind();
+	$("#DIV_GRID_SCHOOL_LIST").jqxGrid({
+        width: '100%',
+        height: '100%',
+        source: dataAdapter,                
+//        pageable: true,
+//        autoheight: true,
+        sortable: true,
+        altrows: true,
+        enabletooltips: true,
+//        editable: true,
+        pagesize: 15,
+//        selectionmode: 'multiplecellsadvanced',
+        selectionmode: 'singlerow',
+        columns: [
+          { text: '학교명',	columngroup: 'SCHOOL_INFO', datafield: 'SCHOOL_NAME',	width: '12%',	align: 'center',	cellsalign: 'left'},
+          { text: '연락처',	columngroup: 'SCHOOL_INFO', datafield: 'PHONE_NO',	width: '10%',	align: 'center',	cellsalign: 'center'},
+          { text: '팩스번호',	columngroup: 'SCHOOL_INFO', datafield: 'FAX_NO',	width: '10%',	align: 'center',	cellsalign: 'center'},
+          { text: '우편번호',	columngroup: 'SCHOOL_INFO', datafield: 'POST_NO',	width: '5%',	align: 'center',	cellsalign: 'center'},
+          { text: '도로명주소',	columngroup: 'SCHOOL_INFO', datafield: 'POST_ADDRESS',	width: '30%',	align: 'center',	cellsalign: 'left'},
+          { text: '홈페이지',	columngroup: 'SCHOOL_INFO', datafield: 'HOME_PAGE',	width: '15%', align: 'center',	cellsalign: 'left'},
+          { text: '지정 방문배송 업체',	columngroup: 'SCHOOL_INFO', datafield: 'SALERS_INFO',	align: 'center',	cellsalign: 'left',
+          	cellsrenderer: function (row, column, value) {
+                var STR_HTML  = '';
+                if ('SALER_BIZ_NAME' in value) {
+                	STR_HTML += '<div class="jqx-grid-cell-center-align" style="margin-top: 8px;">';
+                	STR_HTML += sprintf('%s(%s)',value.SALER_BIZ_NAME, value.SALER_BIZ_NO);
+                	STR_HTML += '</div>';
+                }
+                return STR_HTML;
+            }
+          },
+        ],
+        columngroups: [
+            { text: 
+            	'<b>클릭 => 선택, 더블클릭 => 자세히</b>',
+              align: 'center', 
+              name: 'SCHOOL_INFO' 
+            },
+        ]
+    }).on('rowclick', function (event)  { 
+	    var args = event.args;
+	    var ROW_DATA = $(this).jqxGrid('getrowdata', args.rowindex);
+	    _RS.SELECTED_ROW_DATA = ROW_DATA;
+	    QUERY_SALES_LOG_LIST();
+    }).on('rowdoubleclick', function (event)  { 
+	    var args = event.args;
+	    var ROW_DATA = $(this).jqxGrid('getrowdata', args.rowindex);
+	    MODAL_FOR_SCHOOL_DETAIL(ROW_DATA);
+    });	
+    
+}
+
+function QUERY_SALES_LOG_LIST() {
+//	QIIP_APP_ALERT([_RS.SELECTED_ROW_DATA]); return;
+	QIIP_API_ACCESS({
+			REQ: 'post_GET_LOG_LIST',
+//			STR_DATE_FROM: $('#DATE_RANGE_FOR_SALES_LOG_LIST').jqxDateTimeInput('getText').substring(0,10),
+//			STR_DATE_TO: $('#DATE_RANGE_FOR_SALES_LOG_LIST').jqxDateTimeInput('getText').substring(13),
+			STR_FILTER: 'SALES_ACTIVITY',
+			PHONE_ID: sprintf("SCHOOL_%s-%s", _RS.SELECTED_ROW_DATA.POST_NO, _RS.SELECTED_ROW_DATA.PHONE_NO),
+			PHONE_NO: sprintf("SCHOOL_%s-%s", _RS.SELECTED_ROW_DATA.POST_NO, _RS.SELECTED_ROW_DATA.PHONE_NO),
+			CATEGORY: _RS.PHONE_INFO.APP_NAME,
+		},function(STR_RESULT) {
+			var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+			if ((JSON_RESULT instanceof Array)) {
+				REFRESH_GRID_SALES_LOG_LIST(JSON_RESULT);
+			}
+		}
+	);
+}
+
+function REFRESH_GRID_SALES_LOG_LIST(args_SQL_RESULT) {
+
+//	QIIP_APP_ALERT([args_SQL_RESULT[0]]); return;
+//	QIIP_APP_ALERT([args_SQL_RESULT]); return;
+
+	var SQL_RESULT = Array();
+	args_SQL_RESULT.forEach(function (ONE_ITEM) {
+		var DATA_FOR_PUSH = ONE_ITEM.OBJ_LOG.SALES_ACTIVITY;
+			DATA_FOR_PUSH.UNIQUE_ID = ONE_ITEM.UNIQUE_ID;
+			DATA_FOR_PUSH.DATE_TIME = ONE_ITEM.DATE_TIME;
+		SQL_RESULT.push(DATA_FOR_PUSH);
+	});
+/*
+	SQL_RESULT.forEach(function (ONE_ITEM) {
+	});
+*/
+    var source = {
+        localdata: SQL_RESULT,
+        datatype: "json",
+        datafields:[
+            { name: 'UNIQUE_ID',	type: 'string' },
+            { name: 'DATE_TIME',	type: 'string' },
+            { name: 'SALER_BIZ_NO',	type: 'string' },
+            { name: 'SALER_BIZ_NAME',type: 'string' },
+            { name: 'SALER_IN_CHARGE_NAME',		type: 'string' },
+            { name: 'SALER_IN_CHARGE_PHONE_NO',			type: 'string' },
+            { name: 'SALER_IN_CHARGE_EMAIL',	type: 'string' },
+            { name: 'SALES_LOG',		type: 'string' },
+        ]                     
+    };
+
+    var dataAdapter = new $.jqx.dataAdapter(source);
+	$("#DIV_GRID_SALES_LOG_LIST").unbind();
+	$("#DIV_GRID_SALES_LOG_LIST").jqxGrid({
+        width: '100%',
+        height: '100%',
+        source: dataAdapter,                
+//        pageable: true,
+//        autoheight: true,
+		rowsheight: 70,
+        sortable: true,
+        altrows: true,
+        enabletooltips: true,
+        editable: true,
+        pagesize: 15,
+//        selectionmode: 'multiplecellsadvanced',
+        selectionmode: 'singlerow',
+        editmode: 'dblclick',
+        columns: [
+          { text: '일시',	datafield: 'DATE_TIME',	width: '20%', align: 'center',	cellsalign: 'center', editable: false },
+//          { text: '사업자번호',	datafield: 'SALER_BIZ_NO',	width: '10%', align: 'center',	cellsalign: 'center'},
+//          { text: '상호',	datafield: 'SALER_BIZ_NAME',	width: '10%', align: 'center',	cellsalign: 'center'},
+          { text: '성명',	 columngroup: 'SALES_MANAGER', datafield: 'SALER_IN_CHARGE_NAME',	width: '10%', align: 'center',	cellsalign: 'center', editable: false },
+          { text: '폰번호', columngroup: 'SALES_MANAGER', datafield: 'SALER_IN_CHARGE_PHONE_NO',	width: '10%', align: 'center',	cellsalign: 'center', editable: false },
+          { text: '이메일', columngroup: 'SALES_MANAGER', datafield: 'SALER_IN_CHARGE_EMAIL',	width: '15%', align: 'center',	cellsalign: 'center', editable: false },
+          { text: '영업활동 내용',	datafield: 'SALES_LOG',	align: 'center',	cellsalign: 'center', columntype: 'custom', editable: true,
+          	cellsrenderer: function (row, column, value) {
+                var STR_HTML  = '';
+                	STR_HTML += '<xmp style="width:100%;height:100%;overflow:auto;">';
+                	STR_HTML += value;
+                	STR_HTML += '</xmp>';
+                return STR_HTML;
+            }
+          },
+        ],
+        columngroups: [
+            { text: '영업활동 등록 영업기사',
+              align: 'center', 
+              name: 'SALES_MANAGER' 
+            },
+        ]
+    }).on('rowclick', function (event)  { 
+	    var args = event.args;
+	    var ROW_DATA = $(this).jqxGrid('getrowdata', args.rowindex);
+    }).on('rowdoubleclick', function (event)  { 
+	    var args = event.args;
+	    var ROW_DATA = $(this).jqxGrid('getrowdata', args.rowindex);
+    });	
+    
+}
+
+
+</script>
+<div id="SCHOOL_LIST">
+	<div style="width:65%;height:100%;float:left;">
+		<div style="height:5%; overflow:auto;">
+			<table>
+				<col width="10%" />
+				<col width="10%" />
+				<col width="10%" />
+				<col width="10%" />
+				<col width="10%" />
+				<col width="10%" />
+				<col width="10%" />
+				<col width="10%" />
+				<col width="10%" />
+				<col width="10%" />
+				<tr>
+
+					<th style="background:#94bbd6; color:#333;">학교명</th>
+					<td>
+						<input type="text" id="STR_SCHOOL_NAME"/>
+					</td>
+
+					<th style="background:#94bbd6; color:#333;">도로명 주소</th>
+					<td>
+						<input type="text" id="STR_POST_ADDRESS" />
+					</td>
+
+					<th style="background:#94bbd6; color:#333;">방문배송 업체</th>
+					<td>
+						<input type="text" id="STR_SALER_BIZ_NAME" />
+					</td>
+
+					<th style="background:#94bbd6; color:#333;">LIMIT</th>
+					<td>
+						<input type="text" id="MAX_LIST" value="25"/>
+					</td>
+					
+					<td></td>
+
+					<td>
+						<button class="BTN_SCHOOL_LIST" id="BTN_GET_SCHOOL_LIST">
+							목록갱신
+						</button>
+					</td>
+
+				</tr>
+			</table>
+		</div>
+		<div style="height:95%;">
+			<div id="DIV_GRID_SCHOOL_LIST" style="box-sizing:border-box;">
+			</div>
+		</div>
+	</div>
+	<div style="width:35%;height:100%;float:left;">
+		<div style="height:5%;">
+			<table>
+				<tr>
+					<th>
+						영업 활동 목록
+					</th>
+				</tr>
+			</table>
+		</div>
+		<div style="height:95%;">
+			<div id="DIV_GRID_SALES_LOG_LIST">
+			</div>
+		</div>
+	</div>
+</div>

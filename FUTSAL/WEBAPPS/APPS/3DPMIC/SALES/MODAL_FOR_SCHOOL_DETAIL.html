@@ -1,0 +1,171 @@
+<style>
+#MODAL_SCHOOL_DETAIL table		{width:100%; height:100%; font-size:100%; border-collapse: separate; border-spacing: 1px;}
+#MODAL_SCHOOL_DETAIL table th	{font-weight:bold; text-align: right; white-space:normal; vertical-align: middle; word-break:break-all; word-wrap:break-all; background:#ccc; padding:0 30px;}
+#MODAL_SCHOOL_DETAIL table td	{text-decoration:none; text-align: left;   white-space:normal; vertical-align: middle; word-break:break-all; word-wrap:break-all; background:#eee; padding:0 30px;}
+#MODAL_SCHOOL_DETAIL input		{width:100%; text-align:center;}
+#MODAL_SCHOOL_DETAIL textarea	{width:100%; height:100px;}
+</style>
+<script>
+	function INIT_WIDGETS_FOR_SCHOOL_DETAIL(MODAL_ID) {
+		$(".EVENT_INPUT_BIZ_INFO").on('click', function () {
+			var ID = $(this).attr('ID');
+			if (ID == 'DUMMY') {
+			} else if (ID == 'BTN_OK') {
+				if (MODAL_ID != undefined) $('#'+MODAL_ID).modal('hide');
+			}
+		});
+	}
+</script>
+<div style="height:100%;" id="MODAL_SCHOOL_DETAIL">
+	<div style="height:95%;">
+		<table>
+			<col width="40%" />
+			<col width="60%" />
+			<tr>
+				<th>
+					방문배송 업체
+				</th>
+				<td>
+					{{JSON_ARGS.SALERS_INFO.SALER_BIZ_NAME}}({{JSON_ARGS.SALERS_INFO.SALER_BIZ_NO}})
+				</td>
+			</tr>
+			<tr>
+				<th>
+					학교명
+				</th>
+				<td>
+					{{JSON_ARGS.SCHOOL_NAME}}
+				</td>
+			</tr>
+			<tr>
+				<th>
+					연락처
+				</th>
+				<td>
+					{{JSON_ARGS.PHONE_NO}}
+				</td>
+			</tr>
+			<tr>
+				<th>
+					팩스번호
+				</th>
+				<td>
+					{{JSON_ARGS.FAX_NO}}
+				</td>
+			</tr>
+			<tr>
+				<th>
+					우편번호
+				</th>
+				<td>
+					{{JSON_ARGS.POST_NO}}
+				</td>
+			</tr>
+			<tr>
+				<th>
+					도로명 주소
+				</th>
+				<td>
+					{{JSON_ARGS.POST_ADDRESS}}
+				</td>
+			</tr>
+			<tr>
+				<th>
+					홈페이지
+				</th>
+				<td>
+					<a href="{{JSON_ARGS.HOME_PAGE}}">{{JSON_ARGS.HOME_PAGE}}</a>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					남여공학
+				</th>
+				<td>
+					{{JSON_ARGS.GENDER_INFO}}
+				</td>
+			</tr>
+			<tr>
+				<th>
+					설립주체
+				</th>
+				<td>
+					{{JSON_ARGS.FOUNDER}}
+				</td>
+			</tr>
+			<tr>
+				<th>
+					학제
+				</th>
+				<td>
+					{{JSON_ARGS.SCHOOL_GRADE}}
+				</td>
+			</tr>
+			<tr>
+				<th>
+					유형
+				</th>
+				<td>
+					{{JSON_ARGS.SCHOOL_DETAIL}}
+				</td>
+			</tr>
+			<tr>
+				<th>
+					고교유형
+				</th>
+				<td>
+					{{JSON_ARGS.HS_TYPE}}
+				</td>
+			</tr>
+			<tr>
+				<th>
+					시도
+				</th>
+				<td>
+					{{JSON_ARGS.AREA}}
+				</td>
+			</tr>
+			<tr>
+				<th>
+					행정구역
+				</th>
+				<td>
+					{{JSON_ARGS.AREA_SUB}}
+				</td>
+			</tr>
+			<tr>
+				<th>
+					관할 교육청
+				</th>
+				<td>
+					{{JSON_ARGS.EDU_OFFICE}}
+				</td>
+			</tr>
+			<tr>
+				<th>
+					본ㆍ분교
+				</th>
+				<td>
+					{{JSON_ARGS.BRANCH_INFO}}
+				</td>
+			</tr>
+			<tr>
+				<th>
+					학교상태
+				</th>
+				<td>
+					{{JSON_ARGS.BRANCH_STATUS}}
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div style="height:5%;">
+		<table>
+			<tr>
+				<td>
+					<button class="btn btn-primary btn-lg btn-block login-btn EVENT_INPUT_BIZ_INFO" id="BTN_OK">확인</button>
+				</td>
+			</tr>
+		</table>
+	</div>	
+</div>

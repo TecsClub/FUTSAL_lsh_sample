@@ -1,0 +1,380 @@
+<style>
+	.IP_SMS 			{width:100%; height:100%;}
+	.IP_SMS table		{width:100%; height:100%; font-size:100%; border-collapse: separate; border-spacing: 1px; line-height: 100%;}
+	.IP_SMS table th	{font-weight:bold; text-align: center; white-space:normal; vertical-align: middle; word-break:break-all; word-wrap:break-all; background:#4789b7; color:white; }
+	.IP_SMS table td	{text-decoration:none; text-align: left;   white-space:normal; vertical-align: middle; word-break:break-all; word-wrap:break-all; background:#eee; padding:0 10px;}
+</style>
+
+<script>
+	
+	function INIT_BUTTON_WIDGETS() {
+		$(".EVENT_IP_SMS").on('click', function () {
+			var ID = $(this).attr('ID');
+			if (ID == 'DUMMY') {
+			} else if (ID == 'BTN_ADD_SMS_TO') {
+				EXEC_ADD_SMS_TO();
+			} else if (ID == 'BTN_DEL_SMS_TO') {
+				EXEC_DEL_SMS_TO();
+			} else if (ID == 'BTN_SEND_SMS') {
+				EXEC_SEND_SMS();
+			} else if (ID == 'BTN_NFC_MATCH_COUNT_UP') {
+			} else if (ID == 'BTN_NFC_MATCH_COUNT_DOWN') {
+			}
+		});
+	}
+	
+	function INIT_TABS() {
+		$('#IP_SMS_TABS').on('created', function (){
+		});
+		$('#IP_SMS_TABS').jqxTabs({
+			width: '100%',
+			height: '100%',
+		}).on('selected', function (EVENT){
+			if (EVENT.args.item == 0) {
+			} else if (EVENT.args.item == 1) {
+			}
+		});
+	}
+	
+	var ARRAY_SMS_TO = [
+		'07045193500',
+		'07045193501',
+	];
+	function INIT_LIST_SMS_TO_NUMBERS() {
+		$('#LIST_SMS_TO_NUMBERS').jqxListBox({
+			width: '100%',
+			height: '100%',
+			source: ARRAY_SMS_TO,
+			allowDrop: true,
+			allowDrag: true,
+			renderer: function (index, label, value) {
+			    return '<center>' + value + '</center>';
+			}
+		}).on('select', function (event) {
+//			console.log($(this).jqxListBox('getSelectedItem').originalItem);
+		}).on('dragEnd', function (event) {
+			var NUMBERS_REMAIN = [];
+			$(this).jqxListBox('getItems').forEach(function (ONE_ITEM) {
+				NUMBERS_REMAIN.push(ONE_ITEM.value);
+			});
+			ARRAY_SMS_TO = NUMBERS_REMAIN;
+			console.log(ARRAY_SMS_TO);
+		});
+		
+	}
+
+	function EXEC_ADD_SMS_TO() {
+		var TXT_SMS_TO = $('#TXT_SMS_TO').val();
+		if (TXT_SMS_TO.length <= 0) {
+			QIIP_APP_ALERT([
+				'추가할 전화번호를 입력하세요!'
+			]);
+			return;
+		}
+		
+		var FLAG_EXIST = false;
+		ARRAY_SMS_TO.forEach(function (ONE_NUMBER) {
+			if(ONE_NUMBER == TXT_SMS_TO) {
+				FLAG_EXIST = true;
+			}
+		});
+		if (FLAG_EXIST) {
+			QIIP_APP_ALERT([
+				sprintf('%s 는 이미 존재하는 전화번호 입니다.', TXT_SMS_TO)
+			]);
+			return;
+		}
+		$('#TXT_SMS_TO').val('');
+		ARRAY_SMS_TO.push(TXT_SMS_TO);
+		$('#LIST_SMS_TO_NUMBERS').jqxListBox('addItem', TXT_SMS_TO);
+		$('#LIST_SMS_TO_NUMBERS').jqxListBox('selectItem', TXT_SMS_TO);
+	}
+
+	function EXEC_DEL_SMS_TO() {
+		var SEL_INDEX = $('#LIST_SMS_TO_NUMBERS').jqxListBox('getSelectedIndex');
+		if (SEL_INDEX >= 0) {
+			$('#LIST_SMS_TO_NUMBERS').jqxListBox('removeAt', SEL_INDEX);
+			var NUMBERS_REMAIN = [];
+			$('#LIST_SMS_TO_NUMBERS').jqxListBox('getItems').forEach(function (ONE_ITEM) {
+				NUMBERS_REMAIN.push(ONE_ITEM.value);
+			});
+	//		console.log(NUMBERS_REMAIN);
+			ARRAY_SMS_TO = NUMBERS_REMAIN;
+		}
+	}
+	
+	function EXEC_SEND_SMS() {
+		var ARGS_SMS = {
+			SMS_FROM: $('#SMS_FROM').val(),
+			ARRAY_SMS_TO: ARRAY_SMS_TO,
+			SMS_TEXT: $('#SMS_TEXT').val(),
+		};
+
+		if (ARGS_SMS.SMS_TEXT.length < 1) {
+			QIIP_APP_ALERT([
+				'SMS 내용이 없습니다!'
+			]);
+			return;
+		}
+		
+		if (ARGS_SMS.ARRAY_SMS_TO.length < 1) {
+			QIIP_APP_ALERT([
+				'SMS 수신번호 목록이 없습니다!'
+			]);
+			return;
+		}
+
+		JSON_SMS_REQUEST.METHOD = 'SEND_SMS';
+		JSON_SMS_REQUEST.PARAMS = {
+			SMS_TEXT: ARGS_SMS.SMS_TEXT,
+			SMS_FROM: ARGS_SMS.SMS_FROM,
+			SMS_TO: ARGS_SMS.ARRAY_SMS_TO
+		};
+		QIIP_WS_SMS_REQUEST(JSON_SMS_REQUEST);
+		
+//		EXEC_SEND_SMS_SUB(ARGS_SMS, 0);
+		
+	}
+	
+	function EXEC_SEND_SMS_SUB(ARGS_SMS, INDEX) {
+		JSON_SMS_REQUEST.METHOD = 'SEND_SMS';
+		JSON_SMS_REQUEST.PARAMS = {
+			SMS_FROM: ARGS_SMS.SMS_FROM,
+			SMS_TO: ARGS_SMS.ARRAY_SMS_TO[INDEX],
+			SMS_TEXT: ARGS_SMS.SMS_TEXT
+		};
+		QIIP_WS_SMS_REQUEST(JSON_SMS_REQUEST);
+		if (ARGS_SMS.ARRAY_SMS_TO.length > (INDEX + 1)) {
+			setTimeout(function () {
+				EXEC_SEND_SMS_SUB(ARGS_SMS, INDEX + 1)
+			}, 1000);
+		}
+	}
+
+	function QIIP_WS_SMS_REQUEST(JSON_SMS_REQUEST) {
+		QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+			DIV_CONSOLE_SCROLL,
+			'<xmp>' + JSON.stringify(JSON_SMS_REQUEST, null, '\t') + '</xmp>',
+			'you',
+			'70%'
+		);
+		WS_CONNECTION.send(JSON.stringify(JSON_SMS_REQUEST));
+	}
+	
+	function QIIP_SIDEMENU_INIT_WIDGETS() {
+		INIT_TABS();
+		INIT_BUTTON_WIDGETS();
+		INIT_LIST_SMS_TO_NUMBERS();
+
+		TOGGLE_SIDEMENU(function () {
+			$('#MENU_CONTENTS').css('height', ($('#SIDEMENU_PAGE').height() - 132) / $('#SIDEMENU_PAGE').height() * 100 + '%');
+			
+//			alert(JSON.stringify(window.location, null, '\t'));
+
+			INIT_WS_CONNECTION(CTI_WS_SERVER_URL, CTI_WS_CHANNEL);
+		});
+	}
+
+var DIV_CONSOLE_SCROLL = 'DIV_CONSOLE_SCROLL';
+//var CTI_WS_SERVER_URL	= 'ws://' + window.location.host;
+var CTI_WS_SERVER_URL	= 'ws://sms.1key.kr:6070';
+var CTI_WS_CHANNEL		= 'ws-sms';
+
+var JSON_SMS_REQUEST = {
+	METHOD: 'HELLO'
+};
+
+var WS_CONNECTION = {};
+
+function INIT_WS_CONNECTION(ws_server, ws_channel) {
+    // if user is running mozilla then use it's built-in WebSocket
+    window.WebSocket = window.WebSocket || window.MozWebSocket;
+  
+    // if browser doesn't support WebSocket, just show some notification and exit
+    if (!window.WebSocket) {
+		QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+			DIV_CONSOLE_SCROLL,
+			'죄송합니다, 접속에 사용하신 웹 브라우저가 WebSockets 기능을 지원하지 않습니다.',
+			'you',
+			'70%'
+		);
+      return;
+    }
+
+    // open connection
+    WS_CONNECTION = new WebSocket(ws_server, ws_channel);
+
+    WS_CONNECTION.onopen = function () {
+		QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+			DIV_CONSOLE_SCROLL,
+			sprintf( "new WebSocket('%s', '%s') 이 연결되었습니다.", ws_server, ws_channel),
+			'you',
+			'70%'
+		);
+    };
+    
+    WS_CONNECTION.onerror = function (error) {
+		QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+			DIV_CONSOLE_SCROLL,
+			'WebSocket 연결에 어떤 문제가 있거나 WebSocket 서버가 응답하지 않습니다.',
+			'you',
+			'70%'
+		);
+    };
+
+    // most important part - incoming messages
+    WS_CONNECTION.onmessage = function (message) {
+        // try to parse JSON message. Because we know that the server always returns
+        // JSON this should work without any problem but we should make sure that
+        // the massage is not chunked or otherwise damaged.
+        try {
+          var JSON_PARSED = JSON.parse(message.data);
+        } catch (e) {
+			QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+				DIV_CONSOLE_SCROLL,
+				'이건 JSON 스트링이 아닌것 같아요! : ' + message.data,
+				'you',
+				'70%'
+			);
+          return;
+        }
+
+        // NOTE: if you're not sure about the JSON structure
+        // check the server source code above
+        if ('TYPE' in JSON_PARSED) {
+			QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+				DIV_CONSOLE_SCROLL,
+				JSON.stringify(JSON_PARSED, null, '\t'),
+				'me',
+				'70%'
+			);
+		  
+          var TYPE = JSON_PARSED.TYPE;
+          if (TYPE == 'CONNECTION_ID') {			// 대소문자 구분!
+				JSON_SMS_REQUEST.CONNECTION_ID = JSON_PARSED.CONNECTION_ID;
+          }
+        } else if ('CONNECTION_ID' in JSON_PARSED) {
+			QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+				DIV_CONSOLE_SCROLL,
+				'<xmp>' + JSON.stringify(JSON_PARSED, null, '\t') + '</xmp>',
+				'me',
+				'70%'
+			);
+			JSON_SMS_REQUEST.CONNECTION_ID = JSON_PARSED.CONNECTION_ID;
+
+			JSON_SMS_REQUEST.METHOD = 'SET_PHONE_ID';
+			JSON_SMS_REQUEST.PARAMS = {
+				PHONE_ID: $('#SMS_FROM').val()
+			};
+			QIIP_WS_SMS_REQUEST(JSON_SMS_REQUEST);
+			
+		} else if ('type' in JSON_PARSED) {
+			QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+				DIV_CONSOLE_SCROLL,
+				'<xmp>' + JSON.stringify(JSON_PARSED, null, '\t') + '</xmp>',
+				'me',
+				'70%'
+			);
+        } else {
+			QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+				DIV_CONSOLE_SCROLL,
+				'흠..., JSON 스트링이 이런식이면 곤란한데...  필요한 속성이 없쟎아...: ' + JSON.stringify(JSON_PARSED, null, '\t'),
+				'you',
+				'70%'
+			);
+        }
+    };
+
+    WS_CONNECTION.onclose  = function () {
+		QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+			DIV_CONSOLE_SCROLL,
+			'WebSocket 연결이 끊어졌습니다. 1초 이내에 WebSocket 연결을 재시도 합니다.',
+			'you',
+			'70%'
+		);
+		//try to reconnect in 5 seconds
+		setTimeout(function(){INIT_WS_CONNECTION(CTI_WS_SERVER_URL, CTI_WS_CHANNEL)}, 1000);
+    };
+    
+}
+
+
+</script>
+<div class="IP_SMS" id="IP_SMS_TABS">
+	<ul>
+        <li style="margin-left: 10px;">SMS 발신</li>
+        <li>SMS 수신</li>
+	</ul>
+	<div>
+		<div style="width:50%;height:100%;float:left;">
+			<div style="width:100%;height:40%;">
+				<table>
+					<col width="30%" />
+					<tr>
+						<th style="height:20%;">
+							발신번호
+						</th>
+					</tr>
+					<tr>
+						<td style="height:20%;text-align:center">
+							<input type="text" readonly style="width:100%;height:100%;text-align:center;" id="SMS_FROM" value="{{LOGIN_INFO.data.user_login}}" />
+						</td>
+					</tr>
+					<tr>
+						<th style="height:20%;" colspan="2">
+							SMS 내용
+						</th>
+					</tr>
+					<tr>
+						<td style="height:40%;" colspan="2">
+							<textarea style="width:100%;height:100%;"  id="SMS_TEXT">동해물과 백두산이 마르고닳도록
+하느님이 보우하사 우리나라만세</textarea>
+						</td>
+					</tr>
+				</table>
+			</div>
+			<div style="width:100%;height:50%;">
+				<table>
+					<col width="50%" />
+					<tr>
+						<th style="height:15%;" colspan="2">
+							착신번호
+						</th>
+					</tr>
+					<tr>
+						<td style="height:15%;" colspan="2">
+							<input type="number" style="width:100%;height:100%;text-align:center;" id="TXT_SMS_TO" placeholder="추가할 전화번호 입력"/>
+						</td>
+					</tr>
+					<tr>
+						<td style="height:15%;">
+							<button class="btn btn-primary EVENT_IP_SMS" style="width:100%;height:100%;" id="BTN_ADD_SMS_TO" >추가</button>
+						</td>
+						<td>
+							<button class="btn btn-primary EVENT_IP_SMS" style="width:100%;height:100%;" id="BTN_DEL_SMS_TO" >삭제</button>
+						</td>
+					</tr>
+					<tr>
+						<td style="height:55%;" colspan="2">
+							<div id="LIST_SMS_TO_NUMBERS" ></div>
+						</td>
+					</tr>
+				</table>
+			</div>
+			<div style="width:100%;height:10%;">
+				<table>
+					<tr>
+						<td>
+							<button class="btn btn-primary EVENT_IP_SMS" style="width:100%;height:100%;" id="BTN_SEND_SMS" >발송</button>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		<div id="DIV_CONSOLE_SCROLL" style="width:50%;height:100%;box-sizing:border-box;background-color:#c9c9c9;overflow:auto;float:left;">
+		</div>
+	</div>
+	<div>
+		
+	</div>
+</div>

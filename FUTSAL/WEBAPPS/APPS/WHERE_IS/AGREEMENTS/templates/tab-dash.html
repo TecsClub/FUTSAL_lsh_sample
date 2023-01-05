@@ -1,0 +1,99 @@
+<ion-view view-title="{{APP_NAME}} 이용자 약관!">
+  <ion-content>
+  <ion-pane>
+    <div style="height:90%;overflow:auto;">
+      <div id="AGREEMENTS_ACCORDION">
+        <h3>{{APP_NAME}} 서비스 내용</h3>
+        <div style="padding:1%;">
+          <div class="card">
+            <div class="item item-text-wrap">
+              {{APP_NAME}}는 자녀의 위치를 실시간으로 추적하는 서비스 입니다.
+            </div>
+            <div class="item item-text-wrap">
+              {{APP_NAME}}는 고객님의 음성통화 내용을 자동으로 녹음하여 고객님이 지정하신 E-MAIL 로 자동으로 전송하는 서비스 입니다.
+            </div>
+            <div class="item item-text-wrap">
+              이때, MMS(멀티미디어 문자) 1건이 자동으로 발송되며, 고객님께서 직접 수동으로 MMS(멀티미디어 문자) 1건을 발송하는 것과 동일한 요금이 적용됩니다.
+            </div>
+            <div class="item item-text-wrap">
+              {{APP_NAME}} 앱에서 별도로 요금을 청구하지는 않습니다.
+            </div>
+          </div>
+        </div>
+        <h3>약관 동의 거부 및 거부시 불이익 내용</h3>
+        <div style="padding:1%;">
+          <div class="card">
+            <div class="item item-text-wrap">
+              개인정보 수집 동의를 거부하실 수 있습니다. 동의하지 않을 경우 {{APP_NAME}} 앱을 이용하실 수 없습니다.
+            </div>
+          </div>
+        </div>
+        <h3>개인 정보 전달 방법</h3>
+        <div style="padding:1%;">
+          <div class="card">
+            <div class="item item-text-wrap">
+              {{APP_NAME}} 앱이 자동으로 발송하는 MMS(멀티미디어 문자)에 서비스를 제공하기 위한 개인 정보를 포함 시킵니다.
+            </div>
+          </div>
+        </div>
+        <h3>개인 정보 수집 항목</h3>
+        <div style="padding:1%;">
+          <div class="card">
+            <div class="item item-text-wrap">
+              고객님의 신분 정보는 이용하지 않습니다.
+            </div>
+            <div class="item item-text-wrap">
+              고객님이 소지한 스마트폰에 할당되어 있는 전화번호
+            </div>
+            <div class="item item-text-wrap">
+              고객님이 이용하는 음성 통화에 대한 발신 또는 수신 전화번호
+            </div>
+            <div class="item item-text-wrap">
+              고객님이 이용하는 음성 통화에 대한 시간 정보(통화 시작/종료 시간)
+            </div>
+            <div class="item item-text-wrap">
+              고객님이 이용하는 음성 통화 상대 전화번호에 대한 고객님 폰 주소록에 등록된 닉네임
+            </div>
+            <div class="item item-text-wrap">
+              고객님이 이용하는 음성 통화를 녹음한 음성 파일
+            </div>
+          </div>
+        </div>
+        <h3>개인 정보 이용 목적</h3>
+        <div style="padding:1%;">
+          <div class="card">
+            <div class="item item-text-wrap">
+              {{APP_NAME}} 앱이 자동으로 발송하는 MMS(멀티미디어 문자)에 포함된 정보를 분석하여, 고객님이 설정하신 E-MAIL로 전달하는 기능을 가동하는 동안 일시적으로 이용 합니다.
+            </div>
+          </div>
+        </div>
+        <h3>개인 정보 보유 및 이용 기간</h3>
+        <div style="padding:1%;">
+          <div class="card">
+            <div class="item item-text-wrap">
+              서비스 제공 회사는 {{APP_NAME}} 앱이 자동으로 발송하는 MMS(멀티미디어 문자)에 포함된 정보를 보관, 유지, 관리할 능력을 갖추고 있지 않습니다.
+            </div>
+            <div class="item item-text-wrap">
+              따라서, 수사 기관이 요청하여도 관련 정보를 제공할 수 없도록 서비스 제공 회사는 {{APP_NAME}} 앱이 자동으로 발송하는 MMS(멀티미디어 문자)에 포함된 정보를 수 분 이내에 전달된 모든 개인 정보를 삭제합니다.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="height:10%;">
+      <div class="row" style="padding:0;">
+        <div class="col">
+          <div class="button button-positive" style="width:100%;height:100%;" ng-click="ACCEPT()">
+            동의
+          </div>
+        </div>
+        <div class="col">
+          <div class="button button-positive" style="width:100%;height:100%;" ng-click="REJECT()">
+            거부
+          </div>
+        </div>
+      </div>
+    </div>
+  </ion-pane>
+  <ion-content>
+</ion-view>

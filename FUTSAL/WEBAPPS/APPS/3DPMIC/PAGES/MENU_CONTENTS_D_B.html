@@ -1,0 +1,254 @@
+<link href="assets/css/font-awesome.css" rel="stylesheet" />
+
+<style>
+body{
+overflow-y: auto !important;
+height: 100%;
+}
+ul{
+padding: 0;
+list-style: none;	
+}
+#remote{
+	display: none;
+}
+#DIV_CONTENT{
+margin-top: -70px;
+}
+.detail_content {
+	width: 100%;
+	margin-top: -60px;
+	position: relative;
+}
+.detail_content .sub_bg{
+height: 400px;
+background: #0F2027;  /* fallback for old browsers */
+background: -webkit-linear-gradient(to bottom, #2C5364, #203A43, #0F2027);  /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to bottom, #2C5364, #203A43, #0F2027); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+text-align: center;
+	position: relative;	
+}
+.detail_content .sub_bg > div{
+	position: absolute;
+	top: calc(50% + 35px);
+	left: 50%;
+	transform: translate(-50%, -50%);
+	padding-top: 70px;
+}
+.detail_content .sub_bg > div h2{
+	font-size: 48px;
+	font-weight: 700;
+	margin-bottom: 15px;
+	margin-top: 0;
+	color: #fff;
+}
+.detail_content .sub_bg > div p{
+	font-size: 17px;
+	font-weight: 500;
+	color: #fff;
+}
+
+button#move_top_btn {
+    position: fixed;
+    right: 2%;
+    bottom: 50px;
+    display: none;
+    z-index: 999;
+    text-align: center;
+    background-color: #114991;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    color: #fff;
+    font-weight: 500;
+    border: none;
+    right: 50px;
+}
+button#move_top_btn:hover, button#move_top_btn:focus{
+	background-color: #049DCC;
+}
+button#move_top_btn.stop_move{
+display: block;
+position: absolute;
+bottom: 250px;
+}
+.breadcrumb_wrap{
+	 border-bottom: 1px solid #ddd;
+	 box-shadow: 0px 5px aliceblue;
+}
+.breadcrumb{
+	  background: none;
+   margin-bottom: 0;
+    border-radius: 0;
+    text-align: right;
+    padding: 15px 0px;
+}
+.performance{
+text-align: center;
+margin-top: 50px;
+margin-bottom: 100px;
+}
+.performance h3 {
+		text-align: center;
+    font-weight: bold;
+    display: inline-block;
+    border-bottom: 4px solid #114991;
+    padding-bottom: 8px;
+    font-size: 32px;
+  }
+  
+.performance > p{
+ 	    margin-top: 15px;
+    color: #606060;
+    font-size: 16px;
+    font-weight: 600;
+ }
+ .performance > div{
+ margin-top: 30px;	
+ display: table
+ }
+  .performance h4{
+  width: 150px;
+	font-weight: bold;
+	color: #114991;
+	text-align: right;
+	display: table-cell;
+	margin: 0;
+	padding: 15px;
+	border-right: 1px solid #114991;
+  }
+  .performance .right_txt{
+  	text-align: left;
+  	width: calc(100% - 150px);
+  	display: table-cell;
+  	padding: 15px;
+  }
+  .performance .right_txt strong{
+  	font-size: 18px;
+  	line-height: 40px;
+  }
+  .performance .right_txt ul{
+  margin: 0;	
+  }
+  .performance .right_txt ul li{
+  margin-top: 8px;	
+  color: #555;
+  }
+  .performance > div.con2{
+  	padding-top: 30px;
+border-top: 1px solid #eee;
+  }
+  .performance > img{
+  	margin-top: 40px;	
+  }
+</style>
+
+<script>
+	
+	function QIIP_MENU_CONTENTS_INIT_WIDGETS() {
+//		alert('QIIP_MENU_CONTENTS_INIT_WIDGETS');
+		$("#move_top_btn").click(function() {
+	        $('html, body').animate({
+	            scrollTop : 0
+	        }, 400);
+	        return false;
+	  });
+		$("body").scroll(function(){
+			if ($(this).scrollTop() > 0) {
+		        $('#move_top_btn').fadeIn();
+	    } else {
+	        $('#move_top_btn').fadeOut();
+	    }
+	    
+	    if($(this).scrollTop() > 260){
+	    		$('QIIP_MENU').animate({"background-color":"#fff", "border-color": "#eee"}, 10);	
+	    		$('DIV_LEFT, QIIP_MENU MENU_1ST_TEXT, QIIP_MENU DIV_RIGHT button, QIIP_MENU DIV_RIGHT button span').animate({"color":"#444", "border-color": "#eee"}, 10);	
+	    }else{
+	    		$('QIIP_MENU').animate({"background-color":"rgb(255, 255, 255, 0)", "border-color": "#fff"}, 10);	
+	    		$('DIV_LEFT, QIIP_MENU MENU_1ST_TEXT, QIIP_MENU DIV_RIGHT button, QIIP_MENU DIV_RIGHT button span').animate({"color":"#fff", "border-color": "#fff"}, 10);	
+	    }
+		});
+		
+		$(window).resize(function(){
+	      	var width = parseInt($(this).width());
+			if (width > 960){
+				$("body").scroll(function(){
+				    if($(this).scrollTop() + $(this).height() > $(document).height() - 200) {
+						$("button#move_top_btn").addClass("stop_move");
+				   	} else {
+				   		$("button#move_top_btn").removeClass("stop_move");
+				   	}
+				});
+			} else {
+			  	$("body").scroll(function(){
+					if($(this).scrollTop() + $(this).height() > $(document).height() - 200) {
+						$("button#move_top_btn").addClass("stop_move");
+					} else {
+						$("button#move_top_btn").removeClass("stop_move");
+					}
+				});
+			}
+	    }).resize();
+	}
+	
+</script>
+<!-- DETAIL_CONTENT START -->
+<div class="detail_content">
+	<div class="sub_bg">
+		<div>
+			<h2>PURPOSE</h2>
+			<p>한국 쓰리디프린팅 소재산업 협동조합의 목적 및 목표 대해 소개합니다.</p>
+		</div>
+	</div>
+	<div class="breadcrumb_wrap">
+		<ol class="breadcrumb container">
+			  <li>Home</li>
+			  <li>목적 및 목표</li>
+			  <li class="active">기대성과</li>
+		</ol>	
+	</div>
+	<div class="container performance">	
+		<h3>기대성과</h3>
+		<p>사회적 가치 측면에서의 예상 성과</p>
+		<img src="assets/img/purpose_bg2.png">
+		<div class="con1">
+			<h4>단기성과</h4>
+			
+			<div class="right_txt">
+				<strong>학교, 공공기관 등의 3D프린터 활용도 상승 유도</strong>
+				<ul>
+					<li>
+						『총괄유통관리』개념을 적용한 3D프린팅 소재(필라멘트) 유통구조를 적용하면, 공공기관, 연구소, 학교 등의 3D프린터 운영 담당자는 직접 대면하는 『납품배송, A/S 기사』를 통하여 다양한 기술지원을 받을 수 있고, 본인이 관리하는 3D프린터 설치시설에 대한 장비활용도를 높일 수 있는 다양한 형태의 아이디어를 얻을 수 있음
+					</li>					
+				</ul>
+
+			</div>
+		</div>
+		<div class="con2">
+			<h4>중·장기성과</h4>
+			
+			<div class="right_txt">
+				<strong>3D프린터, 3D프린팅, 소재(필라멘트)관련 기술 체계화 및 신기술 개발</strong>
+				<ul>
+					<li>
+						현행, 3D프린터, 3D프린팅, 소재(필라멘트)관련 기술과 연관된 3D프린팅 출력레시피 등은 표준화 및 객관화가 되지 못하고, 3D프린팅 산업분야 관련 종사자의 개인별 노하우 형태로 존재함
+					</li>			
+					<li>
+						 그 이유로는, 3D프린팅 기술에 대한 체계화 및 표준화 작업은 장기적인 관점에서 시장규모를 확대하고자 하는 계획을 기반으로 이러한 활동을 추진하는 체계적인 조직이 있어야 하는데 아직까지는 그럴만한 환경이 되지 못하였음
+					</li>		
+					<li>
+					 	본 협동조합에서는 중·장기적인 관점에서 3D프린팅 소재(필라멘트)관련 기술 및 품질 체계화 사업을 추진하여, 우리나라 3D프린팅 산업의 발전 및 저변확대에 기여
+					</li>				
+				</ul>
+
+			</div>
+		</div>	
+	</div>
+	<div class="footer" style="background-color: #333;">
+	    <div style="height: 200px;">footer</div>
+	</div>
+	<button id="move_top_btn" alt="MOVE TOP"><span class="glyphicon glyphicon-chevron-up"></span><br>TOP</button>
+
+</div>
+<!-- DETAIL_CONTENT END -->
+	

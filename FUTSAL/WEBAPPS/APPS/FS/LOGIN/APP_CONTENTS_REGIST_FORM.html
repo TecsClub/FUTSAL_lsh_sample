@@ -1,0 +1,298 @@
+<style>
+	.login_table 			{width:100%; height:100%;}
+	.login_table table		{width:100%; height:100%; font-size:100%; border-collapse: separate; border-spacing: 1px; line-height: 100%;}
+	.login_table table th	{text-decoration:bold; text-align: center; white-space:normal; vertical-align: middle; word-break:break-all; background:#ccc;}
+	.login_table table td	{text-decoration:none; text-align: left;   white-space:normal; vertical-align: middle;word-break:break-all;}
+</style>
+<script>
+
+function INIT_WIDGETS_FOR_REGIST_FORM() {
+
+	$(document).unbind('keypress');
+	$(document).keypress(function (EVENT) {
+		if ( event.which == 13 ) {
+		     event.preventDefault();
+			DO_TRY_REGIST_1ST({
+				USER_ID:	$('#USER_ID').val(),
+				USER_EMAIL:	$('#USER_EMAIL').val(),
+			});
+		}
+	});
+
+	$(".BTN_REGIST_FORM").jqxButton({
+		width: '100%',
+		height: '100%'
+	}).on('click', function () {
+		var ID = $(this).attr('ID');
+		if (ID == 'DUMMY') {
+		} else if (ID == 'BTN_TO_REGIST') {
+			DO_TRY_REGIST_1ST({
+				USER_ID:	$('#USER_ID').val(),
+				USER_EMAIL:	$('#USER_EMAIL').val(),
+			});
+		} else if (ID == 'BTN_TO_BACK') {
+			QIIP_APP_CHECK_IF_LOGIN();
+		}
+	});
+}
+
+function DO_TRY_REGIST_1ST(REGIST_DATA) {
+	if (FLAG_PREVENT_TWICE_CLICK) return; else FLAG_PREVENT_TWICE_CLICK = true;
+//	if (!QIIP_IS_VALID_M_PHONE_NO(REGIST_DATA.USER_ID)) {
+	if (!QIIP_IS_VALID_PHONE_NO(REGIST_DATA.USER_ID)) {
+		QIIP_APP_ALERT([
+			'[' + REGIST_DATA.USER_ID + '] 는 적절한 전화 번호가 아닙니다!',
+		],function () {
+			FLAG_PREVENT_TWICE_CLICK = false;
+		});
+		return;
+	}
+	if (!QIIP_IS_VALID_EMAIL(REGIST_DATA.USER_EMAIL)) {
+		QIIP_APP_ALERT([
+			'[' + REGIST_DATA.USER_EMAIL + '] 는 적절한 이메일 주소가 아닙니다!',
+		],function () {
+			FLAG_PREVENT_TWICE_CLICK = false;
+		});
+		return;
+	}
+	var PHP_CODES  = "";
+		PHP_CODES += "return username_exists('" + REGIST_DATA.USER_ID + "');";
+
+//email_exists( string $email )
+
+	QIIP_API_ACCESS({
+			REQ: 'api_WP_ACCESS',
+			PHP_CODES_BASE64: Base64.encode(PHP_CODES),
+		},function(STR_RESULT) {
+//			alert(JSON.stringify(STR_RESULT, null, '\t'));
+			var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+
+			if (STR_RESULT.indexOf('false') >= 0) {
+				DO_TRY_REGIST_2ND(REGIST_DATA);
+			} else {
+				QIIP_APP_ALERT([
+					'전화 번호,...',
+					'[' + REGIST_DATA.USER_ID + '] 는',
+					'이미 가입되어 있습니다!',
+				],function () {
+				});
+				FLAG_PREVENT_TWICE_CLICK = false;
+			}
+		}
+	);
+}
+
+function DO_TRY_REGIST_2ND(REGIST_DATA) {
+	var PHP_CODES  = "";
+		PHP_CODES += "return email_exists('" + REGIST_DATA.USER_EMAIL + "');";
+
+	QIIP_API_ACCESS({
+			REQ: 'api_WP_ACCESS',
+			PHP_CODES_BASE64: Base64.encode(PHP_CODES),
+		},function(STR_RESULT) {
+//			alert(JSON.stringify(STR_RESULT, null, '\t'));
+			var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+
+			if (STR_RESULT.indexOf('false') >= 0) {
+				POPUP_FOR_EXEC_IVR_SCENARIO({
+					APIKEY:				IVR_APIKEY,
+					CMD:				'ARSAUTH_WAIT',
+					TITLE:				'[' + REGIST_DATA.USER_ID + '] 님 - 회원가입',
+					CALL_SCENARIO:		'AUTH_PW_REGIST',
+        			CALL_IN_ANSWER:		true,
+
+					STR_SCENARIO_HELP:	ARR_TO_TABLE_CENTER([
+						'[다음 단계] 버튼을 클릭하신 후,...',
+						'아래와 같이 전화를 걸어, 안내 음성에 따라 비밀번호를 설정 하시면,...',
+						'회원 가입이 완료됩니다.',
+					]),
+					MENT_1ST_INTRO:			'ARS 인증에 사용하실 인증번호 여섯자리를 결정하셔서 입력해주세요.',
+					MENT_1ST_NO_INPUT:		'아무 입력도 없었습니다.',
+					MENT_1ST_LACK_INPUT:	'입력하신 인증번호의 갯수가 부족합니다.',
+					MENT_1ST_RETRY:			'ARS 인증에 사용하실 인증번호 여섯자리를 결정하셔서 다시 입력해주세요.',
+					MENT_1ST_RETRY_EXAUST:	'허용된 재시도 횟수를 초과하여 인증번호 설정을 실패하셨습니다.',
+					MENT_2ND_INTRO:			'첫번째 입력하신 인증번호 여섯자리를 다시 한번 입력해주세요.',
+					MENT_2ND_NO_INPUT:		'아무 입력도 없었습니다.',
+					MENT_2ND_SOME_INPUT:	'첫번째 입력하신 인증번호와, 두번째 입력하신 인증번호가 서로 다릅니다.',
+					MENT_2ND_LACK_INPUT:	'입력하신 인증번호의 갯수가 부족합니다.',
+					MENT_2ND_AUTH_INPUT:	'인증번호 설정이 완료되었습니다.',
+					MENT_2ND_RETRY:			'첫번째 입력하신 인증번호 여섯자리를 다시 한번 입력해주세요.',
+					MENT_2ND_RETRY_EXAUST:	'허용된 재시도 횟수를 초과하여 인증번호 설정을 실패하셨습니다.',
+					CALL_TO:			IVR_NUMBER,
+					CALL_FROM:			REGIST_DATA.USER_ID,
+					AUTH_NUMBER:		'??????',
+					PW_CANDIDATE:		'??????',
+					RETRY_STEP_1:		3,
+					RETRY_STEP_2:		3,
+					FUNC_CALLBACK:		'ARS_PW_REGIST_RESULT'
+				});
+			} else {
+				QIIP_APP_ALERT([
+					'이메일 주소,...',
+					'[' + REGIST_DATA.USER_EMAIL + '] 는',
+					'이미 가입되어 있습니다!',
+				],function () {
+				});
+			}
+			FLAG_PREVENT_TWICE_CLICK = false;
+		}
+	);
+}
+
+function ARS_PW_REGIST_RESULT(STR_JSON_BASE64) {
+	var JSON_ARS_AUTH_RESULT = JSON.parse(Base64.decode(STR_JSON_BASE64));
+	console.log(JSON.stringify(JSON_ARS_AUTH_RESULT, null, '\t'));
+	if (('CALL_ARGS' in JSON_ARS_AUTH_RESULT) && 
+		('CALL_STATUS' in JSON_ARS_AUTH_RESULT) && 
+		('USER_DTMF_INPUTS' in JSON_ARS_AUTH_RESULT)) {
+		if ((JSON_ARS_AUTH_RESULT.USER_DTMF_INPUTS.length >= 2) && 
+			(JSON_ARS_AUTH_RESULT.CALL_STATUS.CODE == 200) && 
+			(JSON_ARS_AUTH_RESULT.CALL_STATUS.CODE_STR == 'AUTH_OK')) {
+			var USER_AUTH = JSON_ARS_AUTH_RESULT.USER_DTMF_INPUTS.pop();
+			DO_USER_REGIST({
+				USER_ID:	JSON_ARS_AUTH_RESULT.CALL_ARGS.CALL_FROM,
+				USER_PW:	USER_AUTH,
+				USER_EMAIL:	$('#USER_EMAIL').val()
+			});
+		} else {
+			QIIP_APP_ALERT([
+				'아래와 같이 ARS 시나리오가 전개되어, 회원가입을 처리 할 수 없습니다.',
+				'<table style="width:100%;text-align:left;">' + 
+				'<tr>' + 
+				'<td>' + 
+				'<pre>' + 
+					JSON.stringify(JSON_ARS_AUTH_RESULT.SCENARIO_HISTORY, null, '\t') + 
+				'</pre>' +
+				'</tr>' + 
+				'</td>' + 
+				'</table>'
+			],function () {
+			});
+		}
+	}
+}
+
+function POPUP_FOR_EXEC_IVR_SCENARIO(SCENARIO_PARAM) {
+	var JSON_ARGS_BASE64 = Base64.encode(JSON.stringify(SCENARIO_PARAM));
+
+	QIIP_API_ACCESS({
+			REQ: 'api_GET_PAGE',
+			FLDR_TEMPLATE: _FLDR_TEMPLATE,
+			FILE_TEMPLATE: 'LOGIN/POPUP_FOR_EXEC_IVR_SCENARIO.html',
+			JSON_ARGS_BASE64: JSON_ARGS_BASE64,
+		},function(STR_RESULT) {
+			var OBJ_POPUP = QIIP_JQX_POPUP_WINDOW({
+	            showCollapseButton: true, 
+	            height: '95%',
+	            width: '90%',
+	            minHeight: 100,
+	            minWidth: 100,
+				},
+				SCENARIO_PARAM.TITLE,
+				STR_RESULT
+			);
+		  	INIT_WIDGETS_POPUP_FOR_EXEC_IVR_SCENARIO(OBJ_POPUP);
+		},{
+			title: _RS.PHONE_INFO.APP_NAME + ' 안내',
+			template: ARR_TO_TABLE_CENTER([
+				'화면을 구성하고 있습니다.'
+			]),
+			cssClass: 'qiip_popup'
+		}
+	);
+
+}
+
+function DO_USER_REGIST(REGIST_DATA) {
+//	alert(JSON.stringify(REGIST_DATA, null, '\t'));
+	var PHP_CODES  = "";
+		PHP_CODES += "return wp_create_user('" + REGIST_DATA.USER_ID + "','" + REGIST_DATA.USER_PW + "','" + REGIST_DATA.USER_EMAIL + "');";
+
+	QIIP_API_ACCESS({
+			REQ: 'api_WP_ACCESS',
+			PHP_CODES_BASE64: Base64.encode(PHP_CODES),
+		},function(STR_RESULT) {
+//			alert(JSON.stringify(STR_RESULT, null, '\t'));
+			var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+
+			if ((typeof JSON_RESULT === 'object') && ('errors' in JSON_RESULT)) {
+				QIIP_APP_ALERT([
+					JSON.stringify(JSON_RESULT.errors, null, '\t')
+				]);
+			} else {
+				QIIP_APP_ALERT([
+					'아래와 같은 회윈정보를 적용하여 회원가입을 처리했습니다.',
+					'[ 전화 번호 : ' + REGIST_DATA.USER_ID + ', ARS 인증번호 : ' + REGIST_DATA.USER_PW + ', EMAIL 주소 : ' + REGIST_DATA.USER_EMAIL + ']',
+				],function () {
+					window.location.replace(window.location.origin);
+				});
+			}
+		}
+	);
+
+}
+
+</script>
+<div class="login_table">
+	<div style="height:25%;"></div>
+	<table style="height:30%;">
+		<col width="20%"/>
+		<col width="30%"/>
+		<col width="30%"/>
+		<col width="20%"/>
+		<tr style="height:25%;">
+			<td></td>
+			<th colspan="2">
+				{{PHONE_INFO.APP_NAME}} 회원가입
+			</th>
+			<td></td>
+		</tr>
+		<tr style="height:25%;">
+			<td></td>
+			<td>
+				<input type="number"
+					   style="text-align:center;width:100%;height:100%;"
+				       placeholder="전화 번호"
+				       id="USER_ID"
+				/>
+			</td>
+			<td>
+				<input type="email"
+					   style="text-align:center;width:100%;height:100%;"
+				       placeholder="이메일 주소"
+				       id="USER_EMAIL"
+				/>
+			</td>
+			<td></td>
+		</tr>
+		<tr style="height:25%;">
+			<td></td>
+			<td colspan="2" style="text-align:center;border: solid 1px gray;">
+				상기 최소 정보를 입력한 후 [회원 가입 시작] 버튼을 누르면<br/>ARS 인증절차 진행 후 자동으로 회원가입 됩니다.
+			</td>
+			<td></td>
+		</tr>
+		<tr style="height:25%;">
+			<td></td>
+			<td colspan="2">
+				<table>
+					<col width="80%" />
+					<tr>
+						<td>
+							<button class="BTN_REGIST_FORM" id="BTN_TO_REGIST">
+							회원 가입 시작
+							</button>
+						</td>
+						<td>
+							<button class="BTN_REGIST_FORM" id="BTN_TO_BACK">
+							뒤로
+							</button>
+						</td>
+					</tr>
+				</table>
+			</td>
+			<td></td>
+		</tr>
+	</table>
+	<div style="height:45%;""></div>
+</div>

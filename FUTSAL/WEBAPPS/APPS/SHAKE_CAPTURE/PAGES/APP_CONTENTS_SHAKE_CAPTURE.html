@@ -1,0 +1,151 @@
+<script>
+
+
+function INIT_WIDGETS_FOR_MENU_CONTENTS() {
+	SET_SCRIPT_ON_BACKPRESSED();
+	REQUEST_PERMISSIONS(function () {
+		ENABLE_GYRO_SENSOR();
+	}, function () {
+		QIIP_APP_ALERT([
+			'요청드린 권한을 허용하지 않았기 때문에,...',
+			_RS.PHONE_INFO.APP_NAME + ' 를 종료합니다.'
+		],function () {
+			APP_FINISH();
+		});
+	});
+
+	$(".BTN_PAGES").jqxButton({
+		width: '100%',
+		height: '100%'
+	}).on('click', function () {
+		var ID = $(this).attr('ID');
+		if (ID == 'DUMMY') {
+		} else if (ID == 'BTN_APP_STT_EXIT') {
+			HOW_TO_EXIT_APP();
+		}
+	});
+}
+
+
+function HOW_TO_EXIT_APP() {
+	_ionicPopup.confirm({
+		title: '종료 확인',
+		cssClass: 'qiip_popup',
+		template: TO_TABLE_CENTER('앱을 종료 하시겠습니까?')
+	}).then(function(res) {
+		if (res) {
+			DISABLE_GYRO_SENSOR();
+			APP_FINISH();
+		}
+	});
+}
+
+function APP_FINISH() {
+	QIIP_APPS_NATIVE_ACCESS({
+		REQUEST: 'APP_FINISH',
+	}, function (STR_RESULT) {
+	});
+}
+
+function SET_SCRIPT_ON_BACKPRESSED() {
+	QIIP_APPS_NATIVE_ACCESS({
+		REQUEST: 'SET_SCRIPT_ON_BACKPRESSED',
+		SCRIPT_ON_BACKPRESSED: {
+			SCRIPT_ON_BACKPRESSED: 'HOW_TO_EXIT_APP'
+		}
+	}, function (STR_RESULT) {
+	});
+}
+
+function REQUEST_PERMISSIONS(FUNC_GRANTED, FUNC_NOT_GRANTED) {
+	QIIP_APPS_NATIVE_ACCESS({
+		REQUEST: 'REQUEST_PERMISSIONS',
+		PERMISSIONS: [
+			'android.permission.INTERNET',
+			'android.permission.READ_EXTERNAL_STORAGE',
+			'android.permission.WRITE_EXTERNAL_STORAGE',
+		],
+		FULL_CONTENTS: true,
+	}, function (STR_RESULT) {
+		var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+		if (JSON_RESULT.STATUS != 200) {
+			QIIP_POPUP_FOR_YES_NO(
+				_RS.PHONE_INFO.APP_NAME + ' 안내',[
+					_RS.PHONE_INFO.APP_NAME + ' 를 정상적으로 이용하시려면...',
+					'요청드린 권한을 허용하셔야 합니다.',
+					'권한 허용을 재시도 하시겠습니까?',
+				], function () {
+					REQUEST_PERMISSIONS(FUNC_GRANTED, FUNC_NOT_GRANTED);
+				}, function () {
+					if (FUNC_NOT_GRANTED != undefined) FUNC_NOT_GRANTED();
+				},
+				95,
+				50
+			);
+		} else {
+			if (FUNC_GRANTED != undefined) FUNC_GRANTED();
+		}
+	});
+}
+
+function ENABLE_GYRO_SENSOR() {
+	QIIP_APPS_NATIVE_ACCESS({
+		REQUEST: 'GYRO_CONTROL',
+		WHAT: 'GYRO_START',
+		SHAKE_THRESHOLD: 5000,
+		CALLBACK_SCRIPT: {
+			ON_SHAKE_THRESHOLD: 'ON_SHAKE_THRESHOLD',
+			ON_GYRO_VALUE: 'ON_GYRO_VALUE',
+		},
+		FULL_CONTENTS: true,
+	}, function (STR_RESULT) {
+		var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+		console.log(JSON.stringify(JSON_RESULT, null, '\t'));
+	});
+}
+
+function ON_SHAKE_THRESHOLD(STR_BASE64) {
+	var JSON_ARGS = JSON.parse(Base64.decode(STR_BASE64));
+	console.log(JSON.stringify(JSON_ARGS, null, '\t'));
+	DO_SCREEN_CAPTURE();
+}
+
+function ON_GYRO_VALUE(STR_BASE64) {
+	var JSON_ARGS = JSON.parse(Base64.decode(STR_BASE64));
+	console.log(JSON.stringify(JSON_ARGS, null, '\t'));
+}
+
+function DO_SCREEN_CAPTURE() {
+	QIIP_APPS_NATIVE_ACCESS({
+		REQUEST: 'SCREEN_CAPTURE',
+		FULL_CONTENTS: true,
+	}, function (STR_RESULT) {
+		var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+		console.log(JSON.stringify(JSON_RESULT, null, '\t'));
+	});
+}
+
+function DISABLE_GYRO_SENSOR() {
+	QIIP_APPS_NATIVE_ACCESS({
+		REQUEST: 'GYRO_CONTROL',
+		WHAT: 'GYRO_STOP',
+		FULL_CONTENTS: true,
+	}, function (STR_RESULT) {
+		var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+		console.log(JSON.stringify(JSON_RESULT, null, '\t'));
+	});
+}
+
+</script>
+
+<div class="qiip_box">
+	<div style="width:100%; height:92%;">
+	</div>
+	<div style="width:100%; height:8%;">
+		<table>
+			<tr>
+				<td><button class="BTN_PAGES" id="BTN_APP_STT_EXIT" >종료</button></td>
+			</tr>
+		</table>
+	</div>
+</div>

@@ -1,0 +1,356 @@
+<style>
+body{
+overflow-y: auto !important;
+height: 100%;
+}
+ul{
+padding: 0;
+list-style: none;	
+}
+#remote{
+	display: none;
+}
+#DIV_CONTENT{
+margin-top: -70px;
+}
+.detail_content {
+	width: 100%;
+	margin-top: -60px;
+	position: relative;
+}
+.detail_content .sub_bg{
+height: 400px;
+background: #0F2027;  /* fallback for old browsers */
+background: -webkit-linear-gradient(to bottom, #2C5364, #203A43, #0F2027);  /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to bottom, #2C5364, #203A43, #0F2027); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+text-align: center;
+	position: relative;	
+}
+.detail_content .sub_bg > div{
+	position: absolute;
+	top: calc(50% + 35px);
+	left: 50%;
+	transform: translate(-50%, -50%);
+	padding-top: 70px;
+}
+.detail_content .sub_bg > div h2{
+	font-size: 48px;
+	font-weight: 700;
+	margin-bottom: 15px;
+	margin-top: 0;
+	color: #fff;
+}
+.detail_content .sub_bg > div p{
+	font-size: 17px;
+	font-weight: 500;
+	color: #fff;
+}
+
+button#move_top_btn {
+    position: fixed;
+    right: 2%;
+    bottom: 50px;
+    display: none;
+    z-index: 999;
+    text-align: center;
+    background-color: #114991;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    color: #fff;
+    font-weight: 500;
+    border: none;
+    right: 50px;
+}
+button#move_top_btn:hover, button#move_top_btn:focus{
+	background-color: #049DCC;
+}
+button#move_top_btn.stop_move{
+display: block;
+position: absolute;
+bottom: 250px;
+}
+.breadcrumb_wrap{
+	 border-bottom: 1px solid #ddd;
+	 box-shadow: 0px 5px aliceblue;
+}
+.breadcrumb{
+	  background: none;
+   margin-bottom: 0;
+    border-radius: 0;
+    text-align: right;
+    padding: 15px 0px;
+}
+.content1{
+text-align: center;
+margin-top: 50px;
+margin-bottom: 100px;
+}
+.detail_content h3{
+	  text-align: center;
+    font-weight: bold;
+    display: inline-block;
+    border-bottom: 4px solid #114991;
+    padding-bottom: 8px;
+    font-size: 32px;
+}	
+.content1 img{
+max-width: 100%;
+clear: both;
+display: block;
+margin: 20px auto;
+}
+.content1 .text_box{
+padding: 0px 15px;
+}
+
+.content1 .text_box h4{
+    border-bottom: 1px dashed #eee;
+    padding-bottom: 10px;
+    color: #555;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.content1 .text_box p{
+text-align: left;
+font-size: 18px;
+color: #666;
+margin-top: 15px;
+}
+.content2{
+	text-align: center;	
+}
+.content2 > ul {
+    margin-top: 20px;
+    text-align: left;
+    margin-bottom: 80px;
+    border-bottom: 1px dashed #eee;
+    padding-bottom: 20px;
+}
+.content2 > ul > li{
+	min-height: 380px;
+}
+.content2 ul li{
+clear:both;
+}
+.content2 ul li img{
+width: 50%;	
+}
+.content2 .img_textbox{
+	padding: 15px;
+}
+.content2 .img_textbox h4{
+font-weight: bold;
+border-bottom: 1px solid #eee;
+padding-bottom: 10px;
+margin:0;
+}
+.content2 .img_textbox h4 span{
+border-radius: 50%;
+background-color: #114991;
+width: 50px;
+display: inline-block;
+height: 50px;
+text-align: center;
+line-height: 50px;
+color: #fff;
+margin-right: 5px;
+}
+
+.content2 ul li:nth-child(1) img{
+	float:left;	
+}
+.content2 ul li:nth-child(3) img{
+	float:left;
+}
+.content2 ul li .img_textbox{
+	width: 50%;	
+	float: left;
+}
+.content2 ul li .img_textbox ul{
+list-style: disc;	
+padding-left: 20px;
+margin-top: 10px;
+}
+.content2 ul li .img_textbox ul li{
+	font-size: 14px;
+	color: #666;	
+	margin-bottom: 10px;
+}
+
+
+</style>
+
+<script>
+	function QIIP_MENU_CONTENTS_INIT_WIDGETS() {
+
+		var PHP_CODES  = "";
+			PHP_CODES += "if (is_user_logged_in()) {";
+			PHP_CODES += "  $RESULT = json_encode(wp_get_current_user());";
+			PHP_CODES += "} else {";
+	//		PHP_CODES += "  $RESULT = wp_login_form(array('echo' => false));";
+	//		PHP_CODES += "  $RESULT = json_encode(new stdClass());";
+			PHP_CODES += "  $OBJ_RESULT = new stdClass();";
+			PHP_CODES += "  $OBJ_RESULT->USERS_CAN_REGISTER = get_option('users_can_register');";
+			PHP_CODES += "  $RESULT = json_encode($OBJ_RESULT);";
+			PHP_CODES += "}";
+			PHP_CODES += "return $RESULT;";
+
+		QIIP_API_ACCESS({
+				REQ: 'api_WP_ACCESS',
+				PHP_CODES_BASE64: Base64.encode(PHP_CODES),
+			},function(STR_RESULT) {
+			    var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+//alert(JSON.stringify(JSON_RESULT, null, '\t'));
+				if ('ID' in JSON_RESULT) {
+					_RS.LOGIN_INFO = JSON_RESULT; // GLOBAL 변수에 저장
+					QIIP_ADD_USER_META_DATA(LOAD_SALES_SERVICE_PAGE());
+				} else {
+					_RS.USERS_CAN_REGISTER = JSON_RESULT.USERS_CAN_REGISTER;
+					LOAD_LOGIN_FORM();
+				}
+			}
+		);
+		
+	}
+	
+	function LOAD_LOGIN_FORM() {
+		QIIP_API_ACCESS({
+			REQ: 'api_GET_PAGE',
+			FLDR_TEMPLATE: _FLDR_TEMPLATE,
+//			FILE_TEMPLATE: 'LOGIN/MODAL_IDPW_LOGIN_INIT.html',
+			FILE_TEMPLATE: 'LOGIN/MODAL_IVR_LOGIN_INIT.html',
+		},function(STR_RESULT) {
+			var HTML_COMPILED = _AC(STR_RESULT)(_RS);
+			if ($('TAG_QIIP_LOGIN').length <= 0) $('body').append('<TAG_QIIP_LOGIN></TAG_QIIP_LOGIN>');
+			$('TAG_QIIP_LOGIN').html(HTML_COMPILED); _RS.$apply();
+			INIT_WIDGETS_QIIP_LOGIN_INIT();
+		});
+		
+	}
+	
+	function AFTER_LOGIN_OK() {
+		var PHP_CODES  = "";
+			PHP_CODES += "if (is_user_logged_in()) {";
+			PHP_CODES += "  $RESULT = json_encode(wp_get_current_user());";
+			PHP_CODES += "} else {";
+	//		PHP_CODES += "  $RESULT = wp_login_form(array('echo' => false));";
+	//		PHP_CODES += "  $RESULT = json_encode(new stdClass());";
+			PHP_CODES += "  $OBJ_RESULT = new stdClass();";
+			PHP_CODES += "  $OBJ_RESULT->USERS_CAN_REGISTER = get_option('users_can_register');";
+			PHP_CODES += "  $RESULT = json_encode($OBJ_RESULT);";
+			PHP_CODES += "}";
+			PHP_CODES += "return $RESULT;";
+
+		QIIP_API_ACCESS({
+				REQ: 'api_WP_ACCESS',
+				PHP_CODES_BASE64: Base64.encode(PHP_CODES),
+			},function(STR_RESULT) {
+			    var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+//alert(JSON.stringify(JSON_RESULT, null, '\t'));
+				if ('ID' in JSON_RESULT) {
+					_RS.LOGIN_INFO = JSON_RESULT; // GLOBAL 변수에 저장
+					QIIP_ADD_USER_META_DATA(LOAD_SALES_SERVICE_PAGE());
+				} else {
+					// THIS CASE SHOULD NOT BE REACHED!
+					_RS.USERS_CAN_REGISTER = JSON_RESULT.USERS_CAN_REGISTER;
+					LOAD_LOGIN_FORM();
+				}
+			}
+		);
+		
+	}
+
+	function LOAD_SALES_SERVICE_PAGE() {
+		QIIP_API_ACCESS({
+				REQ: 'api_GET_PAGE',
+				FLDR_TEMPLATE: _FLDR_TEMPLATE,
+				FILE_TEMPLATE: _RS.APP_CONFIG.SIDEMENU_SALES.TEMPLATE,
+			},function(STR_RESULT) {
+				var HTML_COMPILED = _AC(STR_RESULT)(_RS);
+				$('body').html(HTML_COMPILED); _RS.$apply();
+
+				QIIP_REGIST_RS_FUNCTION('ON_MENU_CLICK',ON_MENU_CLICK);
+				if (!_RS._ACCESS_FROM_APP) {
+					if (('MENUITEMS_FOR_DESKTOP' in _RS.APP_CONFIG.SIDEMENU_SALES) && ('DESKTOP_MENU_USERS' in _RS.APP_CONFIG.SIDEMENU_SALES)) {
+						if (_RS.APP_CONFIG.SIDEMENU_SALES.DESKTOP_MENU_USERS.indexOf(_RS.PHONE_INFO.PHONE_NO) >= 0) {
+							_RS.APP_CONFIG.SIDEMENU_SALES.MENUITEMS_FOR_DESKTOP.forEach(function (ONE_DESKTOP_MENUITEM) {
+		//						_RS.APP_CONFIG.SIDEMENU.MENUITEMS.unshift(ONE_DESKTOP_MENUITEM);
+								_RS.APP_CONFIG.SIDEMENU.MENUITEMS.push(ONE_DESKTOP_MENUITEM);
+							});
+						}
+					}
+					QIIP_REGIST_RS_FUNCTION('QIIP_APP_LOGOUT',QIIP_APP_LOGOUT);
+				}
+				SET_SIDEMENU_EVENT();
+				ON_MENU_CLICK(_RS.APP_CONFIG.SIDEMENU_SALES.MENUITEMS[0]);
+			}
+		);
+	}
+</script>
+
+<!-- DETAIL_CONTENT START -->
+<div class="detail_content">
+	<div class="sub_bg">
+		<div>
+			<h2>3D 프린팅 소재(필라멘트) 유통관리 시스템</h2>
+			<p>3D 프린팅 소재(필라멘트) 유통관리 전산시스템 입니다</p>
+		</div>
+	</div>
+	<div class="breadcrumb_wrap">
+		<ol class="breadcrumb container">
+			  <li>Home</li>
+			  <li>유통관리</li>
+			  <li class="active">전산시스템</li>
+		</ol>	
+	</div>
+	<div class="container">	
+        <h2>3D 프린팅 소재(필라멘트) 유통관리 전산시스템</h2>
+        <p>조달청 나라장터에서 구매 가능한 3D 프린터용 필라멘트에 대한 판매/유통을 관리하는 서비스 입니다.</p>
+
+		<div class="line"></div>
+
+        <h2>서비스 이용 대상자</h2>
+        <p>학교, 공공기관 등에 전산소모품 등을 납품하고 있는 기존사업자 대표 및 그 임직원</p>
+
+		<div class="line"></div>
+
+        <h2>이용시 좋은점</h2>
+        <p>
+        	한국 쓰리디프린팅 소재산업 협동조합의 회원사 중 조달청 나라장터에 게시된 3D프린팅 소재(필라멘트)에 대한 주문 건에 대하여,
+        	주문한 기관(학교, 공공기관 등)에 방문배송 권한을 부여받고, 주문기관 방문배송 업무처리에 따른 수수로 수익을 얻을 수 있음
+        </p>
+
+        <p>
+        	본 서비스의 이용대상자는 학교, 공공기관 등에 전산소모품 등을 납품하고 있는 기존사업자 대표 및 그 임직원이므로, 
+        	학교, 공공기관에 대한 기존의 영업 활동과 함께, 3D프린팅 소재(필라멘트)에 대한 영업활동을 추가로 실시하여,
+        	사업매출을 증대시킬 수 있음
+        </p>
+
+        <p>
+        	또한, 기존의 전산소모품 영업과 다르게, 제고확보 비용을 부담할 필요가 없으며,
+        	학교, 공공기관의 수요 담당자에게 조달청 나라장터 쇼핑몰에 게시된 제품을 구매하도록 유도하는 영업만으로 매출을 증대 시킬 수 있음
+        </p>
+
+		<div class="line"></div>
+
+        <h2>이용 방법</h2>
+        <p>
+        	아래 [로그인] 버튼을 누르고, 회원 가입 후 필요한 사업자 정보를 입력하면 서비스를 활용할 수 있음
+        </p>
+
+		<div class="line"></div>
+
+		<button class="btn btn-primary btn-lg btn-block login-btn QIIP_LOGIN_EVENT" onclick="LOAD_LOGIN_FORM()">로그인</button>
+
+	</div>
+	<div class="footer" style="background-color: #333;">
+	    <div style="height: 200px;">footer</div>
+	</div>
+	<button id="move_top_btn" alt="MOVE TOP"><span class="glyphicon glyphicon-chevron-up"></span><br>TOP</button>
+
+</div>
+<!-- DETAIL_CONTENT END -->
+	
+

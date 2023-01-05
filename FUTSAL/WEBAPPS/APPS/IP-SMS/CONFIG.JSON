@@ -1,0 +1,37 @@
+{
+	"CHROME_ONLY" : false,
+	"LOGIN_BASE" : true,
+	"LOGIN_IDPW" : true,
+	
+	"NO_MENU_CONTENTS" : {
+		"MENU_CONTENTS" : "PAGES/APP_1ST_PAGE.html",
+		"MENU_INIT_FUNC" : "LOAD_SERVICE_PAGE();",
+		"MENU_CONTENTS" : "PAGES/APP_IP-SMS.html",
+		"MENU_INIT_FUNC" : "QIIP_INIT_WIDGETS();",
+		"DUMMY": true
+	},
+	
+	"SIDEMENU_APPS": {
+		"HEADER" : "IP-SMS",
+		"TEMPLATE" : "PAGES/SIDEMENU_APPS.html",
+		"MENUITEMS" : [
+			{
+				"MENU_STRING"	: "SMS 발신",
+				"MENU_CONTENTS"	: "PAGES/IP-SMS.html",
+				"MENU_INIT_FUNC": "QIIP_SIDEMENU_INIT_WIDGETS();"
+			},
+			{
+				"MENU_STRING"	: "SMS 목록",
+				"MENU_CONTENTS"	: "PAGES/IP-SMS-LIST.html",
+				"MENU_INIT_FUNC": "QIIP_SIDEMENU_INIT_WIDGETS();"
+			}
+		],
+		"MENUITEMS_FOR_DESKTOP" : [
+			{
+				"MENU_STRING"		: "데스크탑 기능",
+				"MENU_CONTENTS"		: "PAGES/CONTENTS_DESKTOP.html",
+				"MENU_INIT_FUNC"	: "INIT_WIDGETS_FOR_MENU_CONTENTS();"
+			}
+		]
+	}
+}

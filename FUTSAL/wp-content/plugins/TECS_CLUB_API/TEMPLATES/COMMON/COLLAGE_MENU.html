@@ -1,0 +1,37 @@
+<style>
+.qiip_menu 				{}
+.qiip_menu table		{width:100%; height:100%; font-size:100%; border-collapse: separate; border-spacing: 0px;}
+.qiip_menu table th		{text-decoration:bold; text-align: center; white-space:normal; word-break:break-all}
+.qiip_menu table td		{text-decoration:none; text-align: center; white-space:normal; word-break:break-all}
+
+.qiip_menu_button_1 {
+	background: #cdc5e8;
+	background-image: -webkit-linear-gradient(top, #cdc5e8, #2d2bb8);
+	background-image: -moz-linear-gradient(top, #cdc5e8, #2d2bb8);
+	background-image: -ms-linear-gradient(top, #cdc5e8, #2d2bb8);
+	background-image: -o-linear-gradient(top, #cdc5e8, #2d2bb8);
+	background-image: linear-gradient(to bottom, #cdc5e8, #2d2bb8);
+	
+	-webkit-border-radius: 10;
+	-moz-border-radius: 10;
+	border-radius: 10px;
+	font-size:150%;
+}
+.qiip_menu_button {
+	background-image: url("{$ARGS->URL_PATH_TEMPLATE}/COMMON/wood_board.png");
+    background-size: 100% 100%;
+	background-repeat: no-repeat;
+	
+	-webkit-border-radius: 10;
+	-moz-border-radius: 10;
+	border-radius: 10px;
+	font-size:150%;
+}
+</style>
+<div class='qiip_menu'>
+	<table>
+		<tr loop="$ARGS->OBJ_MENU=>$KEY,$ITEM">
+			<th class='qiip_menu_button' menu_exec='{$ITEM->MENU_EXEC}'>{$ITEM->MENU_TEXT}</th>
+		</tr>
+	</table>	
+</div>

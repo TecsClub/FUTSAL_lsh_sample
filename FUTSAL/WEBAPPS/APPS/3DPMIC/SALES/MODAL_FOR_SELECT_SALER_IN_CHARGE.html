@@ -1,0 +1,157 @@
+<style>
+	#MODAL_FOR_SELECT_SALER_IN_CHARGE 			{width:100%; height:100%;}
+	#MODAL_FOR_SELECT_SALER_IN_CHARGE input		{width:100%; text-align:center;}
+	#MODAL_FOR_SELECT_SALER_IN_CHARGE table		{width:100%; height:100%; font-size:100%; border-collapse: separate; border-spacing: 1px; line-height: 100%;}
+	#MODAL_FOR_SELECT_SALER_IN_CHARGE table th	{font-weight:bold; text-align: center; white-space:normal; vertical-align: middle; word-break:break-all; word-wrap:break-all; background:#94bbd6; color:#333; }
+	#MODAL_FOR_SELECT_SALER_IN_CHARGE table td	{text-decoration:none; text-align: left;   white-space:normal; vertical-align: middle; word-break:break-all; word-wrap:break-all; background:#eee; padding:0 10px;}
+</style>
+
+<script>
+
+function REGIST_BUTTON_EVENT_FOR_SELECT_SALER_IN_CHARGE() {
+	$(".EVENT_MODAL_FOR_SELECT_SALER_IN_CHARGE").on('click', function () {
+		var ID = $(this).attr('ID');
+		if (ID == 'DUMMY') {
+		} else if(ID == 'BTN_SELECT_CANCLE_CLOSE') {
+			if (MODAL_ID_FOR_SELECT_SALER_IN_CHARGE != undefined) $('#'+MODAL_ID_FOR_SELECT_SALER_IN_CHARGE).modal('hide');
+		}
+	});
+}
+
+var MODAL_ID_FOR_SELECT_SALER_IN_CHARGE = null;
+function INIT_WIDGETS_FOR_SELECT_SALER_IN_CHARGE (args_MODAL_ID) {
+	MODAL_ID_FOR_SELECT_SALER_IN_CHARGE = args_MODAL_ID;
+	REGIST_BUTTON_EVENT_FOR_SELECT_SALER_IN_CHARGE();
+	QUERY_MODAL_FOR_SELECT_SALER_IN_CHARGE();
+}
+
+function QUERY_MODAL_FOR_SELECT_SALER_IN_CHARGE() {
+
+	var MAX_LIST = 10;
+	
+	var STR_PHP_COND  = sprintf("$COND_CHECK = false; ");
+	   	STR_PHP_COND += sprintf("   if ($ONE_ROOT_CONTENTES->BIZ_INFO->BIZ_NO . '' == '%s') $COND_CHECK = true; ", _RS.OBJ_POST_ROOT.BIZ_INFO.BIZ_NO);
+	    STR_PHP_COND += sprintf("return $COND_CHECK;");
+
+	QIIP_API_ACCESS({
+			REQ: 'post_GET_ALL_ROOT_ATTRIBUTE',
+			SVC_CATEGORY: _RS.PHONE_INFO.APP_NAME,
+			ATTR_KEY: [
+				'BIZ_INFO'
+			],
+			SEARCH_KEY: 'PSEUDO_PHONE_ID',
+//			LIMIT: MAX_LIST,
+			PHP_COND: [
+				STR_PHP_COND,
+			]
+		},function(STR_RESULT) {
+			var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+			if ((JSON_RESULT instanceof Array)) {
+				REFRESH_GRID_MODAL_FOR_SELECT_SALER_IN_CHARGE(JSON_RESULT);
+			}
+		}
+	);		
+	
+}
+
+function REFRESH_GRID_MODAL_FOR_SELECT_SALER_IN_CHARGE(args_SQL_RESULT) {
+
+//	QIIP_APP_ALERT([args_SQL_RESULT[0]]); return;
+//	QIIP_APP_ALERT([args_SQL_RESULT]); return;
+
+	var SQL_RESULT = Array();
+	args_SQL_RESULT.forEach(function (ONE_ITEM) {
+		var DATA_FOR_PUSH = ONE_ITEM.BIZ_INFO;
+			DATA_FOR_PUSH.BIZ_PHONE_NO = ONE_ITEM.PHONE_NO;
+		SQL_RESULT.push(DATA_FOR_PUSH);
+	});
+
+/*
+	SQL_RESULT.forEach(function (ONE_ITEM) {
+	});
+*/
+    var source = {
+        localdata: SQL_RESULT,
+        datatype: "json",
+        datafields:[
+            { name: 'BIZ_NO',			type: 'string' },
+            { name: 'BIZ_NAME',			type: 'string' },
+            { name: 'BIZ_EMAIL',		type: 'string' },
+            { name: 'BIZ_RELATION',		type: 'string' },
+            { name: 'BIZ_BANK_NAME',	type: 'string' },
+            { name: 'BIZ_BANK_ACCOUNT',	type: 'string' },
+            { name: 'BIZ_BANK_OWNER',	type: 'string' },
+            { name: 'BIZ_PHONE_NO',		type: 'string' },
+        ]                     
+    };
+
+    var dataAdapter = new $.jqx.dataAdapter(source);
+	$("#DIV_GRID_MODAL_FOR_SELECT_SALER_IN_CHARGE").unbind();
+	$("#DIV_GRID_MODAL_FOR_SELECT_SALER_IN_CHARGE").jqxGrid({
+        width: '100%',
+        height: '100%',
+        source: dataAdapter,                
+//        pageable: true,
+//        autoheight: true,
+        sortable: true,
+        altrows: true,
+//        enabletooltips: true,
+//        editable: true,
+        pagesize: 15,
+//        selectionmode: 'multiplecellsadvanced',
+        selectionmode: 'singlerow',
+        columns: [
+          { text: '사업자 번호',	columngroup: 'MODAL_FOR_SELECT_SALER_IN_CHARGE', datafield: 'BIZ_NO',	width: '10%', align: 'center',	cellsalign: 'center'},
+          { text: '상호',	columngroup: 'MODAL_FOR_SELECT_SALER_IN_CHARGE', datafield: 'BIZ_NAME',	width: '20%', align: 'center',	cellsalign: 'center'},
+          { text: '사업자와 관계',	columngroup: 'MODAL_FOR_SELECT_SALER_IN_CHARGE', datafield: 'BIZ_RELATION',	width: '10%',	align: 'center',	cellsalign: 'center'},
+          { text: '폰번호',	columngroup: 'MODAL_FOR_SELECT_SALER_IN_CHARGE', datafield: 'BIZ_PHONE_NO',	width: '10%', align: 'center',	cellsalign: 'center'},
+          { text: '이메일',	columngroup: 'MODAL_FOR_SELECT_SALER_IN_CHARGE', datafield: 'BIZ_EMAIL',	width: '15%', align: 'center',	cellsalign: 'center'},
+          { text: '거래은행',	columngroup: 'MODAL_FOR_SELECT_SALER_IN_CHARGE', datafield: 'BIZ_BANK_NAME', width: '10%', align: 'center',	cellsalign: 'center'},
+          { text: '계좌번호',	columngroup: 'MODAL_FOR_SELECT_SALER_IN_CHARGE', datafield: 'BIZ_BANK_ACCOUNT',	width: '15%', align: 'center',	cellsalign: 'center'},
+          { text: '예금주',	columngroup: 'MODAL_FOR_SELECT_SALER_IN_CHARGE', datafield: 'BIZ_BANK_OWNER',	width: '10%',	align: 'center',	cellsalign: 'center'},
+        ],
+        columngroups: [
+            { text: 
+            	'<b>더블클릭 => 선택 & 닫기</b>',
+              align: 'center', 
+              name: 'MODAL_FOR_SELECT_SALER_IN_CHARGE' 
+            },
+        ]
+    }).on('rowclick', function (event)  { 
+	    var args = event.args;
+	    var ROW_DATA = $(this).jqxGrid('getrowdata', args.rowindex);
+    }).on('rowdoubleclick', function (event)  { 
+	    var args = event.args;
+	    var ROW_DATA = $(this).jqxGrid('getrowdata', args.rowindex);
+		$('#TXT_SALER_IN_CHARGE_NAME').val(ROW_DATA.BIZ_BANK_OWNER);
+		$('#TXT_SALER_IN_CHARGE_PHONE_NO').val(ROW_DATA.BIZ_PHONE_NO);
+		$('#TXT_SALER_IN_CHARGE_EMAIL').val(ROW_DATA.BIZ_EMAIL);
+		if (MODAL_ID_FOR_SELECT_SALER_IN_CHARGE != undefined) $('#'+MODAL_ID_FOR_SELECT_SALER_IN_CHARGE).modal('hide');
+//		QIIP_APP_ALERT([ROW_DATA]);
+	});
+    
+}
+
+</script>
+<div id="MODAL_FOR_SELECT_SALER_IN_CHARGE">
+	<div style="height:90%;">
+		<div id="DIV_GRID_MODAL_FOR_SELECT_SALER_IN_CHARGE">
+		</div>
+	</div>
+	<div style="height:10%;">
+		<table>
+			<col width="90%" />
+			<col width="10%" />
+			<tr>
+				<td style="text-align:right;">
+				</td>
+				<td>
+					<button class="btn btn-primary EVENT_MODAL_FOR_SELECT_SALER_IN_CHARGE" id="BTN_SELECT_CANCLE_CLOSE">
+						취소 & 닫기
+					</button>
+				</td>
+
+			</tr>
+		</table>
+	</div>
+</div>

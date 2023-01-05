@@ -1,0 +1,238 @@
+<script>
+
+var MODAL_ID_FOR_NEW_SMS = null;
+function INIT_WIDGETS_FOR_NEW_SMS(args_MODAL_ID) {
+	FLAG_MODAL_FOR_NEW_SMS = true;
+	MODAL_ID_FOR_NEW_SMS = args_MODAL_ID;
+	INIT_BUTTON_WIDGETS_FOR_NEW_SMS();
+	INIT_LIST_SMS_TO_NUMBERS();
+}
+
+function INIT_BUTTON_WIDGETS_FOR_NEW_SMS() {
+	$(".EVENT_NEW_SMS").on('click', function () {
+		var ID = $(this).attr('ID');
+		if (ID == 'DUMMY') {
+		} else if (ID == 'BTN_ADD_SMS_TO') {
+			EXEC_ADD_SMS_TO();
+		} else if (ID == 'BTN_DEL_SMS_TO') {
+			EXEC_DEL_SMS_TO();
+		} else if (ID == 'BTN_SEND_SMS') {
+			EXEC_SEND_SMS();
+		} else if (ID == 'BTN_CANCLE_CLOSE') {
+			CLOSE_MODAL_FOR_NEW_SMS();
+		}
+	});
+	$('#SMS_TEXT').on('keydown', function () {
+		var LENGTH_SMS_TEXT = BYTE_LENGTH($(this).val());
+		$('#LENGTH_SMS_TEXT').html(LENGTH_SMS_TEXT);
+		if (LENGTH_SMS_TEXT > 79) {
+//			QIIP_APP_ALERT(['글자 갯수가 80개가 넘으면, 78개씩 나누어서 전송합니다.']);
+		}
+	});
+}
+
+function CLOSE_MODAL_FOR_NEW_SMS(FUNC_AFTER) {
+	FLAG_MODAL_FOR_NEW_SMS = false;
+	if (MODAL_ID_FOR_NEW_SMS != undefined) $('#'+MODAL_ID_FOR_NEW_SMS).modal('hide');
+	if (FUNC_AFTER != undefined) FUNC_AFTER();
+}
+
+var ARRAY_SMS_TO = [
+];
+function INIT_LIST_SMS_TO_NUMBERS() {
+	$('#LIST_SMS_TO_NUMBERS').jqxListBox({
+		width: '100%',
+		height: '100%',
+		source: ARRAY_SMS_TO,
+		allowDrop: true,
+		allowDrag: true,
+		renderer: function (index, label, value) {
+		    return '<center>' + value + '</center>';
+		}
+	}).on('select', function (event) {
+//			console.log($(this).jqxListBox('getSelectedItem').originalItem);
+	}).on('dragEnd', function (event) {
+		var NUMBERS_REMAIN = [];
+		$(this).jqxListBox('getItems').forEach(function (ONE_ITEM) {
+			NUMBERS_REMAIN.push(ONE_ITEM.value);
+		});
+		ARRAY_SMS_TO = NUMBERS_REMAIN;
+		console.log(ARRAY_SMS_TO);
+	});
+	
+}
+
+function EXEC_ADD_SMS_TO() {
+	var TXT_SMS_TO = $('#TXT_SMS_TO').val();
+	if (TXT_SMS_TO.length <= 0) {
+		QIIP_APP_ALERT([
+			'추가할 전화번호를 입력하세요!'
+		]);
+		return;
+	}
+	
+	var FLAG_EXIST = false;
+	ARRAY_SMS_TO.forEach(function (ONE_NUMBER) {
+		if(ONE_NUMBER == TXT_SMS_TO) {
+			FLAG_EXIST = true;
+		}
+	});
+	if (FLAG_EXIST) {
+		QIIP_APP_ALERT([
+			sprintf('%s 는 이미 존재하는 전화번호 입니다.', TXT_SMS_TO)
+		]);
+		return;
+	}
+	$('#TXT_SMS_TO').val('');
+	ARRAY_SMS_TO.push(TXT_SMS_TO);
+	$('#LIST_SMS_TO_NUMBERS').jqxListBox('addItem', TXT_SMS_TO);
+	$('#LIST_SMS_TO_NUMBERS').jqxListBox('selectItem', TXT_SMS_TO);
+}
+
+function EXEC_DEL_SMS_TO() {
+	var SEL_INDEX = $('#LIST_SMS_TO_NUMBERS').jqxListBox('getSelectedIndex');
+	if (SEL_INDEX >= 0) {
+		$('#LIST_SMS_TO_NUMBERS').jqxListBox('removeAt', SEL_INDEX);
+		var NUMBERS_REMAIN = [];
+		$('#LIST_SMS_TO_NUMBERS').jqxListBox('getItems').forEach(function (ONE_ITEM) {
+			NUMBERS_REMAIN.push(ONE_ITEM.value);
+		});
+//		console.log(NUMBERS_REMAIN);
+		ARRAY_SMS_TO = NUMBERS_REMAIN;
+	}
+}
+
+function EXEC_SEND_SMS() {
+	var ARGS_SMS = {
+		SMS_FROM: $('#SMS_FROM').val(),
+		ARRAY_SMS_TO: ARRAY_SMS_TO,
+		SMS_TEXT: $('#SMS_TEXT').val(),
+	};
+
+	if (ARGS_SMS.SMS_TEXT.length < 1) {
+		QIIP_APP_ALERT([
+			'SMS 내용이 없습니다!'
+		]);
+		return;
+	}
+	
+	if (ARGS_SMS.ARRAY_SMS_TO.length < 1) {
+		QIIP_APP_ALERT([
+			'SMS 수신번호 목록이 없습니다!'
+		]);
+		return;
+	}
+	
+/*
+가 나 다 라 마 바 사 아 자 차 카 타 파 하
+가 나 다 라 마 바 사 아 자 차 카 타 파 하
+가 나 다 라 마 바 사 아 자 차 카 타 파 하
+가 나 다 라 마 바 사 아 자 차 카 타 파 하
+가 나 다 라 마 바 사 아 자 차 카 타 파 하
+가 나 다 라 마 바 사 아 자 차 카 타 파 하
+가 나 다 라 마 바 사 아 자 차 카 타 파 하
+*/
+	JSON_SMS_REQUEST_QUEUE = [];
+	JSON_SMS_REQUEST_QUEUE_INDEX = 0;
+	
+//	var SMS_TEXT_SPLIT = ARGS_SMS.SMS_TEXT.match(new RegExp('[^]{1,40}', 'g'));
+	var SMS_TEXT_SPLIT = SPLIT_BY_LEN(ARGS_SMS.SMS_TEXT, 80);
+	SMS_TEXT_SPLIT.forEach(function (ONE_SMS_TEXT) {
+		JSON_SMS_REQUEST_QUEUE.push({
+			METHOD: 'SEND_SMS',
+			CONNECTION_ID: JSON_SMS_REQUEST.CONNECTION_ID,
+			PARAMS: {
+				SMS_TEXT: ONE_SMS_TEXT,
+				SMS_FROM: ARGS_SMS.SMS_FROM,
+				SMS_TO: ARGS_SMS.ARRAY_SMS_TO
+			}
+		});
+	});
+
+//	console.log(JSON_SMS_REQUEST_QUEUE);
+	EXEC_SEND_SMS_SUB();
+}
+
+function BYTE_LENGTH(str) {
+	var count = 0;
+	var ch = '';
+	for(var i = 0; i < str.length; i++) {
+	    ch = str.charAt(i);
+	    if(escape(ch).length == 6) {
+	        count ++;
+	    } 
+	    count ++;           
+	}        
+	return count;
+}
+
+</script>
+<div class="APP_IP_SMS" >
+	<div style="width:100%;height:40%;">
+		<table>
+			<col width="30%" />
+			<tr>
+				<th style="height:20%;">
+					발신번호
+				</th>
+			</tr>
+			<tr>
+				<td style="height:20%;text-align:center">
+					<input type="text" readonly style="width:100%;height:100%;text-align:center;" id="SMS_FROM" value="{{LOGIN_INFO.data.user_login}}" />
+				</td>
+			</tr>
+			<tr>
+				<th style="height:20%;" colspan="2">
+					SMS 내용 <span ID="LENGTH_SMS_TEXT">0</span> 글자
+				</th>
+			</tr>
+			<tr>
+				<td style="height:40%;" colspan="2">
+					<textarea style="width:100%;height:100%;"  id="SMS_TEXT"></textarea>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div style="width:100%;height:50%;">
+		<table>
+			<col width="50%" />
+			<tr>
+				<th style="height:15%;" colspan="2">
+					착신번호
+				</th>
+			</tr>
+			<tr>
+				<td style="height:15%;" colspan="2">
+					<input type="number" style="width:100%;height:100%;text-align:center;" id="TXT_SMS_TO" placeholder="추가할 전화번호 입력"/>
+				</td>
+			</tr>
+			<tr>
+				<td style="height:15%;">
+					<button class="btn btn-primary EVENT_NEW_SMS" style="width:100%;height:100%;" id="BTN_ADD_SMS_TO" >추가</button>
+				</td>
+				<td>
+					<button class="btn btn-primary EVENT_NEW_SMS" style="width:100%;height:100%;" id="BTN_DEL_SMS_TO" >삭제</button>
+				</td>
+			</tr>
+			<tr>
+				<td style="height:55%;" colspan="2">
+					<div id="LIST_SMS_TO_NUMBERS" ></div>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div style="width:100%;height:10%;">
+		<table>
+			<col width="50%" />
+			<col width="50%" />
+			<tr>
+				<td>
+					<button class="btn btn-primary EVENT_NEW_SMS" style="width:100%;height:100%;" id="BTN_SEND_SMS" >발송</button>
+				</td>
+				<td>
+					<button class="btn btn-primary EVENT_NEW_SMS" style="width:100%;height:100%;" id="BTN_CANCLE_CLOSE">취소 & 닫기</button>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>

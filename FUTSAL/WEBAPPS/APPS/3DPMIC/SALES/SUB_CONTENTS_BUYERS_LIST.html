@@ -1,0 +1,348 @@
+<style>
+	#BUYERS_LIST 			{width:100%; height:100%;}
+	#BUYERS_LIST input		{width:100%; height:100%; text-align:center;}
+	#BUYERS_LIST table		{width:100%; height:100%; font-size:100%; border-collapse: separate; border-spacing: 1px; line-height: 100%;}
+	#BUYERS_LIST table th	{font-weight:bold; text-align: center; white-space:normal; vertical-align: middle; word-break:break-all; word-wrap:break-all; background:#4789b7; color:white; }
+	#BUYERS_LIST table td	{text-decoration:none; text-align: left;   white-space:normal; vertical-align: middle; word-break:break-all; word-wrap:break-all; background:#eee; padding:0 10px;}
+</style>
+
+<script>
+var IVR_SERVER_SELECTED		= null;
+
+function REGIST_BUTTON_EVENT() {
+	$(".BTN_BUYERS_LIST").jqxButton({
+		width: '100%',
+		height: '100%'
+	}).on('click', function () {
+		var ID = $(this).attr('ID');
+		if (ID == 'DUMMY') {
+		} else if(ID == 'BTN_GET_BUYERS_LIST') {
+			QUERY_BUYERS_LIST();
+		}
+	});
+}
+
+function ON_CLICK_BTN_PROCESS_ACCOUNT(OBJ_DOM) {
+	var ATTR = QIIP_GET_DOM_ATTRIBUTES(OBJ_DOM);
+	var STR_CMD = ATTR.cmd;
+	var ROW_DATA = $('#DIV_GRID_BUYERS_LIST').jqxGrid('getrowdata', ATTR.row);
+
+//	alert(JSON.stringify(ROW_DATA, null, '\t'));
+
+	var STR_SQL = '';
+	if (STR_CMD == 'DUMMY') {
+	} else if (STR_CMD == 'UPD') {
+		STR_SQL  = "UPDATE T_USER_LIST ";
+		STR_SQL += sprintf("SET COMP_ID = '%s', ", ROW_DATA.COMP_ID);
+		STR_SQL += sprintf("LOGIN_ID = '%s', ", ROW_DATA.LOGIN_ID);
+		STR_SQL += sprintf("LOGIN_PW = '%s', ", ROW_DATA.LOGIN_PW);
+		STR_SQL += sprintf("PHONE_ID = '%s', ", ROW_DATA.PHONE_ID);
+		STR_SQL += sprintf("PHONE_PW = '%s' ", ROW_DATA.PHONE_PW);
+		STR_SQL += sprintf("WHERE ID = '%s' ", ROW_DATA.ID);
+	} else if (STR_CMD == 'DEL') {
+		STR_SQL  = "DELETE FROM T_USER_LIST ";
+		STR_SQL += sprintf("WHERE ID = %s ", ROW_DATA.ID);
+	} else if (STR_CMD == 'ADD') {
+		if ((ROW_DATA.COMP_ID.length > 0) &&
+			(ROW_DATA.LOGIN_ID.length > 0) &&
+			(ROW_DATA.LOGIN_PW.length > 0) &&
+			(ROW_DATA.PHONE_ID.length > 0) &&
+			(ROW_DATA.PHONE_PW.length > 0)) {
+			STR_SQL  = "INSERT INTO T_USER_LIST (";
+			STR_SQL += sprintf("COMP_ID, ");
+			STR_SQL += sprintf("LOGIN_ID, ");
+			STR_SQL += sprintf("LOGIN_PW, ");
+			STR_SQL += sprintf("PHONE_ID, ");
+			STR_SQL += sprintf("PHONE_PW ");
+			STR_SQL += sprintf(") VALUES (");
+			STR_SQL += sprintf("'%s', '%s', '%s', '%s', '%s')", 
+							ROW_DATA.COMP_ID,
+							ROW_DATA.LOGIN_ID,
+							ROW_DATA.LOGIN_PW,
+							ROW_DATA.PHONE_ID,
+							ROW_DATA.PHONE_PW
+					   );
+			
+		} else {
+
+			QIIP_APP_ALERT([
+				"데이터 중 일부를 입력하지 않았습니다."
+			]);
+			
+		}
+	}
+
+	console.log(STR_SQL);
+	
+	if (STR_SQL.length < 1) return;
+
+	QIIP_API_ACCESS({
+			REQ: 'api_DB_ACCESS',
+			STR_SQL_BASE64: Base64.encode(STR_SQL),
+		},function(STR_RESULT) {
+			var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+			if (JSON_RESULT instanceof Object) {
+				if ((STR_CMD == 'ADD') || (STR_CMD == 'UPD')) {
+					DB_FIELD_ENCODE(ROW_DATA.LOGIN_ID, function () {
+						QUERY_BUYERS_LIST();
+					});
+				} else {
+					QUERY_BUYERS_LIST();
+				}
+			}
+		},{
+			title: _RS.PHONE_INFO.APP_NAME + ' 안내',
+			template: ARR_TO_TABLE_CENTER([
+				'화면을 구성하고 있습니다.'
+			]),
+			cssClass: 'qiip_popup'
+		}
+	);
+	
+}
+
+function DB_FIELD_ENCODE(LOGIN_ID, FUNC_AFTER) {
+
+	QIIP_API_ACCESS({
+			REQ: 'api_DB_FIELD_ENCODE',
+			TABLE: 'T_USER_LIST',
+			UNIQUE_FIELD: 'ID',
+			FIELDS: [
+				'LOGIN_PW',
+				'PHONE_PW',
+			],
+			WHERE: sprintf("LOGIN_ID = '%s'", LOGIN_ID),
+		},function(STR_RESULT) {
+			var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+			if (JSON_RESULT instanceof Object) {
+				if (FUNC_AFTER != undefined) FUNC_AFTER();
+			}
+		},{
+			title: _RS.PHONE_INFO.APP_NAME + ' 안내',
+			template: ARR_TO_TABLE_CENTER([
+				'화면을 구성하고 있습니다.'
+			]),
+			cssClass: 'qiip_popup'
+		}
+	);
+	
+}
+
+function INIT_WIDGETS_FOR_BUYERS_LIST() {
+	REGIST_BUTTON_EVENT();
+	QUERY_BUYERS_LIST();
+}
+
+function QUERY_BUYERS_LIST() {
+
+	var STR_SCHOOL_GRADE = $('#STR_SCHOOL_GRADE').val();
+	var STR_SCHOOL_CATEGORY = $('#STR_SCHOOL_CATEGORY').val();
+	var STR_SCHOOL_NAME = $('#STR_SCHOOL_NAME').val();
+	var MAX_LIST = parseInt($('#MAX_LIST').val());
+	
+	var STR_PHP_COND  = sprintf("$COND_CHECK = true;");
+		if (STR_SCHOOL_GRADE.length > 0)
+	    	STR_PHP_COND += sprintf("$COND_CHECK = $COND_CHECK && (strpos($ONE_ROOT_CONTENTES->$ATTR_KEY->학제, '%s') === true);", STR_SCHOOL_GRADE);
+		if (STR_SCHOOL_CATEGORY.length > 0)
+		    STR_PHP_COND += sprintf("$COND_CHECK = $COND_CHECK && (strpos($ONE_ROOT_CONTENTES->$ATTR_KEY->고등학교유형, '%s') === true);", STR_SCHOOL_CATEGORY);
+		if (STR_SCHOOL_NAME.length > 0)
+		    STR_PHP_COND += sprintf("$COND_CHECK = $COND_CHECK && (strpos($ONE_ROOT_CONTENTES->$ATTR_KEY->학교명, '%s') === true);", STR_SCHOOL_NAME);
+	    STR_PHP_COND += sprintf("return $COND_CHECK;");
+
+	QIIP_API_ACCESS({
+			REQ: 'post_GET_ALL_ROOT_ATTRIBUTE',
+			SVC_CATEGORY: _RS.PHONE_INFO.APP_NAME,
+			ATTR_KEY: 'BUYER_INFO',
+			SEARCH_KEY: 'BUYER',
+			LIMIT: MAX_LIST,
+			PHP_COND: [
+				"if (isset($ONE_ROOT_CONTENTES->$ATTR_KEY)) { ",
+					STR_PHP_COND,
+				"} else { ",
+				"   return false;",
+				"}"
+			]
+		},function(STR_RESULT) {
+			var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+			if ((JSON_RESULT instanceof Array)) {
+				REFRESH_GRID_BUYERS_LIST(JSON_RESULT);
+			}
+		}
+	);		
+	
+}
+
+function REFRESH_GRID_BUYERS_LIST(args_SQL_RESULT) {
+
+//	QIIP_APP_ALERT([args_SQL_RESULT[0]]); return;
+//	QIIP_APP_ALERT([args_SQL_RESULT]); return;
+
+	var SQL_RESULT = Array();
+	args_SQL_RESULT.forEach(function (ONE_ITEM) {
+		SQL_RESULT.push(ONE_ITEM.BUYER_INFO);
+	});
+
+/*	
+	SQL_RESULT.unshift({
+	    "홈페이지": "",
+	    "학제": "",
+	    "학교 세부 유형": "",
+	    "고등학교유형": "",
+	    "시도": "",
+	    "교육지원청": "",
+	    "행정구": "",
+	    "학교명": "",
+	    "본분교": "",
+	    "학교상태": "",
+	    "설립": "",
+	    "남여공학": "",
+	    "우편번호": "",
+	    "도로명주소": "",
+	    "연락처": "",
+	    "팩스번호": ""
+	});
+*/
+/*
+	SQL_RESULT.forEach(function (ONE_ITEM) {
+	});
+*/
+    var source = {
+        localdata: SQL_RESULT,
+        datatype: "json",
+        datafields:[
+//            { name: 'ID',			type: 'string' },
+            { name: '홈페이지',	type: 'string' },
+            { name: '학제',	type: 'string' },
+            { name: '학교 세부 유형',type: 'string' },
+            { name: '고등학교유형',		type: 'string' },
+            { name: '시도',			type: 'string' },
+            { name: '교육지원청',	type: 'string' },
+            { name: '행정구',		type: 'string' },
+            { name: '학교명',	type: 'string' },
+            { name: '본분교',	type: 'string' },
+            { name: '학교상태',type: 'string' },
+            { name: '설립',		type: 'string' },
+            { name: '남여공학',	type: 'string' },
+            { name: '우편번호',		type: 'string' },
+            { name: '도로명주소',	type: 'string' },
+            { name: '연락처',		type: 'string' },
+            { name: '팩스번호',		type: 'string' },
+        ]                     
+    };
+
+    var dataAdapter = new $.jqx.dataAdapter(source);
+	$("#DIV_GRID_BUYERS_LIST").jqxGrid({
+        width: '100%',
+        height: '100%',
+        source: dataAdapter,                
+//        pageable: true,
+//        autoheight: true,
+        sortable: true,
+        altrows: true,
+        enabletooltips: true,
+        editable: true,
+        pagesize: 15,
+        selectionmode: 'multiplecellsadvanced',
+        columns: [
+          { text: '버튼', align: 'center',	width: '5%', cellsalign: 'center',
+          	cellsrenderer: function (row, column, value) {
+                var STR_HTML  = '';
+                	STR_HTML += '<div style="width:100%;height:100%;text-align:center;">';
+/*
+          		if (row > 0) {
+                	STR_HTML += '<button style="height:100%;" CMD="UPD" ROW="' + row + '" onclick="ON_CLICK_BTN_PROCESS_ACCOUNT(this);">';
+                	STR_HTML += '갱신';
+                	STR_HTML += '</button>';
+                	STR_HTML += ' ';
+                	STR_HTML += '<button style="height:100%;" CMD="DEL" ROW="' + row + '" onclick="ON_CLICK_BTN_PROCESS_ACCOUNT(this);">';
+                	STR_HTML += '삭제';
+                	STR_HTML += '</button>';
+          		} else {
+                	STR_HTML += '<button style="height:100%;" CMD="ADD" ROW="' + row + '" onclick="ON_CLICK_BTN_PROCESS_ACCOUNT(this);">';
+                	STR_HTML += '추가';
+                	STR_HTML += '</button>';
+          		}
+*/
+                	STR_HTML += '<button style="height:100%;" CMD="VIEW" ROW="' + row + '" onclick="ON_CLICK_BTN_PROCESS_ACCOUNT(this);">';
+                	STR_HTML += '자세히';
+                	STR_HTML += '</button>';
+
+                	STR_HTML += '</div>';
+                return STR_HTML;
+            }
+          },
+//          { text: 'ID',			columngroup: 'BUYER_INFO', datafield: 'ID'},
+
+          { text: '학교명',	columngroup: 'BUYER_INFO', datafield: '학교명',	width: '13%',	align: 'center',	cellsalign: 'left'},
+          { text: '연락처',	columngroup: 'BUYER_INFO', datafield: '연락처',	width: '6%',	align: 'center',	cellsalign: 'center'},
+          { text: '팩스번호',	columngroup: 'BUYER_INFO', datafield: '팩스번호',	width: '6%',	align: 'center',	cellsalign: 'center'},
+          { text: '우편번호',	columngroup: 'BUYER_INFO', datafield: '우편번호',		align: 'center',	cellsalign: 'center'},
+          { text: '도로명주소',	columngroup: 'BUYER_INFO', datafield: '도로명주소',	width: '22%',	align: 'center',	cellsalign: 'left'},
+          { text: '홈페이지',	columngroup: 'BUYER_INFO', datafield: '홈페이지',	width: '10%',	align: 'center',	cellsalign: 'left'},
+          { text: '학제',	columngroup: 'BUYER_INFO', datafield: '학제',	width: '3%',	align: 'center',	cellsalign: 'center'},
+          { text: '유형',	columngroup: 'BUYER_INFO', datafield: '학교 세부 유형',	width: '3%',	align: 'center',	cellsalign: 'center'},
+          { text: '고교유형',	columngroup: 'BUYER_INFO', datafield: '고등학교유형',	width: '4%',	align: 'center',	cellsalign: 'center'},
+          { text: '시도',	columngroup: 'BUYER_INFO', datafield: '시도',		align: 'center',	cellsalign: 'center'},
+          { text: '교육청',	columngroup: 'BUYER_INFO', datafield: '교육지원청',		align: 'center',	cellsalign: 'center'},
+          { text: '행정구',	columngroup: 'BUYER_INFO', datafield: '행정구',		align: 'center',	cellsalign: 'center'},
+          { text: '본분교',	columngroup: 'BUYER_INFO', datafield: '본분교',		align: 'center',	cellsalign: 'center'},
+          { text: '학교상태',	columngroup: 'BUYER_INFO', datafield: '학교상태',		align: 'center',	cellsalign: 'center'},
+          { text: '설립',	columngroup: 'BUYER_INFO', datafield: '설립',		align: 'center',	cellsalign: 'center'},
+          { text: '남여공학',	columngroup: 'BUYER_INFO', datafield: '남여공학',		align: 'center',	cellsalign: 'center'},
+        ],
+        columngroups: [
+            { text: 'BUYER 목록', align: 'center', name: 'BUYER_INFO' },
+        ]
+    });	
+    
+}
+
+</script>
+<div id="BUYERS_LIST">
+	<div style="height:5%; overflow:auto;">
+		<table>
+			<col width="10%" />
+			<col width="10%" />
+			<col width="10%" />
+			<col width="10%" />
+			<col width="10%" />
+			<col width="10%" />
+			<col width="10%" />
+			<col width="10%" />
+			<col width="20%" />
+			<tr>
+
+				<th style="background:#94bbd6; color:#333;">학제</th>
+				<td>
+					<input type="text" id="STR_SCHOOL_GRADE" />
+				</td>
+
+				<th style="background:#94bbd6; color:#333;">학교유형</th>
+				<td>
+					<input type="text" id="STR_SCHOOL_CATEGORY" />
+				</td>
+
+				<th style="background:#94bbd6; color:#333;">학교명</th>
+				<td>
+					<input type="text" id="STR_SCHOOL_NAME"/>
+				</td>
+
+				<th style="background:#94bbd6; color:#333;">LIMIT</th>
+				<td>
+					<input type="text" id="MAX_LIST" value="10"/>
+				</td>
+
+				<td>
+					<button class="BTN_BUYERS_LIST" id="BTN_GET_BUYERS_LIST">
+						목록갱신
+					</button>
+				</td>
+
+			</tr>
+		</table>
+	</div>
+	<div style="height:95%;">
+		<div id="DIV_GRID_BUYERS_LIST">
+		</div>
+	</div>
+</div>

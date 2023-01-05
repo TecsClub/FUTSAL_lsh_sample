@@ -1,0 +1,496 @@
+<style>
+body{
+overflow-y: auto !important;
+height: 100%;
+}
+ul{
+padding: 0;
+list-style: none;	
+}
+#remote{
+	display: none;
+}
+#DIV_CONTENT{
+margin-top: -70px;
+}
+.detail_content {
+	width: 100%;
+	margin-top: -60px;
+	position: relative;
+}
+.detail_content .sub_bg{
+height: 400px;
+background: #0F2027;  /* fallback for old browsers */
+background: -webkit-linear-gradient(to bottom, #2C5364, #203A43, #0F2027);  /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to bottom, #2C5364, #203A43, #0F2027); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+text-align: center;
+	position: relative;	
+}
+.detail_content .sub_bg > div{
+	position: absolute;
+	top: calc(50% + 35px);
+	left: 50%;
+	transform: translate(-50%, -50%);
+	padding-top: 70px;
+}
+.detail_content .sub_bg > div h2{
+	font-size: 48px;
+	font-weight: 700;
+	margin-bottom: 15px;
+	margin-top: 0;
+	color: #fff;
+}
+.detail_content .sub_bg > div p{
+	font-size: 17px;
+	font-weight: 500;
+	color: #fff;
+}
+
+button#move_top_btn {
+    position: fixed;
+    right: 2%;
+    bottom: 50px;
+    display: none;
+    z-index: 999;
+    text-align: center;
+    background-color: #114991;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    color: #fff;
+    font-weight: 500;
+    border: none;
+    right: 50px;
+}
+button#move_top_btn:hover, button#move_top_btn:focus{
+	background-color: #049DCC;
+}
+button#move_top_btn.stop_move{
+display: block;
+position: absolute;
+bottom: 250px;
+}
+.breadcrumb_wrap{
+	 border-bottom: 1px solid #ddd;
+	 box-shadow: 0px 5px aliceblue;
+}
+.breadcrumb{
+	  background: none;
+   margin-bottom: 0;
+    border-radius: 0;
+    text-align: right;
+    padding: 15px 0px;
+}
+.content1{
+	text-align: center;
+margin-top: 50px;
+}
+
+.content1 > h3{
+	text-align: center;
+font-weight: bold;
+display: inline-block;
+border-bottom: 4px solid #114991;
+padding-bottom: 8px;
+font-size: 32px;
+	
+}
+.content1 > p{
+	font-size: 18px;
+color: #666;
+margin-top: 15px;
+}
+.content1 > img{
+    margin: 0 auto;
+    display: block;
+    width: 130px;
+    margin-top: 30px;
+    padding-top: 6px;
+   
+}
+.accordion {
+  width:100%;
+  overflow:hidden;
+  margin:50px auto;
+ 	
+}
+.accordion > ul {
+
+    width:100%;
+    display:table;
+    table-layout:fixed;
+    margin:0;
+    padding:0;
+}
+.accordion > ul > li {
+
+      display:table-cell;
+      vertical-align:bottom;
+      position: relative;
+      width:16.666%;
+      height:$a-height;
+      background-repeat:no-repeat;
+      background-position:center center;
+		height: 700px;
+    transition:all 500ms ease;}
+.accordion > ul > li > div {
+    
+    display:block;
+    overflow:hidden;
+    width:100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.4);
+    position: relative;
+}
+.accordion > ul > li > div .default_text{
+position: absolute;
+bottom: 10px;
+text-align: center;
+width: 100%;
+color: #fff;
+height: 200px;
+background-color: rgba(0,0,0,0.6);
+overflow-y:hidden;
+
+}
+.accordion > ul > li > div .default_text h3{
+	line-height: 40px;
+	font-weight: bold;
+	border-top: 3px solid #114991;
+display: inline-block;
+    word-break: break-all;
+}
+.accordion > ul > li > div .default_text p{
+text-align: left;
+padding: 0px 15px;
+}
+.accordion > ul > li .con {
+      
+      display:block;
+      height:$a-height;
+      width:100%;
+			bottom:0;
+      position:absolute;
+      z-index:3;
+      vertical-align:bottom;
+      padding:15px 20px;
+      box-sizing:border-box;
+      color:#fff;
+      text-decoration:none;
+      transition:all 200ms ease;
+}
+.accordion > ul > li .con * {
+
+    opacity:0;
+    margin:0;
+    width:100%;
+    position:relative;
+    z-index:5;
+
+    overflow:hidden;
+    -webkit-transform:translateX(-20px);
+    transform:translateX(-20px);
+
+    -webkit-transition:all 400ms ease;
+    transition:all 400ms ease;
+text-align: left;	
+  }
+  
+  .accordion > ul > li .con h4{
+  	font-weight: bold;
+font-size: 24px;
+border-left: 5px solid #114991;
+padding-left: 15px;
+line-height: 24px;
+padding-bottom: 4px;
+  }
+
+.accordion > ul > li .con h2 {
+
+  font-family:Montserrat,sans-serif;
+  text-overflow:clip;
+  font-size:24px;
+  text-transform:uppercase;
+  margin-bottom:2px;
+
+}
+          
+.accordion > ul > li .con p {
+margin-top: 15px;
+line-height: 22px;
+margin-bottom: 15px;
+ font-size: 18px;
+  }
+  .accordion > ul > li .con p::after{
+  border-bottom: 1px solid #fff;
+content: "";
+width: 100%;
+clear: both;
+height: 1px;
+display: block;
+padding-bottom: 15px;
+opacity: 0.4;
+  }
+ .accordion > ul > li .con ul{
+  	color: #fff;
+		padding-left: 15px;
+		font-size: 15px;
+		line-height: 22px;
+  }
+ 
+  .accordion > ul > li .con h5{
+  	font-size: 18px;
+		font-weight: bold;
+		color: #114991;
+		margin-bottom: 5px;
+  }
+	.accordion > ul > li .con ul li::before{
+		content:"• ";	
+		color: #114991;
+		position: absolute;
+		left: -10px;
+	}
+	   
+.accordion > ul > li:nth-child(1) { background-image:url('assets/img/work1.jpg'); background-position: right; }
+.accordion > ul > li:nth-child(2) { background-image:url('assets/img/work2.jpg'); }
+.accordion > ul > li:nth-child(3) { background-image:url('assets/img/work3.jpg'); }
+.accordion > ul > li:nth-child(4) { background-image:url('assets/img/work4.jpg'); }
+
+  .accordion > ul:hover > li, .accordion > ul:focus-within > li { width:8%; }  
+  .accordion > ul > li:focus {
+    outline: none;
+  }
+  .accordion > ul:hover > li:hover, .accordion > ul > li:focus, .accordion > ul:focus-within > li:focus {
+    width:60%;
+	}
+ 	.accordion > ul:focus-within > li:focus .con {  
+      background:rgba(0,0,0,.4);
+  } 
+  .accordion > ul:focus-within > li:focus .con * {
+        
+        opacity:1;
+        -webkit-transform:translateX(0);
+        transform:translateX(0);
+      
+  }
+ .accordion > ul:hover > li {
+    width: 8% !important;
+     
+  }
+  
+   .accordion > ul:hover > li .default_text{
+   font-size: 35px;	
+   background: none;
+   top: 0;
+   left: 50%;
+   transform: translateX(-50%);
+   line-height: 40px;
+   height: auto;
+   }
+   .accordion > ul:hover > li .default_text h3{
+   	width: 20px;	
+   }
+.accordion > ul:hover > li .default_text p{
+display: none;	
+}
+  .accordion > ul:hover > li > div{
+  	background:rgba(0,0,0,.7);
+  }
+  
+   .accordion > ul:hover > li:hover > div{
+   		background:rgba(0,0,0,.3);
+   }
+   .accordion > ul:hover > li:hover .default_text {
+  	display: none;
+   }
+   
+ .accordion > ul:hover > li .con * { opacity: 0 !important; }
+ .accordion > ul:hover > li:hover {
+    width:60% !important;
+	}
+ .accordion > ul:hover > li:hover .con {
+    background: rgba(0,0,0,0.7);
+    position: absolute;
+    bottom: 0;
+    height: 300px;
+}
+  .accordion > ul:hover > li:hover .con * {
+        
+        opacity:1 !important;
+        -webkit-transform:translateX(0);
+        transform:translateX(0);
+      
+  }
+  
+</style>
+
+<script>
+	
+	function QIIP_MENU_CONTENTS_INIT_WIDGETS() {
+//		alert('QIIP_MENU_CONTENTS_INIT_WIDGETS');
+		$("#move_top_btn").click(function() {
+	        $('html, body').animate({
+	            scrollTop : 0
+	        }, 400);
+	        return false;
+	  });
+		$("body").scroll(function(){
+			if ($(this).scrollTop() > 0) {
+		        $('#move_top_btn').fadeIn();
+	    } else {
+	        $('#move_top_btn').fadeOut();
+	    }
+	    
+	    if($(this).scrollTop() > 260){
+	    		$('QIIP_MENU').animate({"background-color":"#fff", "border-color": "#eee"}, 10);	
+	    		$('DIV_LEFT, QIIP_MENU MENU_1ST_TEXT, QIIP_MENU DIV_RIGHT button, QIIP_MENU DIV_RIGHT button span').animate({"color":"#444", "border-color": "#eee"}, 10);	
+	    }else{
+	    		$('QIIP_MENU').animate({"background-color":"rgb(255, 255, 255, 0)", "border-color": "#fff"}, 10);	
+	    		$('DIV_LEFT, QIIP_MENU MENU_1ST_TEXT, QIIP_MENU DIV_RIGHT button, QIIP_MENU DIV_RIGHT button span').animate({"color":"#fff", "border-color": "#fff"}, 10);	
+	    }
+		});
+		
+		$(window).resize(function(){
+	      	var width = parseInt($(this).width());
+			if (width > 960){
+				$("body").scroll(function(){
+				    if($(this).scrollTop() + $(this).height() > $(document).height() - 200) {
+						$("button#move_top_btn").addClass("stop_move");
+				   	} else {
+				   		$("button#move_top_btn").removeClass("stop_move");
+				   	}
+				});
+			} else {
+			  	$("body").scroll(function(){
+					if($(this).scrollTop() + $(this).height() > $(document).height() - 200) {
+						$("button#move_top_btn").addClass("stop_move");
+					} else {
+						$("button#move_top_btn").removeClass("stop_move");
+					}
+				});
+			}
+	    }).resize();
+	}
+	
+</script>
+<!-- DETAIL_CONTENT START -->
+<div class="detail_content">
+	<div class="sub_bg">
+		<div>
+			<h2>ORGANIZATION</h2>
+			<p>한국 쓰리디프린팅 소재산업 협동조합의 조합구성을 소개합니다.</p>
+		</div>
+	</div>
+	<div class="breadcrumb_wrap">
+		<ol class="breadcrumb container">
+			  <li>Home</li>
+			  <li>조합구성</li>
+			  <li class="active">참여주체</li>
+		</ol>	
+	</div>
+	<div class="container">
+		<div class="content1">
+				<h3>참여주체</h3>
+				<p>자세히 보기 원하는 주체에 마우스를 올려주세요. </p>
+				<img src="assets/img/hand_icon.png" alt="마우스 오버">
+			
+				<div class="accordion">
+				  <ul>
+				    <li tabindex="1">
+				      <div>
+				      	<div class="default_text">
+					      	<h3>MAS 공급승인 제조사</h3>
+					      	<p>협동조합의 임원사로서, <br>조달청 MAS제도를 통한 제품 공급자격 획득 업체</p>
+				      	</div>
+				        <div class="con">
+				          <h4>MAS 공급승인 제조사</h4>
+				          <p>협동조합의 임원사로서, <br>조달청 MAS제도를 통한 제품 공급자격 획득 업체</p>
+				          <div class="aria">	
+				          	<h5>Role</h5>
+				          	<ul>
+				          		<li>나라장터 쇼핑몰을 통한 주문 건에 대한 제품생산 및 공급</li>
+											<li>협동조합과 연계한 공동구매를 통하여 안정적인 원자재 확보</li>
+											<li>개별배송 및 A/S 업무를 총괄유통관리 업체에 위탁함으로써,<br>고품질의 제품생산 및 신소재(특수필라멘트 등) 개발에 집중 가능</li>
+											<li>나라장터 쇼핑몰 MAS 제품등록 및 조달청 관련 행정업무 처리</li>
+				          	</ul>
+				          </div>
+				        </div>
+				      </div>
+				    </li>
+				    <li tabindex="2">
+				      <div>
+				      	<div class="default_text">
+				      		<h3>총괄 유통관리 업체</h3>
+				      		<p>협동조합이 선정한 업체로서, <br>전국 유통대리점을 확보하고 관리할 역량보유</p>
+				       	</div>
+				        <div class="con">
+				          <h4>총괄 유통관리 업체</h4>
+			          	<p>협동조합이 선정한 업체로서, <br>전국 유통대리점을 확보하고 관리할 역량보유</p>
+			          	<div class="aria">
+				          	<h5>Role</h5>
+					          	<ul>
+					          		<li>전국 지역 대리점을 통한 MAS 주문제품에 대한 개별배송 및 A/S 총괄</li>
+												<li>지역대리점 납품, A/S 기사를 대상으로 기술교육 실시</li>
+												<li>총괄 유통관리 전산시스템 구축 및 운영</li>
+												<li>협동조합과 협력하여 기술공청회 및 각종 홍보행사 실시</li>
+												<li>신소재(특수 필라멘트)등에 대한 품질기준 공동개발 참여</li>
+					          	</ul>
+			          	</div>
+				        </div>
+				      </div>
+				    </li>
+				    <li tabindex="3">
+				      <div>
+				      	<div class="default_text">
+				      		<h3>지역 유통대리점</h3>
+				      		<p>총괄 유통관리 업체와 계약된 업체로서, <br>한국 쓰리디프린팅 소재산업 협동조합의 회원사로 가입한 업체</p>
+				        </div>
+				        <div class="con">
+				          <h4>지역 유통대리점</h4>
+					        <p>총괄 유통관리 업체와 계약된 업체로서, <br>한국 쓰리디프린팅 소재산업 협동조합의 회원사로 가입한 업체</p>
+					          		
+				          <div class="aria">
+				          	<h5>Role</h5>
+				          	<ul>
+				          		<li>MAS 주문제품에 대한 개별배송 및 사후 A/S 기사 채용 및 관리</li>
+											<li>납품 검수확인서 수령 및 총괄유통관리 업체에 전달</li>
+											<li>총괄 유통관리 전산시스템 구축 및 운영</li>
+											<li>협동조합과 협력하여 기술공청회 및 각종 홍보행사 실시</li>
+											<li>신소재(특수 필라멘트)등에 대한 품질기준 공동개발 참여</li>
+				          	</ul>
+				          </div>
+				        </div>
+				      </div>
+				    </li>
+				    <li tabindex="4">
+				      <div>
+				      	<div class="default_text">
+				      		<h3>납품, A/S 기사</h3>
+				      		<p>지역 유통대리점에 채용되거나 계약관계에 있는 기술자로서, <br>협동조합 주체로 실시하는 3D 필라멘트 관련 기술교육을 수료한 자</p>
+				      	</div>
+				       	<div class="con">
+				          <h4>납품, A/S 기사</h4>
+					        <p>지역 유통대리점에 채용되거나 계약관계에 있는 기술자로서, <br>협동조합 주체로 실시하는 3D 필라멘트 관련 기술교육을 수료한 자</p> 					         
+				          <div class="aria">
+				          	<h5>Role</h5>
+					          	<ul>
+					          		<li>MAS 주문제품을 최종 주문기관에 실제로 납품하고 사후 서비스 실시</li>
+												<li>학교/연구소/공공기관 3D 프린터 담당자와 밀접한 유대관계 유지</li>
+					          	</ul>
+				          	</div>
+				          </div>
+				        </div>
+				      </div>
+				    </li>
+				  </ul>
+				</div>
+		</div>
+	</div>
+	<div class="footer" style="background-color: #333;">
+	    <div style="height: 200px;">footer</div>
+	</div>
+	<button id="move_top_btn" alt="MOVE TOP"><span class="glyphicon glyphicon-chevron-up"></span><br>TOP</button>
+
+</div>
+<!-- DETAIL_CONTENT END -->
+	

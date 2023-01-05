@@ -1,0 +1,205 @@
+{@ $JSON_ARGS = json_decode(base64_decode($ARGS->JSON_ARGS_BASE64)); }
+<script>
+var SELECTED_LOCATION_FROM_LIST = null;
+var OBJ_POPUP_DIALOG_FOR_SEARCH_LOCATION = null;
+function INIT_WIDGETS_FOR_POPUP_SEARCH_LOCATION(OBJ_DIALOG) {
+	OBJ_POPUP_DIALOG_FOR_SEARCH_LOCATION = OBJ_DIALOG;
+	$('#VOICE_INPUT_PROGRESSBAR').jqxProgressBar({ animationDuration:0, value:1, max:100, width: '100%', height: '100%'});
+	var JSON_CALLBACK_SCRIPT = {
+	    CALLBACK_SCRIPT_FUNC_ON_TRANSCRIPTION:	'VOICE_INPUT_ON_TRANSCRIPTION',
+	    CALLBACK_SCRIPT_FUNC_ON_RMSCHANGED:		'VOICE_INPUT_ON_RMSCHANGED',
+	};
+	QIIP_APP_SET_CALLBACK_SCRIPT('STT_BACKGROUND', JSON_CALLBACK_SCRIPT);
+	
+	$(".BTN_POPUP").jqxButton({
+		width: '100%',
+		height: '100%'
+	}).on('click', function () {
+		var ID = $(this).attr('ID');
+		if (ID == 'DUMMY') {
+		} else if (ID == 'BTN_POPUP_SEARCH_LOCATION') {
+			PLACE_SEARCH_BY_INPUT();
+		} else if (ID == 'BTN_POPUP_SEARCH_LOCATION_OK') {
+			if (SELECTED_LOCATION_FROM_LIST != null) {
+				MOVE_CENTER_FOR_NFC(SELECTED_LOCATION_FROM_LIST);
+				CLOSE_POPUP_FOR_SEARCH_LOCATION();
+			} else {
+				$('#DIV_LOCATION_SELECT_FROM_LIST').html(
+					ARR_TO_TABLE_CENTER([
+						sprintf("장소 검색 후 목록에서 선택을 먼저 처리하십시오!"),
+					])
+				);
+				
+			}
+		} else if (ID == 'BTN_POPUP_VOICE_INPUT') {
+			$('#TEXT_SEARCH_KEYWORD').val('');
+			$('#TEXT_SEARCH_KEYWORD').attr('placeholder','검색 하실 키워드를 말하세요!');
+			START_VOICE_INPUT_SPEECH_RECOGNITION();
+		} else if (ID == 'BTN_POPUP_SEARCH_LOCATION_CANCLE') {
+			CLOSE_POPUP_FOR_SEARCH_LOCATION();
+		}
+	});
+	
+}
+
+function CLOSE_POPUP_FOR_SEARCH_LOCATION() {
+	if (OBJ_POPUP_DIALOG_FOR_SEARCH_LOCATION != null) {
+		QIIP_JQX_CLOSE_WINDOW(OBJ_POPUP_DIALOG_FOR_SEARCH_LOCATION);
+		STOP_VOICE_INPUT_SPEECH_RECOGNITION();
+	}
+}
+
+function PLACE_TEXT_SEARCH(STR_SEARCH_TEXT, CALLBACK_FOR_SEARCH_RESULT) {
+	PLACE_TEXT_SEARCH_SUB(MARKER_FOR_G_MAP, STR_SEARCH_TEXT, CALLBACK_FOR_SEARCH_RESULT);
+}
+
+function PLACE_TEXT_SEARCH_SUB(MARKER_FOR_G_MAP, STR_SEARCH_TEXT, FUNC_CALLBACK) {
+	var lat = MARKER_FOR_G_MAP.getPosition().lat();
+	var lng = MARKER_FOR_G_MAP.getPosition().lng();
+	var latlng = new google.maps.LatLng(lat, lng);
+	
+	var request = {
+		location:latlng,
+//		radius:'500',
+		query: STR_SEARCH_TEXT
+	};
+	var service = new google.maps.places.PlacesService(WHERE_IS_MAIN_MAP);
+	service.textSearch(
+		request,
+		function (results, status) {
+			if (status == google.maps.places.PlacesServiceStatus.OK) {
+				FUNC_CALLBACK(results);
+			} else {
+				FUNC_CALLBACK([]);
+			}
+		}
+	);
+}
+
+function PLACE_SEARCH_BY_INPUT() {
+	var STR_SEARCH_KEYWORD = $('#TEXT_SEARCH_KEYWORD').val();
+	if (STR_SEARCH_KEYWORD.length > 0) {
+		PLACE_TEXT_SEARCH(
+			STR_SEARCH_KEYWORD,
+			function (JSON_ARRAY_RESULTS) {
+
+				var JSON_ARGS_BASE64 = Base64.encode(JSON.stringify(JSON_ARRAY_RESULTS));
+
+				NC(
+					{
+					  CMD: 'HTTP_ACCESS',
+					  HttpAccessInformation: {
+							"SERVER_URL" : API_SERVER_URL,
+							"PARAMS" : [
+								QIIP_APP_OBJ_KEY_VALUE("cmd", "api_GetPage"),
+								QIIP_APP_OBJ_KEY_VALUE("FLDR_TEMPLATE", "IONIC/APPS/APP_WHERE_IS/POPUP"),
+								QIIP_APP_OBJ_KEY_VALUE("FILE_TEMPLATE", "DIV_LOCATION_SELECT_FROM_LIST.html"),
+								QIIP_APP_OBJ_KEY_VALUE("XE_COMPILE", "YES"),
+								QIIP_APP_OBJ_KEY_VALUE("JSON_ARGS_BASE64", JSON_ARGS_BASE64),
+							]
+						}
+					},
+					undefined,
+					function(RESULT) {
+						$('#DIV_LOCATION_SELECT_FROM_LIST').html(RESULT.RESULT_CONTENTS);
+						INIT_WIDGETS_FOR_DIV_LOCATION_SELECT_FROM_LIST();
+					}
+				);
+
+/*						
+				for (var i=0; i<JSON_ARRAY_RESULTS.length; i++) {
+					console.log(JSON.stringify(JSON_ARRAY_RESULTS[i]));
+				}
+*/
+			}
+		);
+	} else {
+		$('#TEXT_SEARCH_KEYWORD').attr('placeholder','검색 키워드를 입력하지 않았습니다.');
+	}
+}
+
+function VOICE_INPUT_ON_TRANSCRIPTION(strJSON_BASE64) {
+	var objParam = JSON.parse(Base64.decode(strJSON_BASE64));
+//	alert(JSON.stringify(objParam));
+//	console.log(JSON.stringify(objParam));
+	$('#TEXT_SEARCH_KEYWORD').val(objParam.CALLBACK_PARAMS);
+	$('#TEXT_SEARCH_KEYWORD').attr('placeholder','주소 또는 상호를 입력하세요!');
+	STOP_VOICE_INPUT_SPEECH_RECOGNITION();
+	PLACE_SEARCH_BY_INPUT();
+}
+
+function VOICE_INPUT_ON_RMSCHANGED(strJSON_BASE64) {
+	var objParam = JSON.parse(Base64.decode(strJSON_BASE64));
+//	console.log(JSON.stringify(objParam));
+	$( "#VOICE_INPUT_PROGRESSBAR" ).jqxProgressBar('val', objParam.CALLBACK_PARAMS);
+}
+
+function START_VOICE_INPUT_SPEECH_RECOGNITION() {
+	NC({
+		CMD: 'START_SPEECH_RECOGNITION',
+		LANGUAGE: 'Korean'
+	});
+}
+
+function STOP_VOICE_INPUT_SPEECH_RECOGNITION() {
+	NC({
+		  CMD: 'STOP_SPEECH_RECOGNITION',
+	});
+}
+
+</script>
+<div class="qiip_index" style="width:100%; height:100%;">
+	<div style="width:100%; height:3%; text-align: center;">
+		<div id="VOICE_INPUT_PROGRESSBAR"></div>
+	</div>
+	<div style="width:100%; height:10%;">
+		<table>
+			<col width="70%"/>
+			<col width="15%"/>
+			<tr>
+				<td>
+					<input
+						style="width:100%;height:100%;box-sizing:border-box; border: solid gray 1px; text-align:center;"
+						type="text"
+						id="TEXT_SEARCH_KEYWORD"
+						placeholder="주소 또는 상호를 입력하세요!"/>
+				</td>
+				<td><button class="BTN_POPUP" id="BTN_POPUP_SEARCH_LOCATION" >검색</button></td>
+				<td><button class="BTN_POPUP" id="BTN_POPUP_VOICE_INPUT" >음성<br/>인식</button></td>
+			</tr>
+		</table>
+	</div>
+	<div style="width:100%; height:22%;">
+		{@ $LOCATION_INFO = $JSON_ARGS->LOCATION_INFO;}
+		<table>
+			<col width="20%"/>
+			<tr>
+				<th>주소</th>
+				<td id="TEXT_LOCATION_ADDRESS">{$LOCATION_INFO->주소}</td>
+			</tr>
+			<tr>
+				<th>상호</th>
+				<td id="TEXT_LOCATION_NAME">{$LOCATION_INFO->상호}</td>
+			</tr>
+			<tr>
+				<th>경도</th>
+				<td id="TEXT_LOCATION_Longitude">{$LOCATION_INFO->경도}</td>
+			</tr>
+			<tr>
+				<th>위도</th>
+				<td id="TEXT_LOCATION_Latitude">{$LOCATION_INFO->위도}</td>
+			</tr>
+		</table>
+	</div>
+	<div id='DIV_LOCATION_SELECT_FROM_LIST' style="width:100%; height:55%; overflow:auto;">
+	</div>
+	<div style="width:100%; height:10%;">
+		<table>
+			<col width="50%"/>
+			<tr>
+				<td><button class="BTN_POPUP" id="BTN_POPUP_SEARCH_LOCATION_OK"	    >선택</button></td>
+				<td><button class="BTN_POPUP" id="BTN_POPUP_SEARCH_LOCATION_CANCLE" >취소</button></td>
+			</tr>
+		</table>
+	</div>
+</div>

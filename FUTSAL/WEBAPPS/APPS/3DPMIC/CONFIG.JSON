@@ -1,0 +1,161 @@
+{
+	"CHROME_ONLY" : false,
+	"LOGIN_BASE" : false,
+	"LOGIN_IDPW" : true,
+	
+	"INITIAL_POST_INFORMATION" : {
+		"GCM_SENDER_ID" : "64222680140",
+		"GCM_API_KEY" : "AIzaSyDNiqGxlZLD2PHeHMMHxUa2DiFT1Wl_PnY"
+	},
+	"QIIP_MENU_INFORMATION" : {
+		"DIV_ID_MENU" : "DIV_MENU",
+		"DIV_ID_CONTENT" : "DIV_CONTENT",
+		"MENU_TEMPLATE" : "PAGES/MENU_TEMPLATE.html",
+		"HOME_CONTENTS" : {
+			"TEMPLATE" : "PAGES/HOME_TEMPLATE.html",
+			"INIT_FUNC" : "QIIP_HOME_INIT_WIDGETS()"
+		},
+		"MENU_INIT_FUNC" : "QIIP_MENU_INIT_WIDGETS()",
+		"MENU_CONTENTS_INIT_FUNC" : "QIIP_MENU_CONTENTS_INIT_WIDGETS()",
+		"JSON_MENU" : [
+			{
+				"MENU_TEXT" : "사업소개",
+				"MENU_SUB" : [
+					{
+						"MENU_TEXT" : "개요 및 사업영역",
+						"MENU_PAGE" : "PAGES/MENU_CONTENTS_A_A.html"
+					},
+					{
+						"MENU_TEXT" : "비전",
+						"MENU_PAGE" : "PAGES/MENU_CONTENTS_A_B.html"
+					},
+					{
+						"MENU_TEXT" : "사업화 계획",
+						"MENU_PAGE" : "PAGES/MENU_CONTENTS_A_C.html"
+					}
+						
+				]
+			},
+			{
+				"MENU_TEXT" : "사업구조",
+				"MENU_SUB" : [
+					{
+						"MENU_TEXT" : "유통구조",
+						"MENU_PAGE" : "PAGES/MENU_CONTENTS_B_A.html"
+					},
+					{
+						"MENU_TEXT" : "수익구조",
+						"MENU_PAGE" : "PAGES/MENU_CONTENTS_B_B.html"
+					}
+				]
+			},
+			{
+				"MENU_TEXT" : "조합구성",
+				"MENU_SUB" : [
+					{
+						"MENU_TEXT" : "참여주체",
+						"MENU_PAGE" : "PAGES/MENU_CONTENTS_C_A.html"
+					},
+					{
+						"MENU_TEXT" : "조합임원사",
+						"MENU_PAGE" : "PAGES/MENU_CONTENTS_C_B.html"
+					}
+				]
+			},
+			{
+				"MENU_TEXT" : "목적 및 목표",
+				"MENU_SUB" : [
+					{
+						"MENU_TEXT" : "성취목표",
+						"MENU_PAGE" : "PAGES/MENU_CONTENTS_D_A.html"
+					},
+					{
+						"MENU_TEXT" : "기대성과",
+						"MENU_PAGE" : "PAGES/MENU_CONTENTS_D_B.html"
+					}
+				]
+			},
+			{
+				"MENU_TEXT" : "유통관리",
+				"MENU_SUB" : [
+					{
+						"MENU_TEXT" : "전산시스템",
+						"MENU_PAGE" : "PAGES/MENU_CONTENTS_SALES.html"
+					}
+				]
+			}
+			
+		]
+	},
+
+	"SIDEMENU_SALES": {
+		"HEADER" : "유통관리 시스템",
+		"TEMPLATE" : "SALES/SIDEMENU_SALES.html",
+		"MENUITEMS_BAK" : [
+			{
+				"MENU_STRING"		: "INTRODUCTION",
+				"MENU_CONTENTS"		: "SALES/APP_CONTENTS_INTRODUCTION.html",
+				"MENU_INIT_FUNC"	: "QIIP_SIDEMENU_INIT_WIDGETS();"
+			},
+			{
+				"MENU_STRING"		: "개인정보 관리",
+				"MENU_CONTENTS"		: "SALES/APP_CONTENTS_MEMBER_INFO.html",
+				"MENU_INIT_FUNC"	: "QIIP_SIDEMENU_INIT_WIDGETS();"
+			},
+			{
+				"MENU_STRING"		: "초중고 정보조회",
+				"MENU_CONTENTS"		: "SALES/APP_CONTENTS_SCHOOL_INFO.html",
+				"MENU_INIT_FUNC"	: "QIIP_SIDEMENU_INIT_WIDGETS();"
+			},
+			{
+				"MENU_STRING"		: "영업활동 입력",
+				"MENU_CONTENTS"		: "SALES/APP_CONTENTS_SALES_DATA.html",
+				"MENU_INIT_FUNC"	: "QIIP_SIDEMENU_INIT_WIDGETS();"
+			},
+			{
+				"MENU_STRING"		: "조달 주문건 관련 업무",
+				"MENU_CONTENTS"		: "SALES/APP_CONTENTS_SALES_ASSIGN.html",
+				"MENU_INIT_FUNC"	: "QIIP_SIDEMENU_INIT_WIDGETS();"
+			}
+		],
+		"MENUITEMS" : [
+			{
+				"MENU_STRING"		: "INTRODUCTION",
+				"MENU_CONTENTS"		: "SALES/APP_CONTENTS_INTRODUCTION.html",
+				"MENU_INIT_FUNC"	: "QIIP_SIDEMENU_INIT_WIDGETS();"
+			},
+			{
+				"MENU_STRING"		: "개인정보 관리",
+				"MENU_CONTENTS"		: "SALES/APP_CONTENTS_MEMBER_INFO.html",
+				"MENU_INIT_FUNC"	: "QIIP_SIDEMENU_INIT_WIDGETS();"
+			},
+			{
+				"MENU_STRING"		: "영업활동 입력",
+				"MENU_CONTENTS"		: "SALES/APP_CONTENTS_SALES_DATA.html",
+				"MENU_INIT_FUNC"	: "QIIP_SIDEMENU_INIT_WIDGETS();"
+			},
+			{
+				"MENU_STRING"		: "조달 주문건 관련 업무",
+				"MENU_CONTENTS"		: "SALES/APP_CONTENTS_SALES_ASSIGN.html",
+				"MENU_INIT_FUNC"	: "QIIP_SIDEMENU_INIT_WIDGETS();"
+			},
+			{
+				"MENU_STRING"		: "통계자료 조회",
+				"MENU_CONTENTS"		: "SALES/APP_CONTENTS_STATISTICS.html",
+				"MENU_INIT_FUNC"	: "QIIP_SIDEMENU_INIT_WIDGETS();"
+			},
+			{
+				"MENU_STRING"		: "교육공지",
+				"MENU_CONTENTS"		: "SALES/APP_CONTENTS_EDUCATION.html",
+				"MENU_INIT_FUNC"	: "QIIP_SIDEMENU_INIT_WIDGETS();"
+			}
+		],
+		"MENUITEMS_FOR_DESKTOP" : [
+			{
+				"MENU_STRING"		: "데스크탑 기능",
+				"MENU_CONTENTS"		: "PAGES/CONTENTS_DESKTOP.html",
+				"MENU_INIT_FUNC"	: "INIT_WIDGETS_FOR_MENU_CONTENTS();"
+			}
+		]
+	}
+}

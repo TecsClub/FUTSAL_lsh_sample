@@ -1,0 +1,13 @@
+@charset "utf-8";
+#page-wrapper{
+	padding: 0;
+}
+.ibox{
+	margin: 0;	
+}
+.ibox-content{
+	height: 80vh;
+}
+.embed-responsive-16by9{
+	padding-bottom: 80vh;
+}

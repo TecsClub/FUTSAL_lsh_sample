@@ -1,0 +1,60 @@
+<script>
+var OBJ_POPUP_DIALOG_FOR_IMAGE_PRINT_PREVIEW = null;
+function INIT_WIDGETS_FOR_IMAGE_PRINT_PREVIEW(OBJ_DIALOG) {
+	OBJ_POPUP_DIALOG_FOR_IMAGE_PRINT_PREVIEW = OBJ_DIALOG;
+}
+function CLOSE_POPUP_FOR_IMAGE_PRINT_PREVIEW() {
+	
+	if (OBJ_POPUP_DIALOG_FOR_IMAGE_PRINT_PREVIEW != null) {
+		QIIP_JQX_CLOSE_WINDOW(OBJ_POPUP_DIALOG_FOR_IMAGE_PRINT_PREVIEW);
+	}
+}
+
+function DO_IMAGE_PRINT_PREVIEW_SHARE() {
+}
+
+function DO_IMAGE_PRINT_PREVIEW_CLOUD_PRINT() {
+}
+
+
+</script>
+
+<div style="width:100%; height:10%;">
+  <div class="row" style="padding:0;">
+    <div class="col">
+      <div class="button button-positive" style="width:100%;">
+        인쇄 내용 미리 보기
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="width:100%; height:80%; overflow: auto;">
+	<table style="width:100%; height:100%;" >
+		<tr>
+			<td valign="bottom">
+		      <div class="button" style="width:100%;">
+		        작업이 처리되었습니다.
+		      </div>
+			</td>
+		</tr>
+		<tr>
+			<td>
+		      <div class="button button-small" style="width:100%;">
+				파일관리자 앱을 이용하여 PHOTO_SLICER 폴더를 확인하세요!
+		      </div>
+			</td>
+		</tr>
+	</table>
+</div>
+
+<div style="width:100%; height:10%;">
+  <div class="row" style="padding:0;">
+    <div class="col">
+      <div class="button button-positive" style="width:100%;" onclick="CLOSE_POPUP_FOR_IMAGE_PRINT_PREVIEW()">
+        닫기
+      </div>
+    </div>
+  </div>
+</div>
+

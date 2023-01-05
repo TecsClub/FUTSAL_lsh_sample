@@ -1,0 +1,36 @@
+<script>
+function INIT_WIDGETS_FOR_DIV_LOCATION_SELECT_FROM_LIST() {
+	$(".BTN_SELECT_ONE_LOCATION").button().click(function (event) {
+		event.preventDefault();
+		var LOCATION = JSON_PARSE_IF_CAN($(this).attr('LOCATION'));
+		SELECTED_LOCATION_FROM_LIST = {
+			"Latitude"	: LOCATION.lat,
+			"Longitude"	: LOCATION.lng,
+//			"name"	: $(this).attr('NAME'),
+//			"formatted_address"	: $(this).attr('ADDRESS')
+		};
+//		alert(JSON.stringify(SELECTED_LOCATION_FROM_LIST, null, '\t'));
+		$('#TEXT_LOCATION_ADDRESS').html($(this).attr('ADDRESS'));
+		$('#TEXT_LOCATION_NAME').html($(this).attr('NAME'));
+		$('#TEXT_LOCATION_Latitude').html($(this).attr('LAT'));
+		$('#TEXT_LOCATION_Longitude').html($(this).attr('LNG'));
+	});
+}	
+</script>
+<table>
+	<col width="50%"/>
+	<tr ng-repeat="ONE_ITEM in JSON_ARRAY_RESULTS">
+		<td>
+			<button style="width:100%;height:100%;"
+				class="BTN_SELECT_ONE_LOCATION"
+				ADDRESS="{{ONE_ITEM.formatted_address}}"
+				NAME="{{ONE_ITEM.name}}"
+				LOCATION="{{ONE_ITEM.geometry.location}}">
+				{{ONE_ITEM.name}}
+			</button>
+			<!--
+			{{ONE_ITEM}}
+			-->
+		</td>
+	</tr>
+</table>

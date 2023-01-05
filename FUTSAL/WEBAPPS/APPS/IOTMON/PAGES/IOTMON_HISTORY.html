@@ -1,0 +1,156 @@
+<style>
+</style>
+
+<script>
+function REGIST_BUTTON_EVENT() {
+/*
+	$(".BTN_OPENAPI_ACCOUNTS").jqxButton({
+		width: '100%',
+		height: '100%'
+	}).on('click', function () {
+		var ID = $(this).attr('ID');
+		if (ID == 'DUMMY') {
+		} else if(ID == 'BTN_GET_OPENAPI_ACCOUNTS') {
+			QUERY_OPENAPI_ACCOUNTS();
+		}
+	});
+*/
+}
+
+
+function INIT_WIDGETS_FOR_MENU_CONTENTS() {
+	REGIST_BUTTON_EVENT();
+	TOGGLE_SIDEMENU(function () {
+/*
+		setTimeout(function (){
+			QUERY_OPENAPI_ACCOUNTS();
+		}, 1000);
+*/
+	});
+}
+
+function QUERY_OPENAPI_ACCOUNTS() {
+    var STR_COMP_ID = $('#STR_COMP_ID').val();
+    var STR_LOGIN_ID = $('#STR_LOGIN_ID').val();
+    var STR_PHONE_ID = $('#STR_PHONE_ID').val();
+    
+    var FLAG_FILTER = false;
+    if (STR_COMP_ID.length > 0)  { FLAG_FILTER = true; }
+    if (STR_LOGIN_ID.length > 0) { FLAG_FILTER = true; }
+    if (STR_PHONE_ID.length > 0) { FLAG_FILTER = true; }
+
+    var MAX_LIST	  = parseInt($('#MAX_LIST').val());
+    if (MAX_LIST < 1) {
+    	MAX_LIST = 50;
+    } else if (MAX_LIST > 1000) {
+    	MAX_LIST = 1000;
+    }
+
+	var STR_SQL  = "SELECT * FROM T_USER_LIST ";
+		if (FLAG_FILTER) {
+			STR_SQL += sprintf("WHERE ID > 0 ");
+		}
+		if (STR_COMP_ID.length > 0) {
+			STR_SQL += sprintf("AND COMP_ID like '%s' ", '%' + STR_COMP_ID + '%');
+		}
+		if (STR_LOGIN_ID.length > 0) {
+			STR_SQL += sprintf("AND LOGIN_ID like '%s' ", '%' + STR_LOGIN_ID + '%');
+		}
+		if (STR_PHONE_ID.length > 0) {
+			STR_SQL += sprintf("AND PHONE_ID like '%s' ", '%' + STR_PHONE_ID + '%');
+		}
+		STR_SQL += sprintf("ORDER BY ID DESC ");
+		STR_SQL += sprintf("LIMIT %d ", MAX_LIST);
+	
+	console.log(STR_SQL);
+
+	QIIP_API_ACCESS({
+			REQ: 'api_DB_ACCESS',
+			STR_SQL_BASE64: Base64.encode(STR_SQL),
+		},function(STR_RESULT) {
+			var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+			if (JSON_RESULT instanceof Object) {
+				REFRESH_GRID_OPENAPI_ACCOUNTS(JSON_RESULT);
+			}
+		},{
+			title: _RS.PHONE_INFO.APP_NAME + ' 안내',
+			template: ARR_TO_TABLE_CENTER([
+				'화면을 구성하고 있습니다.'
+			]),
+			cssClass: 'qiip_popup'
+		}
+	);
+}
+
+</script>
+<div class="openapi_accounts">
+	<p class="strong">Event history</p>
+	<div class="table-responsive">
+      <table class="table table-bordered table-hover">
+      	<colgroup>
+		      <col width="5%">
+		      <col width="19%">
+		      <col width="19%">
+		      <col width="19%">
+		      <col width="19%">
+		      <col width="19%">                               
+		  	</colgroup>
+        <thead>
+          <tr>
+            <th>NUM</th>
+            <th>LED ID</th>
+            <th>SOUND</th>
+            <th>FIRE</th>
+            <th>Motion</th>
+            <th>Date Time</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">1</th>
+            <td>0100</td>
+            <td>-50</td>
+            <td>NO</td>
+            <td>0</td>
+            <td>22:01:05</td>
+          </tr>
+          <tr>
+            <th scope="row">2</th>
+            <td>0103</td>
+            <td>-10</td>
+            <td>NO</td>
+            <td>3</td>
+            <td>22:05:05</td>
+          </tr>
+          <tr>
+            <th scope="row">3</th>
+            <td>0102</td>
+            <td>-15</td>
+            <td>NO</td>
+            <td>4</td>
+            <td>22:05:10</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+	<div class="page_num">
+	  <ul class="pagination">
+	    <li>
+	      <a href="#" aria-label="Previous">
+	        <span aria-hidden="true">&laquo;</span>
+	      </a>
+	    </li>
+	    <li class="active"><a href="#">1</a></li>
+	    <li><a href="#">2</a></li>
+	    <li><a href="#">3</a></li>
+	    <li><a href="#">4</a></li>
+	    <li><a href="#">5</a></li>
+	    <li>
+	      <a href="#" aria-label="Next">
+	        <span aria-hidden="true">&raquo;</span>
+	      </a>
+	    </li>
+	  </ul>
+	</div>
+	
+</div>

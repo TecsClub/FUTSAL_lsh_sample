@@ -1,0 +1,105 @@
+@charset "utf-8";
+*:focus{
+	outline: none !important;
+}
+/* join */
+.login_table {
+	background-color: #eee;
+height: 100vh;
+}
+.login_table header{
+	background-color: #333;
+}
+.login_table header .container{
+	text-align: right;
+}
+
+.login_table header .container button{
+font-size: 20px;
+font-weight: bold;
+color: #E06731;
+line-height: 2;
+text-decoration: none;
+cursor: pointer;
+background: none;
+border: none;
+height: auto !important;
+
+width: auto !important;
+}
+.login_table header .container button:hover{
+	color: #d75409;
+}
+.login_table .join_form{
+	margin-top: 0px;
+
+background-color: #fff;
+
+border-radius: 4px;
+
+box-shadow: 2px 2px 4px rgba(0,0,0,.2);
+
+position: absolute;
+
+transform: translate(-50%);
+
+left: 50%;
+
+top: 36%;
+max-width: 400px;
+}
+
+.login_table .join_form h2{
+	text-align: center;
+
+border-bottom: 2px solid #FF9160;
+
+color: #E06731;
+
+padding-bottom: 10px;
+
+font-weight: 600;
+margin-bottom: 20px;
+
+margin-top: 15px;
+font-size: 26px;
+}
+.login_table .join_form .join_in{
+width: 90%;
+margin: 0 auto;
+margin-bottom: 15px;
+}
+.login_table .join_form .join_in input{
+	margin-bottom: 5px;
+	font-size: 14px
+}
+.login_table .join_form .join_in input:focus{
+	border-color: #E06731;
+	box-shadow: none;
+}
+.login_table .join_form .join_in button{
+margin-top: 15px;
+width: 100%;
+font-weight: bold;
+background-image: linear-gradient(to bottom,#888 0,#555 100%);
+border-color: #666;
+background-color: #666;
+	box-shadow: none !important;
+	color: #fff;
+font-size: 15px;
+height: 38px !important;
+font-weight: 400;
+}
+
+
+.login_table .join_form .join_in button:hover, .login_table .join_form .join_in button:focus{
+	background-image: linear-gradient(to bottom,#666 0,#444 100%)!important;
+	background-color: #444 !important;
+	box-shadow: none;
+border-color: #666;
+}
+
+.login_table .form-control::placeholder {
+    color: #bfc4c9;
+    opacity: 1;
+}

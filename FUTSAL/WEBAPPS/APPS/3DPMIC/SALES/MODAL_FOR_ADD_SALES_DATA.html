@@ -1,0 +1,230 @@
+<style>
+#MODAL_ADD_SALES_DATA table		{width:100%; height:100%; font-size:100%; border-collapse: separate; border-spacing: 1px;}
+#MODAL_ADD_SALES_DATA table th	{font-weight:bold; text-align: center; white-space:normal; vertical-align: middle; word-break:break-all; word-wrap:break-all; background:#ccc; padding:0 30px;}
+#MODAL_ADD_SALES_DATA table td	{text-decoration:none; text-align: left;   white-space:normal; vertical-align: middle; word-break:break-all; word-wrap:break-all; background:#eee; padding:0 30px;}
+#MODAL_ADD_SALES_DATA input		{width:100%; text-align:center;}
+#MODAL_ADD_SALES_DATA textarea	{width:100%; height:90%;}
+</style>
+<script>
+	var SELEC_SALES_ACTION_KEYWORD = [
+		{ 	KEYWORD_DISP: '전단지 배포', KEYWORD_CODE: '전단지 배포' },
+		{ 	KEYWORD_DISP: '담당자 확인', KEYWORD_CODE: '담당자 확인' },
+		{ 	KEYWORD_DISP: '담당자와상담', KEYWORD_CODE: '담당자와상담' },
+		{ 	KEYWORD_DISP: '주문의사확인', KEYWORD_CODE: '주문의사확인' },
+		{ 	KEYWORD_DISP: '예상주문확정', KEYWORD_CODE: '예상주문확정' },
+	];
+
+	function INIT_WIDGETS_FOR_ADD_SALES_DATA(MODAL_ID) {
+
+		$('#SELECT_SALES_ACTION_KEYWORD').jqxDropDownList({
+			width: '100%',
+			source: SELEC_SALES_ACTION_KEYWORD,
+			selectedIndex: 0,
+			displayMember: 'KEYWORD_DISP',
+		}).on('select', function (event){
+		    var args = event.args;
+		    if (args) {
+			    var index = args.index;
+			}                        
+	//	}).on('click', function () {
+	//		$(this).jqxDropDownList('open');
+		});
+		
+		$(".EVENT_ADD_SALES_DATA").on('click', function () {
+			var ID = $(this).attr('ID');
+			if (ID == 'DUMMY') {
+			} else if (ID == 'BTN_SELECT') {
+				MODAL_FOR_FIND_SCHOOL();
+			} else if (ID == 'BTN_OK') {
+				EXEC_ADD_SALES_DATA(MODAL_ID);
+			} else if (ID == 'BTN_CANCLE') {
+				if (MODAL_ID != undefined) $('#'+MODAL_ID).modal('hide');
+			}
+		});
+		$('#TXT_SALES_IN_CHARGE_NAME').on('change', function () {
+			$(this).val($(this).val().replace(/\s/g, ""));
+		});
+		$('#TXT_SALES_IN_CHARGE_PHONE_NO').on('change', function () {
+			$(this).val($(this).val().replace(/-/g, ""));
+			if (!QIIP_IS_VALID_PHONE_NO($(this).val())) {
+				QIIP_APP_ALERT([
+					sprintf('%s 는 적절한 전화번호가 아닙니다!',$(this).val())
+				],function () {
+				},function () {
+					$('#TXT_SALES_IN_CHARGE_PHONE_NO').val('');
+				});
+			}
+		});
+		$('#TXT_SALES_IN_CHARGE_EMAIL').on('change', function () {
+			if (!QIIP_IS_VALID_EMAIL($(this).val())) {
+				QIIP_APP_ALERT([
+					sprintf('%s 는 적절한 이메일 주소가 아닙니다!',$(this).val())
+				],function () {
+				},function () {
+					$('#TXT_SALES_IN_CHARGE_EMAIL').val('');
+				});
+			}
+		});
+		
+	}
+
+	function MODAL_FOR_FIND_SCHOOL() {
+		QIIP_API_ACCESS({
+				REQ: 'api_GET_PAGE',
+				FLDR_TEMPLATE: _FLDR_TEMPLATE,
+				FILE_TEMPLATE: 'SALES/MODAL_FOR_FIND_SCHOOL.html',
+			},function(STR_RESULT) {
+				var HTML_COMPILED = QIIP_STATIC_HTML({}, STR_RESULT);
+				QIIP_APP_MODAL_POPUP({
+					TITLE: '학교 찾기',
+					BACKDROP: false,
+					CSS: {
+	//					width: '1050px',
+	//					height: '900px',
+						width: '90%',
+						height: '60%',
+					},
+					CONTENT: HTML_COMPILED,
+					INIT_FUNC: function (UNIQUE_ID) {
+						INIT_WIDGETS_FOR_SCHOOL_LIST(UNIQUE_ID);
+					}
+				});
+			}
+		);
+	}
+	
+	function EXEC_ADD_SALES_DATA(MODAL_ID) {
+
+		var SALES_DATA = {
+			SALES_TARGET_CODE:			$('#TXT_SALES_TARGET_CODE').val(),
+			SALES_TARGET_NAME:			$('#TXT_SALES_TARGET_NAME').val(),
+			SALES_IN_CHARGE_NAME:		$('#TXT_SALES_IN_CHARGE_NAME').val(),
+			SALES_IN_CHARGE_PHONE_NO:	$('#TXT_SALES_IN_CHARGE_PHONE_NO').val(),
+			SALES_IN_CHARGE_EMAIL:		$('#TXT_SALES_IN_CHARGE_EMAIL').val(),
+			SALES_ACTION_KEYWORD:		$('#SELECT_SALES_ACTION_KEYWORD').jqxDropDownList('getSelectedItem').originalItem.KEYWORD_CODE,
+			SALES_ACTION_MEMO:			$('#TXT_SALES_ACTION_MEMO').val(),
+		};
+
+		var KEYS = Object.keys(SALES_DATA);
+		
+		var INPUT_OK = true;
+		$.each(KEYS, function (INDEX, ONE_KEY) {
+			if (SALES_DATA[ONE_KEY].length > 0) {
+			} else {
+				INPUT_OK = false;
+			}
+		});
+		if (!INPUT_OK) {
+			QIIP_APP_ALERT([
+				'항목 중 일부를 입력하지 않으셨습니다!'
+			]);
+		} else {
+			QIIP_API_ACCESS({
+					REQ: 'post_LOG',
+					PHONE_ID: _RS.PHONE_INFO.PHONE_ID,
+					PHONE_NO: _RS.PHONE_INFO.PHONE_NO,
+					CATEGORY: _RS.PHONE_INFO.APP_NAME,
+					SALES_DATA: SALES_DATA,
+				},function(STR_RESULT) {
+					if (MODAL_ID != undefined) $('#'+MODAL_ID).modal('hide');
+					QUERY_SALES_DATA_LIST();
+				}
+			);
+		}
+	}
+</script>
+<div style="height:100%;" id="MODAL_ADD_SALES_DATA">
+	<div style="height:95%;">
+		<table>
+			<col width="15%" />
+			<col width="30%" />
+			<col width="15%" />
+			<col width="30%" />
+			<col width="10%" />
+			<tr>
+				<th colspan="5">
+					영업대상 기관
+				</th>
+			</tr>
+			<tr>
+				<th>
+					기관 코드
+				</th>
+				<td>
+					<input type="text" id="TXT_SALES_TARGET_CODE" readonly value="{{JSON_ARGS.SALES_TARGET_CODE}}" />
+				</td>
+				<th>
+					기관 이름
+				</th>
+				<td>
+					<input type="text" id="TXT_SALES_TARGET_NAME" readonly value="{{JSON_ARGS.SALES_TARGET_NAME}}" />
+				</td>
+				<td>
+					<button class="btn btn-primary btn-lg btn-block login-btn EVENT_ADD_SALES_DATA" id="BTN_SELECT">선택</button>
+				</td>
+			</tr>
+			<tr>
+				<th colspan="5">
+					영업대상 담당자
+				</th>
+			</tr>
+			<tr>
+				<th colspan="2">
+					담당자 이름
+				</th>
+				<td colspan="3">
+					<input type="text" id="TXT_SALES_IN_CHARGE_NAME" value="{{JSON_ARGS.SALES_IN_CHARGE_NAME}}" />
+				</td>
+			</tr>
+			<tr>
+				<th colspan="2">
+					담당자 폰번호
+				</th>
+				<td colspan="3">
+					<input type="text" id="TXT_SALES_IN_CHARGE_PHONE_NO" value="{{JSON_ARGS.SALES_IN_CHARGE_PHONE_NO}}" />
+				</td>
+			</tr>
+			<tr>
+				<th colspan="2">
+					담당자 이메일
+				</th>
+				<td colspan="3">
+					<input type="text" id="TXT_SALES_IN_CHARGE_EMAIL" value="{{JSON_ARGS.SALES_IN_CHARGE_EMAIL}}" />
+				</td>
+			</tr>
+			<tr>
+				<th colspan="5">
+					영업활동
+				</th>
+			</tr>
+			<tr>
+				<th colspan="2">
+					영업활동 키워드
+				</th>
+				<td colspan="3">
+					<div id="SELECT_SALES_ACTION_KEYWORD"></div>
+				</td>
+			</tr>
+			<tr>
+				<th colspan="2">
+					영업 활동 내용 메모
+				</th>
+				<td colspan="3" style="height:35%;">
+					<textarea id="TXT_SALES_ACTION_MEMO" >{{JSON_ARGS.SALES_ACTION_MEMO}}</textarea>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div style="height:5%;">
+		<table>
+			<tr>
+				<td>
+					<button class="btn btn-primary btn-lg btn-block login-btn EVENT_ADD_SALES_DATA" id="BTN_OK">입력</button>
+				</td>
+				<td>
+					<button class="btn btn-primary btn-lg btn-block login-btn EVENT_ADD_SALES_DATA" id="BTN_CANCLE">취소</button>
+				</td>
+			</tr>
+		</table>
+	</div>	
+</div>

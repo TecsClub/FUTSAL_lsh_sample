@@ -1,0 +1,46 @@
+{@ $JSON_ARGS = json_decode(base64_decode($ARGS->JSON_ARGS_BASE64)); }
+#PAGE_ARGS#
+<script>
+var OBJ_POPUP_PDF_TO_EMAIL = null;
+
+function INIT_WIDGETS_FOR_POPUP_PDF_TO_EMAIL(OBJ_DIALOG) {
+	OBJ_POPUP_PDF_TO_EMAIL = OBJ_DIALOG;
+	$('#ARGS_INFO').html(JSON.stringify(JSON_ARGS, null, '\t'));
+}
+
+function CLOSE_POPUP_FOR_PDF_TO_EMAIL() {
+	if (OBJ_POPUP_PDF_TO_EMAIL != null) {
+		QIIP_JQX_CLOSE_WINDOW(OBJ_POPUP_PDF_TO_EMAIL);
+	}
+}
+
+</script>
+
+<div style="width:100%; height:90%; text-align: center;" >
+  <div class="card" style="margin:0;">
+    <div class="item item-text-wrap">
+      현재, 개발 중 입니다.
+    </div>
+    <div class="item item-text-wrap">
+      조만간 업데이트 하겠습니다.
+    </div>
+    <div class="item item-text-wrap">
+      많은 관심 부탁드립니다.
+    </div>
+  </div>
+</div>
+<!--
+<div style="width:100%; height:10%; overflow: auto;">
+	<div style="width:100%; height:100%;" id="ARGS_INFO">
+	</div>
+</div>
+-->
+<div style="width:100%; height:10%; padding:0;">
+  <div class="row" style="padding:0;">
+    <div class="col">
+      <div class="button button-positive" style="width:100%;" onclick="CLOSE_POPUP_FOR_PDF_TO_EMAIL()">
+        닫기
+      </div>
+    </div>
+  </div>
+</div>

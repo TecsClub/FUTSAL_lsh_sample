@@ -1,0 +1,108 @@
+<style>
+/*
+	.login_table 			{width:100%; height:100%;}
+	.login_table table		{width:100%; height:100%; font-size:100%; border-collapse: separate; border-spacing: 1px; line-height: 100%;}
+	.login_table table th	{text-decoration:bold; text-align: center; white-space:normal; vertical-align: middle; word-break:break-all; background:#ccc;}
+	.login_table table td	{text-decoration:none; text-align: left;   white-space:normal; vertical-align: middle;word-break:break-all;}
+*/	
+
+</style>
+<script>
+
+	
+function INIT_WIDGETS_FOR_CHROME_ONLY() {
+
+if($(".login_table").hasClass("browser_error")){
+		$("body").addClass("overhidden");
+}
+	
+
+	$('#ID_LINK_REDIRECT_EDGE').attr('href', 'microsoft-edge:' + window.location.origin);
+	$('#ID_LINK_REDIRECT_CHROME').attr('href', 'https://www.google.co.kr/chrome/browser/desktop/index.html');
+	$('#ID_LINK_REDIRECT_FIREFOX').attr('href', 'https://www.mozilla.org/ko/firefox/new/');
+	return;
+}
+
+
+
+</script>
+
+<div class="login_table browser_error">
+	
+		<div>
+			<h2><i class="fa fa-exclamation-circle" aria-hidden="true"></i><small> {{PHONE_INFO.APP_NAME}} 안내 </small></h2>
+		</div>
+			<p style="text-align: left;">
+				<span class="strong">죄송합니다!</span><br/>
+				{{PHONE_INFO.APP_NAME}} 서비스를 이용하시려면,...<br/>
+				크롬(Chrome), 에지(Edge), 파이어 폭스(FireFox) 등,...<br/>
+				WebAudio 기능을 지원하는 브라우저를 이용하여 접속하셔야 합니다!
+			</p>
+	
+			<div class="connect">
+				<div>
+						<a id="ID_LINK_REDIRECT_EDGE"><span>에지(Edge) 로 접속</span></a>
+				</div>
+				<div>
+						<a id="ID_LINK_REDIRECT_CHROME"><span>크롬(Chrome) 다운로드</span></a>
+				</div>
+				<div>
+						<a id="ID_LINK_REDIRECT_FIREFOX"><span>파이어폭스(FireFox) 다운로드</span></a>
+				</div>
+			</div>
+</div>
+
+<!--
+<div class="login_table">
+	
+	<div ng-show="!_IS_MOBILE" style="height:30%;"></div>
+	<table style="height:30%;">
+		<col ng-show="!_IS_MOBILE" width="20%"/>
+		<col width="30%"/>
+		<col width="30%"/>
+		<col width="20%"/>
+		<tr style="height:33%;">
+			<td ng-show="!_IS_MOBILE"></td>
+			<th colspan="2">
+				<b><i class="fa fa-exclamation-circle" aria-hidden="true"></i> {{PHONE_INFO.APP_NAME}} 안내</b>
+			</th>
+			<td ng-show="!_IS_MOBILE"></td>
+		</tr>
+		<tr style="height:33%;">
+			<td ng-show="!_IS_MOBILE"></td>
+			<th colspan="2">
+				<p style="text-align: left;">
+					<span class="strong">죄송합니다!</span><br/>
+					{{PHONE_INFO.APP_NAME}} 서비스를 이용하시려면,...<br/>
+					크롬(Chrome), 에지(Edge), 파이어 폭스(FireFox) 등,...<br/>
+					WebAudio 기능을 지원하는 브라우저를 이용하여 접속하셔야 합니다!
+				</p>
+			</th>
+			<td ng-show="!_IS_MOBILE"></td>
+		</tr>
+		<tr style="height:34%;">
+			<td ng-show="!_IS_MOBILE"></td>
+			<td colspan="2">
+				<table>
+					<div>
+							<a id="ID_LINK_REDIRECT_EDGE"><span>에지(Edge) 로 접속</span></a>
+						</th>
+					</tr>
+					<tr>
+						<th>
+							<a id="ID_LINK_REDIRECT_CHROME"><span>크롬(Chrome) 다운로드</span></a>
+						</th>
+					</tr>
+					<tr>
+						<th>
+							<a id="ID_LINK_REDIRECT_FIREFOX"><span>파이어폭스(FireFox) 다운로드</span></a>
+						</th>
+					</tr>
+				</table>
+			</td>
+			<td ng-show="!_IS_MOBILE"></td>
+		</tr>
+	</table>
+	<div ng-show="!_IS_MOBILE" style="height:50%;"></div>
+</div>
+-->

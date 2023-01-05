@@ -1,0 +1,75 @@
+<style>
+.NAU_MAIL_TABLE		{width:100%; border-collapse: separate; border-spacing: 1px; border: 1px solid #bcbcbc;}
+.NAU_MAIL_TABLE th	{text-decoration:bold; text-align: center; white-space:normal; word-break:break-all; background-color:#aaaaaa;}
+.NAU_MAIL_TABLE td	{text-decoration:none; text-align: center; white-space:normal; word-break:break-all; background-color:#efefef;}
+</style>
+<table class="NAU_MAIL_TABLE">
+	<col width="10%"/>
+	<col width="90%"/>
+	<tr>
+		<th>
+			요청
+		</th>
+		<th style="text-align:left;">
+			<!--@if($ARGS->SERVER->SERVER_PORT != 80)-->
+				<xmp>http://{$ARGS->SERVER->SERVER_NAME}:{$ARGS->SERVER->SERVER_PORT}{$ARGS->SERVER->REQUEST_URI}</xmp>
+			<!--@else-->
+				<xmp>http://{$ARGS->SERVER->SERVER_NAME}{$ARGS->SERVER->REQUEST_URI}</xmp>
+			<!--@end-->
+		</th>
+	</tr>
+	<tr>
+		<th>
+			EMAIL<br/>PARAMS
+		</th>
+		<th style="text-align:left;">
+			<xmp>{json_encode($ARGS->EMAIL_PARAMS, JSON_PRETTY_PRINT)}</xmp>
+		</th>
+	</tr>
+	<tr>
+		<th>
+			결과
+		</th>
+		<th style="text-align:left;">
+			<xmp>{json_encode($ARGS->RESULT, JSON_PRETTY_PRINT)}</xmp>
+		</th>
+	</tr>
+	<!--@if($ARGS->RESULT->RESULT != 'SUCCESS')-->
+	<tr>
+		<th>
+			사용법
+		</th>
+		<th style="text-align:left;">
+			{@
+				$OBJ_USAGE = new stdClass();
+				$OBJ_USAGE->SUBJECT		= 'NAUTES SYSTEM AUTO ALARM MAIL';
+				$OBJ_USAGE->CONTENT		= 'NO CONTENT';
+
+				$OBJ_USAGE->FROM 		= 'nautes_system@nautestech.com';
+				$OBJ_USAGE->FROMNAME	= 'NAUTES_SYSTEM';
+				
+				$OBJ_USAGE->TO = ["dest1@test.com","dest2@test.com"];
+				$OBJ_USAGE->ATTACHES			= [
+					"sftp://user1:user1_pw@123.123.123.123:9022/ABS_PATH/FOR/FILE/test1.xls",
+					"sftp://user2:user2_pw@123.123.123.123:9022/ABS_PATH/FOR/FILE/test2.xls",
+				];
+
+			}
+			<!--@if($ARGS->SERVER->SERVER_PORT != 80)-->
+				<xmp>http://{$ARGS->SERVER->SERVER_NAME}:{$ARGS->SERVER->SERVER_PORT}?PASS=1&cmd=api_EMAIL&JSON={json_encode($OBJ_USAGE, JSON_PRETTY_PRINT)}</xmp>
+			<!--@else-->
+				<xmp>http://{$ARGS->SERVER->SERVER_NAME}?PASS=1&cmd=api_EMAIL&JSON={json_encode($OBJ_USAGE, JSON_PRETTY_PRINT)}</xmp>
+			<!--@end-->
+		</th>
+	</tr>
+	<tr>
+		<th colspan="2" style="text-align:left;">
+			<!--@if($ARGS->SERVER->SERVER_PORT != 80)-->
+				<xmp>http://{$ARGS->SERVER->SERVER_NAME}:{$ARGS->SERVER->SERVER_PORT}?PASS=1&cmd=api_EMAIL&JSON={json_encode($OBJ_USAGE)}</xmp>
+			<!--@else-->
+				<xmp>http://{$ARGS->SERVER->SERVER_NAME}?PASS=1&cmd=api_EMAIL&JSON={json_encode($OBJ_USAGE)}</xmp>
+			<!--@end-->
+		</th>
+	</tr>
+	<!--@end-->
+</table>

@@ -1,0 +1,900 @@
+<style>
+	#MODAL_FOR_ADD_SALES_ASSIGN 			{width:100%; height:100%;}
+	#MODAL_FOR_ADD_SALES_ASSIGN div			{box-sizing:border-box;}
+	#MODAL_FOR_ADD_SALES_ASSIGN input		{width:100%; text-align:center;}
+	#MODAL_FOR_ADD_SALES_ASSIGN table		{width:100%; height:100%; font-size:100%; border-collapse: separate; border-spacing: 1px; line-height: 100%;}
+	#MODAL_FOR_ADD_SALES_ASSIGN table th	{font-weight:bold; text-align: center; white-space:normal; vertical-align: middle; word-break:break-all; word-wrap:break-all; background:#94bbd6; color:#333; }
+	#MODAL_FOR_ADD_SALES_ASSIGN table td	{text-decoration:none; text-align: left;   white-space:normal; vertical-align: middle; word-break:break-all; word-wrap:break-all; background:#eee; padding:0 10px;}
+</style>
+
+<script>
+
+function REGIST_BUTTON_EVENT() {
+	$(".EVENT_MODAL_FOR_ADD_SALES_ASSIGN").on('click', function () {
+		var ID = $(this).attr('ID');
+		if (ID == 'DUMMY') {
+		} else if(ID == 'BTN_CANCLE_CLOSE') {
+			if (MODAL_ID_FOR_ADD_SALES_ORDER != undefined) $('#'+MODAL_ID_FOR_ADD_SALES_ORDER).modal('hide');
+		} else if(ID == 'BTN_GET_MODAL_FOR_ADD_SALES_ASSIGN') {
+			QUERY_MODAL_FOR_SELECT_SALES_TARGET();
+		} else if(ID == 'BTN_SEL_SALER_IN_CHARGE') {
+			MODAL_FOR_SELECT_SALER_ASSIGN();
+		} else if(ID == 'BTN_ADD_SALES_ORDER') {
+			EXEC_ADD_SALES_ORDER(function () {
+				if (MODAL_ID_FOR_ADD_SALES_ORDER != undefined) $('#'+MODAL_ID_FOR_ADD_SALES_ORDER).modal('hide');
+				QUERY_SALES_ASSIGN_LIST();
+			});
+		}
+	});
+}
+
+function MODAL_FOR_SELECT_SALER_ASSIGN() {
+	QIIP_API_ACCESS({
+			REQ: 'api_GET_PAGE',
+			FLDR_TEMPLATE: _FLDR_TEMPLATE,
+			FILE_TEMPLATE: 'SALES/MODAL_FOR_SELECT_SALER_ASSIGN.html',
+		},function(STR_RESULT) {
+			var HTML_COMPILED = QIIP_STATIC_HTML({}, STR_RESULT);
+			QIIP_APP_MODAL_POPUP({
+				TITLE: '방문배송 업체 찾아서 선택하기',
+				BACKDROP: false,
+				CSS: {
+					width: '70%',
+					height: '60%',
+				},
+				CONTENT: HTML_COMPILED,
+				INIT_FUNC: function (UNIQUE_ID) {
+					INIT_WIDGETS_FOR_SELECT_SALER_ASSIGN(UNIQUE_ID);
+				}
+			});
+		}
+	);
+}
+
+
+var MODAL_ID_FOR_ADD_SALES_ORDER = null;
+function INIT_WIDGETS_FOR_ADD_SALES_ASSIGN(args_MODAL_ID) {
+	MODAL_ID_FOR_ADD_SALES_ORDER = args_MODAL_ID;
+	REGIST_BUTTON_EVENT();
+	INIT_WIDGET_SELECTION_TABS();
+	REFRASH_GRID_ORDER_PRODUCTS();
+}
+
+function INIT_WIDGET_SELECTION_TABS() {
+	$('#DIV_SELECTION_TABS').on('created', function (){
+		INIT_DATE_RANGE_WIDGET();
+		QUERY_MODAL_FOR_SELECT_SALES_TARGET();
+		
+	});
+	$('#DIV_SELECTION_TABS').jqxTabs({
+		width: '100%',
+		height: '100%',
+	}).on('selected', function (EVENT){
+		if (EVENT.args.item == 0) {
+			QUERY_MODAL_FOR_SELECT_SALES_TARGET();
+		} else if (EVENT.args.item == 1) {
+			QUERY_MODAL_FOR_SELECT_ORDER_PRODUCT();
+		} else if (EVENT.args.item == 2) {
+		}
+	});
+}
+
+function INIT_DATE_RANGE_WIDGET() {
+    // create Date object for current location
+    var d = new Date();
+    // convert to msec
+    // add local time zone offset 
+    // get UTC time in msec
+    var utc_today = d.getTime() + (-1 * d.getTimezoneOffset() * 60000);
+    var utc_day_ago = d.getTime() + (-1 * d.getTimezoneOffset() * 60000) - (1000 * 60 * 60 * 24 * 1);
+    var utc_week_ago = d.getTime() + (-1 * d.getTimezoneOffset() * 60000) - (1000 * 60 * 60 * 24 * 7);
+    var utc_month_ago = d.getTime() + (-1 * d.getTimezoneOffset() * 60000) - (1000 * 60 * 60 * 24 * 30);
+    
+	var FIRST_DAY_OF_THIS_MONTH = new Date(d.getFullYear(), d.getMonth(), 1);
+	var LAST__DAY_OF_THIS_MONTH = new Date(d.getFullYear(), d.getMonth() + 1, 0);
+    
+    var TODAY = new Date(utc_today);
+    var ONE_MONTH_AGO = new Date(utc_month_ago);
+    var ONE_WEEK_AGO = new Date(utc_week_ago);
+    var ONE_DAY_AGO = new Date(utc_day_ago);
+
+    $('#DATE_RANGE_FOR_SALES_LOG_LIST').jqxDateTimeInput({
+    	width: '100%',
+    	selectionMode: 'range',
+    	formatString: 'yyyy-MM-dd',
+    	readonly: true,
+//	}).on('click', function () {
+//		$(this).jqxDateTimeInput('open');
+    }).on('change', function (event) {
+//		FILL_HTML_FOR_USE_VOUCHER_LIST();
+    });		
+    $('#DATE_RANGE_FOR_SALES_LOG_LIST').jqxDateTimeInput('setRange', FIRST_DAY_OF_THIS_MONTH, LAST__DAY_OF_THIS_MONTH);
+}
+
+function QUERY_MODAL_FOR_SELECT_ORDER_PRODUCT() {
+	var STR_PHP_COND  = sprintf("$COND_CHECK = true; ");
+	    STR_PHP_COND += sprintf("return $COND_CHECK;");
+
+	QIIP_API_ACCESS({
+			REQ: 'post_GET_ALL_ROOT_ATTRIBUTE',
+			SVC_CATEGORY: _RS.PHONE_INFO.APP_NAME,
+			ATTR_KEY: [
+				'FILAMENT_INFO'
+			],
+			SEARCH_KEY: 'FILAMENT_',
+//			LIMIT: MAX_LIST,
+			PHP_COND: [
+				STR_PHP_COND,
+			]
+		},function(STR_RESULT) {
+			var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+			if ((JSON_RESULT instanceof Array)) {
+				REFRESH_GRID_MODAL_FOR_SELECT_ORDER_PRODUCT(JSON_RESULT);
+			}
+		}
+	);
+}
+
+function REFRESH_GRID_MODAL_FOR_SELECT_ORDER_PRODUCT(args_SQL_RESULT) {
+
+//	QIIP_APP_ALERT([args_SQL_RESULT[0]]); return;
+//	QIIP_APP_ALERT([args_SQL_RESULT]); return;
+
+	var SQL_RESULT = Array();
+	args_SQL_RESULT.forEach(function (ONE_ITEM) {
+		var DATA_FOR_PUSH = ONE_ITEM.FILAMENT_INFO;
+			DATA_FOR_PUSH.COUNT = 1;
+		SQL_RESULT.push(DATA_FOR_PUSH);
+	});
+/*
+	SQL_RESULT.forEach(function (ONE_ITEM) {
+	});
+*/
+    var source = {
+        localdata: SQL_RESULT,
+        datatype: "json",
+        datafields:[
+            { name: 'IMAGE_URL',		type: 'string' },
+            { name: 'FILAMENT_ID',	type: 'string' },
+            { name: 'FILAMENT_NAME',	type: 'string' },
+            { name: 'MAKER',	type: 'string' },
+            { name: 'PRICE',type: 'int' },
+        ]                     
+    };
+
+    var dataAdapter = new $.jqx.dataAdapter(source);
+	$("#DIV_GRID_MODAL_FOR_SELECT_ORDER_PRODUCT").unbind();
+	$("#DIV_GRID_MODAL_FOR_SELECT_ORDER_PRODUCT").jqxGrid({
+        width: '100%',
+        height: '100%',
+        source: dataAdapter,                
+//        pageable: true,
+//        autoheight: true,
+		rowsheight: 150,
+        sortable: true,
+        altrows: true,
+        enabletooltips: true,
+        editable: true,
+        pagesize: 15,
+//        selectionmode: 'multiplecellsadvanced',
+        selectionmode: 'singlerow',
+        editmode: 'dblclick',
+        columns: [
+          { text: '사진',	columngroup: 'PRODUCT_INFO', datafield: 'IMAGE_URL',	width: '15%', align: 'center',	cellsalign: 'center',
+          	cellsrenderer: function (row, column, value) {
+                var STR_HTML  = '';
+                	STR_HTML += '<img width="100%" src="' + value + '" />';
+                return STR_HTML;
+            }
+          },
+          { text: '제조사',	columngroup: 'PRODUCT_INFO',  datafield: 'MAKER',	width: '25%', align: 'center',	cellsalign: 'center', editable: false},
+          { text: '제품코드',	columngroup: 'PRODUCT_INFO', datafield: 'FILAMENT_ID',	width: '10%', align: 'center',	cellsalign: 'center', editable: false},
+          { text: '제품명',	columngroup: 'PRODUCT_INFO', datafield: 'FILAMENT_NAME',	width: '35%', align: 'center',	cellsalign: 'center', editable: false},
+          { text: '가격', 	columngroup: 'PRODUCT_INFO', datafield: 'PRICE',	 align: 'center',	cellsalign: 'center', editable: false },
+        ],
+        columngroups: [
+            { text: 
+            	'<b>더블클릭 => 추가, 삭제시 수량을 음수로 설정 후 더블클릭</b>',
+              align: 'center', 
+              name: 'PRODUCT_INFO' 
+            },
+        ]
+    }).on('rowclick', function (event)  { 
+	    var args = event.args;
+	    var ROW_DATA = $(this).jqxGrid('getrowdata', args.rowindex);
+    }).on('rowdoubleclick', function (event)  { 
+	    var args = event.args;
+	    var ROW_DATA = $(this).jqxGrid('getrowdata', args.rowindex);
+	    UPDATE_ORDER_PRODUCTS(ROW_DATA, function () {
+	    	REFRASH_GRID_ORDER_PRODUCTS();
+	    });
+    });	
+    $("#DIV_GRID_MODAL_FOR_SELECT_ORDER_PRODUCT").jqxGrid('sortby', 'MAKER', 'asc');
+}
+
+function UPDATE_ORDER_PRODUCTS(args_ROW_DATA, FUNC_AFTER) {
+    var DATA_FOR_PUSH = JSON.parse(JSON.stringify(args_ROW_DATA));
+    	delete(DATA_FOR_PUSH.IMAGE_URL);
+    	DATA_FOR_PUSH.COUNT = 1;
+    	DATA_FOR_PUSH.PRICE_MULT = DATA_FOR_PUSH.COUNT * DATA_FOR_PUSH.PRICE;
+    var FLAG_UPDATE = false;
+    ORDER_PRODUCTS.forEach(function (ONE_PRODUCT, INDEX) {
+    	if (ONE_PRODUCT.FILAMENT_ID == DATA_FOR_PUSH.FILAMENT_ID) {
+    		ONE_PRODUCT.COUNT += DATA_FOR_PUSH.COUNT;
+    		ONE_PRODUCT.PRICE_MULT = ONE_PRODUCT.COUNT * ONE_PRODUCT.PRICE;
+    		if (ONE_PRODUCT.COUNT < 1) {
+    			ORDER_PRODUCTS.splice(INDEX, 1);
+    		}
+    		FLAG_UPDATE = true;
+    	}
+    });
+    if (!FLAG_UPDATE) {
+	    ORDER_PRODUCTS.push(DATA_FOR_PUSH);
+    }
+    if (FUNC_AFTER != undefined) FUNC_AFTER();
+}
+
+function QUERY_MODAL_FOR_SELECT_SALES_TARGET() {
+
+	var STR_POST_ADDRESS = $('#STR_POST_ADDRESS').val();
+	var STR_SCHOOL_NAME = $('#STR_SCHOOL_NAME').val();
+	var MAX_LIST = parseInt($('#MAX_LIST').val());
+	
+	var STR_PHP_COND  = sprintf("$COND_CHECK = true; ");
+		if (STR_POST_ADDRESS.length > 0)
+		    STR_PHP_COND += sprintf("$COND_CHECK = $COND_CHECK && (strpos($ONE_ROOT_CONTENTES->SCHOOL_INFO->POST_ADDRESS, '%s') !== false);", STR_POST_ADDRESS);
+		if (STR_SCHOOL_NAME.length > 0)
+		    STR_PHP_COND += sprintf("$COND_CHECK = $COND_CHECK && (strpos($ONE_ROOT_CONTENTES->SCHOOL_INFO->SCHOOL_NAME, '%s') !== false);", STR_SCHOOL_NAME);
+	    STR_PHP_COND += sprintf("return $COND_CHECK;");
+
+	QIIP_API_ACCESS({
+			REQ: 'post_GET_ALL_ROOT_ATTRIBUTE',
+			SVC_CATEGORY: _RS.PHONE_INFO.APP_NAME,
+			ATTR_KEY: [
+				'SCHOOL_INFO',
+				'SALERS_INFO',
+			],
+			SEARCH_KEY: 'SCHOOL',
+			LIMIT: MAX_LIST,
+			PHP_COND: [
+				STR_PHP_COND,
+			]
+		},function(STR_RESULT) {
+			var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+			if ((JSON_RESULT instanceof Array)) {
+				REFRESH_GRID_MODAL_FOR_ADD_SALES_ASSIGN(JSON_RESULT);
+			}
+		}
+	);		
+	
+}
+
+function REFRESH_GRID_MODAL_FOR_ADD_SALES_ASSIGN(args_SQL_RESULT) {
+
+//	QIIP_APP_ALERT([args_SQL_RESULT[0]]); return;
+//	QIIP_APP_ALERT([args_SQL_RESULT]); return;
+
+	var SQL_RESULT = Array();
+	args_SQL_RESULT.forEach(function (ONE_ITEM) {
+		var DATA_FOR_PUSH = ONE_ITEM.SCHOOL_INFO;
+			if (ONE_ITEM.SALERS_INFO != null) {
+				DATA_FOR_PUSH.SALER_BIZ_NO = ONE_ITEM.SALERS_INFO.SALER_BIZ_NO;
+				DATA_FOR_PUSH.SALER_BIZ_NAME = ONE_ITEM.SALERS_INFO.SALER_BIZ_NAME;
+				DATA_FOR_PUSH.SALER_PHONE_NO = ONE_ITEM.SALERS_INFO.SALER_PHONE_NO;
+				DATA_FOR_PUSH.BUY_IN_CHARGE_NAME = ONE_ITEM.SALERS_INFO.BUY_IN_CHARGE_NAME;
+				DATA_FOR_PUSH.BUY_IN_CHARGE_PHONE_NO = ONE_ITEM.SALERS_INFO.BUY_IN_CHARGE_PHONE_NO;
+				DATA_FOR_PUSH.BUY_IN_CHARGE_EMAIL = ONE_ITEM.SALERS_INFO.BUY_IN_CHARGE_EMAIL;
+				DATA_FOR_PUSH.SALER_IN_CHARGE_NAME = ONE_ITEM.SALERS_INFO.SALER_IN_CHARGE_NAME;
+				DATA_FOR_PUSH.SALER_IN_CHARGE_PHONE_NO = ONE_ITEM.SALERS_INFO.SALER_IN_CHARGE_PHONE_NO;
+				DATA_FOR_PUSH.SALER_IN_CHARGE_EMAIL = ONE_ITEM.SALERS_INFO.SALER_IN_CHARGE_EMAIL;
+				DATA_FOR_PUSH.SALES_GOAL_N = ONE_ITEM.SALERS_INFO.SALES_GOAL_N;
+				DATA_FOR_PUSH.SALES_GOAL_KG = ONE_ITEM.SALERS_INFO.SALES_GOAL_KG;
+			} else {
+				DATA_FOR_PUSH.SALER_BIZ_NO = '';
+				DATA_FOR_PUSH.SALER_BIZ_NAME = '';
+				DATA_FOR_PUSH.SALER_PHONE_NO = '';
+				DATA_FOR_PUSH.BUY_IN_CHARGE_NAME = '';
+				DATA_FOR_PUSH.BUY_IN_CHARGE_PHONE_NO = '';
+				DATA_FOR_PUSH.BUY_IN_CHARGE_EMAIL = '';
+				DATA_FOR_PUSH.SALER_IN_CHARGE_NAME = '';
+				DATA_FOR_PUSH.SALER_IN_CHARGE_PHONE_NO = '';
+				DATA_FOR_PUSH.SALER_IN_CHARGE_EMAIL = '';
+				DATA_FOR_PUSH.SALES_GOAL_N = 1;
+				DATA_FOR_PUSH.SALES_GOAL_KG = 1;
+			}
+		SQL_RESULT.push(DATA_FOR_PUSH);
+	});
+
+/*
+	SQL_RESULT.forEach(function (ONE_ITEM) {
+	});
+*/
+    var source = {
+        localdata: SQL_RESULT,
+        datatype: "json",
+        datafields:[
+//            { name: 'ID',			type: 'string' },
+            { name: 'HOME_PAGE',	type: 'string' },
+            { name: 'SCHOOL_GRADE',	type: 'string' },
+            { name: 'SCHOOL_DETAIL',type: 'string' },
+            { name: 'HS_TYPE',		type: 'string' },
+            { name: 'AREA',			type: 'string' },
+            { name: 'EDU_OFFICE',	type: 'string' },
+            { name: 'AREA_SUB',		type: 'string' },
+            { name: 'SCHOOL_NAME',	type: 'string' },
+            { name: 'BRANCH_INFO',	type: 'string' },
+            { name: 'BRANCH_STATUS',type: 'string' },
+            { name: 'FOUNDER',		type: 'string' },
+            { name: 'GENDER_INFO',	type: 'string' },
+            { name: 'POST_NO',		type: 'string' },
+            { name: 'POST_ADDRESS',	type: 'string' },
+            { name: 'PHONE_NO',		type: 'string' },
+            { name: 'FAX_NO',		type: 'string' },
+            { name: 'SALER_BIZ_NO',	type: 'string' },
+            { name: 'SALER_BIZ_NAME',type: 'string' },
+            { name: 'SALER_PHONE_NO',type: 'string' },
+            { name: 'BUY_IN_CHARGE_NAME',type: 'string' },
+            { name: 'BUY_IN_CHARGE_PHONE_NO',type: 'string' },
+            { name: 'BUY_IN_CHARGE_EMAIL',type: 'string' },
+            { name: 'SALER_IN_CHARGE_NAME',type: 'string' },
+            { name: 'SALER_IN_CHARGE_PHONE_NO',type: 'string' },
+            { name: 'SALER_IN_CHARGE_EMAIL',type: 'string' },
+            { name: 'SALES_GOAL_N',type: 'string' },
+            { name: 'SALES_GOAL_KG',type: 'string' },
+        ]                     
+    };
+
+    var dataAdapter = new $.jqx.dataAdapter(source);
+	$("#DIV_GRID_MODAL_FOR_SELECT_SALES_TARGET").unbind();
+	$("#DIV_GRID_MODAL_FOR_SELECT_SALES_TARGET").jqxGrid({
+        width: '100%',
+        height: '100%',
+        source: dataAdapter,                
+//        pageable: true,
+//        autoheight: true,
+        sortable: true,
+        altrows: true,
+//        enabletooltips: true,
+//        editable: true,
+        pagesize: 15,
+//        selectionmode: 'multiplecellsadvanced',
+        selectionmode: 'singlerow',
+        columns: [
+          { text: '학교명',	columngroup: 'MODAL_FOR_ADD_SALES_ASSIGN', datafield: 'SCHOOL_NAME',	width: '20%', align: 'center',	cellsalign: 'left'},
+          { text: '연락처',	columngroup: 'MODAL_FOR_ADD_SALES_ASSIGN', datafield: 'PHONE_NO',	width: '15%', align: 'center',	cellsalign: 'center'},
+          { text: '우편번호',	columngroup: 'MODAL_FOR_ADD_SALES_ASSIGN', datafield: 'POST_NO',	width: '7%',	align: 'center',	cellsalign: 'center'},
+          { text: '도로명주소',	columngroup: 'MODAL_FOR_ADD_SALES_ASSIGN', datafield: 'POST_ADDRESS',	width: '35%', align: 'center',	cellsalign: 'left'},
+          { text: '홈페이지',	columngroup: 'MODAL_FOR_ADD_SALES_ASSIGN', datafield: 'HOME_PAGE',	align: 'center',	cellsalign: 'left'},
+        ],
+        columngroups: [
+            { text: 
+            	'<b>클릭 => 선택, 더블클릭 => 자세히</b>',
+              align: 'center', 
+              name: 'MODAL_FOR_ADD_SALES_ASSIGN' 
+            },
+        ]
+    }).on('rowclick', function (event)  { 
+	    var args = event.args;
+	    var ROW_DATA = $(this).jqxGrid('getrowdata', args.rowindex);
+		$('#TXT_SALES_TARGET_CODE').val(sprintf('SCHOOL_%s-%s', ROW_DATA.POST_NO, ROW_DATA.PHONE_NO));
+		$('#TXT_SALES_TARGET_NAME').val(ROW_DATA.SCHOOL_NAME);
+		$('#TXT_SALES_ASSIGNED_BIZ_NO').val(ROW_DATA.SALER_BIZ_NO);
+		$('#TXT_SALES_ASSIGNED_BIZ_NAME').val(ROW_DATA.SALER_BIZ_NAME);
+		
+		QUERY_SALES_LOG_LIST(ROW_DATA);
+		
+//		QIIP_APP_ALERT([ROW_DATA]);
+    }).on('rowdoubleclick', function (event)  { 
+	    var args = event.args;
+	    var ROW_DATA = $(this).jqxGrid('getrowdata', args.rowindex);
+	    MODAL_FOR_SCHOOL_DETAIL(ROW_DATA);
+	});
+
+	QUERY_SALES_LOG_LIST({});
+    
+}
+
+function QUERY_SALES_LOG_LIST(args_ROW_DATA) {
+//	QIIP_APP_ALERT([args_ROW_DATA]); return;
+	QIIP_API_ACCESS({
+			REQ: 'post_GET_LOG_LIST',
+			STR_DATE_FROM: $('#DATE_RANGE_FOR_SALES_LOG_LIST').jqxDateTimeInput('getText').substring(0,10),
+			STR_DATE_TO: $('#DATE_RANGE_FOR_SALES_LOG_LIST').jqxDateTimeInput('getText').substring(13),
+			STR_FILTER: 'SALES_ACTIVITY',
+			PHONE_ID: sprintf("SCHOOL_%s-%s", args_ROW_DATA.POST_NO, args_ROW_DATA.PHONE_NO),
+			PHONE_NO: sprintf("SCHOOL_%s-%s", args_ROW_DATA.POST_NO, args_ROW_DATA.PHONE_NO),
+			CATEGORY: _RS.PHONE_INFO.APP_NAME,
+		},function(STR_RESULT) {
+			var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+			if ((JSON_RESULT instanceof Array)) {
+				REFRESH_GRID_SALES_LOG_LIST(JSON_RESULT);
+			}
+		}
+	);
+}
+
+function REFRESH_GRID_SALES_LOG_LIST(args_SQL_RESULT) {
+
+//	QIIP_APP_ALERT([args_SQL_RESULT[0]]); return;
+//	QIIP_APP_ALERT([args_SQL_RESULT]); return;
+
+	var SQL_RESULT = Array();
+	args_SQL_RESULT.forEach(function (ONE_ITEM) {
+		var DATA_FOR_PUSH = ONE_ITEM.OBJ_LOG.SALES_ACTIVITY;
+			DATA_FOR_PUSH.UNIQUE_ID = ONE_ITEM.UNIQUE_ID;
+			DATA_FOR_PUSH.DATE_TIME = ONE_ITEM.DATE_TIME;
+		SQL_RESULT.push(DATA_FOR_PUSH);
+	});
+/*
+	SQL_RESULT.forEach(function (ONE_ITEM) {
+	});
+*/
+    var source = {
+        localdata: SQL_RESULT,
+        datatype: "json",
+        datafields:[
+            { name: 'UNIQUE_ID',	type: 'string' },
+            { name: 'DATE_TIME',	type: 'string' },
+            { name: 'SALER_BIZ_NO',	type: 'string' },
+            { name: 'SALER_BIZ_NAME',type: 'string' },
+            { name: 'SALER_IN_CHARGE_NAME',		type: 'string' },
+            { name: 'SALER_IN_CHARGE_PHONE_NO',			type: 'string' },
+            { name: 'SALER_IN_CHARGE_EMAIL',	type: 'string' },
+            { name: 'SALES_LOG',		type: 'string' },
+        ]                     
+    };
+
+    var dataAdapter = new $.jqx.dataAdapter(source);
+	$("#DIV_GRID_MODAL_FOR_VIEW_SALES_ACTIVITY").unbind();
+	$("#DIV_GRID_MODAL_FOR_VIEW_SALES_ACTIVITY").jqxGrid({
+        width: '100%',
+        height: '100%',
+        source: dataAdapter,                
+//        pageable: true,
+//        autoheight: true,
+		rowsheight: 100,
+        sortable: true,
+        altrows: true,
+        enabletooltips: true,
+//        editable: true,
+        pagesize: 15,
+//        selectionmode: 'multiplecellsadvanced',
+        selectionmode: 'singlerow',
+        editmode: 'dblclick',
+        columns: [
+          { text: '일시',	datafield: 'DATE_TIME',	width: '15%', align: 'center',	cellsalign: 'center', editable: false },
+          { text: '사업자번호',	datafield: 'SALER_BIZ_NO',	width: '10%', align: 'center',	cellsalign: 'center'},
+          { text: '상호',	datafield: 'SALER_BIZ_NAME',	width: '15%', align: 'center',	cellsalign: 'center'},
+          { text: '성명',	 columngroup: 'SALES_MANAGER', datafield: 'SALER_IN_CHARGE_NAME',	width: '10%', align: 'center',	cellsalign: 'center', editable: false },
+          { text: '폰번호', columngroup: 'SALES_MANAGER', datafield: 'SALER_IN_CHARGE_PHONE_NO',	width: '10%', align: 'center',	cellsalign: 'center', editable: false },
+          { text: '이메일', columngroup: 'SALES_MANAGER', datafield: 'SALER_IN_CHARGE_EMAIL',	width: '15%', align: 'center',	cellsalign: 'center', editable: false },
+          { text: '영업활동 내용',	datafield: 'SALES_LOG',	align: 'center',	cellsalign: 'center', columntype: 'custom', editable: true,
+          	cellsrenderer: function (row, column, value) {
+                var STR_HTML  = '';
+                	STR_HTML += '<xmp style="width:100%;height:100%;overflow:auto;">';
+                	STR_HTML += value;
+                	STR_HTML += '</xmp>';
+                return STR_HTML;
+            }
+          },
+        ],
+        columngroups: [
+            { text: '영업활동 등록 영업기사',
+              align: 'center', 
+              name: 'SALES_MANAGER' 
+            },
+        ]
+    }).on('rowclick', function (event)  { 
+	    var args = event.args;
+	    var ROW_DATA = $(this).jqxGrid('getrowdata', args.rowindex);
+    }).on('rowdoubleclick', function (event)  { 
+	    var args = event.args;
+	    var ROW_DATA = $(this).jqxGrid('getrowdata', args.rowindex);
+    });	
+    
+}
+
+var ORDER_PRODUCTS = [];
+function REFRASH_GRID_ORDER_PRODUCTS() {
+
+    var source = {
+        localdata: ORDER_PRODUCTS,
+        datatype: "json",
+        datafields:[
+            { name: 'IMAGE_URL',	type: 'string' },
+            { name: 'FILAMENT_ID',	type: 'string' },
+            { name: 'FILAMENT_NAME',	type: 'string' },
+            { name: 'MAKER',	type: 'string' },
+            { name: 'PRICE',type: 'int' },
+            { name: 'COUNT',type: 'int' },
+            { name: 'PRICE_MULT',type: 'int' },
+        ]                     
+    };
+
+    var dataAdapter = new $.jqx.dataAdapter(source);
+	$("#DIV_GRID_MODAL_FOR_ORDER_PRODUCTS").unbind();
+	$("#DIV_GRID_MODAL_FOR_ORDER_PRODUCTS").jqxGrid({
+        width: '100%',
+        height: '100%',
+        source: dataAdapter,                
+//        pageable: true,
+//        autoheight: true,
+//		rowsheight: 100,
+        sortable: true,
+        altrows: true,
+        enabletooltips: true,
+        editable: true,
+        pagesize: 15,
+//        selectionmode: 'multiplecellsadvanced',
+        selectionmode: 'singlerow',
+        editmode: 'dblclick',
+        columns: [
+          { text: '제조사',	 datafield: 'MAKER',	width: '20%', align: 'center',	cellsalign: 'center', editable: false},
+          { text: '제품코드',	datafield: 'FILAMENT_ID',	width: '15%', align: 'center',	cellsalign: 'center', editable: false},
+          { text: '제품명',	datafield: 'FILAMENT_NAME',	width: '30%', align: 'center',	cellsalign: 'center', editable: false},
+          { text: '단가', 	datafield: 'PRICE',	 align: 'center',	cellsalign: 'center', editable: false },
+          { text: '수량', 	datafield: 'COUNT',	 align: 'center',	cellsalign: 'center', editable: true },
+          { text: '가격', 	datafield: 'PRICE_MULT',	 align: 'center',	cellsalign: 'center', editable: false },
+        ],
+    }).on('rowclick', function (event)  { 
+	    var args = event.args;
+	    var ROW_DATA = $(this).jqxGrid('getrowdata', args.rowindex);
+    }).on('rowdoubleclick', function (event)  { 
+	    var args = event.args;
+	    var ROW_DATA = $(this).jqxGrid('getrowdata', args.rowindex);
+    }).on('cellvaluechanged', function (event)  { 
+    	var ROW_DATA = $(this).jqxGrid('getrowdata', args.rowindex);
+    	RE_COMPUTE_ORDER_PRODUCTS(ROW_DATA, function () {
+    		REFRASH_GRID_ORDER_PRODUCTS();
+    	});
+    });	
+    
+}
+
+function RE_COMPUTE_ORDER_PRODUCTS(args_ROW_DATA, FUNC_AFTER) {
+    ORDER_PRODUCTS.forEach(function (ONE_PRODUCT, INDEX) {
+    	if (ONE_PRODUCT.FILAMENT_ID == args_ROW_DATA.FILAMENT_ID) {
+    		ONE_PRODUCT.COUNT = args_ROW_DATA.COUNT;
+    		ONE_PRODUCT.PRICE_MULT = ONE_PRODUCT.COUNT * ONE_PRODUCT.PRICE;
+    	}
+		if (ONE_PRODUCT.COUNT < 1) {
+			ORDER_PRODUCTS.splice(INDEX, 1);
+		}
+    });
+    if (FUNC_AFTER != undefined) FUNC_AFTER();
+}
+
+
+function EXEC_ADD_SALES_ORDER(FUNC_AFTER) {
+	if (($('#TXT_SALES_TARGET_CODE').val().length < 1) ||
+		($('#TXT_SALES_TARGET_NAME').val().length < 1)) {
+		QIIP_APP_ALERT([
+			'주문기관을 선택하지 않으셨습니다.'
+		]); 
+		return;
+	}
+
+	if (ORDER_PRODUCTS.length < 1) {
+		QIIP_APP_ALERT([
+			'주문 상품을 선택하지 않으셨습니다.'
+		]); 
+		return;
+	}
+
+	if (($('#TXT_SALES_ASSIGNED_BIZ_NO').val().length < 1)) {
+		QIIP_APP_ALERT([
+			'방문배송업체를 선택하지 않으셨습니다.'
+		]); 
+		return;
+	}
+	
+//	return;
+
+	QIIP_API_ACCESS({
+			REQ: 'post_GET_ROOT_INFO',
+			PHONE_NO: $('#TXT_SALES_TARGET_CODE').val(),
+			PHONE_ID: $('#TXT_SALES_TARGET_CODE').val(),
+			SVC_CATEGORY: _RS.PHONE_INFO.APP_NAME,
+		},function(STR_RESULT) {
+			var JSON_ORDER = JSON_PARSE_IF_CAN(STR_RESULT);
+			if (JSON_ORDER instanceof Object) {
+				
+//				QIIP_APP_ALERT([JSON_RESULT]); return;
+//				QIIP_APP_ALERT([JSON_RESULT]); return;
+
+				var STR_PHP_COND  = sprintf("$COND_CHECK = true; ");
+				   	STR_PHP_COND += sprintf("   $COND_CHECK = $COND_CHECK && ($ONE_ROOT_CONTENTES->BIZ_INFO->BIZ_NO . '' == '%s'); ", $('#TXT_SALES_ASSIGNED_BIZ_NO').val());
+				   	STR_PHP_COND += sprintf("   $COND_CHECK = $COND_CHECK && ($ONE_ROOT_CONTENTES->BIZ_INFO->BIZ_RELATION == '대표자'); ");
+				    STR_PHP_COND += sprintf("return $COND_CHECK;");
+
+				QIIP_API_ACCESS({
+						REQ: 'post_GET_ALL_ROOT_ATTRIBUTE',
+						SVC_CATEGORY: _RS.PHONE_INFO.APP_NAME,
+						ATTR_KEY: [
+							'BIZ_INFO'
+						],
+						SEARCH_KEY: 'PSEUDO_PHONE_ID',
+			//			LIMIT: MAX_LIST,
+						PHP_COND: [
+							STR_PHP_COND,
+						]
+					},function(STR_RESULT) {
+						var JSON_DELIVER = JSON_PARSE_IF_CAN(STR_RESULT);
+						if ((JSON_DELIVER instanceof Array)) {
+							
+							var SALES_LOG_TYPE = 'ORG';
+							if (JSON_ORDER.SALERS_INFO == null) {
+								SALES_LOG_TYPE = 'NEW';
+							} else {
+								if (JSON_ORDER.SALERS_INFO.SALER_BIZ_NO != JSON_DELIVER[0].BIZ_INFO.BIZ_NO) {
+									SALES_LOG_TYPE = 'UPD';
+								}
+							}
+							
+							JSON_ORDER.SALERS_INFO = {
+								SALER_BIZ_NO: JSON_DELIVER[0].BIZ_INFO.BIZ_NO,
+								SALER_BIZ_NAME: JSON_DELIVER[0].BIZ_INFO.BIZ_NAME,
+								BUY_IN_CHARGE_NAME: '',
+								BUY_IN_CHARGE_PHONE_NO: '',
+								BUY_IN_CHARGE_EMAIL: '',
+								SALER_IN_CHARGE_NAME: JSON_DELIVER[0].BIZ_INFO.BIZ_BANK_OWNER,
+								SALER_IN_CHARGE_PHONE_NO: JSON_DELIVER[0].PHONE_NO,
+								SALER_IN_CHARGE_EMAIL: JSON_DELIVER[0].BIZ_INFO.BIZ_EMAIL,
+								SALES_GOAL_N: 2,
+								SALES_GOAL_KG: 10,
+							};
+
+//							QIIP_APP_ALERT([JSON_ORDER, JSON_DELIVER[0]]); return;
+
+							QIIP_API_ACCESS({
+									REQ: 'post_PUT_ROOT_INFO',
+									PHONE_NO: $('#TXT_SALES_TARGET_CODE').val(),
+									PHONE_ID: $('#TXT_SALES_TARGET_CODE').val(),
+									SVC_CATEGORY: _RS.PHONE_INFO.APP_NAME,
+									JSON_UPDATE: JSON_ORDER,
+								},function(STR_RESULT) {
+									var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+									
+									var SALES_INFO = {
+										SALES_INFO: {
+											SALES_STEP: 0,
+											SALES_TARGET_CODE:	$('#TXT_SALES_TARGET_CODE').val(),
+											SALES_TARGET_NAME:	$('#TXT_SALES_TARGET_NAME').val(),
+											DELIVERY_BIZ_NO:	$('#TXT_SALES_ASSIGNED_BIZ_NO').val(),
+											DELIVERY_BIZ_NAME:	$('#TXT_SALES_ASSIGNED_BIZ_NAME').val(),
+											DELIVERY_BIZ_ADDR:  JSON_DELIVER[0].BIZ_INFO.BIZ_ADDRESS,
+											DELIVERY_COMPANY:  '',
+											DELIVERY_TRACE_NO:  '',
+											ORDER_PRODUCTS: ORDER_PRODUCTS,
+										}
+									};
+									
+									var SALES_LOG = '';
+									if (SALES_LOG_TYPE == 'DUMMY') {
+									} else if (SALES_LOG_TYPE == 'ORG') {
+										SALES_LOG = sprintf(
+														'할당정책 : 기존업체 재할당\n주문기관 : %s\n할당한 방문배송 업체 : %s(%s)', 
+														JSON_ORDER.SCHOOL_INFO.SCHOOL_NAME, 
+														JSON_DELIVER[0].BIZ_INFO.BIZ_NAME,
+														JSON_DELIVER[0].BIZ_INFO.BIZ_NO
+													);
+									} else if (SALES_LOG_TYPE == 'NEW') {
+										SALES_LOG = sprintf(
+														'할당정책 : 신규할당\n주문기관 : %s\n할당한 방문배송 업체 : %s(%s)', 
+														JSON_ORDER.SCHOOL_INFO.SCHOOL_NAME, 
+														JSON_DELIVER[0].BIZ_INFO.BIZ_NAME,
+														JSON_DELIVER[0].BIZ_INFO.BIZ_NO
+													);
+									} else if (SALES_LOG_TYPE == 'UPD') {
+										SALES_LOG = sprintf(
+														'할당정책 : 변경할당\n주문기관 : %s\n기존 방문배송 업체 : %s(%s)\n뱐경 방문배송 업체 : %s(%s)', 
+														JSON_ORDER.SCHOOL_INFO.SCHOOL_NAME, 
+														JSON_ORDER.SALERS_INFO.SALER_BIZ_NO, 
+														JSON_ORDER.SALERS_INFO.SALER_BIZ_NAME, 
+														JSON_DELIVER[0].BIZ_INFO.BIZ_NAME,
+														JSON_DELIVER[0].BIZ_INFO.BIZ_NO
+													);
+									}
+								
+									var SALES_ACTIVITY = {
+											SALER_BIZ_NO: JSON_DELIVER[0].BIZ_INFO.BIZ_NO,
+											SALER_BIZ_NAME: JSON_DELIVER[0].BIZ_INFO.BIZ_NAME,
+											SALER_IN_CHARGE_NAME: _RS.LOGIN_INFO.data.display_name,
+											SALER_IN_CHARGE_PHONE_NO: _RS.LOGIN_INFO.data.user_login,
+											SALER_IN_CHARGE_EMAIL: _RS.LOGIN_INFO.data.user_email,
+											SALES_LOG: SALES_LOG,
+										};
+									
+									QIIP_API_ACCESS({
+											REQ: 'post_PUT_ROOT_INFO',
+											PHONE_NO: 'SALES_ASSIGN',
+											PHONE_ID: 'SALES_ASSIGN',
+											APPEND_DATE: true,
+											APPEND_UNIQUE_ID: true,
+											SVC_CATEGORY: _RS.PHONE_INFO.APP_NAME,
+											JSON_UPDATE: SALES_INFO,
+											OBJ_LEAF: {
+												SALES_ACTIVITY: SALES_ACTIVITY
+											},
+										},function(STR_RESULT) {
+											
+											QIIP_API_ACCESS({
+													REQ: 'post_LOG',
+													PHONE_ID: sprintf("SCHOOL_%s-%s", JSON_ORDER.SCHOOL_INFO.POST_NO, JSON_ORDER.SCHOOL_INFO.PHONE_NO),
+													PHONE_NO: sprintf("SCHOOL_%s-%s", JSON_ORDER.SCHOOL_INFO.POST_NO, JSON_ORDER.SCHOOL_INFO.PHONE_NO),
+													CATEGORY: _RS.PHONE_INFO.APP_NAME,
+													SALES_ACTIVITY: SALES_ACTIVITY,
+												},function(STR_RESULT) {
+													if (FUNC_AFTER != undefined) FUNC_AFTER();
+												}
+											);
+
+										}
+									);
+									
+								}
+							);
+							
+						}
+					}
+				);		
+
+			}
+		}
+	);
+
+}
+
+</script>
+<div id="MODAL_FOR_ADD_SALES_ASSIGN">
+	<div style="width:60%;height:100%;float:left;">
+		<div id="DIV_SELECTION_TABS">
+		    <ul>
+		        <li style="margin-left: 10px;">주문기관 선택</li>
+		        <li>주문 상품 선택</li>
+		    </ul>
+		    <div>
+				<div style="height:7%;">
+					<table>
+						<col width="10%" />
+						<col width="20%" />
+						<col width="10%" />
+						<col width="20%" />
+						<col width="10%" />
+						<col width="20%" />
+						<col width="10%" />
+						<tr>
+
+							<th>학교명</th>
+							<td>
+								<input type="text" id="STR_SCHOOL_NAME"/>
+							</td>
+
+							<th>도로명 주소</th>
+							<td>
+								<input type="text" id="STR_POST_ADDRESS" />
+							</td>
+
+							<th>LIMIT</th>
+							<td>
+								<input type="text" id="MAX_LIST" value="25"/>
+							</td>
+
+							<th>
+								<button class="btn btn-primary EVENT_MODAL_FOR_ADD_SALES_ASSIGN" id="BTN_GET_MODAL_FOR_ADD_SALES_ASSIGN">
+									찾기
+								</button>
+							</th>
+
+						</tr>
+					</table>
+				</div>
+				<div style="height:43%;">
+					<div id="DIV_GRID_MODAL_FOR_SELECT_SALES_TARGET">
+					</div>
+				</div>
+				<div style="height:7%;">
+					<table>
+						<col width="50%" />
+						<col width="25%" />
+						<col width="25%" />
+						<tr>
+							<th>
+								영업활동 내역
+							</th>
+							<th>
+								날짜 구간
+							</th>
+							<td>
+								<div id="DATE_RANGE_FOR_SALES_LOG_LIST"></div>
+							</td>
+						</tr>
+					</table>
+				</div>
+				<div style="height:43%;">
+					<div id="DIV_GRID_MODAL_FOR_VIEW_SALES_ACTIVITY">
+					</div>
+				</div>
+		    </div>
+		    <div>
+				<div id="DIV_GRID_MODAL_FOR_SELECT_ORDER_PRODUCT">
+				</div>
+		    </div>
+		</div>
+	</div>
+	<div style="width:40%;height:100%;float:left;">
+		<table>
+			<col width="15%" />
+			<col width="15%" />
+			<col width="20%" />
+			<col width="15%" />
+			<col width="15%" />
+			<col width="20%" />
+			<tr style="height:10%;">
+				<th colspan="6" >
+					주문 기관
+				</th>
+			</tr>
+			<tr style="height:10%;">
+				<th>
+					기관 코드
+				</th>
+				<td colspan="2">
+					<input type="text" id="TXT_SALES_TARGET_CODE" readonly placeholder="[필수] : 좌측 목록에서 선택"/>
+				</td>
+				<th>
+					기관 이름
+				</th>
+				<td colspan="2">
+					<input type="text" id="TXT_SALES_TARGET_NAME" readonly placeholder="[필수] : 좌측 목록에서 선택"/>
+				</td>
+			</tr>
+			<tr style="height:10%;">
+				<th colspan="6">
+					주문 상품 목록
+				</th>
+			</tr>
+			<tr style="height:40%;">
+				<td colspan="6">
+					<div id="DIV_GRID_MODAL_FOR_ORDER_PRODUCTS"></div>
+				</td>
+			</tr>
+			<tr style="height:10%;">
+				<th colspan="5">
+					방문배송 업체
+				</th>
+				<th>
+					<button class="btn btn-primary EVENT_MODAL_FOR_ADD_SALES_ASSIGN" id="BTN_SEL_SALER_IN_CHARGE">
+						찾아서 교체
+					</button>
+				</th>
+			</tr>
+			<tr style="height:10%;">
+				<th>
+					사업자 번호
+				</th>
+				<td colspan="2">
+					<input type="text" id="TXT_SALES_ASSIGNED_BIZ_NO" readonly placeholder="[필수] : 찾아서 교체 클릭 -> 선택"/>
+				</td>
+				<th>
+					업체명
+				</th>
+				<td colspan="2">
+					<input type="text" id="TXT_SALES_ASSIGNED_BIZ_NAME" readonly placeholder="[필수] : 찾아서 교체 클릭 -> 선택"/>
+				</td>
+			</tr>
+			<tr style="height:10%;">
+				<th colspan="3">
+					<button class="btn btn-primary EVENT_MODAL_FOR_ADD_SALES_ASSIGN" id="BTN_ADD_SALES_ORDER">
+						조달 주문건 등록
+					</button>
+				</th>
+				<th colspan="3">
+					<button class="btn btn-primary EVENT_MODAL_FOR_ADD_SALES_ASSIGN" id="BTN_CANCLE_CLOSE">
+						취소 & 닫기
+					</button>
+				</th>
+			</tr>
+		</table>
+	</div>
+</div>

@@ -1,0 +1,99 @@
+{
+	"CHROME_ONLY" : false,
+	"LOGIN_IDPW" : true,
+
+	"IVR_SERVER_IPS" : [
+		{
+			"SERVER_NAME"	: "PBX-DNA_SOFT",
+			"SERVER_IP"		: "222.232.172.143"
+		}
+	],
+
+	"INITIAL_POST_INFORMATION" : {
+		"WORK_INFORMATION" : {
+			"CUSTOM_WORK_INFORMATION" : [
+				{
+					"DATE" : "2017-09-02",
+					"ITS_WORK_DAY" : true,
+					"WORK_TIMES" : [
+						{
+							"START" : "09:30",
+							"END" : "14:40"
+						},
+						{
+							"START" : "20:30",
+							"END" : "22:40"
+						}
+					],
+					"LUNCH_TIME_START" : "00:00",
+					"LUNCH_TIME_END" : "00:00"
+				}
+			],
+			
+			"WORK_TIME_INFORMATION" : {
+				"WORK_TIMES" : [
+					{
+						"START" : "09:30",
+						"END" : "18:00"
+					}
+				],
+				"LUNCH_TIME_START" : "12:30",
+				"LUNCH_TIME_END" : "13:30"
+			},
+			
+			"WORKER_GROUPS" : {
+				"상담원그룹" : [
+					"07045145095","07045145096","07045145097","07045145098","07045145099"
+				]
+				
+			},
+			"BUSY_RETRY_MAX" : 3,
+			"DUMMY" : true			
+		}
+	},
+
+	"SIDEMENU": {
+		"HEADER" : "",
+		"FILE_TEMPLATE_" : "PAGES/SIDEMENU.html",
+		"FILE_TEMPLATE" : "PAGES/SIDEMENU_BOOTSTRAP.html",
+		"MENUITEMS" : [
+			{
+				"MENU_STRING"		: "ARS 통화설정",
+				"MENU_CONTENTS"		: "PAGES/APP_CONTENTS_ARS-CONFIG.html",
+				"MENU_INIT_FUNC"	: "INIT_WIDGETS_FOR_MENU_CONTENTS();"
+			}
+		],
+		"MENUITEMS_BAK" : [
+			{
+				"MENU_STRING"		: "ARS 통화설정",
+				"MENU_CONTENTS"		: "PAGES/APP_CONTENTS_ARS-CONFIG.html",
+				"MENU_INIT_FUNC"	: "INIT_WIDGETS_FOR_MENU_CONTENTS();"
+			},
+			{
+				"MENU_STRING"		: "ARS 통화 요청 목록",
+				"MENU_CONTENTS"		: "PAGES/APP_CONTENTS_ARS_REGISTS.html",
+				"MENU_INIT_FUNC"	: "INIT_WIDGETS_FOR_MENU_CONTENTS();"
+			},
+			{
+				"MENU_STRING"		: "IVR 통화 상황판",
+				"MENU_CONTENTS"		: "PAGES/APP_CONTENTS_IVR_MONITOR.html",
+				"MENU_INIT_FUNC"	: "INIT_WIDGETS_FOR_MENU_CONTENTS();"
+			},
+			{
+				"MENU_STRING"		: "IVR 통화 목록",
+				"MENU_CONTENTS"		: "PAGES/APP_CONTENTS_IVR_CALL_LIST.html",
+				"MENU_INIT_FUNC"	: "INIT_WIDGETS_FOR_MENU_CONTENTS();"
+			}
+		],
+		"DESKTOP_MENU_USERS" : [
+			"01077743438"
+		],
+		"MENUITEMS_FOR_DESKTOP" : [
+			{
+				"MENU_STRING"		: "데스크탑 기능",
+				"MENU_CONTENTS"		: "PAGES/CONTENTS_DESKTOP.html",
+				"MENU_INIT_FUNC"	: "INIT_WIDGETS_FOR_MENU_CONTENTS();"
+			}
+		]
+	}
+}

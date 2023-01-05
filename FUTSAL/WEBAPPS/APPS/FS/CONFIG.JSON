@@ -1,0 +1,40 @@
+{
+	"CHROME_ONLY" : false,
+	"LOGIN_BASE" : false,
+	"LOGIN_IDPW" : true,
+	
+	"NO_MENU_CONTENTS" : {
+		"MENU_CONTENTS" : "PAGES/APP_1ST_PAGE.html",
+		"MENU_INIT_FUNC" : "LOAD_SERVICE_PAGE();",
+		"DUMMY": true
+	},
+	
+	"SIDEMENU_APPS": {
+		"HEADER" : "풋살",
+		"TEMPLATE" : "PAGES/SIDEMENU_APPS.html",
+		"MENUITEMS" : [
+			{
+				"MENU_STRING"	: "경기 목록",
+				"MENU_CONTENTS"	: "PAGES/MATCH-LIST.html",
+				"MENU_INIT_FUNC": "QIIP_SIDEMENU_INIT_WIDGETS();"
+			},
+			{
+				"MENU_STRING"	: "Youtube 영상",
+				"MENU_CONTENTS"	: "PAGES/YT_VIDEO.html",
+				"MENU_INIT_FUNC": "QIIP_SIDEMENU_INIT_WIDGETS();"
+			},
+			{
+				"MENU_STRING"	: "TTS 생성",
+				"MENU_CONTENTS"	: "PAGES/APP-GEN-TTS.html",
+				"MENU_INIT_FUNC": "QIIP_SIDEMENU_INIT_WIDGETS();"
+			}
+		],
+		"MENUITEMS_FOR_DESKTOP" : [
+			{
+				"MENU_STRING"		: "데스크탑 기능",
+				"MENU_CONTENTS"		: "PAGES/CONTENTS_DESKTOP.html",
+				"MENU_INIT_FUNC"	: "INIT_WIDGETS_FOR_MENU_CONTENTS();"
+			}
+		]
+	}
+}

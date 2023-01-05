@@ -1,0 +1,145 @@
+<?php if(!defined("__XE__"))exit;
+$__Context->JSON_ARGS = json_decode(base64_decode($__Context->ARGS->JSON_ARGS_BASE64));  ?>
+#PAGE_ARGS# <!-- <script>var JSON_ARGS=JSON.parse(Base64.decode($ARGS->JSON_ARGS_BASE64));</script> -->
+<style>
+	.login_table 			{width:100%; height:100%;}
+	.login_table table		{width:100%; height:100%; font-size:100%; border-collapse: separate; border-spacing: 1px; line-height: 100%;}
+	.login_table table th	{text-decoration:bold; text-align: center; white-space:normal; vertical-align: middle; word-break:break-all; background:#ccc;}
+	.login_table table td	{text-decoration:none; text-align: left;   white-space:normal; vertical-align: middle;word-break:break-all;}
+</style>
+<script>
+function INIT_WIDGETS_FOR_PW_RESET_FORM() {
+	$(window).unbind();
+	$(window).keypress(function (EVENT) {
+		if ( event.which == 13 ) {
+		     event.preventDefault();
+			DO_PW_RESET(
+				$('#PW_RESET_INFO').val()
+			);
+		}
+	});
+	$(".BTN_PW_RESET_FORM").jqxButton({
+		width: '100%',
+		height: '100%'
+	}).on('click', function () {
+		var ID = $(this).attr('ID');
+		if (ID == 'DUMMY') {
+		} else if (ID == 'BTN_TO_PW_RESET') {
+			DO_PW_RESET(
+				$('#PW_RESET_INFO').val()
+			);
+		} else if (ID == 'BTN_TO_BACK') {
+			QIIP_APP_CHECK_IF_LOGIN();
+		}
+	});
+}
+function DO_PW_RESET(PW_RESET_INFO) {
+	var PHP_CODES  = '';
+		PHP_CODES += '';
+		PHP_CODES += '$errors = new WP_Error();';
+		PHP_CODES += "if ( strpos( '" + PW_RESET_INFO + "' , '@' ) ) {";
+		PHP_CODES += "	$user_data = get_user_by( 'email', trim( wp_unslash( '" + PW_RESET_INFO + "' ) ) );";
+		PHP_CODES += "	if ( empty( $user_data ) )";
+		PHP_CODES += "		$errors->add('invalid_email', __('<strong>ERROR</strong>: There is no user registered with that email address.'));";
+		PHP_CODES += "} else {";
+		PHP_CODES += "	$login = trim( '" + PW_RESET_INFO + "');";
+		PHP_CODES += "	$user_data = get_user_by('login', $login);";
+		PHP_CODES += "}";
+		PHP_CODES += "if ( $errors->get_error_code() ) return $errors;";
+		PHP_CODES += "if ( !$user_data ) {";
+		PHP_CODES += "	$errors->add('invalidcombo', __('<strong>ERROR</strong>: Invalid username or email.'));";
+		PHP_CODES += "	return $errors;";
+		PHP_CODES += "}";
+		PHP_CODES += "$user_login = $user_data->user_login;";
+		PHP_CODES += "$user_email = $user_data->user_email;";
+		PHP_CODES += "$key = get_password_reset_key( $user_data );";
+		PHP_CODES += "if ( is_wp_error( $key ) ) return $key;";
+		PHP_CODES += "$message = __('Someone has requested a password reset for the following account:') . " + '"\r\n\r\n";';
+		PHP_CODES += "$message .= network_home_url( '/' ) . " + '"\r\n\r\n";';
+		PHP_CODES += "$message .= sprintf(__('Username: %s'), $user_login) . " + '"\r\n\r\n";';
+		PHP_CODES += "$message .= __('If this was a mistake, just ignore this email and nothing will happen.') . " + '"\r\n\r\n";';
+		PHP_CODES += "$message .= __('To reset your password, visit the following address:') . " + '"\r\n\r\n";';
+		PHP_CODES += "$message .= '<' . network_site_url(" + '"' + "wp-login.php?action=rp&key=$key&login=" + '"' + " . rawurlencode($user_login), 'login') . " + '">\r\n";';
+		PHP_CODES += "if ( is_multisite() ) {";
+		PHP_CODES += "	$blogname = get_network()->site_name;";
+		PHP_CODES += "} else {";
+		PHP_CODES += "	$blogname = wp_specialchars_decode(get_option('blogname'), ENT_QUOTES);";
+		PHP_CODES += "}";
+		PHP_CODES += "$title = sprintf( __('[%s] Password Reset'), $blogname );";
+		PHP_CODES += "$title = apply_filters( 'retrieve_password_title', $title, $user_login, $user_data );";
+		PHP_CODES += "$message = apply_filters( 'retrieve_password_message', $message, $key, $user_login, $user_data );";
+		PHP_CODES += "if ( $message && !wp_mail( $user_email, wp_specialchars_decode( $title ), $message ) )";
+		PHP_CODES += "wp_die( __('The email could not be sent.') . " + '"<br />\n"' + " . __('Possible reason: your host may have disabled the mail() function.') );";
+		PHP_CODES += "return true;";
+	QIIP_API_ACCESS({
+			REQ: 'api_WP_ACCESS',
+			PHP_CODES_BASE64: Base64.encode(PHP_CODES),
+		},function(STR_RESULT) {
+			var JSON_RESULT = {};
+		    try { JSON_RESULT = JSON.parse(STR_RESULT); } catch(e) { }
+			if ((typeof JSON_RESULT === 'object') && ('errors' in JSON_RESULT)) {
+				QIIP_APP_ALERT([
+					'<xmp>' +
+					JSON.stringify(JSON_RESULT.errors, null, '\t') +
+					'</xmp>'
+				]);
+			} else {
+				QIIP_APP_ALERT([
+					'입력하신 [' + PW_RESET_INFO + '] 회원정보에 지정된,...',
+					'E-MAIL 주소로 도착한 메일에서 비밀번호를 설정하세요!'
+				],function () {
+					window.location.replace(window.location.origin + '?S=' + _RS.PHONE_INFO.APP_NAME);
+				});
+			}
+		}
+	);
+	
+}
+</script>
+<div class="login_table">
+	<div style="height:30%;"></div>
+	<table style="height:20%;">
+		<col width="20%"/>
+		<col width="60%"/>
+		<tr style="height:33%;">
+			<td></td>
+			<th>
+				{{PHONE_INFO.APP_NAME}} 비밀번호 재설정
+			</th>
+			<td></td>
+		</tr>
+		<tr style="height:33%;">
+			<td></td>
+			<td>
+				<input type="email"
+					   style="text-align:center;width:100%;height:100%;"
+				       placeholder="아이디 또는 이메일 주소"
+				       id="PW_RESET_INFO"
+				/>
+			</td>
+			<td></td>
+		</tr>
+		<tr style="height:34%;">
+			<td></td>
+			<td>
+				<table>
+					<col width="80%" />
+					<tr>
+						<td>
+							<button class="BTN_PW_RESET_FORM" id="BTN_TO_PW_RESET">
+							비밀번호 재설정 메일 발송 요청
+							</button>
+						</td>
+						<td>
+							<button class="BTN_PW_RESET_FORM" id="BTN_TO_BACK">
+							뒤로
+							</button>
+						</td>
+					</tr>
+				</table>
+			</td>
+			<td></td>
+		</tr>
+	</table>
+	<div style="height:50%;""></div>
+</div>

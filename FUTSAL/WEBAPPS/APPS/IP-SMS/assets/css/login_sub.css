@@ -1,0 +1,75 @@
+@charset "utf-8";
+	body{
+		background: url("../img/login_bg.png") no-repeat 100%;
+		width: 100% !important;
+	}
+	.login_table{
+		height: 100vh;
+position: relative;
+background-color: rgba( 0, 0, 0, 0.7 );
+	}
+	button{
+		height: 34px !important;
+		outline: none !important;
+	}
+	
+	h2{
+		text-align: center;
+		font-weight: bold;
+		line-height: 1.2;
+		margin-top: 0;
+		border-bottom: 1px solid darkgray;
+		color: #27ace1;
+		font-size: 45px;
+		padding-bottom: 5px;
+	}
+	h2 svg:not(:root).svg-inline--fa{
+    font-size: 90px;
+    margin-bottom: 10px;
+  }
+  h2 small{
+  	line-height: 1.3;
+		color: #bbb;
+}
+.form-group{
+	margin: 0 auto;
+	}
+	
+
+.back_btn{
+	display: inline-block;
+	width: auto !important;
+	background: none;
+	border: none;
+	float: right;
+	box-shadow: none;
+	font-size: 16px;
+	color: #ccc;
+background: none;
+	}
+	.back_btn:focus, .back_btn:hover{
+		color: #eee;
+		background: none;
+		border: none;
+		box-shadow: none;
+		}
+	.form-group input{
+	text-align: center;
+	margin-bottom: 5px;
+	}
+	.reset_btn{
+		color: #fff;
+background-color: #337ab7;
+border-color: #2e6da4;
+	}
+	.back_btn span{
+	line-height: 24px;
+	}
+	.form_wrap{
+		position: absolute;
+top: 30%;
+left: 50%;
+transform: translate(-50%);
+width: 450px;
+
+		}

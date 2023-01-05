@@ -1,0 +1,38 @@
+{@ $OBJ_ARRAY = get_object_vars($ARGS->OBJECT); }
+<!--@if(!isset($ARGS->COMMENT))-->
+	<table>
+	<col width="20%" />
+	<tr loop="$OBJ_ARRAY=>$KEY,$VAL">
+		<th style="text-align:right; background:#CCCCCC;">{$KEY}</th>
+		<td style="text-align:left;  background:#EEEEEE;">
+			{json_encode($VAL, JSON_PRETTY_PRINT)}
+		</td>
+	</tr>
+	</table>
+<!--@else-->
+	<table>
+	<col width="1%" />
+	<tr loop="$OBJ_ARRAY=>$KEY,$VAL">
+		<th style="text-align:right; background:#FFCC00;"></th>
+		<!--@if($KEY == 'ARRAY_ACCESS_LOG')-->
+			<td>
+				<div>
+					<table loop="$VAL=>$VAL_OF_LOG">
+						<col width="15%" />
+						<tr loop="$VAL_OF_LOG=>$KEY_01,$VAL_01">
+							<th style="text-align:right; background:#FFCC00;">{$KEY_01}</th>
+							<td style="text-align:left;  background:#EEEEEE;">
+									{json_encode($VAL_01, JSON_PRETTY_PRINT)}
+							</td>
+						</tr>
+					</table>
+				</div>
+			</td>
+		<!--@else-->
+			<td style="text-align:left;  background:#EEEEEE;">
+				{json_encode($VAL, JSON_PRETTY_PRINT)}
+			</td>
+		<!--@end-->
+	</tr>
+	</table>
+<!--@end-->

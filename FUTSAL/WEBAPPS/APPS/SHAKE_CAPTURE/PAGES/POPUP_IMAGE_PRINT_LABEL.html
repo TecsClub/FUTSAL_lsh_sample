@@ -1,0 +1,267 @@
+<script>
+var ARR_PAPER_OPTIONS = [
+	{	"PAPER_VALUE":false,	"PAPER_DISP":"세로 방향"},
+	{	"PAPER_VALUE":true,		"PAPER_DISP":"가로 방향"},
+];
+var PAPER_DIRECTION_VALUE = false;
+var OBJ_POPUP_DIALOG_FOR_IMAGE_PRINT = null;
+function INIT_WIDGETS_FOR_POPUP_IMAGE_PRINT(OBJ_DIALOG) {
+	OBJ_POPUP_DIALOG_FOR_IMAGE_PRINT = OBJ_DIALOG;
+	INIT_WIDGETS_FOR_POPUP_IMAGE_PRINT_AFTER_DOCUMENT_LOAD();
+}
+function CLOSE_POPUP_FOR_IMAGE_PRINT() {
+	if (OBJ_POPUP_DIALOG_FOR_IMAGE_PRINT != null) {
+		QIIP_JQX_CLOSE_WINDOW(OBJ_POPUP_DIALOG_FOR_IMAGE_PRINT);
+	}
+}
+
+function INIT_WIDGETS_FOR_POPUP_IMAGE_PRINT_AFTER_DOCUMENT_LOAD() {
+
+	$('#SELECTOR_PAPER_DIRECTION').jqxDropDownList({
+		width: '100%',
+		source: ARR_PAPER_OPTIONS,
+		selectedIndex: 0,
+		displayMember: 'PAPER_DISP'
+	}).on('select', function (event){
+		PAPER_DIRECTION_VALUE = $(this).jqxDropDownList('getSelectedItem').originalItem.PAPER_VALUE;
+	});
+	$('#slider_nRows').jqxSlider({
+		width: "94%", height: 30, sliderButtonSize: 15, min: 1, max: 25, value:_RS.PS_ARGS.nRows, step: 1
+	});
+	$('#slider_nRows').on('change', function (event) {
+		$('#nRows').html(sprintf("%3d", $(this).jqxSlider('value')));
+	});
+	$('#slider_nCols').jqxSlider({
+		width: "94%", height: 30, sliderButtonSize: 15, min: 1, max: 25, value:_RS.PS_ARGS.nCols, step: 1
+	});
+	$('#slider_nCols').on('change', function (event) {
+		$('#nCols').html(sprintf("%3d", $(this).jqxSlider('value')));
+	});
+	$('#slider_n_rows_gap').jqxSlider({
+		width: "94%", height: 30, sliderButtonSize: 15, min: 0, max: 25, value:_RS.PS_ARGS.n_rows_gap, step: 1
+	});
+	$('#slider_n_rows_gap').on('change', function (event) {
+		$('#n_rows_gap').html(sprintf("%3d", $(this).jqxSlider('value')));
+	});
+	$('#slider_n_cols_gap').jqxSlider({
+		width: "94%", height: 30, sliderButtonSize: 15, min: 0, max: 25, value:_RS.PS_ARGS.n_cols_gap, step: 1
+	});
+	$('#slider_n_cols_gap').on('change', function (event) {
+		$('#n_cols_gap').html(sprintf("%3d", $(this).jqxSlider('value')));
+	});
+
+	$('#slider_n_top_gap').jqxSlider({
+		width: "94%", height: 30, sliderButtonSize: 15, min: 0, max: 100, value:_RS.PS_ARGS.n_top_gap, step: 1
+	});
+	$('#slider_n_top_gap').on('change', function (event) {
+		$('#n_top_gap').html(sprintf("%3d", $(this).jqxSlider('value')));
+	});
+	$('#slider_n_bottom_gap').jqxSlider({
+		width: "94%", height: 30, sliderButtonSize: 15, min: 0, max: 100, value:_RS.PS_ARGS.n_top_gap, step: 1
+	});
+	$('#slider_n_bottom_gap').on('change', function (event) {
+		$('#n_bottom_gap').html(sprintf("%3d", $(this).jqxSlider('value')));
+	});
+	$('#slider_n_left_gap').jqxSlider({
+		width: "94%", height: 30, sliderButtonSize: 15, min: 0, max: 100, value:_RS.PS_ARGS.n_left_gap, step: 1
+	});
+	$('#slider_n_left_gap').on('change', function (event) {
+		$('#n_left_gap').html(sprintf("%3d", $(this).jqxSlider('value')));
+	});
+	$('#slider_n_right_gap').jqxSlider({
+		width: "94%", height: 30, sliderButtonSize: 15, min: 0, max: 100, value:_RS.PS_ARGS.n_right_gap, step: 1
+	});
+	$('#slider_n_right_gap').on('change', function (event) {
+		$('#n_right_gap').html(sprintf("%3d", $(this).jqxSlider('value')));
+	});
+}
+
+var FLAG_IN_DOING_EXEC_IMAGE_PRINT = false;
+function EXEC_IMAGE_PRINT() {
+	if (FLAG_IN_DOING_EXEC_IMAGE_PRINT) return;
+	FLAG_IN_DOING_EXEC_IMAGE_PRINT = true;
+	var JSON_ARGS = {
+		"bLandscape"	: PAPER_DIRECTION_VALUE,
+		"bSavePDF"		: false,
+		"IMAGE_URL"		: $("#IMAGE_URL").val(),
+		"PRINT_MODE"	: $("#PRINT_MODE").val(),
+		"nRows"			: $("#slider_nRows").jqxSlider('value'),
+		"nCols"			: $("#slider_nCols").jqxSlider('value'),
+		"n_rows_gap"	: $("#slider_n_rows_gap").jqxSlider('value'),
+		"n_cols_gap"	: $("#slider_n_cols_gap").jqxSlider('value'),
+		"n_top_gap"		: $("#slider_n_top_gap").jqxSlider('value'),
+		"n_bottom_gap"	: $("#slider_n_bottom_gap").jqxSlider('value'),
+		"n_left_gap"	: $("#slider_n_left_gap").jqxSlider('value'),
+		"n_right_gap"	: $("#slider_n_right_gap").jqxSlider('value'),
+	};
+//	QIIP_APP_JSON_TO_TABLE_DIALOG(JSON_ARGS);
+
+	QIIP_APPS_NATIVE_ACCESS({
+		REQUEST: 'MAKE_PDF_AND_PREVIEW',
+		JSON_ARGS: JSON_ARGS,
+	}, function (STR_RESULT) {
+	});
+	
+}
+
+</script>
+
+
+<div style="width:100%; height:20%;">
+  <div class="row" style="padding:0;">
+    <div class="col">
+      <div class="button button-positive" style="width:100%;">
+        처리 원본 이미지 크기 :{{JSON_ARGS.IMAGE_SIZE}}
+      </div>
+    </div>
+  </div>
+  </div>
+</div>
+<div style="width:100%; height:65%;">
+	<input type="hidden" id="IMAGE_URL" value="{{JSON_ARGS.IMAGE_URL}}"/>
+	<input type="hidden" id="PRINT_MODE" value="{{JSON_ARGS.PRINT_MODE}}"/>
+	<div class="row" style="padding:0;">
+	    <div class="col col-75">
+			<div class="button button-small button-lignt" style="width:100%;">
+				용지 방향
+			</div>
+	    </div>
+	    <div class="col">
+	    	<div id='SELECTOR_PAPER_DIRECTION' style="margin-left: 3%;" />
+	    </div>
+	</div>
+	<div class="row" style="padding:0;">
+	    <div class="col col-20">
+			<div class="button button-small button-lignt" style="width:100%;">
+				행 갯수
+			</div>
+	    </div>
+	    <div class="col col-20">
+			<div class="button button-small button-lignt" style="width:100%;">
+				<span id="nRows">{{JSON_ARGS.nRows}}</span>
+			</div>
+	    </div>
+	    <div class="col">
+	    	<div id='slider_nRows' style="margin-left: 3%;" />
+	    </div>
+	</div>
+	<div class="row" style="padding:0;">
+	    <div class="col col-20">
+			<div class="button button-small button-lignt" style="width:100%;">
+				열 갯수
+			</div>
+	    </div>
+	    <div class="col col-20">
+			<div class="button button-small button-lignt" style="width:100%;">
+				<span id="nCols">{{JSON_ARGS.nCols}}</span>
+			</div>
+	    </div>
+	    <div class="col">
+	    	<div id='slider_nCols' style="margin-left: 3%;" />
+	    </div>
+	</div>
+	<div class="row" style="padding:0;">
+	    <div class="col col-20">
+			<div class="button button-small button-lignt" style="width:100%;">
+				행 간격
+			</div>
+	    </div>
+	    <div class="col col-20">
+			<div class="button button-small button-lignt" style="width:100%;">
+				<span id="n_rows_gap">{{JSON_ARGS.n_rows_gap}}</span>
+			</div>
+	    </div>
+	    <div class="col">
+	    	<div id='slider_n_rows_gap' style="margin-left: 3%;" />
+	    </div>
+	</div>
+	<div class="row" style="padding:0;">
+	    <div class="col col-20">
+			<div class="button button-small button-lignt" style="width:100%;">
+				열 간격
+			</div>
+	    </div>
+	    <div class="col col-20">
+			<div class="button button-small button-lignt" style="width:100%;">
+				<span id="n_cols_gap">{{JSON_ARGS.n_cols_gap}}</span>
+			</div>
+	    </div>
+	    <div class="col">
+	    	<div id='slider_n_cols_gap' style="margin-left: 3%;" />
+	    </div>
+	</div>
+	<div class="row" style="padding:0;">
+	    <div class="col col-20">
+			<div class="button button-small button-lignt" style="width:100%;">
+				상 여백
+			</div>
+	    </div>
+	    <div class="col col-20">
+			<div class="button button-small button-lignt" style="width:100%;">
+				<span id="n_top_gap">{{JSON_ARGS.n_top_gap}}</span>
+			</div>
+	    </div>
+	    <div class="col">
+	    	<div id='slider_n_top_gap' style="margin-left: 3%;" />
+	    </div>
+	</div>
+	<div class="row" style="padding:0;">
+	    <div class="col col-20">
+			<div class="button button-small button-lignt" style="width:100%;">
+				하 여백
+			</div>
+	    </div>
+	    <div class="col col-20">
+			<div class="button button-small button-lignt" style="width:100%;">
+				<span id="n_bottom_gap">{{JSON_ARGS.n_bottom_gap}}</span>
+			</div>
+	    </div>
+	    <div class="col">
+	    	<div id='slider_n_bottom_gap' style="margin-left: 3%;" />
+	    </div>
+	</div>
+	<div class="row" style="padding:0;">
+	    <div class="col col-20">
+			<div class="button button-small button-lignt" style="width:100%;">
+				좌 여백
+			</div>
+	    </div>
+	    <div class="col col-20">
+			<div class="button button-small button-lignt" style="width:100%;">
+				<span id="n_left_gap">{{JSON_ARGS.n_left_gap}}</span>
+			</div>
+	    </div>
+	    <div class="col">
+	    	<div id='slider_n_left_gap' style="margin-left: 3%;" />
+	    </div>
+	</div>
+	<div class="row" style="padding:0;">
+	    <div class="col col-20">
+			<div class="button button-small button-lignt" style="width:100%;">
+				우 여백
+			</div>
+	    </div>
+	    <div class="col col-20">
+			<div class="button button-small button-lignt" style="width:100%;">
+				<span id="n_right_gap">{{JSON_ARGS.n_right_gap}}</span>
+			</div>
+	    </div>
+	    <div class="col">
+	    	<div id='slider_n_right_gap' style="margin-left: 3%;" />
+	    </div>
+	</div>
+</div>
+<div style="width:100%; height:15%;">
+  <div class="row" style="padding:0;">
+    <div class="col">
+      <div class="button button-positive" style="width:100%;" onclick="EXEC_IMAGE_PRINT()">
+        모바일 인쇄
+      </div>
+    </div>
+    <div class="col">
+      <div class="button button-positive" style="width:100%;" onclick="CLOSE_POPUP_FOR_IMAGE_PRINT()">
+        닫기
+      </div>
+    </div>
+  </div>
+</div>

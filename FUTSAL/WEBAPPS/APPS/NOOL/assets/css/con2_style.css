@@ -1,0 +1,128 @@
+@charset "utf-8";
+/* 왼쪽 컨텐츠 */
+.left_con .result ul li:nth-child(1) {
+    position: absolute;
+    top: 18%;
+    left: 7%;
+}
+.left_con .result ul li:nth-child(2) {
+    position: absolute;
+    top: 18%;
+    right: 7%;
+}
+.left_con .result ul li span::after{
+	display: none;
+}
+
+/* 정확도 */
+
+/* 데이터 */
+ul.user_data{
+    margin-top: 35px;
+}
+.time{
+    padding-bottom: 25px;
+}
+
+/* 오른쪽 컨텐츠 */
+
+/* 스코어 보드 */
+.score_board{
+
+    width: 35%;
+    float: left;
+    margin-bottom: 37px;
+}
+.score_board h2{
+
+}
+.score_board table{
+
+    width: 90%;
+    margin: 0 auto;
+    margin-top: 45px;
+    margin-bottom: 48px;
+}
+.score_board table tbody{
+
+}
+.score_board table tbody tr{
+
+}
+
+.score_board table tbody tr th{
+vertical-align: middle;
+}
+.score_board table tbody tr td{
+
+    vertical-align: middle;
+}
+.score_board table tbody tr td:nth-child(2){
+
+}
+.score_board table tbody tr td:nth-child(3){
+
+    font-size: 15px;
+}
+.score_board table tbody tr td:nth-child(4){
+
+    font-weight: bold;
+    font-size: 18px;
+    text-align: right;
+    color: #e06731;
+}
+.score_board table tbody tr td:nth-child(5){
+
+    color: #999;
+    font-size: 13px;
+}
+.score_board table tbody tr td img{
+	
+    width: 50px;
+}
+
+.score_board table {
+    border: none;
+}
+.score_board table tbody tr:nth-child(1) th{
+    border: none;
+}
+.score_board table tbody tr:nth-child(1) td{
+    border: none;
+}
+
+/* 리플레이 */
+.replay{
+
+    width: 63%;
+    float: right;
+    text-align: center;
+    margin-bottom: 40px;
+}
+.replay h2{
+
+}
+.replay .video_frame{
+
+}
+.replay .video_frame div{
+
+}
+.replay .video_frame div iframe{
+
+}
+div.right_con .video_frame{
+    max-width: 88%;
+    margin-bottom: 35px;
+    margin-top: 68px;
+}
+/* 비디오 클립 */
+
+.video_clip{
+    clear: both;
+}
+
+
+.video_clip .thumbnail .caption h4 {
+    padding-top: 8px;
+}

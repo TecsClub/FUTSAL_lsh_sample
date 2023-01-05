@@ -1,0 +1,102 @@
+<link rel="stylesheet" href="/WEBAPPS/APPS/Green-Line/PAGES/SIDEMENU_APPS.css">
+
+<style>
+	.APP_Green-Line 			{width:100%; height:100%;box-sizing:border-box;}
+	.APP_Green-Line table		{width:100%; height:100%; font-size:100%; border-collapse: separate; border-spacing: 1px; line-height: 100%;}
+	.APP_Green-Line table th	{font-weight:bold; text-align: center; white-space:normal; vertical-align: middle; word-break:break-all; word-wrap:break-all; background:#4789b7; color:white; }
+	.APP_Green-Line table td	{text-decoration:none; text-align: left;   white-space:normal; vertical-align: middle; word-break:break-all; word-wrap:break-all; background:#eee; padding:0 10px;}
+</style>
+
+<script>
+
+function INIT_BUTTON_WIDGETS() {
+	$(".EVENT_VIDEO_FILE").unbind();
+	$(".EVENT_VIDEO_FILE").on('click', function () {
+		var VIDEO_FILE = $(this).attr('VIDEO_FILE');
+		alert(VIDEO_FILE);
+	});
+}
+
+function LOAD_VIDEO_SOURCE(DOM) {
+	var ID			= $(DOM).attr('ID');
+	var VIDEO_FILE	= $(DOM).attr('VIDEO_FILE');
+	$('#VIDEO_' + ID).attr('src', '/WEBAPPS/APPS/Green-Line/CAM/' + VIDEO_FILE);
+
+/*
+	var video = $('#divVideo video')[0];
+	video.src = videoFile;
+	video.load();
+	video.play();
+*/
+//	alert(ID + ' : ' + VIDEO_FILE);
+}
+
+function LIST_VIDEO_FILES(ONE_ITEM) {
+	QIIP_API_ACCESS({
+		REQ: 'api_GreenLine',
+		WHAT: 'LIST_VIDEO_FILES',
+		TITLE: ONE_ITEM.TITLE
+	},function(STR_RESULT) {
+		var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+		if (JSON_RESULT instanceof Object) {
+/*
+			$('#'+ONE_ITEM.TITLE).jqxListBox({ width: '100%', height: '100%' });
+			JSON_RESULT.VIDEO_FILES.forEach(function (ONE_VIDEO) {
+				$('#'+ONE_ITEM.TITLE).jqxListBox('addItem', ONE_VIDEO);
+			});
+//*/
+			_RS.VIDEO_FILES[ONE_ITEM.TITLE] = JSON_RESULT.VIDEO_FILES;
+			_RS.$apply();
+/*
+			QIIP_APP_ALERT([
+				'<xmp>' + JSON.stringify(_RS.VIDEO_FILES, null, '\t') + '</xmp>',
+			],function () {
+//					window.location.replace(_API_SERVER_URL);
+			});
+*/
+		}
+	});
+}
+
+function QIIP_SIDEMENU_INIT_WIDGETS() {
+	TOGGLE_SIDEMENU(function () {
+		$('#MENU_CONTENTS').css('height', ($('#SIDEMENU_PAGE').height() - 70) / $('#SIDEMENU_PAGE').height() * 100 + '%');
+		_RS.VIDEO_FILES = {};
+
+		_RS.APP_CONFIG.GreenLine_CAMS.forEach(function (ONE_ITEM) {
+			LIST_VIDEO_FILES(ONE_ITEM);
+		});
+	});
+}
+
+</script>
+
+
+<div class="APP_Green-Line" style="overflow:auto;">
+	<table>
+		<col width="20%" />
+		<col width="40%" />
+		<col width="40%" />
+		<tr ng-repeat="CAMS in APP_CONFIG.GreenLine_CAMS">
+			<td>
+				<div style="width:100%;height:100%;overflow:auto;">
+					<button ng-repeat="ONE_VIDEO_FILE in VIDEO_FILES[CAMS.TITLE]"
+							class="btn btn-primary EVENT_VIDEO_FILE"
+						    style="width:100%;"
+						    ID="{{CAMS.TITLE}}"
+						    VIDEO_FILE="{{ONE_VIDEO_FILE}}"
+						    onclick="LOAD_VIDEO_SOURCE(this);"
+						    >
+						{{ONE_VIDEO_FILE}}
+					</button>
+				</div>
+			</td>
+			<th>
+				<video style="width:100%;" ID="VIDEO_{{CAMS.TITLE}}" controls autoplay />
+			</th>
+			<th>
+				<img style="width:100%;" src="{{CAMS.URL}}" />
+			</th>
+		</tr>
+	</table>
+</div>

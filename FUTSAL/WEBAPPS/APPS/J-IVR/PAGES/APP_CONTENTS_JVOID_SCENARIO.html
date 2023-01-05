@@ -1,0 +1,732 @@
+<style>
+	.ivr_scenario 			{width:100%; height:100%;}
+	.ivr_scenario table		{width:100%; height:100%; font-size:100%; border-collapse: separate; border-spacing: 1px; line-height: 100%;}
+	.ivr_scenario table th	{font-weight:bold; text-align: center; white-space:normal; vertical-align: middle; word-break:break-all; word-wrap:break-all; background:#4789b7; color:white; }
+	.ivr_scenario table td	{text-decoration:none; text-align: left;   white-space:normal; vertical-align: middle; word-break:break-all; word-wrap:break-all; background:#eee; padding:0 10px;}
+</style>
+
+<script>
+var IVR_SERVER_SELECTED		= null;
+
+function REGIST_BUTTON_EVENT() {
+
+	$(".BTN_IVR_SCENARIO").jqxButton({
+		width: '100%',
+		height: '100%'
+	}).on('click', function () {
+		var ID = $(this).attr('ID');
+		if (ID == 'DUMMY') {
+		} else if(ID == 'BTN_GET_IVR_SCENARIO') {
+			QUERY_IVR_SCENARIO();
+		} else if(ID == 'BTN_LOAD_CONFIG') {
+			var TARGET = $(this).attr('TARGET');
+			if (TARGET == 'SOFTPHONE_RELAYER') {
+				LOAD_SOFTPHONE_RELAYER_CONFIG();
+			} else if (TARGET == 'SCENARIO_PLAYER') {
+				LOAD_SCENARIO_PLAYER_CONFIG();
+			}
+		} else if(ID == 'BTN_SAVE_CONFIG') {
+			var TARGET = $(this).attr('TARGET');
+			if (TARGET == 'SOFTPHONE_RELAYER') {
+				SAVE_SOFTPHONE_RELAYER_CONFIG();
+			} else if (TARGET == 'SCENARIO_PLAYER') {
+				SAVE_SCENARIO_PLAYER_CONFIG();
+			}
+		} else if(ID == 'BTN_RESTART') {
+			var TARGET = $(this).attr('TARGET');
+			var SERVER_SHELL = '';
+			if (TARGET == 'SOFTPHONE_RELAYER') {
+				SERVER_SHELL = sprintf('%s/%s', _RS.APP_CONFIG.SOFTPHONE_RELAYER_FLDR, _RS.APP_CONFIG.SOFTPHONE_RELAYER_KILL);
+			} else if (TARGET == 'SCENARIO_PLAYER') {
+				SERVER_SHELL = sprintf('%s/%s', _RS.APP_CONFIG.SOFTPHONE_RELAYER_FLDR, _RS.APP_CONFIG.SOFTPHONE_EVENT_MANAGER_KILL);
+			}
+			EXEC_SERVER_SHELL(SERVER_SHELL);
+		}
+	});
+}
+
+function ON_CLICK_BTN_PROCESS_SCENARIO(OBJ_DOM) {
+	var ATTR = QIIP_GET_DOM_ATTRIBUTES(OBJ_DOM);
+	var STR_CMD = ATTR.cmd;
+	var ROW_DATA = {
+		ID: $('#TXT_ID_' + ATTR.row_index).val(),
+		SCENARIO_NAME: $('#TXT_SCENARIO_NAME_' + ATTR.row_index).val(),
+		SCENARIO_JSON: $('#TXT_SCENARIO_JSON_' + ATTR.row_index).val(),
+	};
+
+//	alert(JSON.stringify(ROW_DATA, null, '\t'));
+
+	if ((STR_CMD == 'UPD') || (STR_CMD == 'ADD')) {
+		try {
+			var TEMP_JSON = JSON.parse(ROW_DATA.SCENARIO_JSON);
+		} catch {
+			QIIP_APP_ALERT([
+				"시나리오 정의 내용에 JSON 오류가 있습니다."
+			]);
+			return;
+		}
+	}
+	
+	var STR_SQL = '';
+	if (STR_CMD == 'DUMMY') {
+	} else if (STR_CMD == 'UPD') {
+		STR_SQL  = "UPDATE JVOIP_IVR_SCENARIO ";
+		STR_SQL += sprintf("SET SCENARIO_NAME = '%s', ", ROW_DATA.SCENARIO_NAME);
+		STR_SQL += sprintf("SCENARIO_JSON_BASE64 = '%s' ", Base64.encode(ROW_DATA.SCENARIO_JSON));
+		STR_SQL += sprintf("WHERE ID = '%s' ", ROW_DATA.ID);
+	} else if (STR_CMD == 'DEL') {
+		STR_SQL  = "DELETE FROM JVOIP_IVR_SCENARIO ";
+		STR_SQL += sprintf("WHERE ID = %s ", ROW_DATA.ID);
+	} else if (STR_CMD == 'ADD') {
+		if ((ROW_DATA.SCENARIO_NAME.length > 0) &&
+			(ROW_DATA.SCENARIO_JSON.length > 0)) {
+			STR_SQL  = "INSERT INTO JVOIP_IVR_SCENARIO (";
+			STR_SQL += sprintf("SCENARIO_NAME, ");
+			STR_SQL += sprintf("SCENARIO_JSON_BASE64 ");
+			STR_SQL += sprintf(") VALUES (");
+			STR_SQL += sprintf("'%s', '%s')", 
+							ROW_DATA.SCENARIO_NAME,
+							Base64.encode(ROW_DATA.SCENARIO_JSON)
+					   );
+			
+		} else {
+			QIIP_APP_ALERT([
+				"데이터 중 일부를 입력하지 않았습니다."
+			]);
+		}
+	}
+
+	console.log(STR_SQL);
+	
+	if (STR_SQL.length < 1) return;
+
+	QIIP_API_ACCESS({
+			REQ: 'api_DB_ACCESS',
+			STR_SQL_BASE64: Base64.encode(STR_SQL),
+		},function(STR_RESULT) {
+			var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+			if (JSON_RESULT instanceof Object) {
+				var FLAG_ERROR = false;
+				if ('STATUS' in JSON_RESULT) {
+					if (JSON_RESULT.STATUS != 200) {
+						FLAG_ERROR = true;
+					}
+				}
+				if (FLAG_ERROR) {
+					QIIP_APP_ALERT([
+						STR_SQL,
+						JSON_RESULT.STATUS_HELP
+					]);
+					return;
+				} else {
+					QUERY_IVR_SCENARIO();
+				}
+			}
+		},{
+			title: _RS.PHONE_INFO.APP_NAME + ' 안내',
+			template: ARR_TO_TABLE_CENTER([
+				'화면을 구성하고 있습니다.'
+			]),
+			cssClass: 'qiip_popup'
+		}
+	);
+	
+}
+
+function ON_CLICK_BTN_PROCESS_SCENARIO_OLD(OBJ_DOM) {
+	var ATTR = QIIP_GET_DOM_ATTRIBUTES(OBJ_DOM);
+	var STR_CMD = ATTR.cmd;
+	var ROW_DATA = $('#DIV_GRID_SCENARIO_LIST').jqxGrid('getrowdata', ATTR.row);
+
+//	alert(JSON.stringify(ROW_DATA, null, '\t'));
+
+	if ((STR_CMD == 'UPD') || (STR_CMD == 'ADD')) {
+		try {
+			var TEMP_JSON = JSON.parse(ROW_DATA.SCENARIO_JSON);
+		} catch {
+			QIIP_APP_ALERT([
+				"시나리오 정의 내용에 JSON 오류가 있습니다."
+			]);
+			return;
+		}
+	}
+	
+	var STR_SQL = '';
+	if (STR_CMD == 'DUMMY') {
+	} else if (STR_CMD == 'UPD') {
+		STR_SQL  = "UPDATE JVOIP_IVR_SCENARIO ";
+		STR_SQL += sprintf("SET SCENARIO_NAME = '%s', ", ROW_DATA.SCENARIO_NAME);
+		STR_SQL += sprintf("SCENARIO_JSON_BASE64 = '%s' ", Base64.encode(ROW_DATA.SCENARIO_JSON));
+		STR_SQL += sprintf("WHERE ID = '%s' ", ROW_DATA.ID);
+	} else if (STR_CMD == 'DEL') {
+		STR_SQL  = "DELETE FROM JVOIP_IVR_SCENARIO ";
+		STR_SQL += sprintf("WHERE ID = %s ", ROW_DATA.ID);
+	} else if (STR_CMD == 'ADD') {
+		if ((ROW_DATA.SCENARIO_NAME.length > 0) &&
+			(ROW_DATA.SCENARIO_JSON.length > 0)) {
+			STR_SQL  = "INSERT INTO JVOIP_IVR_SCENARIO (";
+			STR_SQL += sprintf("SCENARIO_NAME, ");
+			STR_SQL += sprintf("SCENARIO_JSON_BASE64 ");
+			STR_SQL += sprintf(") VALUES (");
+			STR_SQL += sprintf("'%s', '%s')", 
+							ROW_DATA.SCENARIO_NAME,
+							Base64.encode(ROW_DATA.SCENARIO_JSON)
+					   );
+			
+		} else {
+			QIIP_APP_ALERT([
+				"데이터 중 일부를 입력하지 않았습니다."
+			]);
+		}
+	}
+
+	console.log(STR_SQL);
+	
+	if (STR_SQL.length < 1) return;
+
+	QIIP_API_ACCESS({
+			REQ: 'api_DB_ACCESS',
+			STR_SQL_BASE64: Base64.encode(STR_SQL),
+		},function(STR_RESULT) {
+			var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+			if (JSON_RESULT instanceof Object) {
+				var FLAG_ERROR = false;
+				if ('STATUS' in JSON_RESULT) {
+					if (JSON_RESULT.STATUS != 200) {
+						FLAG_ERROR = true;
+					}
+				}
+				if (FLAG_ERROR) {
+					QIIP_APP_ALERT([
+						STR_SQL,
+						JSON_RESULT.STATUS_HELP
+					]);
+					return;
+				} else {
+					QUERY_IVR_SCENARIO();
+				}
+			}
+		},{
+			title: _RS.PHONE_INFO.APP_NAME + ' 안내',
+			template: ARR_TO_TABLE_CENTER([
+				'화면을 구성하고 있습니다.'
+			]),
+			cssClass: 'qiip_popup'
+		}
+	);
+	
+}
+
+function DB_FIELD_ENCODE(LOGIN_ID, FUNC_AFTER) {
+
+	QIIP_API_ACCESS({
+			REQ: 'api_DB_FIELD_ENCODE',
+			TABLE: 'T_USER_LIST',
+			UNIQUE_FIELD: 'ID',
+			FIELDS: [
+				'LOGIN_PW',
+				'PHONE_PW',
+			],
+			WHERE: sprintf("LOGIN_ID = '%s'", LOGIN_ID),
+		},function(STR_RESULT) {
+			var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+			if (JSON_RESULT instanceof Object) {
+				if (FUNC_AFTER != undefined) FUNC_AFTER();
+			}
+		},{
+			title: _RS.PHONE_INFO.APP_NAME + ' 안내',
+			template: ARR_TO_TABLE_CENTER([
+				'화면을 구성하고 있습니다.'
+			]),
+			cssClass: 'qiip_popup'
+		}
+	);
+	
+}
+
+function INIT_WIDGETS_FOR_MENU_CONTENTS() {
+	REGIST_BUTTON_EVENT();
+	TOGGLE_SIDEMENU(function () {
+		setTimeout(function (){
+			LOAD_SOFTPHONE_RELAYER_CONFIG();
+			LOAD_SCENARIO_PLAYER_CONFIG();
+			QUERY_IVR_DB_TABLE_CHECK();
+		}, 200);
+	});
+}
+
+function QUERY_IVR_DB_TABLE_CHECK() {
+	
+	var TABLE_DEF = {
+		ID: 'INT(12) UNSIGNED AUTO_INCREMENT',
+		SCENARIO_NAME: 'VARCHAR(64) NOT NULL',
+		SCENARIO_JSON_BASE64: 'MEDIUMTEXT'
+	};
+	
+	var STR_SQL  = "CREATE TABLE IF NOT EXISTS JVOIP_IVR_SCENARIO (";
+	
+	Object.keys(TABLE_DEF).forEach(function (ONE_KEY) {
+		STR_SQL += ONE_KEY + ' ' + TABLE_DEF[ONE_KEY] + ', ';
+	});
+	
+	STR_SQL += 'PRIMARY KEY (ID)) ';
+	STR_SQL += 'DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci';
+	
+//	console.log(STR_SQL);
+
+	QIIP_API_ACCESS({
+			REQ: 'api_DB_ACCESS',
+			STR_SQL_BASE64: Base64.encode(STR_SQL),
+		},function(STR_RESULT) {
+			var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+			if (JSON_RESULT instanceof Object) {
+				var FLAG_ERROR = false;
+				if ('STATUS' in JSON_RESULT) {
+					if (JSON_RESULT.STATUS != 200) {
+						FLAG_ERROR = true;
+					}
+				}
+				if (FLAG_ERROR) {
+					QIIP_APP_ALERT([
+						STR_SQL,
+						JSON_RESULT.STATUS_HELP
+					]);
+					return;
+				} else {
+					QUERY_IVR_SCENARIO();
+				}
+			}
+		},{
+			title: _RS.PHONE_INFO.APP_NAME + ' 안내',
+			template: ARR_TO_TABLE_CENTER([
+				'화면을 구성하고 있습니다.'
+			]),
+			cssClass: 'qiip_popup'
+		}
+	);
+	
+}
+
+
+function QUERY_IVR_SCENARIO() {
+    var STR_SCENARIO_NAME = $('#STR_SCENARIO_NAME').val();
+    
+    var FLAG_FILTER = false;
+    if (STR_SCENARIO_NAME.length > 0) { FLAG_FILTER = true; }
+
+    var MAX_LIST	  = parseInt($('#MAX_LIST').val());
+    if (MAX_LIST < 1) {
+    	MAX_LIST = 50;
+    } else if (MAX_LIST > 1000) {
+    	MAX_LIST = 1000;
+    }
+
+	var STR_SQL  = "SELECT * FROM JVOIP_IVR_SCENARIO ";
+		if (FLAG_FILTER) {
+			STR_SQL += sprintf("WHERE ID > 0 ");
+		}
+		if (STR_SCENARIO_NAME.length > 0) {
+			STR_SQL += sprintf("AND SCENARIO_NAME like '%s' ", '%' + STR_SCENARIO_NAME + '%');
+		}
+		STR_SQL += sprintf("ORDER BY ID DESC ");
+		STR_SQL += sprintf("LIMIT %d ", MAX_LIST);
+	
+	console.log(STR_SQL);
+
+	QIIP_API_ACCESS({
+			REQ: 'api_DB_ACCESS',
+			STR_SQL_BASE64: Base64.encode(STR_SQL),
+		},function(STR_RESULT) {
+			var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+			if (JSON_RESULT instanceof Object) {
+				var FLAG_ERROR = false;
+				if ('STATUS' in JSON_RESULT) {
+					if (JSON_RESULT.STATUS != 200) {
+						FLAG_ERROR = true;
+					}
+				}
+				if (FLAG_ERROR) {
+					QIIP_APP_ALERT([
+						STR_SQL,
+						JSON_RESULT.STATUS_HELP
+					]);
+					return;
+				} else {
+					LOAD_GRID_IVR_SCENARIO(JSON_RESULT);
+				}
+			}
+		},{
+			title: _RS.PHONE_INFO.APP_NAME + ' 안내',
+			template: ARR_TO_TABLE_CENTER([
+				'화면을 구성하고 있습니다.'
+			]),
+			cssClass: 'qiip_popup'
+		}
+	);
+}
+
+function LOAD_GRID_IVR_SCENARIO(SQL_RESULT) {
+	SQL_RESULT.forEach(function (ONE_ITEM) {
+		ONE_ITEM.SCENARIO_JSON = Base64.decode(ONE_ITEM.SCENARIO_JSON_BASE64);
+	});
+
+	SQL_RESULT.unshift({
+		"ID": "NA",
+		"SCENARIO_NAME": "",
+		"SCENARIO_JSON": "",
+		"SCENARIO_JSON_BASE64": Base64.encode("")
+	});
+
+	_RS.SCENARIO_LIST = SQL_RESULT;
+	_RS.$apply();
+	
+}
+
+function LOAD_SOFTPHONE_RELAYER_CONFIG() {
+	QIIP_API_ACCESS({
+			REQ: 'api_GET_FILE',
+			FLDR: _RS.APP_CONFIG.SOFTPHONE_RELAYER_FLDR,
+			FILE: _RS.APP_CONFIG.SOFTPHONE_RELAYER_CONFIG
+		},function(STR_RESULT) {
+			$('#TXT_CONFIG_SOFTPHONE_RELAYER').html(STR_RESULT);
+		},{
+			title: _RS.PHONE_INFO.APP_NAME + ' 안내',
+			template: ARR_TO_TABLE_CENTER([
+				'화면을 구성하고 있습니다.'
+			]),
+			cssClass: 'qiip_popup'
+		}
+	);
+}
+
+function SAVE_SOFTPHONE_RELAYER_CONFIG() {
+
+	try {
+		var TEMP_JSON = JSON.parse($('#TXT_CONFIG_SOFTPHONE_RELAYER').val());
+	} catch {
+		QIIP_APP_ALERT([
+			"설정 정의 내용에 JSON 오류가 있습니다."
+		]);
+		return;
+	}
+	
+	QIIP_API_ACCESS({
+			REQ: 'api_PUT_FILE',
+			FLDR: _RS.APP_CONFIG.SOFTPHONE_RELAYER_FLDR,
+			FILE: _RS.APP_CONFIG.SOFTPHONE_RELAYER_CONFIG,
+			CONTENTS_BASE64: Base64.encode($('#TXT_CONFIG_SOFTPHONE_RELAYER').val()),
+		},function(STR_RESULT) {
+			console.log(STR_RESULT);
+		},{
+			title: _RS.PHONE_INFO.APP_NAME + ' 안내',
+			template: ARR_TO_TABLE_CENTER([
+				'화면을 구성하고 있습니다.'
+			]),
+			cssClass: 'qiip_popup'
+		}
+	);
+}
+
+function LOAD_SCENARIO_PLAYER_CONFIG() {
+
+	QIIP_API_ACCESS({
+			REQ: 'api_GET_FILE',
+			FLDR: _RS.APP_CONFIG.SOFTPHONE_RELAYER_FLDR,
+			FILE: _RS.APP_CONFIG.SCENARIO_PLAYER_CONFIG
+		},function(STR_RESULT) {
+			$('#TXT_CONFIG_SCENARIO_PLAYER').html(STR_RESULT);
+		},{
+			title: _RS.PHONE_INFO.APP_NAME + ' 안내',
+			template: ARR_TO_TABLE_CENTER([
+				'화면을 구성하고 있습니다.'
+			]),
+			cssClass: 'qiip_popup'
+		}
+	);
+}
+
+function SAVE_SCENARIO_PLAYER_CONFIG() {
+
+	try {
+		var TEMP_JSON = JSON.parse($('#TXT_CONFIG_SCENARIO_PLAYER').val());
+	} catch {
+		QIIP_APP_ALERT([
+			"설정 정의 내용에 JSON 오류가 있습니다."
+		]);
+		return;
+	}
+
+	QIIP_API_ACCESS({
+			REQ: 'api_PUT_FILE',
+			FLDR: _RS.APP_CONFIG.SOFTPHONE_RELAYER_FLDR,
+			FILE: _RS.APP_CONFIG.SCENARIO_PLAYER_CONFIG,
+			CONTENTS_BASE64: Base64.encode($('#TXT_CONFIG_SCENARIO_PLAYER').val()),
+		},function(STR_RESULT) {
+			console.log(STR_RESULT);
+		},{
+			title: _RS.PHONE_INFO.APP_NAME + ' 안내',
+			template: ARR_TO_TABLE_CENTER([
+				'화면을 구성하고 있습니다.'
+			]),
+			cssClass: 'qiip_popup'
+		}
+	);
+}
+
+
+function EXEC_SERVER_SHELL(args_SHELL_COMMAND) {
+	QIIP_API_ACCESS({
+			REQ: 'api_EXEC',
+			SHELL_COMMAND: args_SHELL_COMMAND
+		},function(STR_RESULT) {
+			console.log(STR_RESULT);
+		},{
+			title: _RS.PHONE_INFO.APP_NAME + ' 안내',
+			template: ARR_TO_TABLE_CENTER([
+				'화면을 구성하고 있습니다.'
+			]),
+			cssClass: 'qiip_popup'
+		}
+	);
+}
+
+
+function LOAD_GRID_IVR_SCENARIO_OLD(SQL_RESULT) {
+//	$('#DIV_GRID_SCENARIO_LIST').html(
+//		'<pre>' +
+//		JSON.stringify(SQL_RESULT, null, '\t') +
+//		'</pre>'
+//	);
+//	return;
+
+	SQL_RESULT.forEach(function (ONE_ITEM) {
+//		var TMP_JSON = JSON.parse(Base64.decode(ONE_ITEM.SCENARIO_JSON_BASE64));
+//		ONE_ITEM.SCENARIO_JSON = JSON.stringify(TMP_JSON, null, '\t');
+		ONE_ITEM.SCENARIO_JSON = Base64.decode(ONE_ITEM.SCENARIO_JSON_BASE64)
+	});
+
+	SQL_RESULT.unshift({
+		"ID": "NA",
+		"SCENARIO_NAME": "",
+		"SCENARIO_JSON": ""
+	});
+
+    var source = {
+        localdata: SQL_RESULT,
+        datatype: "json",
+        datafields:[
+            { name: 'ID',				type: 'string' },
+            { name: 'SCENARIO_NAME',	type: 'string' },
+            { name: 'SCENARIO_JSON',	type: 'string' },
+        ]                     
+    };
+    var dataAdapter = new $.jqx.dataAdapter(source);
+	$("#DIV_GRID_SCENARIO_LIST").jqxGrid({
+		rowsheight: 200,
+        width: '100%',
+        height: '100%',
+        source: dataAdapter,                
+//        pageable: true,
+//        autoheight: true,
+        sortable: true,
+        altrows: true,
+        enabletooltips: true,
+        editable: true,
+        pagesize: 15,
+        selectionmode: 'multiplecellsadvanced',
+        columns: [
+          { text: '버튼', width: '10%', align: 'center',	cellsalign: 'center',
+          	cellsrenderer: function (row, column, value) {
+                var STR_HTML  = '';
+                	STR_HTML += '<div style="width:100%;height:100%;text-align:center;">';
+          		if (row > 0) {
+                	STR_HTML += '<button style="height:100%;" CMD="UPD" ROW="' + row + '" onclick="ON_CLICK_BTN_PROCESS_SCENARIO(this);">';
+                	STR_HTML += '갱신';
+                	STR_HTML += '</button>';
+                	STR_HTML += ' ';
+                	STR_HTML += '<button style="height:100%;" CMD="DEL" ROW="' + row + '" onclick="ON_CLICK_BTN_PROCESS_SCENARIO(this);">';
+                	STR_HTML += '삭제';
+                	STR_HTML += '</button>';
+          		} else {
+                	STR_HTML += '<button style="height:100%;" CMD="ADD" ROW="' + row + '" onclick="ON_CLICK_BTN_PROCESS_SCENARIO(this);">';
+                	STR_HTML += '추가';
+                	STR_HTML += '</button>';
+          		}
+                	STR_HTML += '</div>';
+                return STR_HTML;
+            }
+          },
+          { text: 'ID',				width: '5%', columngroup: 'SCENARIO_LIST', datafield: 'ID'},
+          { text: 'SCENARIO NAME',	width: '10%', columngroup: 'SCENARIO_LIST', datafield: 'SCENARIO_NAME',		align: 'center',	cellsalign: 'center'},
+          { text: 'SCENARIO JSON',	width: '65%', columngroup: 'SCENARIO_LIST', datafield: 'SCENARIO_JSON',		align: 'center',	cellsalign: 'center',
+          	cellsrenderer: function (row, column, value) {
+                var STR_HTML  = '';
+//                	STR_HTML += '<textarea style="width:100%;height:100%;">';
+                	STR_HTML += '<div style="width:100%;height:100%;overflow:auto;">';
+                	STR_HTML += '<pre>';
+                	STR_HTML += value;
+                	STR_HTML += '</pre>';
+                	STR_HTML += '</div>';
+//                	STR_HTML += '</textarea>';
+                return STR_HTML;
+            }
+          },
+        ],
+        columngroups: [
+            { text: 'SCENARIO LIST', align: 'center', name: 'SCENARIO_LIST' },
+        ]
+    });	
+    
+}
+
+</script>
+<div class="ivr_scenario">
+	<div style="height:100%;width:70%;float:left;">
+		<div style="height:5%;">
+			<table>
+				<col width="10%" />
+				<col width="15%" />
+				<col width="10%" />
+				<col width="15%" />
+				<col width="10%" />
+				<col width="15%" />
+				<col width="25%" />
+				<tr>
+					<th style="background:#94bbd6; color:#333;">SCENARIO_NAME</th>
+					<td>
+						<input type="text" id="STR_SCENARIO_NAME" style="width:100%;height:100%" />
+					</td>
+
+					<th style="background:#94bbd6; color:#333;">LIMIT</th>
+					<td>
+						<input type="text" id="MAX_LIST" style="width:100%;height:100%;text-align:center;" value="50"/>
+					</td>
+
+					<td>
+						<button class="BTN_IVR_SCENARIO" id="BTN_GET_IVR_SCENARIO">
+							목록갱신
+						</button>
+					</td>
+
+				</tr>
+			</table>
+		</div>
+		<div style="height:95%;overflow:auto;">
+			<table>
+				<col width="15%" />
+				<col width="15%" />
+				<col width="70%" />
+				<tr>
+					<th>
+					</th>
+					<th>
+						SCENARIO_NAME
+					</th>
+					<th style="height:35px;">
+						SCENARIO_JSON
+					</th>
+				</tr>
+			  	<tr ng-repeat="ONE_ROW in SCENARIO_LIST" >
+			  		<td ng-show="ONE_ROW.ID == 'NA'">
+	                	<button style="height:50%;width:100%;" CMD="ADD" ROW_INDEX="{{$index}}" onclick="ON_CLICK_BTN_PROCESS_SCENARIO(this);">
+	                	추가
+	                	</button>
+			  		</td>
+			  		<td ng-show="ONE_ROW.ID != 'NA'">
+			  			<table>
+			  				<tr>
+			  					<td>
+				                	<button style="height:50%;width:100%;" CMD="UPD" ROW_INDEX="{{$index}}" onclick="ON_CLICK_BTN_PROCESS_SCENARIO(this);">
+				                	변경
+				                	</button>
+			  					</td>
+			  					<td>
+				                	<button style="height:50%;width:100%;" CMD="DEL" ROW_INDEX="{{$index}}" onclick="ON_CLICK_BTN_PROCESS_SCENARIO(this);">
+				                	삭제
+				                	</button>
+			  					</td>
+			  				</tr>
+			  			</table>
+			  		</td>
+			  		<td>
+			  			<input type="hidden" id="TXT_ID_{{$index}}" value="{{ONE_ROW.ID}}"/>
+			  			<input style="height:25%;width:100%;" type="text" id="TXT_SCENARIO_NAME_{{$index}}" value="{{ONE_ROW.SCENARIO_NAME}}"/>
+			  		</td>
+			  		<td style="height:300px;">
+			  			<textarea style="width:100%;height:100%;" id="TXT_SCENARIO_JSON_{{$index}}" >{{ONE_ROW.SCENARIO_JSON}}</textarea>
+			  		</td>
+			  	</tr>
+			</table>
+		</div>
+	</div>
+	<div style="height:100%;width:30%;float:left;">
+		<div style="height:5%;">
+			<table>
+				<tr>
+					<th>SOFTPHONE_RELAYER CONFIG</th>
+				</tr>
+			</table>
+		</div>
+		<div style="height:40%;">
+			<textarea style="width:100%;height:100%;" id="TXT_CONFIG_SOFTPHONE_RELAYER" ></textarea>
+		</div>
+		<div style="height:5%;">
+			<table>
+				<col width="33%" />
+				<col width="33%" />
+				<col width="34%" />
+				<tr>
+					<td>
+	                	<button class="BTN_IVR_SCENARIO" style="width:100%;height:100%;" TARGET="SOFTPHONE_RELAYER" id="BTN_LOAD_CONFIG">
+	                	LOAD
+	                	</button>
+					</td>
+					<td>
+	                	<button class="BTN_IVR_SCENARIO" style="width:100%;height:100%;" TARGET="SOFTPHONE_RELAYER" id="BTN_SAVE_CONFIG">
+	                	SAVE
+	                	</button>
+					</td>
+					<td>
+	                	<button class="BTN_IVR_SCENARIO" style="width:100%;height:100%;" TARGET="SOFTPHONE_RELAYER" id="BTN_RESTART">
+	                	RE-START
+	                	</button>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div style="height:5%;">
+			<table>
+				<tr>
+					<th>SCENARIO CONFIG</th>
+				</tr>
+			</table>
+		</div>
+		<div style="height:40%;">
+			<textarea style="width:100%;height:100%;" id="TXT_CONFIG_SCENARIO_PLAYER" ></textarea>
+		</div>
+		<div style="height:5%;">
+			<table>
+				<col width="33%" />
+				<col width="33%" />
+				<col width="34%" />
+				<tr>
+					<td>
+	                	<button class="BTN_IVR_SCENARIO" style="width:100%;height:100%;" TARGET="SCENARIO_PLAYER" id="BTN_LOAD_CONFIG">
+	                	LOAD
+	                	</button>
+					</td>
+					<td>
+	                	<button class="BTN_IVR_SCENARIO" style="width:100%;height:100%;" TARGET="SCENARIO_PLAYER" id="BTN_SAVE_CONFIG">
+	                	SAVE
+	                	</button>
+					</td>
+					<td>
+	                	<button class="BTN_IVR_SCENARIO" style="width:100%;height:100%;" TARGET="SCENARIO_PLAYER" id="BTN_RESTART">
+	                	RE-START
+	                	</button>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</div>

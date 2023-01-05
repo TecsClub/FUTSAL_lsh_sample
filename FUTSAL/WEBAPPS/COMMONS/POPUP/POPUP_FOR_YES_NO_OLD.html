@@ -1,0 +1,56 @@
+{@ $ARGS = json_decode(base64_decode($ARGS->JSON_ARGS_BASE64)); }
+<script>
+var OBJ_POPUP_FOR_YES_NO = null;
+var OBJ_POPUP_FUNC_YES = undefined;
+var OBJ_POPUP_FUNC_NO  = undefined;
+function INIT_WIDGETS_POPUP_FOR_YES_NO(OBJ_DIALOG, FUNC_YES, FUNC_NO, TIME_TO_CLOSE) {
+	OBJ_POPUP_FOR_YES_NO = OBJ_DIALOG;
+	OBJ_POPUP_FUNC_YES = FUNC_YES;
+	OBJ_POPUP_FUNC_NO = FUNC_NO;
+	$(".BTN_POPUP_YES_NO").jqxButton({
+		width: '100%',
+		height: '100%'
+	});
+	if (TIME_TO_CLOSE != undefined) {
+		setTimeout(CLOSE_POPUP_FOR_YES_NO, TIME_TO_CLOSE);
+	}
+}
+
+function CLOSE_POPUP_FOR_YES_NO(SELECTION) {
+	if (OBJ_POPUP_FOR_YES_NO != null) {
+		QIIP_JQX_CLOSE_WINDOW(OBJ_POPUP_FOR_YES_NO);
+		if (SELECTION == 'YES') {
+			if (OBJ_POPUP_FUNC_YES != undefined) OBJ_POPUP_FUNC_YES();
+		} else {
+			if (OBJ_POPUP_FUNC_NO  != undefined) OBJ_POPUP_FUNC_NO();
+		}
+	}
+}
+
+</script>
+
+<div class="qiip_index" style="width:100%;height:80%;background-color:#c9c9c9;overflow:auto;">
+	<table>
+		<tr loop="$ARGS=>$KEY,$ONE_STRING" >
+			<th>{$ONE_STRING}</th>
+		</tr>
+	</table>
+</div>
+<div class="qiip_index" style="width:100%;height:20%;padding:0;">
+	<table>
+		<col width="50%"/>
+		<tr>
+			<td>
+		      	<button class="BTN_POPUP_YES_NO" onclick="CLOSE_POPUP_FOR_YES_NO('YES')">
+		        	예
+		    	</button>
+			</td>
+			<td>
+		      	<button class="BTN_POPUP_YES_NO" onclick="CLOSE_POPUP_FOR_YES_NO('NO')">
+		        	아니오
+		    	</button>
+			</td>
+		</tr>
+	</table>
+</div>
+

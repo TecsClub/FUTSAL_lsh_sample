@@ -1,0 +1,678 @@
+<style>
+#CAM_MONITOR div		{box-sizing: border-box;}
+#CAM_MONITOR table	{width:100%; height:100%; font-size:100%; border-collapse: separate; border-spacing: 1px; line-height: 100%;}
+#CAM_MONITOR table th	{text-decoration:bold; text-align: center; white-space:normal; vertical-align: middle; word-break:break-all; background:#bbb;}
+#CAM_MONITOR table td	{text-decoration:none; text-align: left;   white-space:normal; vertical-align: middle;word-break:break-all; background:#fff;}
+#CAM_MONITOR input	{width:100%; height:100%;}
+#CAM_MONITOR button	{width:100%; height:100%;}
+</style>
+<script>
+	var DIV_CONSOLE_SCROLL = 'DIV_DIA_MON_LOG';
+	var FLAG_PROBE_DATA = false;
+//	var LST_WS_SERVER_URL	= window.location.origin + '/LST/API.jsp'
+	var LST_WS_SERVER_URL	= 'ws://localhost';
+	var LST_WS_CHANNEL		= 'ws_serial-service';
+	
+	var CAMERA_STREAM_A		= null;
+	
+	var CANVAS_CAMERA_A		= null;
+	var CTX_CAMERA_A		= null;
+	
+	var CANVAS_IMAGE_A		= null;
+	var CTX_IMAGE_A			= null;
+
+	var CAMERA_STREAM_B		= null;
+	
+	var CANVAS_CAMERA_B		= null;
+	var CTX_CAMERA_B		= null;
+	
+	var CANVAS_IMAGE_B		= null;
+	var CTX_IMAGE_B			= null;
+
+	function rgbToHsl( r, g, b ){
+	  r /= 255, g /= 255, b /= 255;
+	  var max = Math.max(r, g, b), min = Math.min(r, g, b);
+	  var h, s, l = (max + min) / 2;
+
+	  if(max == min){
+	      h = s = 0; // achromatic
+	  }else{
+	      var d = max - min;
+	      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+	      switch(max){
+	      case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+	      case g: h = (b - r) / d + 2; break;
+	      case b: h = (r - g) / d + 4; break;
+	      }
+	      h /= 6;
+	  }
+	  return [h, s, l];
+	}
+
+	function thresholdHsl(pixels,lower,upper){
+	  var d = pixels.data;
+	   var createTest = function( lower, upper ){
+	     return lower <= upper
+	            ? function(v){ return lower <= v && v <= upper; }
+	            : function(v){ return lower <= v || v <= upper; };
+	   }
+	   var h = createTest( lower[0], upper[0] );
+	   var s = createTest( lower[1], upper[1] );
+	   var l = createTest( lower[2], upper[2] );
+
+	  for (var i=0; i<d.length; i+=4) {
+	   var hsl = rgbToHsl( d[i], d[i+1], d[i+2] );
+	   if ( !h(hsl[0]) || !s(hsl[1]) || !l(hsl[2]) ){
+	     d[i+3] = 0;
+	   }
+	  }
+	}
+
+
+	function CAMERA_SNAPSHOT_LOOP() {
+		CAMERA_SNAPSHOT();
+		setTimeout(CAMERA_SNAPSHOT_LOOP, 5);
+	}
+
+	var FLAG = false;
+	function CAMERA_SNAPSHOT() {
+		if (CAMERA_STREAM_A.srcObject != null) {
+			CTX_CAMERA_A.drawImage(CAMERA_STREAM_A, 0, 0);
+
+			var ImageData_CAMERA = CTX_CAMERA_A.getImageData(0, 0, CAMERA_STREAM_A.width, CAMERA_STREAM_A.height);
+
+			for (var x=0; x<ImageData_CAMERA.width; x++) {
+				for (var y=0; y<ImageData_CAMERA.height; y++) {
+					var INDEX_PIXEL = (x + y * ImageData_CAMERA.width) * 4;
+					var r = ImageData_CAMERA.data[INDEX_PIXEL];
+					var g = ImageData_CAMERA.data[INDEX_PIXEL + 1];
+					var b = ImageData_CAMERA.data[INDEX_PIXEL + 2];
+					var a = ImageData_CAMERA.data[INDEX_PIXEL + 3];
+
+
+				    // compare rgb levels for green and set alphachannel to 0;
+				    selectedR = 105;
+				    selectedG = 105;
+				    selectedB = 105;
+				    if (r >= selectedR && g >= selectedG && b >= selectedB) {
+				        ImageData_CAMERA.data[INDEX_PIXEL + 3] = 0;
+				    }
+				}
+			}
+
+//			thresholdHsl(ImageData_CAMERA,[0,0.12,0],[1,1,1]);
+			CTX_IMAGE_A.putImageData(ImageData_CAMERA, 0, 0);
+			
+			if (FLAG) {
+				console.log(ImageData_CAMERA);
+				FLAG = false;
+			}
+			// "image/webp" works in Chrome.
+			// Other browsers will fall back to image/png.
+	//		document.querySelector('img').src = canvas.toDataURL('image/webp');
+			
+		}
+
+		if (CAMERA_STREAM_B.srcObject != null) {
+			CTX_CAMERA_B.drawImage(CAMERA_STREAM_B, 0, 0);
+
+			var ImageData_CAMERA = CTX_CAMERA_B.getImageData(0, 0, CAMERA_STREAM_B.width, CAMERA_STREAM_B.height);
+
+			for (var x=0; x<ImageData_CAMERA.width; x++) {
+				for (var y=0; y<ImageData_CAMERA.height; y++) {
+					var INDEX_PIXEL = (x + y * ImageData_CAMERA.width) * 4;
+					var r = ImageData_CAMERA.data[INDEX_PIXEL];
+					var g = ImageData_CAMERA.data[INDEX_PIXEL + 1];
+					var b = ImageData_CAMERA.data[INDEX_PIXEL + 2];
+					var a = ImageData_CAMERA.data[INDEX_PIXEL + 3];
+
+
+				    // compare rgb levels for green and set alphachannel to 0;
+				    selectedR = 105;
+				    selectedG = 105;
+				    selectedB = 105;
+				    if (r >= selectedR && g >= selectedG && b >= selectedB) {
+				        ImageData_CAMERA.data[INDEX_PIXEL + 3] = 0;
+				    }
+				}
+			}
+
+//			thresholdHsl(ImageData_CAMERA,[0,0.12,0],[1,1,1]);
+			CTX_IMAGE_B.putImageData(ImageData_CAMERA, 0, 0);
+			
+			if (FLAG) {
+				console.log(ImageData_CAMERA);
+				FLAG = false;
+			}
+			// "image/webp" works in Chrome.
+			// Other browsers will fall back to image/png.
+	//		document.querySelector('img').src = canvas.toDataURL('image/webp');
+			
+		}
+	}
+	
+	
+	function QIIP_NO_MENU_INIT_WIDGETS() {
+		CAMERA_STREAM_A	= $('#CAMERA_STREAM_A')[0];
+
+		CAMERA_STREAM_A.addEventListener('click', function () {
+			FLAG = true;
+		}, false);
+
+		CANVAS_CAMERA_A	= document.getElementById('CANVAS_CAMERA_A');
+		CTX_CAMERA_A		= CANVAS_CAMERA_A.getContext('2d');
+		
+		CANVAS_IMAGE_A	= document.getElementById('CANVAS_IMAGE_A');
+		CTX_IMAGE_A		= CANVAS_IMAGE_A.getContext('2d');
+
+
+
+
+		CAMERA_STREAM_B	= $('#CAMERA_STREAM_B')[0];
+
+		CAMERA_STREAM_B.addEventListener('click', function () {
+			FLAG = true;
+		}, false);
+
+		CANVAS_CAMERA_B	= document.getElementById('CANVAS_CAMERA_B');
+		CTX_CAMERA_B		= CANVAS_CAMERA_B.getContext('2d');
+		
+		CANVAS_IMAGE_B	= document.getElementById('CANVAS_IMAGE_B');
+		CTX_IMAGE_B		= CANVAS_IMAGE_B.getContext('2d');
+
+		CAMERA_SNAPSHOT_LOOP();
+
+		$('#DIV_CAM_MON_TABS').on('created', function (){
+			INIT_WIDGET_LIST_CAMERA();
+		});
+		$('#DIV_CAM_MON_TABS').jqxTabs({
+			width: '100%',
+			height: '100%',
+		}).on('selected', function (EVENT){
+			if (EVENT.args.item == 0) {
+			} else if (EVENT.args.item == 1) {
+			}
+		});
+		
+		INIT_WS_CONNECTION(LST_WS_SERVER_URL, LST_WS_CHANNEL);
+		setTimeout(function () {
+			
+		}, 100);
+	}
+
+	//creates an object with all HD & SD video ratios between two heights
+	function createAllResolutions(minHeight, maxHeight) {
+	    const ratioHD = 16 / 9;
+	    const ratioSD = 4 / 3;
+
+	    let resolutions = [],
+	        res;
+
+	    for (let y = maxHeight; y >= minHeight; y--) {
+	        //HD
+	        res = {
+	            "label": (y * ratioHD).toFixed() + "x" + y,
+	            "width": parseInt((y * ratioHD).toFixed()), //this was returning a string
+	            "height": y,
+	            "ratio": "16:9"
+	        };
+	        resolutions.push(res);
+
+	        //SD
+	        res = {
+	            "label": (y * ratioSD).toFixed() + "x" + y,
+	            "width": parseInt((y * ratioSD).toFixed()),
+	            "height": y,
+	            "ratio": "4:3"
+	        };
+	        resolutions.push(res);
+
+	        //square
+	        //noinspection JSSuspiciousNameCombination
+	        res = {
+	            "label": y + "x" + y,
+	            "width": y,
+	            "height": y,
+	            "ratio": "1:1"
+	        };
+	        resolutions.push(res);
+
+	    }
+	    console.log("resolutions length: " + resolutions.length);
+	    return resolutions;
+	}
+
+	//Variables to use in the quick scan
+	const quickScan = [
+	    {
+	        "label": "4K(UHD)",
+	        "width": 3840,
+	        "height": 2160,
+	        "ratio": "16:9"
+	    },
+	    {
+	        "label": "1080p(FHD)",
+	        "width": 1920,
+	        "height": 1080,
+	        "ratio": "16:9"
+	    },
+	    {
+	        "label": "UXGA",
+	        "width": 1600,
+	        "height": 1200,
+	        "ratio": "4:3"
+	    },
+	    {
+	        "label": "720p(HD)",
+	        "width": 1280,
+	        "height": 720,
+	        "ratio": "16:9"
+	    },
+	    {
+	        "label": "SVGA",
+	        "width": 800,
+	        "height": 600,
+	        "ratio": "4:3"
+	    },
+	    {
+	        "label": "VGA",
+	        "width": 640,
+	        "height": 480,
+	        "ratio": "4:3"
+	    },
+	    {
+	        "label": "360p(nHD)",
+	        "width": 640,
+	        "height": 360,
+	        "ratio": "16:9"
+	    },
+	    {
+	        "label": "CIF",
+	        "width": 352,
+	        "height": 288,
+	        "ratio": "4:3"
+	    },
+	    {
+	        "label": "QVGA",
+	        "width": 320,
+	        "height": 240,
+	        "ratio": "4:3"
+	    },
+	    {
+	        "label": "QCIF",
+	        "width": 176,
+	        "height": 144,
+	        "ratio": "4:3"
+	    },
+	    {
+	        "label": "QQVGA",
+	        "width": 160,
+	        "height": 120,
+	        "ratio": "4:3"
+	    }
+
+	];
+
+	
+	function FIND_CAPTURE_MODE(ID_MODE, CAMERA_SELECTED, TEST_MODES, INDEX) {
+		if (INDEX < TEST_MODES.length - 1) {
+		    let constraints = {
+		        audio: false,
+		        video: {
+		            deviceId: CAMERA_SELECTED.deviceId ? {exact: CAMERA_SELECTED.deviceId} : undefined,
+		            width: {exact: TEST_MODES[INDEX].width},    //new syntax
+		            height: {exact: TEST_MODES[INDEX].height},   //new syntax
+		            frameRate: {
+		            	ideal: 60, max: 160
+		            }
+		        }
+		    };
+		    
+	        navigator.mediaDevices.getUserMedia(constraints)
+            .then(function (mediaStream) {
+            	if (ID_MODE == 'LIST_CAMERA_A') {
+					LIST_CAPTURE_MODE_A.push(TEST_MODES[INDEX]);
+            	} else {
+					LIST_CAPTURE_MODE_B.push(TEST_MODES[INDEX]);
+            	}
+	            setTimeout(function () {
+	            	FIND_CAPTURE_MODE(ID_MODE, CAMERA_SELECTED, TEST_MODES, INDEX + 1);
+	            }, 10);
+            })
+            .catch((error) => {
+	            setTimeout(function () {
+	            	FIND_CAPTURE_MODE(ID_MODE, CAMERA_SELECTED, TEST_MODES, INDEX + 1);
+	            }, 10);
+//                console.log('getUserMedia error!', error);
+            });
+		} else {
+			console.log('END OF TEST');
+			if (ID_MODE == 'LIST_CAMERA_A') {
+				INIT_WIDGET_LIST_CAPTURE_MODE('LIST_CAPTURE_MODE_A', LIST_CAPTURE_MODE_A);
+			} else {
+				INIT_WIDGET_LIST_CAPTURE_MODE('LIST_CAPTURE_MODE_B', LIST_CAPTURE_MODE_B);
+			}
+		}
+	}
+
+	var LIST_CAPTURE_MODE_A = [];
+	var LIST_CAPTURE_MODE_B = [];
+	
+	function INIT_WIDGET_LIST_CAPTURE_MODE(ID_MODE, LIST_ARRAY) {
+//		console.log(JSON.stringify(LIST_CAPTURE_MODE_A, null, '\t'));
+		$("#" + ID_MODE).unbind();
+		$("#" + ID_MODE).jqxDropDownList({
+			width: '100%',
+			source: LIST_ARRAY,
+//			displayMember: 'label',
+			selectedIndex: 0,
+		}).on('change', function (event) {
+			var CAMERA_SELECTED;
+				if (ID_MODE == 'LIST_CAPTURE_MODE_A') {
+					CAMERA_SELECTED			= $("#LIST_CAMERA_A").jqxDropDownList('getSelectedItem').originalItem;
+				} else {
+					CAMERA_SELECTED			= $("#LIST_CAMERA_B").jqxDropDownList('getSelectedItem').originalItem;
+				}
+			var CAPTURE_MODE_SELEDTED	= $(this).jqxDropDownList('getSelectedItem').originalItem;
+
+		    let constraints = {
+		        audio: false,
+		        video: {
+		            deviceId: CAMERA_SELECTED.deviceId ? {exact: CAMERA_SELECTED.deviceId} : undefined,
+		            width: {exact: CAPTURE_MODE_SELEDTED.width},    //new syntax
+		            height: {exact: CAPTURE_MODE_SELEDTED.height},  //new syntax
+		            frameRate: {
+		            	ideal: 60, max: 160
+		            }
+		        }
+		    };
+
+	        navigator.mediaDevices.getUserMedia(constraints)
+            .then(function (mediaStream) {
+		        //change the video dimensions
+		        console.log("Display size for " + CAPTURE_MODE_SELEDTED.label + ": " + CAPTURE_MODE_SELEDTED.width + "x" + CAPTURE_MODE_SELEDTED.height);
+		        
+		        if (ID_MODE == 'LIST_CAPTURE_MODE_A') {
+			        CANVAS_CAMERA_A.width	= CAPTURE_MODE_SELEDTED.width;
+			        CANVAS_CAMERA_A.height = CAPTURE_MODE_SELEDTED.height;
+
+			        CANVAS_IMAGE_A.width	= CAPTURE_MODE_SELEDTED.width;
+			        CANVAS_IMAGE_A.height = CAPTURE_MODE_SELEDTED.height;
+
+			        CAMERA_STREAM_A.width = CAPTURE_MODE_SELEDTED.width;
+			        CAMERA_STREAM_A.height = CAPTURE_MODE_SELEDTED.height;
+			        
+			        CAMERA_STREAM_A.srcObject = mediaStream;
+		        } else {
+			        CANVAS_CAMERA_B.width	= CAPTURE_MODE_SELEDTED.width;
+			        CANVAS_CAMERA_B.height = CAPTURE_MODE_SELEDTED.height;
+
+			        CANVAS_IMAGE_B.width	= CAPTURE_MODE_SELEDTED.width;
+			        CANVAS_IMAGE_B.height = CAPTURE_MODE_SELEDTED.height;
+
+			        CAMERA_STREAM_B.width = CAPTURE_MODE_SELEDTED.width;
+			        CAMERA_STREAM_B.height = CAPTURE_MODE_SELEDTED.height;
+			        
+			        CAMERA_STREAM_B.srcObject = mediaStream;
+		        }
+            })
+            .catch((error) => {
+                console.log('getUserMedia error!', error);
+            });
+			
+		});
+	}
+	
+	function INIT_WIDGET_LIST_CAMERA() {
+		var LIST_CAMERA = [];
+	    //Now enumerate devices
+	    navigator.mediaDevices.enumerateDevices()
+        .then(function (deviceInfos) {
+		    let camcount = 1;   //used for labeling if the device label is not enumerated
+		    for (let i = 0; i !== deviceInfos.length; ++i) {
+		        let deviceInfo = deviceInfos[i];
+		        if (deviceInfo.kind === 'videoinput') {
+//			        console.log(deviceInfo);
+			        var TEMP_FOR_PUSH = {
+			        	deviceId:	deviceInfo.deviceId,
+			        	groupId:	deviceInfo.groupId,
+			        	kind:		deviceInfo.kind,
+			        	label:		deviceInfo.label || 'Camera ' + camcount,
+			        };
+			        LIST_CAMERA.push(TEMP_FOR_PUSH);
+		            camcount++;
+		        }
+		    }
+			$("#LIST_CAMERA_A").jqxDropDownList({
+				width: '100%',
+				source: LIST_CAMERA,
+				selectedIndex: 0,
+			}).on('change', function (event) {
+				FIND_CAPTURE_MODE('LIST_CAMERA_A', $(this).jqxDropDownList('getSelectedItem').originalItem, quickScan, 0);
+			});
+			FIND_CAPTURE_MODE('LIST_CAMERA_A', $("#LIST_CAMERA_A").jqxDropDownList('getSelectedItem').originalItem, quickScan, 0);
+
+			$("#LIST_CAMERA_B").jqxDropDownList({
+				width: '100%',
+				source: LIST_CAMERA,
+				selectedIndex: 0,
+			}).on('change', function (event) {
+				FIND_CAPTURE_MODE('LIST_CAMERA_B', $(this).jqxDropDownList('getSelectedItem').originalItem, quickScan, 0);
+			});
+			FIND_CAPTURE_MODE('LIST_CAMERA_B', $("#LIST_CAMERA_B").jqxDropDownList('getSelectedItem').originalItem, quickScan, 0);
+			
+        })
+        .catch(function (error) {
+        	console.log('navigator.mediaDevices.enumerateDevices error: ', error);
+        });
+	}
+
+
+	function MODAL_TEST() {
+		QIIP_API_ACCESS({
+				REQ: 'api_GET_PAGE',
+				FLDR_TEMPLATE: _FLDR_TEMPLATE,
+				FILE_TEMPLATE: 'PAGES/MODAL_TEST.html',
+			},function(STR_RESULT) {
+				QIIP_APP_MODAL_POPUP({
+					TITLE: 'MODAL TEST',
+					BACKDROP: false,
+					CSS: {
+						width: '90%',
+						height: '90%',
+					},
+					CONTENT: STR_RESULT,
+					INIT_FUNC: function (UNIQUE_ID) {
+						INIT_WIDGETS_FOR_MODAL_TEST(UNIQUE_ID);
+					}
+				});
+			}
+		);
+	}
+
+	var WS_CONNECTION = {};
+
+	function QIIP_WS_SERIAL_REQUEST(JSON_SERIAL_REQUEST) {
+		QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+			DIV_CONSOLE_SCROLL,
+			'<pre>' + JSON.stringify(JSON_SERIAL_REQUEST, null, '\t') + '</pre>',
+			'you',
+			'70%'
+		);
+
+		WS_CONNECTION.send(JSON.stringify(JSON_SERIAL_REQUEST));
+	}
+
+	function INIT_WS_CONNECTION(ws_server, ws_channel) {
+	    // if user is running mozilla then use it's built-in WebSocket
+	    window.WebSocket = window.WebSocket || window.MozWebSocket;
+	  
+	    // if browser doesn't support WebSocket, just show some notification and exit
+	    if (!window.WebSocket) {
+			QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+				DIV_CONSOLE_SCROLL,
+				'죄송합니다, 접속에 사용하신 웹 브라우저가 WebSockets 기능을 지원하지 않습니다.',
+				'you',
+				'70%'
+			);
+	      return;
+	    }
+
+	    // open connection
+	    WS_CONNECTION = new WebSocket(ws_server, ws_channel);
+
+	    WS_CONNECTION.onopen = function () {
+			QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+				DIV_CONSOLE_SCROLL,
+				sprintf( "new WebSocket('%s', '%s') 이 연결되었습니다.", ws_server, ws_channel),
+				'you',
+				'70%'
+			);
+//			QIIP_WS_SERIAL_REQUEST({CMD	: "REGIST_AS_MONITOR"});
+	    };
+	    
+	    WS_CONNECTION.onerror = function (error) {
+			QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+				DIV_CONSOLE_SCROLL,
+				'WebSocket 연결에 어떤 문제가 있거나 WebSocket 서버가 응답하지 않습니다.',
+				'you',
+				'70%'
+			);
+	    };
+
+	    // most important part - incoming messages
+	    WS_CONNECTION.onmessage = function (message) {
+	        // try to parse JSON message. Because we know that the server always returns
+	        // JSON this should work without any problem but we should make sure that
+	        // the massage is not chunked or otherwise damaged.
+	        try {
+	          var JSON_PARSED = JSON.parse(message.data);
+	        } catch (e) {
+				QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+					DIV_CONSOLE_SCROLL,
+					'이건 JSON 스트링이 아닌것 같아요! : ' + message.data,
+					'you',
+					'70%'
+				);
+	          return;
+	        }
+/*
+			QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+				DIV_CONSOLE_SCROLL,
+				'<pre>' + JSON.stringify(JSON_PARSED, null, '\t') + '</pre>',
+				'me',
+				'70%'
+			);
+*/
+
+	        // NOTE: if you're not sure about the JSON structure
+	        // check the server source code above
+	        if ('DUMMY' in JSON_PARSED) {
+	        } else if ('WS_CONNECTION_ID' in JSON_PARSED) {
+				JSON_LST_REQUEST.WS_CONNECTION_ID = JSON_PARSED.WS_CONNECTION_ID;
+	        } else if ('type' in JSON_PARSED) {
+	        	if (JSON_PARSED.type == 'Buffer') {
+		        	SERIAL_ON_RECEIVE(JSON_PARSED);
+	        	}
+	        } else {
+				QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+					DIV_CONSOLE_SCROLL,
+					'흠..., JSON 스트링이 이런식이면 곤란한데...  필요한 속성이 없쟎아...: ' + JSON.stringify(JSON_PARSED, null, '\t'),
+					'you',
+					'70%'
+				);
+	        }
+	    };
+
+	    WS_CONNECTION.onclose  = function () {
+			QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+				DIV_CONSOLE_SCROLL,
+				'WebSocket 연결이 끊어졌습니다. 1초 이내에 WebSocket 연결을 재시도 합니다.',
+				'you',
+				'70%'
+			);
+			//try to reconnect in 5 seconds
+//			setTimeout(function(){INIT_WS_CONNECTION(LST_WS_SERVER_URL, LST_WS_CHANNEL)}, 1000);
+	    };
+	    
+	}
+	
+</script>
+<div id="CAM_MONITOR">
+	<div style="width:100%;height:100%;" id="DIV_CAM_MON_TABS">
+		<ul>
+	        <li style="margin-left: 10px;">카메라</li>
+	        <li>기타</li>
+		</ul>
+		<div>
+			<div style="width:50%;height:100%;float:left;">
+				<div style="width:100%;height:5%;">
+					<table>
+						<col width="50%" />
+						<col width="50%" />
+						<tr>
+							<td>
+								<div id="LIST_CAMERA_A"></div>
+							</td>
+							<td>
+								<div id="LIST_CAPTURE_MODE_A"></div>
+							</td>
+						</tr>
+					</table>
+				</div>
+				<div style="width:100%;height:95%;overflow:auto;">
+					<table>
+						<tr>
+							<td style="text-align:center;">
+								<video id="CAMERA_STREAM_A" autoplay=""></video>
+								<canvas id="CANVAS_CAMERA_A" style="display:none"></canvas>
+							</td>
+						</tr>
+						<tr>
+							<td style="text-align:center;">
+								<canvas id="CANVAS_IMAGE_A"></canvas>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div style="width:50%;height:100%;float:left;">
+				<div style="width:100%;height:5%;">
+					<table>
+						<col width="50%" />
+						<col width="50%" />
+						<tr>
+							<td>
+								<div id="LIST_CAMERA_B"></div>
+							</td>
+							<td>
+								<div id="LIST_CAPTURE_MODE_B"></div>
+							</td>
+						</tr>
+					</table>
+				</div>
+				<div style="width:100%;height:95%;overflow:auto;">
+					<table>
+						<tr>
+							<td style="text-align:center;">
+								<video id="CAMERA_STREAM_B" autoplay=""></video>
+								<canvas id="CANVAS_CAMERA_B" style="display:none"></canvas>
+							</td>
+						</tr>
+						<tr>
+							<td style="text-align:center;">
+								<canvas id="CANVAS_IMAGE_B"></canvas>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+		<div>
+			<div style="width:50%;height:100%;float:left;">
+			</div>
+			<div style="width:50%;height:100%;float:left;overflow:auto;" id="DIV_DIA_MON_LOG">
+			</div>
+		</div>
+	</div>
+</div>

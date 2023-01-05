@@ -1,0 +1,433 @@
+{@ $ARGS = json_decode(base64_decode($ARGS->JSON_ARGS_BASE64)); }
+#PAGE_ARGS# <!-- <script>var JSON_ARGS=JSON.parse(Base64.decode($ARGS->JSON_ARGS_BASE64));</script> -->
+
+<script>
+var SCROLL_RATIO_PREV = 0.0;
+var SCROLL_RATIO = 0.0;
+var PREV_SCROLL_RATIO = 0.0;
+
+var OBJ_POPUP_FOR_EXEC_ADD_ASK_REGARD_MUSIC = null;
+
+function INIT_WIDGETS_POPUP_FOR_EXEC_ADD_ASK_REGARD_MUSIC(OBJ_DIALOG) {
+	OBJ_POPUP_FOR_EXEC_ADD_ASK_REGARD_MUSIC = OBJ_DIALOG;
+
+//	$("#TEXT_TARGET_CALL_TO").val(_RS.PHONE_INFO.PHONE_NO);
+
+	$(".BTN_POPUP").jqxButton({
+		width: '100%',
+		height: '100%'
+	}).on('click', function () {
+		var ID = $(this).attr('ID');
+		if (ID == 'DUMMY') {
+		} else if (ID == 'BTN_SEARCH_YOUTUBE') {
+			YOUTUBE_NEXT_PAGE_TOKEN = '';
+			YOUTUBE_PREV_PAGE_TOKEN = '';
+			YOUTUBE_MEDIA_CUR_PAGE = 0;
+			EXEC_SEARCH_YOUTUBE();
+		} else if (ID == 'BTN_PREV_YOUTUBE_MEDIA') {
+			YOUTUBE_PAGE_TOKEN = YOUTUBE_PREV_PAGE_TOKEN;
+			EXEC_SEARCH_YOUTUBE();
+		} else if (ID == 'BTN_NEXT_YOUTUBE_MEDIA') {
+			YOUTUBE_PAGE_TOKEN = YOUTUBE_NEXT_PAGE_TOKEN;
+			EXEC_SEARCH_YOUTUBE();
+		} else if (ID == 'BTN_CLOSE_POPUP_FOR_EXEC_ADD_ASK_REGARD_MUSIC') {
+			CLOSE_POPUP_FOR_EXEC_ADD_ASK_REGARD_MUSIC();
+		} else if (ID == 'BTN_EXEC_ADD_SELECTED_YOUTUBE_MEDIA') {
+			EXEC_ADD_SELECTED_YOUTUBE_MEDIA();
+		}
+	});
+	$('#BTN_PREV_YOUTUBE_MEDIA').jqxButton({disabled: true  });
+	$('#BTN_NEXT_YOUTUBE_MEDIA').jqxButton({disabled: true  });
+
+	$('#TEXT_SEARCK_KEYWORD').on('change', function () {
+		YOUTUBE_NEXT_PAGE_TOKEN = '';
+		YOUTUBE_PREV_PAGE_TOKEN = '';
+		YOUTUBE_MEDIA_CUR_PAGE = 0;
+	});
+
+	$("#CONTAINER_SCROLL_YOUTUBE_MEDIA_LIST").bind("scroll", function () {
+		var scrollBottom = $(this).scrollTop() + $(this).height();
+		var HEIGHT_RATIO = $(this).height() / this.scrollHeight;
+		SCROLL_RATIO = scrollBottom * 100 / this.scrollHeight;
+		$("#YOUTUBE_MEDIA_SCROLL_STATUS").html(sprintf("%4.1f", SCROLL_RATIO)+ " %");
+		if (YOUTUBE_PREV_PAGE_TOKEN.length > 0) {
+			$('#BTN_PREV_YOUTUBE_MEDIA').jqxButton({disabled: false });
+		} else {
+			$('#BTN_PREV_YOUTUBE_MEDIA').jqxButton({disabled: true  });
+		}
+		if (YOUTUBE_NEXT_PAGE_TOKEN.length > 0) {
+			$('#BTN_NEXT_YOUTUBE_MEDIA').jqxButton({disabled: false });
+		} else {
+			$('#BTN_NEXT_YOUTUBE_MEDIA').jqxButton({disabled: true  });
+		}
+/*
+		if (PREV_SCROLL_RATIO < SCROLL_RATIO) {
+			YOUTUBE_PAGE_TOKEN = YOUTUBE_NEXT_PAGE_TOKEN;
+		    if(SCROLL_RATIO >= 95) {
+		    	$(this).scrollTop(HEIGHT_RATIO);
+		    	EXEC_SEARCH_YOUTUBE();
+		    }
+		} else {
+			YOUTUBE_PAGE_TOKEN = YOUTUBE_PREV_PAGE_TOKEN;
+		    if(SCROLL_RATIO <= HEIGHT_RATIO) {
+		    	$(this).scrollTop(this.scrollHeight * 95 / 100);
+		    	EXEC_SEARCH_YOUTUBE();
+		    }
+		}
+//		    console.log(sprintf("%4.1f", Math.abs(SCROLL_RATIO - SCROLL_RATIO_PREV))+ " %");
+	    if (Math.abs(SCROLL_RATIO - SCROLL_RATIO_PREV) > 30.0) {
+			SCROLL_RATIO_PREV = SCROLL_RATIO;
+	    }
+		PREV_SCROLL_RATIO = SCROLL_RATIO;
+*/
+	});
+
+}
+
+function CLOSE_POPUP_FOR_EXEC_ADD_ASK_REGARD_MUSIC() {
+	if (OBJ_POPUP_FOR_EXEC_ADD_ASK_REGARD_MUSIC != null) {
+		QIIP_JQX_CLOSE_WINDOW(OBJ_POPUP_FOR_EXEC_ADD_ASK_REGARD_MUSIC);
+	}
+}
+
+function EXEC_ADD_SELECTED_YOUTUBE_MEDIA() {
+	var YOUTUBE_MEDIA_FROM_IMG_LIST = [];
+	$('.YOUTUBE_MEDIA_THUMBNAIL').each(function () {
+		if ($(this).css('opacity') < 1) {
+			YOUTUBE_MEDIA_FROM_IMG_LIST.push(
+				JSON.parse(Base64.decode($(this).attr('YOUTUBE_MEDIA_INFO')))
+			);
+		}
+	});
+	if (YOUTUBE_MEDIA_FROM_IMG_LIST.length > 0) {
+//		alert(JSON.stringify(YOUTUBE_MEDIA_FROM_IMG_LIST, null, '\t'));
+		TEST_ACCESS_FOR_YOUTUBE_MEDIA(YOUTUBE_MEDIA_FROM_IMG_LIST, 0);
+	} else {
+
+		QIIP_POPUP_FOR_ALERT(
+			'안내',[
+				'추가하고자 하는 유투브 미디어를 선택하지 않았습니다!',
+				'유투브 미디어 검색을 먼저 처리하신 후,...',
+				'섬네일 이미지를 터치하면 선택하거나 선택취소 할 수 있습니다.'
+			],function() {
+			},
+			95,
+			90
+		);
+
+	}
+}
+
+function TEST_ACCESS_FOR_YOUTUBE_MEDIA(YOUTUBE_MEDIA_FROM_IMG_LIST, INDEX) {
+	
+	var ONE_MEDIA_FROM_IMG = YOUTUBE_MEDIA_FROM_IMG_LIST[INDEX];
+	
+	if (INDEX < YOUTUBE_MEDIA_FROM_IMG_LIST.length) {
+
+		QIIP_API_ACCESS({
+				REQ: 'api_YOUTUBE_MP3',
+				YOUTUBE_videoId: ONE_MEDIA_FROM_IMG.id.videoId,
+				OUT_TYPE: 'PATH',
+				PHONE_ID: _RS.PHONE_INFO.PHONE_ID,
+				PHONE_NO: _RS.PHONE_INFO.PHONE_NO,
+				SVC_CATEGORY: _RS.PHONE_INFO.APP_NAME,
+			},function(STR_RESULT) {
+				TEST_ACCESS_FOR_YOUTUBE_MEDIA(YOUTUBE_MEDIA_FROM_IMG_LIST, INDEX + 1);
+			},{
+				QIIP_JQX_WINDOW: true,
+				title: _RS.PHONE_INFO.APP_NAME + ' 안내',
+				template: ARR_TO_TABLE_CENTER([
+					sprintf('선택하신 유투브 미디어 [%s]를 처리하고 있습니다.', ONE_MEDIA_FROM_IMG.snippet.title),
+					sprintf('용량이 크면 오래 걸립니다.'),
+					sprintf('팝업 화면이 자동으로 닫힐 때 까지 기다려 주십시오!'),
+				]),
+				cssClass: 'qiip_popup'
+			}
+		);
+
+	} else {
+		UPDATE_OBJ_POST_ROOT_FOR_YOUTUBE_MEDIA_LIST(YOUTUBE_MEDIA_FROM_IMG_LIST);
+	}
+	
+}
+
+function UPDATE_OBJ_POST_ROOT_FOR_YOUTUBE_MEDIA_LIST(YOUTUBE_MEDIA_FROM_IMG_LIST) {
+	var YOUTUBE_MEDIA_LIST = [];
+	if ('YOUTUBE_MEDIA_LIST' in _RS.OBJ_POST_ROOT) {
+		 YOUTUBE_MEDIA_LIST = _RS.OBJ_POST_ROOT.YOUTUBE_MEDIA_LIST;
+	}
+	var LENGTH_BEFORE = YOUTUBE_MEDIA_LIST.length;
+	YOUTUBE_MEDIA_FROM_IMG_LIST.forEach(function (ONE_MEDIA_FROM_IMG) {
+		var FLAG_EXIST = false;
+		YOUTUBE_MEDIA_LIST.forEach(function (ONE_YOUTUBE_MEDIA) {
+			if (ONE_YOUTUBE_MEDIA.MEDIA_INFO.id.videoId == ONE_MEDIA_FROM_IMG.id.videoId) {
+				FLAG_EXIST = true;
+				return false;
+			}
+		});
+		if (!FLAG_EXIST) {
+			var YOUTUBE_MEDIA_URL = sprintf(
+				'%s?REQ=api_YOUTUBE_MP3&YOUTUBE_videoId=%s&EXT=.mp3',
+				window.location.origin,
+				ONE_MEDIA_FROM_IMG.id.videoId
+			);
+			YOUTUBE_MEDIA_LIST.push({
+				MEDIA_ID: ONE_MEDIA_FROM_IMG.id.videoId,
+				MEDIA_URL: YOUTUBE_MEDIA_URL,
+				MEDIA_INFO: ONE_MEDIA_FROM_IMG
+			});
+		}
+	});
+//	alert(JSON.stringify(YOUTUBE_MEDIA_LIST, null, '\t'));
+	var LENGTH_AFTER = YOUTUBE_MEDIA_LIST.length;
+	if (LENGTH_BEFORE != LENGTH_AFTER) {
+		var OBJ_UPDATE = new Object();
+			OBJ_UPDATE.BASE64 = true;
+			OBJ_UPDATE.YOUTUBE_MEDIA_LIST = YOUTUBE_MEDIA_LIST;
+			_RS.OBJ_POST_ROOT.YOUTUBE_MEDIA_LIST = YOUTUBE_MEDIA_LIST;
+		QIIP_UPDATE_POST_ROOT(
+			OBJ_UPDATE,
+			function () {
+				REFRESH_ASK_REGARD_MUSICS(true);
+			} 
+		);
+	}
+	CLOSE_POPUP_FOR_EXEC_ADD_ASK_REGARD_MUSIC();
+}
+
+function POPUP_FOR_WAE_PLAY(WAV_FILE_URL, PLAY_TIME) {
+
+	var JSON_ARGS_BASE64 = Base64.encode(JSON.stringify({
+		AUDIO_URL: WAV_FILE_URL,
+		PLAY_TIME: PLAY_TIME
+	}));
+
+	QIIP_API_ACCESS({
+		REQ: 'api_GET_PAGE',
+		FLDR_TEMPLATE: _FLDR_TEMPLATE,
+		FILE_TEMPLATE: 'POPUP/POPUP_FOR_WAE_PLAY.html',
+		JSON_ARGS_BASE64: JSON_ARGS_BASE64,
+		PHONE_ID: _RS.PHONE_INFO.PHONE_ID,
+		PHONE_NO: _RS.PHONE_INFO.PHONE_NO,
+		SVC_CATEGORY: _RS.PHONE_INFO.APP_NAME,
+	},function(STR_RESULT) {
+		var OBJ_POPUP = QIIP_JQX_POPUP_WINDOW({
+            showCollapseButton: true, 
+            height: '70%',
+            width: '90%',
+            minHeight: 100,
+            minWidth: 100,
+			},
+			'오디오 파형 보기 및 재생',
+			STR_RESULT
+		);
+	  	INIT_WIDGETS_POPUP_FOR_WAE_PLAY(OBJ_POPUP);
+	});
+
+}
+
+var YOUTUBE_MEDIA_TOTAL = 0;
+var YOUTUBE_COUNT_PER_PAGE = 50;
+var YOUTUBE_MEDIA_CUR_PAGE = 0;
+var YOUTUBE_NEXT_PAGE_TOKEN = '';
+var YOUTUBE_PREV_PAGE_TOKEN = '';
+var YOUTUBE_PAGE_TOKEN = '';
+function EXEC_SEARCH_YOUTUBE() {
+
+	var STR_SEARCH_KEYWORD = $('#TEXT_SEARCK_KEYWORD').val();
+	if (STR_SEARCH_KEYWORD.length < 1) {
+
+		QIIP_POPUP_FOR_ALERT(
+			'안내!',
+			['유투브 미디어 검색어를 입력하지 않았습니다.'],
+			undefined,
+			95,
+			90
+		);
+		
+		return;
+	}
+
+	if ((YOUTUBE_PAGE_TOKEN.length > 0) && (YOUTUBE_PAGE_TOKEN == YOUTUBE_PREV_PAGE_TOKEN)) {
+		YOUTUBE_MEDIA_CUR_PAGE -= 1;
+	} else {
+		YOUTUBE_MEDIA_CUR_PAGE += 1;
+	}
+
+	QIIP_API_ACCESS({
+			REQ: 'api_YOUTUBE_SEARCH',
+			Q: STR_SEARCH_KEYWORD,
+			COUNT: YOUTUBE_COUNT_PER_PAGE,
+			PG_TOKEN: YOUTUBE_PAGE_TOKEN,
+			PHONE_ID: _RS.PHONE_INFO.PHONE_ID,
+			PHONE_NO: _RS.PHONE_INFO.PHONE_NO,
+			SVC_CATEGORY: _RS.PHONE_INFO.APP_NAME,
+		},function(STR_RESULT) {
+			var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+//			alert(JSON.stringify(JSON_RESULT.items, null, '\t'));
+			if ('nextPageToken' in JSON_RESULT) {
+				YOUTUBE_NEXT_PAGE_TOKEN = JSON_RESULT.nextPageToken;
+			}
+			if ('prevPageToken' in JSON_RESULT) {
+				YOUTUBE_PREV_PAGE_TOKEN = JSON_RESULT.prevPageToken;
+			}
+			if ('pageInfo' in JSON_RESULT) {
+				YOUTUBE_MEDIA_TOTAL = JSON_RESULT.pageInfo.totalResults;
+				$('#YOUTUBE_MEDIA_TOTAL').html(
+					sprintf('%d / %d', YOUTUBE_MEDIA_CUR_PAGE * YOUTUBE_COUNT_PER_PAGE, YOUTUBE_MEDIA_TOTAL)
+				);
+			}
+			if ('items' in JSON_RESULT) {
+				PUT_HTML_FOR_YOUTUBE_MEDIA_LIST(JSON_RESULT.items);
+			}
+		},{
+			QIIP_JQX_WINDOW: true,
+			title: _RS.PHONE_INFO.APP_NAME + ' 안내',
+			template: ARR_TO_TABLE_CENTER([
+				'유투브에서,...',
+				sprintf('검색어 [%s]에 대한 미디어를 검색하고 있습니다.',STR_SEARCH_KEYWORD),
+				'잠시만 기다려 주십시오!'
+			]),
+			cssClass: 'qiip_popup'
+		}
+	);
+
+}
+
+function PUT_HTML_FOR_YOUTUBE_MEDIA_LIST(MEDIA_ARRAY) {
+	var JSON_ARGS_BASE64 = Base64.encode(JSON.stringify(MEDIA_ARRAY));
+
+	QIIP_API_ACCESS({
+		REQ: 'api_GET_PAGE',
+		FLDR_TEMPLATE: _FLDR_TEMPLATE,
+		FILE_TEMPLATE: 'POPUP/HTML_FOR_YOUTUBE_MEDIA_LIST.html',
+		JSON_ARGS_BASE64: JSON_ARGS_BASE64,
+		PHONE_ID: _RS.PHONE_INFO.PHONE_ID,
+		PHONE_NO: _RS.PHONE_INFO.PHONE_NO,
+		SVC_CATEGORY: _RS.PHONE_INFO.APP_NAME,
+	},function(STR_RESULT) {
+		
+		$('#CONTAINER_TABLE_YOUTUBE_MEDIA_LIST').html(
+			STR_RESULT
+		);
+		$(".YOUTUBE_MEDIA_THUMBNAIL").on('click', function () {
+			if ($(this).css('opacity') < 1) {
+				$(this).css('opacity', 1.0);
+			} else {
+				$(this).css('opacity', 0.5);
+			}
+		});
+		
+		$(".BTN_YOUTUBE_MEDIA").jqxButton({
+			width: '100%',
+			height: '100%'
+		}).on('click', function () {
+			var ID = $(this).attr('ID');
+			if (ID == 'DUMMY') {
+			} else if (ID == 'BTN_YOUTUBE_MEDIA_PLAY') {
+//					alert('BTN_YOUTUBE_MEDIA_PLAY');
+				EXEC_YOUTUBE_MEDIA_LOAD(
+					$(this).attr('videoId'),
+					parseInt($(this).attr('PLAY_TIME'))
+				);
+			}
+		});
+			
+	});
+
+}
+
+function EXEC_YOUTUBE_MEDIA_LOAD(videoId, PLAY_TIME) {
+//	alert('EXEC_YOUTUBE_MEDIA_LOAD');
+	QIIP_API_ACCESS({
+		REQ: 'api_YOUTUBE_MP3',
+		YOUTUBE_videoId: videoId,
+		OUT_TYPE: 'PATH',
+		PHONE_ID: _RS.PHONE_INFO.PHONE_ID,
+		PHONE_NO: _RS.PHONE_INFO.PHONE_NO,
+		SVC_CATEGORY: _RS.PHONE_INFO.APP_NAME,
+	},function(STR_RESULT) {
+		var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+		if (JSON_RESULT instanceof Object) {
+			POPUP_FOR_WAE_PLAY(window.location.origin +  JSON_RESULT.YOUTUBE_MP3, PLAY_TIME);
+		}
+	},{
+		QIIP_JQX_WINDOW: true,
+		title: _RS.PHONE_INFO.APP_NAME + ' 안내',
+		template: ARR_TO_TABLE_CENTER([
+			'선택하신 미디어를 읽어들이고 있습니다.',
+			'알림 창이 자동으로 닫힐때 까지,...',
+			'잠시만 기다려 주십시오!'
+		]),
+		cssClass: 'qiip_popup'
+	});
+
+}
+
+</script>
+
+<div class="qiip_index" style="width:100%; height:7%;">
+	<table>
+		<col width="40%"/>
+		<col width="45%"/>
+		<tr>
+			<th>유투브 미디어 검색</th>
+			<td>
+				<input 
+					style="width:100%;height:100%;box-sizing:border-box; border: solid gray 1px; text-align:center;"
+					type="text"
+					id="TEXT_SEARCK_KEYWORD"
+					placeholder="유투브 미디어 검색어 입력"/>
+			</td>
+			<td><button class="BTN_POPUP" id="BTN_SEARCH_YOUTUBE">검색</button></td>
+		</tr>
+	</table>
+</div>
+<div class="qiip_index" style="width:100%;height:7%;padding:0; overflow:auto;">
+	<table>
+		<col width="20%"/>
+		<col width="30%"/>
+		<col width="30%"/>
+		<col width="20%"/>
+		<tr>
+			<td>
+		      	<button class="BTN_POPUP" id="BTN_PREV_YOUTUBE_MEDIA" >
+		        	이전 페이지
+		    	</button>
+			</td>
+			<th id="YOUTUBE_MEDIA_TOTAL">
+				0 / 0
+			</th>
+			<th id="YOUTUBE_MEDIA_SCROLL_STATUS">
+				0.0 %
+			</th>
+			<td>
+		      	<button class="BTN_POPUP" id="BTN_NEXT_YOUTUBE_MEDIA" >
+		        	다음 페이지
+		    	</button>
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="qiip_index" style="width:100%;height:79%;padding:0; overflow:auto;" id="CONTAINER_SCROLL_YOUTUBE_MEDIA_LIST">
+	<table id='CONTAINER_TABLE_YOUTUBE_MEDIA_LIST'>
+	</table>
+</div>
+<div class="qiip_index" style="width:100%;height:7%;padding:0;">
+	<table>
+		<col width="50%"/>
+		<tr>
+			<td>
+		      	<button class="BTN_POPUP" id="BTN_CLOSE_POPUP_FOR_EXEC_ADD_ASK_REGARD_MUSIC" >
+		        	취소 하기
+		    	</button>
+			</td>
+			<td>
+		      	<button class="BTN_POPUP" id="BTN_EXEC_ADD_SELECTED_YOUTUBE_MEDIA" >
+		        	추가 하기
+		    	</button>
+			</td>
+		</tr>
+	</table>
+</div>
+

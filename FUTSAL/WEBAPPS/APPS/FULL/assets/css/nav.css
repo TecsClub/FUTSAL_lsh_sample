@@ -1,0 +1,30 @@
+@charset "utf-8";
+
+a:focus{
+	outline: none;
+}
+#content > div > div:first-child{
+		position: absolute;
+}
+#content > div > div:first-child+div{
+	line-height: 50px;
+	padding-left: 80px;
+	text-align: left;
+}
+#content{
+	padding: 0;
+}
+#MENU_HEADER{
+		background: #4568DC;
+background: -webkit-linear-gradient(to left, #B06AB3, #7386D5);
+background: linear-gradient(to left, #B06AB3, #7386D5);
+color: #fff;
+font-weight: bold;
+}
+.navbar-btn{
+		margin-top: 5px;
+
+margin-bottom: 5px;
+
+border-radius: 0px 4px 4px 0px;
+}

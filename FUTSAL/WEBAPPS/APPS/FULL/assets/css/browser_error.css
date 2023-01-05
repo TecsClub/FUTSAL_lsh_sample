@@ -1,0 +1,109 @@
+@charset "utf-8";
+	
+.browser_error{
+max-width: 1000px;
+position: absolute;
+top: 50%;
+left: 50%;
+transform : translate(-50%, -60%);
+width: 100%;
+min-width: 250px;	
+}
+
+.browser_error .connect {
+	border-top: 1px solid #ccc;
+	padding-top : 20px;
+		
+}
+.browser_error .connect a{
+	display: block;
+	line-height : 35px;
+	background-color: #eee;
+	margin: 0px 15px;	
+}
+.browser_error .connect > div{
+width: 33.3333%;	
+float: left;
+text-align: center;
+}
+
+.browser_error .connect a:hover{
+background-color : #ffb612;
+transition: all 0.5s;
+}
+.browser_error h2{
+font-size: 85px;
+border-bottom: 1px solid #ccc;
+text-align: center;
+padding-bottom: 15px;	
+}
+.browser_error h2 small{
+	position : relative;
+ bottom: 10px;
+	}
+.browser_error > p{
+padding: 15px 50px;
+color: #777;
+}
+
+.overhidden{
+	overflow: hidden;
+}
+
+
+.browser_error h2 svg{
+color : #ffb612;
+margin-right: 10px;
+}
+
+@media (max-width: 750px){
+		.browser_error .connect{
+			padding-top: 5px;
+		}
+		.browser_error .connect > div{
+			width: 100%;
+			float: none;
+			border-bottom: 1px solid #fff;
+
+			}
+		.browser_error .connect a{
+			margin: 2.5px 5px;
+		}
+		.browser_error > p{
+			padding: 15px 20px;	
+		}
+	}
+	@media (max-width: 450px){
+		.browser_error h2{
+			padding: 0;
+		}
+		.browser_error h2 svg{
+				display: block;
+				margin: 0 auto;
+				margin-bottom: 20px;			
+		}
+		.browser_error h2 small{
+			display: block;
+		}
+	}
+	@media (max-width: 350px){
+			.browser_error h2{
+				font-size: 60px;	
+			}
+	}
+		@media (max-width: 250px){
+		.overhidden{
+			overflow: auto;
+		}
+	}
+	
+	@media (max-height: 580px){
+		.overhidden{
+			overflow-y: auto;	
+		}
+		.browser_error{
+			position: static;
+			transform: none;
+			margin: 0 auto;
+		}
+	}

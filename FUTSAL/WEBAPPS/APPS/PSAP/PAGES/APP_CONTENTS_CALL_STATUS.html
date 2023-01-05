@@ -1,0 +1,37 @@
+<div class="ivr_call_status">
+<table>
+	<col width="20%"/>
+	<col width="30%"/>
+	<col width="20%"/>
+	<col width="30%"/>
+	<tr>
+		<th style="text-align:center; background:#94bbd6; color:black; font-size:0.8em;">
+			FROM
+		</th>
+		<th style="text-align:center; background:white; color:black; font-weight:normal; font-size:0.8em;">
+			{{UDP_CALL_STATUS.CALL_ARGS.CALL_FROM}}
+		</th>
+		<th style="text-align:center; background:#94bbd6; color:black; font-size:0.8em;">
+			TO
+		</th>
+		<td style="text-align:center; background:white; color:black; font-weight:normal; font-size:0.8em;">
+			{{UDP_CALL_STATUS.CALL_ARGS.CALL_TO}}
+		</td>
+	</tr>
+	<tr ng-show="isObject(UDP_CALL_STATUS.CALL_STATUS.MESSAGE)">
+		<th colspan="4" style="text-align:center; background:#94bbd6; color:black; font-size:0.8em;border:0;">
+			{{UDP_CALL_STATUS.CALL_STATUS.MESSAGE.STEP_ATTRIBUTE}}
+		</th>
+	</tr>
+	<tr ng-show="!isObject(UDP_CALL_STATUS.CALL_STATUS.MESSAGE)">
+		<th colspan="4" style="text-align:center; background:#94bbd6; color:black; font-size:0.8em;border:0;">
+			{{UDP_CALL_STATUS.CALL_STATUS.MESSAGE}}
+		</th>
+	</tr>
+	<tr ng-show="!isObject(UDP_CALL_STATUS.COMMENT)">
+		<th colspan="4" style="text-align:center; background:white; color:black; font-weight:normal; font-size:0.8em; border:0;">
+			{{UDP_CALL_STATUS.COMMENT}}
+		</td>
+	</tr>
+</table>	
+</div>

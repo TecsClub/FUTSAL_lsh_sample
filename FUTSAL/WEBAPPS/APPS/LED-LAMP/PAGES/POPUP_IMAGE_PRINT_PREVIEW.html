@@ -1,0 +1,134 @@
+{@ $JSON_ARGS = json_decode(base64_decode($ARGS->JSON_ARGS_BASE64)); }
+{@ if ($JSON_ARGS->PRINT_MODE == 'LABEL') $sliceRows = 1; }
+{@ if ($JSON_ARGS->PRINT_MODE == 'LABEL') $sliceCols = 1; }
+{@ if ($JSON_ARGS->PRINT_MODE == 'SLICE') $sliceRows = $JSON_ARGS->sliceRows; }
+{@ if ($JSON_ARGS->PRINT_MODE == 'SLICE') $sliceCols = $JSON_ARGS->sliceCols; }
+
+<script>
+var OBJ_POPUP_DIALOG_FOR_IMAGE_PRINT_PREVIEW = null;
+function INIT_WIDGETS_FOR_IMAGE_PRINT_PREVIEW(OBJ_DIALOG) {
+	OBJ_POPUP_DIALOG_FOR_IMAGE_PRINT_PREVIEW = OBJ_DIALOG;
+}
+function CLOSE_POPUP_FOR_IMAGE_PRINT_PREVIEW() {
+	var NATIVE_ACCESS_INFORMATION = {
+			"REQUEST" : "CLEAN_MAKE_PDF_AND_PREVIEW",
+			"JSON_ARGS" : JSON.parse('{json_encode($JSON_ARGS)}'),
+		};
+	var result = JSON.parse(QIIP_APP_NATIVE_ACCESS(NATIVE_ACCESS_INFORMATION));
+	
+	if (OBJ_POPUP_DIALOG_FOR_IMAGE_PRINT_PREVIEW != null) {
+		QIIP_JQX_CLOSE_WINDOW(OBJ_POPUP_DIALOG_FOR_IMAGE_PRINT_PREVIEW);
+	}
+}
+
+$(document).ready(function(){
+});
+
+function DO_IMAGE_PRINT_PREVIEW_SHARE() {
+	var JSON_ARGS = JSON.parse('{json_encode($JSON_ARGS)}');
+		JSON_ARGS.CAPTION = '인쇄용 파일 E-MAIL 로 받기';
+	
+	var JSON_ARGS_BASE64 = Base64.encode(JSON.stringify(JSON_ARGS));
+
+	QIIP_HTTP_ACCESS(
+		undefined,
+		undefined,{
+			"SERVER_URL" : API_SERVER_URL,
+			"PARAMS" : [
+				QIIP_APP_OBJ_KEY_VALUE("cmd", "api_GetPage"),
+				QIIP_APP_OBJ_KEY_VALUE("FLDR_TEMPLATE", "IONIC/APPS/APP_PSAP/PAGES"),
+				QIIP_APP_OBJ_KEY_VALUE("FILE_TEMPLATE", "PDF_TO_EMAIL.html"),
+				QIIP_APP_OBJ_KEY_VALUE("JSON_ARGS_BASE64", JSON_ARGS_BASE64),
+			]
+		}, function (RESULT) {
+			var OBJ_POPUP = QIIP_JQX_POPUP_WINDOW({
+	            showCollapseButton: true, 
+	            height: '95%',
+	            width: '90%',
+	            minHeight: 100,
+	            minWidth: 100,
+				},
+				JSON_ARGS.CAPTION,
+				RESULT
+			);
+			INIT_WIDGETS_FOR_POPUP_PDF_TO_EMAIL(OBJ_POPUP);
+		}
+	);
+}
+
+function DO_IMAGE_PRINT_PREVIEW_SHARE_OLD() {
+	var NATIVE_ACCESS_INFORMATION = {
+			"REQUEST" : "IMAGE_PRINT_PREVIEW_SHARE",
+			"JSON_ARGS" : JSON.parse('{json_encode($JSON_ARGS)}'),
+		};
+	var result = JSON.parse(QIIP_APP_NATIVE_ACCESS(NATIVE_ACCESS_INFORMATION));
+}
+
+function DO_IMAGE_PRINT_PREVIEW_CLOUD_PRINT() {
+	var NATIVE_ACCESS_INFORMATION = {
+			"REQUEST" : "IMAGE_PRINT_PREVIEW_CLOUD_PRINT",
+			"JSON_ARGS" : JSON.parse('{json_encode($JSON_ARGS)}'),
+		};
+	var result = JSON.parse(QIIP_APP_NATIVE_ACCESS(NATIVE_ACCESS_INFORMATION));
+}
+
+
+</script>
+
+<div style="width:100%; height:20%;">
+  <div class="row" style="padding:0;">
+    <div class="col">
+      <div class="button button-positive" style="width:100%;">
+        인쇄 내용 미리 보기
+      </div>
+    </div>
+  </div>
+  <div class="row" style="padding:0;">
+    <div class="col col-50">
+      <div class="button button-small button-positive" style="width:100%;" onclick="DO_IMAGE_PRINT_PREVIEW_SHARE()">
+        인쇄용 파일 E-MAIL 로 받기
+      </div>
+    </div>
+    <div class="col">
+      <div class="button button-small button-positive" style="width:100%;" onclick="DO_IMAGE_PRINT_PREVIEW_CLOUD_PRINT()">
+        모바일 인쇄
+      </div>
+    </div>
+    <div class="col">
+      <div class="button button-small button-positive" style="width:100%;" onclick="CLOSE_POPUP_FOR_IMAGE_PRINT_PREVIEW()">
+        닫기
+      </div>
+    </div>
+  </div>
+</div>
+<div id="CONTAINER_IMAGES" style="width:100%; height:80%; overflow: auto;">
+<!--
+	<xmp>{print_r($ARGS,true)}</xmp>
+-->
+	<table>
+		<!--@for($row = 0; $row < $sliceRows; $row++)-->
+		<tr>
+			<!--@for($col = 0; $col < $sliceCols; $col++)-->
+			<td>
+				{@ $pageNumber = $row * $sliceCols + $col;}
+				{@ $STR_FILENAME_JPG = sprintf("%s/PSAP_Slice-%04d.jpg", $JSON_ARGS->STR_JPG_FOLDER, $pageNumber);}
+				<img width="100%" src="file://{$STR_FILENAME_JPG}"/>
+			</td>
+			<!--@end-->
+		</tr>
+		<!--@end-->
+	</table>
+	<table>
+		<!--@for($row = 0; $row < $sliceRows; $row++)-->
+			<!--@for($col = 0; $col < $sliceCols; $col++)-->
+				{@ $pageNumber = $row * $sliceCols + $col;}
+				{@ $STR_FILENAME_JPG = sprintf("%s/PSAP_Slice-%04d.jpg", $JSON_ARGS->STR_JPG_FOLDER, $pageNumber);}
+				<tr>
+					<td>
+						<img width="100%" src="file://{$STR_FILENAME_JPG}"/>
+					</td>
+				</tr>
+			<!--@end-->
+		<!--@end-->
+	</table>
+</div>

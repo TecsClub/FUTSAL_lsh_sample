@@ -1,0 +1,557 @@
+<style>
+	.QIIP_ACCORDION_CONTENT {
+		height:80% !important;
+		overflow:auto;
+		padding:0;
+	}
+	.ars_scenario 			{width:100%; height:100%; box-sizing:border-box;}
+	.ars_scenario table		{width:100%; height:100%; font-size:100%; border-collapse: separate; border-spacing: 1px; line-height: 100%;}
+	.ars_scenario table th	{font-weight:bold; text-align: center; white-space:normal; vertical-align: middle; word-break:break-all; word-wrap:break-all; background:#ccc}
+	.ars_scenario table td	{text-decoration:none; text-align: left;   white-space:normal; vertical-align: middle; word-break:break-all; word-wrap:break-all; background:#eee; padding:0 10px;}
+</style>
+
+<script>
+var JSON_IVR_PARAM = null;
+var DEFAULT_CALL_WAIT_TIME	= 60;
+var MODAL_UNIQUE_ID = null;
+var STEP_OF_EXEC_IVR_SCENARIO = 0;
+
+function CLOSE_POPUP_FOR_EXEC_IVR_SCENARIO() {
+	if (MODAL_UNIQUE_ID != null) $('#'+MODAL_UNIQUE_ID).modal('hide');
+}
+
+function INIT_WIDGETS_FOR_EXEC_IVR_SCENARIO(JSON_ARGS, UNIQUE_ID) {
+	JSON_IVR_PARAM = JSON_ARGS;
+	MODAL_UNIQUE_ID = UNIQUE_ID;
+	
+	$(".EVENT_MODAL_POPUP").on('click', function () {
+		var ID = $(this).attr('ID');
+		if (ID == 'DUMMY') {
+		} else if (ID == 'BTN_CLOSE_POPUP_FOR_EXEC_IVR_SCENARIO') {
+			CLOSE_POPUP_FOR_EXEC_IVR_SCENARIO();
+		} else if (ID == 'BTN_STEP_FORWARD_FOR_EXEC_IVR_SCENARIO') {
+			STEP_FORWARD_FOR_EXEC_IVR_SCENARIO();
+		}
+	});
+	
+	$("#ACCORDION_FOR_EXEC_IVR_SCENARIO").accordion({
+			heightStyle: "fill",
+			active: STEP_OF_EXEC_IVR_SCENARIO,
+	//		animate: false,
+	        create: function( event, ui ) {
+        },
+        activate: function( event, ui ) {
+            var HEADER_TEXT = ui.newHeader.text();
+            if (HEADER_TEXT.indexOf('1') >= 0) {
+		    	STEP_OF_EXEC_IVR_SCENARIO = 0;
+            } else if (HEADER_TEXT.indexOf('2') >= 0) {
+		    	STEP_OF_EXEC_IVR_SCENARIO = 1;
+            } else if (HEADER_TEXT.indexOf('3') >= 0) {
+		    	STEP_OF_EXEC_IVR_SCENARIO = 2;
+            } else if (HEADER_TEXT.indexOf('4') >= 0) {
+		    	STEP_OF_EXEC_IVR_SCENARIO = 3;
+            }
+            
+//          if (STEP_OF_EXEC_IVR_SCENARIO < 1) $('#DIV_LAST_STEP').html('');
+        }
+	});
+	
+	DISPLAY_STR_HELP();
+}
+
+function DISPLAY_STR_HELP() {
+	
+//alert(JSON.stringify(JSON_IVR_PARAM, null, '\t'));
+//alert(JSON.stringify(_RS.PHONE_INFO.APP_NAME, null, '\t'));
+	
+	var strHTML  = '';
+	
+	if (JSON_IVR_PARAM != null) {
+		strHTML += '<table>';
+		strHTML += '<col width="50%"/>';
+
+		strHTML += '<tr>';
+		strHTML += '<td colspan="2" style="text-align:center;">';
+		if(_RS._IS_MOBILE.length > 0) {
+			strHTML += '<h3>';
+			strHTML += '전화 걸어서 인증 하는 메커니즘 입니다.';
+			strHTML += '</h3>';
+		} else {
+			strHTML += '<h1>';
+			strHTML += '전화 걸어서 인증 하는 메커니즘 입니다.';
+			strHTML += '</h1>';
+		}
+		strHTML += '</td>';
+		strHTML += '</tr>';
+
+		strHTML += '<tr>';
+		strHTML += '<td colspan="2" style="text-align:center;">';
+		if(_RS._IS_MOBILE.length > 0) {
+			strHTML += '<h3>';
+			strHTML += TO_KOREAN_READABLE(JSON_IVR_PARAM.CALL_FROM) + ' ▶ ' + TO_KOREAN_READABLE(JSON_IVR_PARAM.CALL_TO);
+			strHTML += '</h3>';
+		} else {
+			strHTML += '<h1>';
+			strHTML += TO_KOREAN_READABLE(JSON_IVR_PARAM.CALL_FROM) + ' ▶ ' + TO_KOREAN_READABLE(JSON_IVR_PARAM.CALL_TO);
+			strHTML += '</h1>';
+		}
+		strHTML += '</td>';
+		strHTML += '</tr>';
+
+		if ('STR_SCENARIO_HELP' in JSON_IVR_PARAM) {
+			strHTML += '<tr style="height:50%;">';
+			strHTML += '<td colspan="2" style="text-align:center;">';
+			strHTML += JSON_IVR_PARAM.STR_SCENARIO_HELP;
+			strHTML += '</td>';
+			strHTML += '</tr>';
+		}
+		
+		strHTML += '<tr>';
+		strHTML += '<th>';
+		strHTML += '발신 번호';
+		strHTML += '</th>';
+		strHTML += '<td>';
+		strHTML += TO_KOREAN_READABLE(JSON_IVR_PARAM.CALL_FROM);
+		strHTML += '</td>';
+		strHTML += '</tr>';
+
+		strHTML += '<tr>';
+		strHTML += '<th>';
+		strHTML += '수신 번호';
+		strHTML += '</th>';
+		strHTML += '<td>';
+		strHTML += TO_KOREAN_READABLE(JSON_IVR_PARAM.CALL_TO);
+		strHTML += '</td>';
+		strHTML += '</tr>';
+		
+		strHTML += '</table>';
+
+//		alert(strHTML);
+	
+		$('#DIV_LAST_STEP').html(strHTML);
+		
+	} else {
+		strHTML = ARR_TO_TABLE_CENTER([
+			'JSON_IVR_PARAM 이 전달되지 않았습니다!'
+		]);
+		$('#DIV_LAST_STEP').html(strHTML);
+	}
+		
+	
+}
+
+function STEP_FORWARD_FOR_EXEC_IVR_SCENARIO() {
+	if (STEP_OF_EXEC_IVR_SCENARIO < 3) {
+		STEP_OF_EXEC_IVR_SCENARIO += 1;
+		$("#ACCORDION_FOR_EXEC_IVR_SCENARIO").accordion( "option", "active", STEP_OF_EXEC_IVR_SCENARIO );
+		if (STEP_OF_EXEC_IVR_SCENARIO == 1) {
+			PREPARE_CALL_START_AND_MONITOR();
+		}
+	}
+}
+
+var CALL_WAIT_END_TIMEVALUE = -1;
+var CALL_IN_CONNECTED = false;
+function DISPLAY_COUNT_DOWN() {
+	var TIME_REMAIN = (CALL_WAIT_END_TIMEVALUE - Date.now()) / 1000;
+	var strHTML = '';
+
+		strHTML += '<table>';
+
+		strHTML += '<tr>';
+		strHTML += '<td colspan="2" style="text-align:center;">';
+		strHTML += '<b>';
+		if(_RS._IS_MOBILE.length > 0) {
+			strHTML += '<h3>';
+			strHTML += '전화를 걸어 주세요! ' + QIIP_APP_SECS_TO_TIME_STRING(TIME_REMAIN) + ' 남았습니다!';
+			strHTML += '</h3>';
+		} else {
+			strHTML += '<h1>';
+			strHTML += '전화를 걸어 주세요! ' + QIIP_APP_SECS_TO_TIME_STRING(TIME_REMAIN) + ' 남았습니다!';
+			strHTML += '</h1>';
+		}
+		strHTML += '</b>';
+		strHTML += '</td>';
+		strHTML += '</tr>';
+
+		strHTML += '<tr>';
+		strHTML += '<td colspan="2" style="text-align:center;">';
+		strHTML += '<b>';
+		if(_RS._IS_MOBILE.length > 0) {
+			strHTML += '<h3>';
+			strHTML += TO_KOREAN_READABLE(JSON_IVR_PARAM.CALL_FROM) + ' ▶ ' + TO_KOREAN_READABLE(JSON_IVR_PARAM.CALL_TO);
+			strHTML += '</h3>';
+		} else {
+			strHTML += '<h1>';
+			strHTML += TO_KOREAN_READABLE(JSON_IVR_PARAM.CALL_FROM) + ' ▶ ' + TO_KOREAN_READABLE(JSON_IVR_PARAM.CALL_TO);
+			strHTML += '</h1>';
+		}
+		strHTML += '</b>';
+		strHTML += '</td>';
+		strHTML += '</tr>';
+
+		strHTML += '<tr>';
+		strHTML += '<th>';
+		strHTML += '<h3>';
+		strHTML += '발신 번호';
+		strHTML += '</h3>';
+		strHTML += '</th>';
+		strHTML += '<td>';
+		strHTML += '<h3>';
+		strHTML += TO_KOREAN_READABLE(JSON_IVR_PARAM.CALL_FROM);
+		strHTML += '</h3>';
+		strHTML += '</td>';
+		strHTML += '</tr>';
+
+		strHTML += '<tr>';
+		strHTML += '<th>';
+		strHTML += '<h3>';
+		strHTML += '수신 번호';
+		strHTML += '</h3>';
+		strHTML += '</th>';
+		strHTML += '<td>';
+		strHTML += '<h3>';
+		strHTML += TO_KOREAN_READABLE(JSON_IVR_PARAM.CALL_TO);
+		strHTML += '</h3>';
+		strHTML += '</td>';
+		strHTML += '</tr>';
+		
+		strHTML += '</table>';
+		
+		
+		$('#DIV_CALL_REQUEST_MSG').html(strHTML);
+		
+/*	
+	QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+		DIV_CALL_STATUS_LOG,
+		strHTML,
+		'me',
+		'70%'
+	);
+*/
+	
+	if ((!CALL_IN_CONNECTED) && (TIME_REMAIN > 0)) {
+		setTimeout(function() {
+			DISPLAY_COUNT_DOWN();
+		}, 1000);
+	} else {
+		if (TIME_REMAIN > 0) {
+			DISPLAY_CALL_ACCEPT();
+		} else {
+			WS_CONNECTION.send(JSON.stringify({
+				CMD: 'ARSAUTH_NONE'
+			}));
+		}
+	}
+}
+
+function DISPLAY_CALL_ACCEPT() {
+	var strHTML = '';
+
+		strHTML += '<table>';
+
+		strHTML += '<tr>';
+		strHTML += '<td style="text-align:center;">';
+		if(_RS._IS_MOBILE.length > 0) {
+			strHTML += '<h3>';
+			strHTML += TO_KOREAN_READABLE(JSON_IVR_PARAM.CALL_FROM) + ' 님';
+			strHTML += '</h3>';
+		} else {
+			strHTML += '<h1>';
+			strHTML += TO_KOREAN_READABLE(JSON_IVR_PARAM.CALL_FROM) + ' 님';
+			strHTML += '</h1>';
+		}
+		strHTML += '</td>';
+		strHTML += '</tr>';
+
+		strHTML += '<tr>';
+		strHTML += '<td style="text-align:center;">';
+		strHTML += '<b>';
+		if(_RS._IS_MOBILE.length > 0) {
+			strHTML += '<h3>';
+			strHTML += '전화를 받았습니다.';
+			strHTML += '</h3>';
+		} else {
+			strHTML += '<h1>';
+			strHTML += '전화를 받았습니다.';
+			strHTML += '</h1>';
+		}
+		strHTML += '</b>';
+		strHTML += '</td>';
+		strHTML += '</tr>';
+
+		strHTML += '<tr>';
+		strHTML += '<td style="text-align:center;">';
+		strHTML += '<b>';
+		if(_RS._IS_MOBILE.length > 0) {
+			strHTML += '<h3>';
+			strHTML += 'ARS 안내음성에 따라 인증번호를 입력해 주세요.';
+			strHTML += '</h3>';
+		} else {
+			strHTML += '<h1>';
+			strHTML += 'ARS 안내음성에 따라 인증번호를 입력해 주세요.';
+			strHTML += '</h1>';
+		}
+		strHTML += '</b>';
+		strHTML += '</td>';
+		strHTML += '</tr>';
+
+		
+		strHTML += '</table>';
+		
+		
+		$('#DIV_CALL_REQUEST_MSG').html(strHTML);
+}
+
+function CHANGE_PHONE_NO_FOR_TTS(PHONE_NO) {
+	return PHONE_NO.split('').join(', ');
+}
+
+var JSON_IVR_REQUEST = {};
+function ADD_ATTRIBUTE_WS_CONNECTION_ID_AND_EXEC_CALL_STARET_AND_MONITOR(WS_CONNECTION_ID) {
+	JSON_IVR_REQUEST = JSON.parse(JSON.stringify(JSON_IVR_PARAM)); // CLONE
+	
+	JSON_IVR_REQUEST.WS_CONNECTION_ID	= WS_CONNECTION_ID;
+	JSON_IVR_REQUEST.PHONE_INFO			= _RS.PHONE_INFO;
+	JSON_IVR_REQUEST.API_SERVER_URL		= window.location.origin;
+		
+	if (QIIP_IS_VALID_PHONE_NO(JSON_IVR_REQUEST.ASK_TO))	JSON_IVR_REQUEST.ASK_TO		= CHANGE_PHONE_NO_FOR_TTS(JSON_IVR_REQUEST.ASK_TO);
+	if (QIIP_IS_VALID_PHONE_NO(JSON_IVR_REQUEST.ASK_FROM))	JSON_IVR_REQUEST.ASK_FROM	= CHANGE_PHONE_NO_FOR_TTS(JSON_IVR_REQUEST.ASK_FROM);
+
+   	WS_CONNECTION.send(JSON.stringify(JSON_IVR_REQUEST));
+
+	if (JSON_IVR_PARAM.CMD == 'ARSAUTH_WAIT') {
+		if (JSON_IVR_REQUEST.CALL_WAIT_TIME == undefined) {
+			JSON_IVR_REQUEST.CALL_WAIT_TIME		= DEFAULT_CALL_WAIT_TIME;
+		}
+		CALL_WAIT_END_TIMEVALUE = Date.now() + JSON_IVR_REQUEST.CALL_WAIT_TIME * 1000;
+		DISPLAY_COUNT_DOWN();
+		if (_ACCESS_FROM_APP) {
+	   		setTimeout(function () {
+				QIIP_APPS_NATIVE_ACCESS({
+					REQUEST: 'MAKE_VOICE_CALL',
+					CALL_TO: JSON_IVR_PARAM.CALL_TO,
+				}, function (RESULT) {
+				});
+	   		}, 500);
+		}
+	}
+
+// 	$('#BTN_CLOSE_POPUP_FOR_EXEC_IVR_SCENARIO').jqxButton({disabled: true });
+// 	$('#BTN_STEP_FORWARD_FOR_EXEC_IVR_SCENARIO').jqxButton({disabled: true });
+	$('#DIV_BUTTONS').remove();
+
+}
+
+function UPDATE_SERVICE_VOUCHER(JSON_PARSED) {
+	_RS.OBJ_POST_ROOT.SERVICE_VOUCHER = _RS.OBJ_POST_ROOT.SERVICE_VOUCHER - JSON_PARSED.CALL_TIMES.TIME_VALUE_AUTH_DURATION;
+	$('#SERVICE_VOUCHER').html(_RS.OBJ_POST_ROOT.SERVICE_VOUCHER);
+}
+
+var ARSAUTH_WS_SERVER_URL	= 'ws://pbx.q1p.win:3000';
+var ARSAUTH_WS_CHANNEL		= 'arsauth-status';
+
+function PREPARE_CALL_START_AND_MONITOR() {
+	INIT_WS_CONNECTION(ARSAUTH_WS_SERVER_URL, ARSAUTH_WS_CHANNEL);
+}
+
+var DIV_CALL_STATUS_LOG = 'DIV_CALL_STATUS_LOG';
+var WS_CONNECTION = null;
+function INIT_WS_CONNECTION(ws_server, ws_channel) {
+	WS_CONNECTION = {};
+    // if user is running mozilla then use it's built-in WebSocket
+    window.WebSocket = window.WebSocket || window.MozWebSocket;
+  
+    // if browser doesn't support WebSocket, just show some notification and exit
+    if (!window.WebSocket) {
+    	QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+    		DIV_CALL_STATUS_LOG,
+    		'죄송합니다, 접속에 사용하신 웹 브라우저가 WebSockets 기능을 지원하지 않습니다.',
+    		'me',
+    		'70%'
+    	);
+      return;
+    }
+
+    // open connection
+    WS_CONNECTION = new WebSocket(ws_server, ws_channel);
+
+    WS_CONNECTION.onopen = function () {
+    	QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+    		DIV_CALL_STATUS_LOG,
+    		sprintf( "ARS 처리 시스템에 연결되었습니다."),
+//    		sprintf( "new WebSocket('%s', '%s') 이 연결되었습니다.", ws_server, ws_channel),
+    		'me',
+    		'70%'
+    	);
+    };
+    
+    WS_CONNECTION.onerror = function (error) {
+    	QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+    		DIV_CALL_STATUS_LOG,
+//    		'WebSocket 연결에 어떤 문제가 있거나 WebSocket 서버가 응답하지 않습니다.',
+    		'ARS 처리 시스템에 어떤 문제가 있거나 ARS 처리 시스템이 응답하지 않습니다.',
+    		'me',
+    		'70%'
+    	);
+    };
+
+    // most important part - incoming messages
+    WS_CONNECTION.onmessage = function (message) {
+        // try to parse JSON message. Because we know that the server always returns
+        // JSON this should work without any problem but we should make sure that
+        // the massage is not chunked or otherwise damaged.
+        try {
+          var JSON_PARSED = JSON.parse(message.data);
+        } catch (e) {
+	    	QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+	    		DIV_CALL_STATUS_LOG,
+	    		'이건 JSON 스트링이 아닌것 같아요! : ' + message.data,
+	    		'me',
+	    		'70%'
+	    	);
+			return;
+        }
+
+        // NOTE: if you're not sure about the JSON structure
+        // check the server source code above
+        if ('TYPE' in JSON_PARSED) {
+        	if (JSON_PARSED.COMMENT != undefined) {
+		    	QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+		    		DIV_CALL_STATUS_LOG,
+		    		JSON.stringify(JSON_PARSED.COMMENT, null, ' '),
+		    		'me',
+		    		'70%'
+		    	);
+        	}
+		  
+			var TYPE = JSON_PARSED.TYPE;
+			if (TYPE == 'WS_CONNECTION_ID') {			// 대소문자 구분!
+				ADD_ATTRIBUTE_WS_CONNECTION_ID_AND_EXEC_CALL_STARET_AND_MONITOR(JSON_PARSED.WS_CONNECTION_ID);
+			} else if (TYPE == 'ARSAUTH-STATUS') {	// 대소문자 구분!
+				if (JSON_PARSED.CALL_CONNECT && JSON_PARSED.CALL_IN_BOUND) CALL_IN_CONNECTED = true;
+			    if (JSON_PARSED.CALL_END) {
+			    	if ( JSON_PARSED.CALL_IN_BOUND && JSON_PARSED.CALL_ARGS.CALL_FROM != JSON_IVR_PARAM.CALL_FROM) {
+				    	QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+				    		DIV_CALL_STATUS_LOG,
+				    		'JSON_PARSED.CALL_IN_BOUND && JSON_PARSED.CALL_ARGS.CALL_FROM != JSON_IVR_PARAM.CALL_FROM',
+				    		'you',
+				    		'70%'
+				    	);
+			    		return;
+			    	}
+			    	if (!JSON_PARSED.CALL_IN_BOUND && JSON_PARSED.CALL_ARGS.CALL_TO != JSON_IVR_PARAM.CALL_TO) {
+				    	QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+				    		DIV_CALL_STATUS_LOG,
+				    		'!JSON_PARSED.CALL_IN_BOUND && JSON_PARSED.CALL_ARGS.CALL_FROM != JSON_IVR_PARAM.CALL_FROM',
+				    		'you',
+				    		'70%'
+				    	);
+			    		return;
+			    	}
+			    	QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+			    		DIV_CALL_STATUS_LOG,
+			    		sprintf("통화를 종료 하였습니다."),
+			    		'me',
+			    		'70%'
+			    	);
+					var DELAY_TIME = 1000;
+			    	QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+			    		DIV_CALL_STATUS_LOG,
+			    		sprintf("%5.2f 초 후 자동으로 팝업창이 닫힙니다", DELAY_TIME / 1000),
+			    		'me',
+			    		'70%'
+			    	);
+			    	
+					setTimeout(function() {
+						CLOSE_POPUP_FOR_EXEC_IVR_SCENARIO();
+						if ('FUNC_CALLBACK' in JSON_IVR_PARAM) {
+							eval(sprintf("%s('%s');", JSON_IVR_PARAM.FUNC_CALLBACK, Base64.encode(JSON.stringify(JSON_PARSED))));
+						}
+					}, DELAY_TIME);
+			    }
+			} else if (TYPE == 'ARSAUTH_RESULT') {	// 대소문자 구분!
+				if (JSON_PARSED.CODE != 200) {
+			    	QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+			    		DIV_CALL_STATUS_LOG,
+			    		'ARS 처리 시스템에 장애가 발생했습니다.<br/><br/>' +
+			    		sprintf("장애 원인은<br/><br/>[%s]<br/><br/>입니다.<br/><br/>", JSON_PARSED.MESSAGE) +
+			    		'최대한 빠른 시일 내에 복구하도록 하겠습니다.',
+			    		'me',
+			    		'70%'
+			    	);
+				   	$('#BTN_CLOSE_POPUP_FOR_EXEC_IVR_SCENARIO').jqxButton({disabled: false });
+				} else {
+					if (_ACCESS_FROM_APP) {
+					   	if (JSON_IVR_REQUEST.CMD == 'ARSAUTH_WAIT') {
+					   		setTimeout(function () {
+						   		NC({
+						   			CMD: 'MAKE_VOICE_CALL',
+						   			CALL_TO: JSON_IVR_REQUEST.CALL_TO
+						   		});
+					   		}, 500);
+					   	}
+					}
+				}
+			}
+        } else {
+	    	QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+	    		DIV_CALL_STATUS_LOG,
+	    		'흠..., JSON 스트링이 이런식이면 곤란한데...  TYPE 속성이 없쟎아...: ' + JSON.stringify(JSON_PARSED, null, '\t'),
+	    		'me',
+	    		'70%'
+	    	);
+        }
+    };
+
+    WS_CONNECTION.onclose  = function () {
+    	QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+    		DIV_CALL_STATUS_LOG,
+    		'ARS 처리 시스템과 연결이 끊어졌습니다. 1초 이내에 연결을 재시도 합니다.',
+//    		'WebSocket 연결이 끊어졌습니다. 1초 이내에 WebSocket 연결을 재시도 합니다.',
+    		'me',
+    		'70%'
+    	);
+		//try to reconnect in 1 seconds
+		setTimeout(function(){INIT_WS_CONNECTION(ARSAUTH_WS_SERVER_URL, ARSAUTH_WS_CHANNEL)}, 1000);
+    };
+
+    WS_CONNECTION.CLOSE_FORCE  = function () {
+    	QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+    		DIV_CALL_STATUS_LOG,
+    		'ARS 처리 시스템과 연결을 정상적으로 종료 합니다.',
+    		'me',
+    		'70%'
+    	);
+    	WS_CONNECTION.onclose  = function () {}; // disable onclose handler first
+    	WS_CONNECTION.close();
+    }
+}
+
+
+</script>
+<div class="ars_scenario" style="width:100%;height:90%;" id="ACCORDION_FOR_EXEC_IVR_SCENARIO">
+	<h3>단계 1 : 로그인 절차 안내</h3>
+    <div class="QIIP_ACCORDION_CONTENT" id="DIV_LAST_STEP">
+    </div>
+	<h3>단계 2 : 통화진행 모니터링</h3>
+    <div class="QIIP_ACCORDION_CONTENT" >
+    	<div style="height:70%;" id='DIV_CALL_REQUEST_MSG'>
+    	</div>
+    	<div style="height:30%;" id='DIV_CALL_STATUS_LOG'>
+    	</div>
+    </div>
+</div>
+<div class="ars_scenario" style="width:100%;height:10%;padding:0;" id="DIV_BUTTONS">
+	<table>
+		<col width="50%"/>
+		<tr>
+			<td>
+				<button class="btn btn-primary btn-lg btn-block login-btn EVENT_MODAL_POPUP" id="BTN_CLOSE_POPUP_FOR_EXEC_IVR_SCENARIO">취소 하기</button>
+			</td>
+			<td>
+				<button class="btn btn-primary btn-lg btn-block login-btn EVENT_MODAL_POPUP" id="BTN_STEP_FORWARD_FOR_EXEC_IVR_SCENARIO">다음 단계</button>
+			</td>
+		</tr>
+	</table>
+</div>

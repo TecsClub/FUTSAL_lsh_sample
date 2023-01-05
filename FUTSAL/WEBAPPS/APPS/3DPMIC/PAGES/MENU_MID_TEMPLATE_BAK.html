@@ -1,0 +1,202 @@
+<style>
+@media (max-width: 767px){
+	/* detail */
+	.nav_md > .dropdown:nth-child(2){
+		display: none;
+	}
+	.nav_md > a{
+		display: none;
+	}
+	.nav_md > .dropdown:nth-child(3){
+		border-left: 1px solid #ccc;
+	}
+	.nav_md > .dropdown{
+		width: 50%;
+	}
+	.nav_md > .dropdown button{
+		width: 100%;
+	}
+	.nav_md > .dropdown ul{
+		width: 100%;
+		left: 0;
+	}
+}
+
+.nav_md{
+	position: relative;
+	top: 340px;
+	height: 60px;
+	background-color: #fff;
+	border-top: 1px solid #ccc;
+	border-bottom: 1px solid #ccc;
+	padding: 0px 30px;
+	z-index: 10;
+}
+.nav_md > button{
+	width: 60px;
+	height: 58px;
+	text-align: center;
+	padding: 0;
+	font-weight: 700;
+	color: #333;
+	border-radius: 0;
+	line-height: 60px;
+	border-top: none;
+	border-bottom: none;
+	float: left;
+}
+.nav_md > .dropdown{
+	float: left;
+	height: 100%;
+}
+.nav_md > .dropdown button{
+	height: 100%;
+	text-align: left;
+	border-radius: 0;
+	border: none;
+	border-right: 1px solid #ccc;
+	width: 180px;
+}
+.nav_md > .dropdown button span{
+	float: right;
+	margin-top: 8px;
+}
+.nav_md > .dropdown ul{
+	margin: 0;
+	width: 181px;
+	border-radius: 0;
+	left: -1px;
+}
+
+.nav_md > .dropdown ul li a{
+line-height: 30px;
+}
+.nav_md.fixed{
+	position: fixed;
+	top: 0;
+	width: 100%;
+}
+
+button#move_top_btn {
+    position: fixed;
+    right: 2%;
+    bottom: 50px;
+    display: none;
+    z-index: 999;
+    text-align: center;
+    background-color: #00B4EB;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    color: #fff;
+    font-weight: 500;
+    border: none;
+}
+button#move_top_btn:hover, button#move_top_btn:focus{
+	background-color: #049DCC;
+}
+button#move_top_btn.stop_move{
+display: block;
+position: absolute;
+bottom: 250px;
+}
+	
+</style>
+<script>
+	function QIIP_SETUP_MID_MENU_WIDGETS() {
+		$('.dropdown').on('show.bs.dropdown', function() {
+		    $(this).find('.dropdown-menu').first().stop(true, true).slideDown();
+		});
+
+		$('.dropdown').on('hide.bs.dropdown', function() {
+		    $(this).find('.dropdown-menu').first().stop(true, true).slideUp();
+		});
+		
+		$("#move_top_btn").click(function() {
+	        $('html, body').animate({
+	            scrollTop : 0
+	        }, 400);
+	        return false;
+	    });
+	    
+		$("body").scroll(function(){
+			if ($(this).scrollTop() >  340) {
+				$(".nav_md").addClass("fixed");
+			}else{
+				$(".nav_md").removeClass("fixed");
+			}
+			if ($(this).scrollTop() > 0) {
+		        $('#move_top_btn').fadeIn();
+		    } else {
+		        $('#move_top_btn').fadeOut();
+		    }
+		});
+
+		$(window).resize(function(){
+	      	var width = parseInt($(this).width());
+			if (width > 960){
+				$("body").scroll(function(){
+				    if($(this).scrollTop() + $(this).height() > $(document).height() - 260) {
+						$("button#move_top_btn").addClass("stop_move");
+				   	} else {
+				   		$("button#move_top_btn").removeClass("stop_move");
+				   	}
+				});
+			} else {
+			  	$("body").scroll(function(){
+					if($(this).scrollTop() + $(this).height() > $(document).height() - 260) {
+						$("button#move_top_btn").addClass("stop_move");
+					} else {
+						$("button#move_top_btn").removeClass("stop_move");
+					}
+				});
+			}
+	    }).resize();
+		
+	}
+	
+</script>
+<!-- MENU_MID START -->
+<div class="nav_md">
+	<button class="btn btn-default">HOME</button>
+	<div class="dropdown">
+		<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+		    Dropdown1
+		    <span class="caret"></span>
+		</button>
+		<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+		    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Action</li>
+		    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Another action</li>
+		    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Something else here</li>
+		    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated link</li>
+		</ul>
+	</div>
+	<div class="dropdown">
+		<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+		    Dropdown2
+		    <span class="caret"></span>
+		</button>
+		<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+		    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Action</li>
+		    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Another action</li>
+		    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Something else here</li>
+		    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated link</li>
+		</ul>
+	</div>
+	<div class="dropdown">
+		<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+		    Dropdown3
+		    <span class="caret"></span>
+		</button>
+		<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+		    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Action</li>
+		    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Another action</li>
+		    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Something else here</li>
+		    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated line</li>
+		</ul>
+	</div>
+	<div>
+		{{JSON_ARGS}}
+	</div>
+</div>
+<!-- MENU_MID END -->

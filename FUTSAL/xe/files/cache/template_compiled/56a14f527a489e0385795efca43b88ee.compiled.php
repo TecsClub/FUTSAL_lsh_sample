@@ -1,0 +1,56 @@
+<?php if(!defined("__XE__"))exit;?><script>
+	function INIT_WIDGETS_FOR_DIV_ADMIN_HEADER() {
+		$(".BTN_CLASS_HEADER").on('click', function () {
+			var ID = $(this).attr('ID');
+			if (ID == 'DUMMY') {
+			} else if (ID == 'BTN_LOGOUT') {
+				QIIP_APP_LOGOUT();
+			} else if (ID == 'BTN_SHOW_RESULT') {
+			} else if (ID == 'BTN_SHOW_OTHERS') {
+				QIIP_API_ACCESS({
+					REQ: 'api_GET_PAGE',
+					FLDR_TEMPLATE: _FLDR_TEMPLATE,
+					FILE_TEMPLATE: 'PAGES/POPUP_USER_SELECT.html',
+				},function(STR_RESULT) {
+					var HTML_COMPILED = QIIP_STATIC_HTML(ALL_USER_DATA, STR_RESULT);
+					var OBJ_POPUP_FOR_ALERT = QIIP_JQX_POPUP_WINDOW({
+			            showCollapseButton: true, 
+			            height: '13.5%',
+	            		width: '20%',
+			            minHeight: 100,
+			            minWidth: 100,
+						},
+						'사용자 선택',
+						HTML_COMPILED
+					);
+					_RS.$apply();
+					INIT_WIDGETS_FOR_POPUP_USER_SELECT(OBJ_POPUP_FOR_ALERT);
+				});
+			}
+		});
+}
+</script>
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">NOOL <em>HEALTH </em><small>모션 캡쳐 재활치료 시스템</small></a>
+        </div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <div class="nav navbar-nav">
+                <span class="block m-t-xs"> <strong class="font-bold">관리자페이지</strong></span>
+            </div>
+            <div class="nav navbar_middle">
+          
+            </div>
+            <div class="nav navbar-nav navbar-right">
+                <button type="button" class="logout_btn BTN_CLASS_HEADER" id="BTN_LOGOUT">
+                	<i class="fas fa-sign-out-alt"></i> 로그아웃</button>
+                <div class="btn-group btn-group-lg" role="group" aria-label="button">
+                  	<button type="button" class="btn btn-default BTN_CLASS_HEADER" id="BTN_SHOW_OTHERS">타사용자 보기</button>
+                </div>
+            </div>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>

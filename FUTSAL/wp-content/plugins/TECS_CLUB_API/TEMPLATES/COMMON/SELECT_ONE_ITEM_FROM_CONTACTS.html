@@ -1,0 +1,79 @@
+{@ $VARS = json_decode($ARGS->VARS);}
+
+<script>
+var FOR_POPUP_SELECT_ONE_ITEM_FROM_CONTACTS = null;
+
+function INIT_WIDGETS_FOR_POPUP_SELECT_ONE_ITEM_FROM_CONTACTS(OBJ_DIALOG) {
+	FOR_POPUP_SELECT_ONE_ITEM_FROM_CONTACTS = OBJ_DIALOG;
+	$(".BTN_LABEL").button().click(function (event) {
+		event.preventDefault();
+	});
+	$(".BTN_SELECT_ONE_CONTACT").button().click(function (event) {
+		event.preventDefault();
+		var DIV_ID_RESULT_FOR_SELECTED_CONTACT = '{$VARS->DIV_ID_RESULT}';
+		var FLAG_MEMBER = $(this).attr("MEMBER");
+		if (FLAG_MEMBER.length > 0) {
+			var SELECTED_PHONE_NO = $(this).attr("PHONE_NO");
+			$('#'+DIV_ID_RESULT_FOR_SELECTED_CONTACT).val(SELECTED_PHONE_NO);
+			CLOSE_POPUP_FOR_SELECT_ONE_ITEM_FROM_CONTACTS();
+		} else {
+			qiip_dialog_array_yes_no(
+				[
+					sprintf(
+						"%s(%s) 님은 {$ARGS->APP_NAME} 앱을 설치하지 않아서 도착 알림 등록을 하실 수 없습니다!",
+						$(this).attr("DISPLAY_NAME"),
+						$(this).attr("PHONE_NO")
+					),
+					sprintf(
+						"%s(%s) 님에게 {$ARGS->APP_NAME} 앱 설치를 권유하는 SMS를 발송하시겠습니까?!",
+						$(this).attr("DISPLAY_NAME"),
+						$(this).attr("PHONE_NO")
+					)
+				],
+				"",
+				"",
+				50,
+				"비회원 도착 알림 등록 시도에 대한 안내"
+			);
+		}
+	});
+	$("#BTN_ONE_ITEM_FROM_CONTACTS_CANCLE").button().click(function (event) {
+		event.preventDefault();
+		CLOSE_POPUP_FOR_SELECT_ONE_ITEM_FROM_CONTACTS();
+	});
+}
+
+function CLOSE_POPUP_FOR_SELECT_ONE_ITEM_FROM_CONTACTS() {
+	if (FOR_POPUP_SELECT_ONE_ITEM_FROM_CONTACTS != null) {
+		qiip_close_dialog(FOR_POPUP_SELECT_ONE_ITEM_FROM_CONTACTS);
+		qiip_clear_dialog_content(FOR_POPUP_SELECT_ONE_ITEM_FROM_CONTACTS);
+	}
+}
+
+</script>
+<div style="width:100%; height:90%;overflow:auto;">
+	{@ $ARRAY_CONTACTS = $VARS->JSON_ARRAY_CONTACTS;}
+	<table cond="count($ARRAY_CONTACTS) > 0">
+		<col width="25%"/>
+		<col width="35%"/>
+		<col width="40%"/>
+		<tr loop="$ARRAY_CONTACTS=>$NO,$ONE_ITEM">
+			<td cond="$ONE_ITEM->MEMBER" ><button class="BTN_SELECT_ONE_CONTACT" MEMBER="{$ONE_ITEM->MEMBER}" DISPLAY_NAME="{$ONE_ITEM->DISPLAY_NAME}" PHONE_NO="{$ONE_ITEM->NUMBER}" style="width:100%;height:100%;">회원</button></td>
+			<td cond="!$ONE_ITEM->MEMBER"><button class="BTN_SELECT_ONE_CONTACT" MEMBER="{$ONE_ITEM->MEMBER}" DISPLAY_NAME="{$ONE_ITEM->DISPLAY_NAME}" PHONE_NO="{$ONE_ITEM->NUMBER}" style="width:100%;height:100%;">비회원</button></td>
+			<td><button class="BTN_SELECT_ONE_CONTACT"  MEMBER="{$ONE_ITEM->MEMBER}" DISPLAY_NAME="{$ONE_ITEM->DISPLAY_NAME}" PHONE_NO="{$ONE_ITEM->NUMBER}" style="width:100%;height:100%;">{$ONE_ITEM->DISPLAY_NAME}</button></td>
+			<td><button class="BTN_SELECT_ONE_CONTACT"  MEMBER="{$ONE_ITEM->MEMBER}" DISPLAY_NAME="{$ONE_ITEM->DISPLAY_NAME}" PHONE_NO="{$ONE_ITEM->NUMBER}" style="width:100%;height:100%;">{$ONE_ITEM->NUMBER}</button></td>
+		</tr>
+	</table>
+	<table cond="count($ARRAY_CONTACTS) <= 0">
+		<tr>
+			<td><button class="BTN_LABEL" style="width:100%;height:100%;">검색 결과가 없습니다.</button></td>
+		</tr>
+	</table>
+</div>
+<div style="width:100%; height:10%;">
+	<table>
+		<tr>
+			<td><button id="BTN_ONE_ITEM_FROM_CONTACTS_CANCLE" style="width:100%;height:100%;">취소</button></td>
+		</tr>
+	</table>
+</div>

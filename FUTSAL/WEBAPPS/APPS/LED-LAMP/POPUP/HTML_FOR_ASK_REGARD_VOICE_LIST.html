@@ -1,0 +1,203 @@
+{@ $ARGS = json_decode(base64_decode($ARGS->JSON_ARGS_BASE64)); }
+#PAGE_ARGS# <!-- <script>var JSON_ARGS=JSON.parse(Base64.decode($ARGS->JSON_ARGS_BASE64));</script> -->
+
+<style>
+	.ask_regard_voice_list 			{width:100%; height:100%;}
+	.ask_regard_voice_list table	{width:100%; height:100%; font-size:100%; border-collapse: separate; border-spacing: 1px; line-height: 100%;}
+	.ask_regard_voice_list table th	{text-decoration:bold; text-align: center; white-space:normal; vertical-align: middle; word-break:break-all; background:#ccc;}
+	.ask_regard_voice_list table td	{text-decoration:none; text-align: left;   white-space:normal; vertical-align: middle;word-break:break-all;}
+</style>
+
+<script>
+function INIT_WIDGETS_FOR_ASK_REGARD_VOICE_LIST() {
+
+	if ($('.BTN_FOR_ASK_REGARD_VOICE_LIST').length <= 0) return;
+
+	$(".BTN_FOR_ASK_REGARD_VOICE_LIST").jqxButton({
+		width: '100%',
+		height: '100%'
+	}).on('click', function () {
+		var ID = $(this).attr('ID');
+		if (ID == 'DUMMY') {
+		} else if (ID == 'BTN_FOR_VOICE_LISTEN') {
+			POPUP_FOR_WAE_PLAY(
+				$(this).attr('URL'),
+				0
+			);
+		} else if (ID == 'BTN_FOR_VOICE_REMOVE') {
+			REMOVE_ASK_REGARD_VOICE_FROM_SERVER($(this));
+		} else if (ID == 'BTN_FOR_VOICE_SELECT') {
+			$('#SELECTED_ASK_REGARD_VOICE').val($(this).attr('STR_KEY'));
+			$('#SELECTED_ASK_REGARD_VOICE').attr('URL', $(this).attr('URL'));
+			$('#SELECTED_ASK_REGARD_VOICE').attr('PLAY_TIME', $(this).attr('PLAY_TIME'));
+			CLOSE_POPUP_FOR_SEL_ASK_REGARD_VOICE();
+		}
+	});
+}
+
+function POPUP_FOR_WAE_PLAY(WAV_FILE_URL, PLAY_TIME) {
+
+	var JSON_ARGS_BASE64 = Base64.encode(JSON.stringify({
+		AUDIO_URL: WAV_FILE_URL,
+		PLAY_TIME: PLAY_TIME
+	}));
+
+	QIIP_API_ACCESS({
+			REQ: 'api_GET_PAGE',
+			FLDR_TEMPLATE: _FLDR_TEMPLATE,
+			FILE_TEMPLATE: 'POPUP/POPUP_FOR_WAE_PLAY.html',
+			PHONE_ID: _RS.PHONE_INFO.PHONE_ID,
+			PHONE_NO: _RS.PHONE_INFO.PHONE_NO,
+			CATEGORY: _RS.PHONE_INFO.APP_NAME,
+			JSON_ARGS_BASE64: JSON_ARGS_BASE64,
+		},function(STR_RESULT) {
+			var OBJ_POPUP = QIIP_JQX_POPUP_WINDOW({
+	            showCollapseButton: true, 
+	            height: '95%',
+	            width: '90%',
+	            minHeight: 100,
+	            minWidth: 100,
+				},
+				'녹음음성 파형 보기 및 재생',
+				STR_RESULT
+			);
+		  	INIT_WIDGETS_POPUP_FOR_WAE_PLAY(OBJ_POPUP);
+/*
+		},{
+			title: _RS.PHONE_INFO.APP_NAME + ' 안내',
+			template: ARR_TO_TABLE_CENTER([
+				'팝업 화면을 구성하고 있습니다.'
+			]),
+			cssClass: 'qiip_popup'
+*/
+		}
+	);
+
+}
+
+function REMOVE_ASK_REGARD_VOICE_FROM_SERVER(JQUERY_DOM) {
+	QIIP_POPUP_FOR_YES_NO(
+		'경고!',[
+			'선택하신 안부문의 녹음음성',
+			'[' + JQUERY_DOM.attr('STR_KEY') + ']를, 삭제하시겠습니까?',
+			'삭제 후에는 복구할 수 없습니다.',
+		], function () {
+
+			QIIP_API_ACCESS({
+					REQ: 'post_UPDATE_ROOT_INFO',
+					STR_JSON_UPDATE: JSON.stringify({}),
+					STR_JSON_ATTACH_REMOVES: JSON.stringify([JQUERY_DOM.attr('STR_PATH')]),
+					PHONE_ID: _RS.PHONE_INFO.PHONE_ID,
+					PHONE_NO: _RS.PHONE_INFO.PHONE_NO,
+					CATEGORY: _RS.PHONE_INFO.APP_NAME,
+				},function(STR_RESULT) {
+					REFRESH_ASK_REGARD_VOICES(false);
+					$('#SELECTED_ASK_REGARD_VOICE').val('');
+					$('#SELECTED_ASK_REGARD_VOICE').attr('URL', '');
+					$('#SELECTED_ASK_REGARD_VOICE').attr('PLAY_TIME', '');
+				}
+			);
+
+		}, function () {
+		},
+		95,
+		50
+	);
+/*
+	MY_YES_NO([
+			'선택하신 안부문의 녹음음성',
+			'[' + JQUERY_DOM.attr('STR_KEY') + ']를, 삭제하시겠습니까?',
+			'삭제 후에는 복구할 수 없습니다.',
+		],
+		function() {
+		},
+		function () {
+			QIIP_HTTP_ACCESS(
+				OBJ_IONIC_POPUP,{
+					title:'안내',
+					template: ARR_TO_TABLE_CENTER([
+						'선택하신 안부문의 녹음음성',
+						'[' + JQUERY_DOM.attr('STR_KEY') + ']를, 연동 서버에서 삭제하고 있습니다.',
+					])
+				},{
+					"SERVER_URL" : API_SERVER_URL,
+					"PARAMS" : [
+						QIIP_APP_OBJ_KEY_VALUE("cmd","api_UPDATE_ROOT_INFO"),
+						QIIP_APP_OBJ_KEY_VALUE("STR_JSON_UPDATE", JSON.stringify({})),
+						QIIP_APP_OBJ_KEY_VALUE("STR_JSON_ATTACH_REMOVES", JSON.stringify([JQUERY_DOM.attr('STR_PATH')])),
+					],
+				}, function (RESULT) {
+					REFRESH_ASK_REGARD_VOICES(false);
+				}
+			);
+		},
+		'아니오',
+		'예'
+	);
+*/
+}
+
+</script>
+<div class="ask_regard_voice_list" style="width:100%; height:100%; overflow:auto;">
+	<table>
+		<col width="20%"/>
+		<col width="15%"/>
+		<col width="15%"/>
+	<!--@foreach($ARGS as $KEY=>$ONE_ASK_REGARD_VOICE)-->
+		<tr>
+			<td>
+		      	<button
+		      		class="BTN_FOR_ASK_REGARD_VOICE_LIST"
+		      		ID="BTN_FOR_VOICE_LISTEN"
+		      		URL="{$ONE_ASK_REGARD_VOICE->STR_URL}"
+		      		>
+		        	들어보기
+		    	</button>
+			</td>
+			<td>
+		      	<button
+		      		class="BTN_FOR_ASK_REGARD_VOICE_LIST"
+		      		ID="BTN_FOR_VOICE_REMOVE"
+		      		STR_KEY="{substr($ONE_ASK_REGARD_VOICE->STR_KEY, strlen('2017-01-01_00:00:00_'))}"
+		      		STR_PATH="{$ONE_ASK_REGARD_VOICE->STR_PATH}"
+		      		>
+		        	삭제
+		    	</button>
+			</td>
+			<td>
+		      	<button
+		      		class="BTN_FOR_ASK_REGARD_VOICE_LIST"
+		      		ID="BTN_FOR_VOICE_SELECT"
+		      		STR_KEY="{substr($ONE_ASK_REGARD_VOICE->STR_KEY, strlen('2017-01-01_00:00:00_'))}"
+		      		URL="{$ONE_ASK_REGARD_VOICE->STR_URL}"
+		      		PLAY_TIME="100"
+		      		>
+		        	선택
+		    	</button>
+			</td>
+			<td style="text-align:center;">
+				{substr($ONE_ASK_REGARD_VOICE->STR_KEY, 0, strlen('2017-01-01_00:00:00'))}
+				<br/><br/>
+				{substr($ONE_ASK_REGARD_VOICE->STR_KEY, strlen('2017-01-01_00:00:00_'))}
+			</th>
+		</tr>
+	<!--@end-->
+	<!--@if(count($ARGS) < 1)-->
+		<tr>
+			<td style="text-align:center;">
+				[안부문의 녹음음성] 이 하나도 없습니다.
+			</td>
+		</tr>
+		<tr>
+			<td style="text-align:center;">
+				[추가] 버튼을 터치하시면,...
+			</td>
+		</tr>
+		<tr>
+			<td style="text-align:center;">
+				[안부문의 녹음음성]을 직접 녹음하여 목록에 추가하실 수 있습니다.
+			</td>
+		</tr>
+	<!--@end-->
+	</table>
+</div>

@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width, height=device-height" />
+	<style>
+		@font-face{ font-family: 'HWTOTO';		src: url("HWTOTO132.TTF"); }
+	</style>
+
+	<script type="text/javascript" 			src="https://code.jquery.com/jquery-1.12.4.js"></script>
+	<script type="text/javascript"			src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	<script type="text/javascript" 			src="date.format.js"></script>
+	<script type="text/javascript" 			src="sprintf.min.js"></script>
+	<script type="text/javascript" 			src="WS2S.js"></script>
+
+</head>
+<style>
+body						{margin:0;}
+table						{width:100%; height:100%; border-collapse: separate; border-spacing: 1px; border: 1px solid #bcbcbc;}
+table th					{text-decoration:bold; text-align: center; white-space:normal; word-break:break-all}
+table td					{text-decoration:none; text-align: center; white-space:normal; word-break:break-all}
+
+.bubble{
+    background-color: #FFFF00;
+    border-radius: 5px;
+    box-shadow: 0 0 6px #B2B2B2;
+    display: inline-block;
+    padding: 10px 18px;
+    position: relative;
+    vertical-align: top;
+    min-width: 40%;
+}
+.bubble::before {
+    background-color: #FFFF00;
+    content: "\00a0";
+    display: block;
+    height: 16px;
+    position: absolute;
+    top: 11px;
+    transform:             rotate( 29deg ) skew( -35deg );
+        -moz-transform:    rotate( 29deg ) skew( -35deg );
+        -ms-transform:     rotate( 29deg ) skew( -35deg );
+        -o-transform:      rotate( 29deg ) skew( -35deg );
+        -webkit-transform: rotate( 29deg ) skew( -35deg );
+    width:  20px;
+}
+.me {
+    float: left;
+    margin: 5px 45px 5px 20px;
+}
+.me::before {
+    box-shadow: -2px 2px 2px 0 rgba( 178, 178, 178, .4 );
+    left: -9px;
+}
+.you {
+    float: right;
+    margin: 5px 20px 5px 45px;
+}
+.you::before {
+    box-shadow: 2px -2px 2px 0 rgba( 178, 178, 178, .4 );
+    right: -9px;
+}
+
+.ui-widget				{font-family:HWTOTO;font-size:100%}
+.ui-widget .ui-widget	{font-family:HWTOTO;}
+.ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button { font-family: HWTOTO;}
+.ui-widget-content	{font-family:HWTOTO;}
+.ui-widget-header	{font-family:HWTOTO;}
+</style>
+
+<style>
+.QIIP_WEB 				{width:100%; height:100%; font-family:HWTOTO;}
+.QIIP_WEB table			{width:100%; height:100%; font-size:100%; border-collapse: separate; border-spacing: 0px;}
+.QIIP_WEB table th		{text-decoration:bold; text-align: center; white-space:normal; word-break:break-all; background-color:#EEE;}
+.QIIP_WEB table td		{text-decoration:none; text-align: center; white-space:normal; word-break:break-all}
+.QIIP_SELECT			{width:100%; height:100%;}
+.QIIP_BUTTONS			{width:100%; height:100%;}
+.QIIP_TEXTINPUT			{width:100%; height:100%;text-align:center;}
+
+.QIIP_WEB_TITLE {
+	background-image: url("wood_board.png");
+    background-size: 100% 100%;
+	background-repeat: no-repeat;
+	
+	-webkit-border-radius: 10;
+	-moz-border-radius: 10;
+	border-radius: 10px;
+	font-size:150%;
+}
+</style>
+
+<script>
+var HEART_BEAT_INTERVAL = 55;
+var BIND_IP_PHONE = '';
+var  QIIP_APP_LOG_CONSOLE = {
+        CHAT_TOGGLE: true
+     };
+QIIP_APP_LOG_CONSOLE.CHAT_LOG = function(div_scroll, message, talker, width) {
+	if (div_scroll == undefined) {
+		console.log(message);
+		return;
+	}
+    var element_scroll = document.querySelector('#' + div_scroll);
+
+    var div = document.createElement('div');
+    div.classList.add('bubble');
+    if (talker != undefined) {
+    	div.classList.add(talker);
+    } else {
+        if (QIIP_APP_LOG_CONSOLE.CHAT_TOGGLE) {
+            div.classList.add('me');
+        } else {
+            div.classList.add('you');
+        }
+        QIIP_APP_LOG_CONSOLE.CHAT_TOGGLE = !QIIP_APP_LOG_CONSOLE.CHAT_TOGGLE;
+    }
+    if (width != undefined) {
+    	div.style.minWidth = width;
+    }
+//    div.innerHTML = '<xmp>' + message + '</xmp>';
+    div.innerHTML = (new Date()).format('yyyy-mm-dd HH:MM:ss : ') + message;
+    element_scroll.appendChild(div);
+
+    while (element_scroll.childNodes.length > 100) {
+        element_scroll.removeChild(element_scroll.firstChild);
+    }
+    element_scroll.scrollTop = element_scroll.scrollHeight;
+
+};
+</script>
+
+<script>
+var DIV_CONSOLE_SCROLL = 'DIV_CONSOLE_SCROLL';
+var WS2S_SERVER_URL		= null;
+var CTI_TCP_SERVER_HOST	= null;
+var CTI_TCP_SERVER_PORT = null;
+
+function QIIP_WEB_INIT_UTILS() {
+	QIIP_WEB_AdjustSizes();
+}
+
+$(window).resize(function() {
+	QIIP_WEB_AdjustSizes();
+});
+
+function QIIP_WEB_AdjustSizes() {
+	var WindowWidth		= parseInt($(window).width());
+	var WindowHeight	= parseInt($(window).height()); 
+	$("body").css("width", WindowWidth);
+	$("body").css("height", WindowHeight);
+}
+
+var JSON_CTI_REQUEST = {
+	METHOD: 'HELLO'
+};
+
+var WS2S_CONNECTION = null;
+
+function INIT_WIDGETS() {
+	$(".QIIP_SELECT")
+	.on('change', function () {
+		var ID = $(this).attr('ID');
+		console.log(ID);
+		if (ID == 'DUMMY') {
+		} else if (ID == 'SELECT_TCP_SERVER_HOST') {
+			WS2S_SERVER_URL		= $('#SELECT_WS2S_SERVER_URL').val();
+			CTI_TCP_SERVER_HOST = $('#SELECT_TCP_SERVER_HOST').val();
+			CTI_TCP_SERVER_PORT = $('#SELECT_TCP_SERVER_PORT').val();
+			WS2S_CONNECTION = new WS2S(
+				WS2S_SERVER_URL,
+				CTI_TCP_SERVER_HOST,
+				CTI_TCP_SERVER_PORT,
+				WS2S_ON_STATUS,
+				WS2S_ON_RECEIVE
+			);
+		}
+	});
+
+	$(".QIIP_BUTTONS")
+	.button({width : '100%',height : '100%'})
+	.on('click', function () {
+		var ID = $(this).attr('ID');
+		console.log(ID);
+		if (ID == 'DUMMY') {
+		} else if (ID == 'OPENAPI_BIND') {
+			JSON_CTI_REQUEST = {
+				CONNECTION_ID: WS2S_CONNECTION.SOCKET_CONNECTION_ID,
+				METHOD: ID,
+				PARAMS: {
+					COMP_ID: $('#COMP_ID').val(),
+					LOGIN_ID: $('#LOGIN_ID').val(),
+					LOGIN_PW: $('#LOGIN_PW').val()
+				}
+			}
+			QIIP_WS_CTI_REQUEST(JSON_CTI_REQUEST);
+		} else if (ID == 'OPENAPI_Xfer') {
+			JSON_CTI_REQUEST = {
+				CONNECTION_ID: WS2S_CONNECTION.SOCKET_CONNECTION_ID,
+				METHOD: ID,
+				PARAMS: {
+					IP_PHONE: $('#IP_PHONE').val(),
+					TARGET_NUMBER: $('#FW_TARGET_NUMBER').val()
+				}
+			}
+			QIIP_WS_CTI_REQUEST(JSON_CTI_REQUEST);
+		} else if (ID == 'OPENAPI_Dial') {
+			JSON_CTI_REQUEST = {
+				CONNECTION_ID: WS2S_CONNECTION.SOCKET_CONNECTION_ID,
+				METHOD: ID,
+				PARAMS: {
+					IP_PHONE: $('#IP_PHONE').val(),
+					TARGET_NUMBER: $('#TARGET_NUMBER').val()
+				}
+			}
+			QIIP_WS_CTI_REQUEST(JSON_CTI_REQUEST);
+		} else {
+			JSON_CTI_REQUEST = {
+				CONNECTION_ID: WS2S_CONNECTION.SOCKET_CONNECTION_ID,
+				METHOD: ID,
+				PARAMS: {
+					IP_PHONE: $('#IP_PHONE').val()
+				}
+			}
+			QIIP_WS_CTI_REQUEST(JSON_CTI_REQUEST);
+		}
+	});
+	
+}
+
+function WS2S_ON_STATUS(STR_DATA) {
+	QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+		DIV_CONSOLE_SCROLL,
+		STR_DATA,
+		'you',
+		'70%'
+	);
+}
+
+function WS2S_ON_RECEIVE(RECEIVE_DATA) {
+
+	var STR_LOG = JSON.stringify(RECEIVE_DATA, null, '\t');
+	QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+		DIV_CONSOLE_SCROLL,
+		'<xmp>' + STR_LOG + '</xmp>',
+		'me',
+		'70%'
+	);
+
+	if ('CONNECTION_ID' in RECEIVE_DATA) {
+		if ('STATUS' in RECEIVE_DATA) {
+			if (RECEIVE_DATA.STATUS == 'BIND_OK') {
+				BIND_IP_PHONE = RECEIVE_DATA.IP_PHONE;
+				if (!AUTO_HEART_BEAT) SEND_HEART_BEAT();
+			}
+		} else if ('RESULT' in RECEIVE_DATA) {
+			if (RECEIVE_DATA.RESULT.STATUS == 409) {
+				BIND_IP_PHONE = RECEIVE_DATA.RESULT.IP_PHONE;
+				if (!AUTO_HEART_BEAT) SEND_HEART_BEAT();
+			}
+		}
+	}
+	
+}
+
+$(document).ready(function(){
+	QIIP_WEB_INIT_UTILS();
+	INIT_WIDGETS();
+	WS2S_SERVER_URL		= $('#SELECT_WS2S_SERVER_URL').val();
+	CTI_TCP_SERVER_HOST = $('#SELECT_TCP_SERVER_HOST').val();
+	CTI_TCP_SERVER_PORT = $('#SELECT_TCP_SERVER_PORT').val();
+	WS2S_CONNECTION = new WS2S(
+		WS2S_SERVER_URL,
+		CTI_TCP_SERVER_HOST,
+		CTI_TCP_SERVER_PORT,
+		WS2S_ON_STATUS,
+		WS2S_ON_RECEIVE
+	);
+});
+
+
+var AUTO_HEART_BEAT = false;
+function SEND_HEART_BEAT() {
+	JSON_CTI_REQUEST = {
+		CONNECTION_ID: WS2S_CONNECTION.SOCKET_CONNECTION_ID,
+		METHOD: 'HEART_BEAT',
+		PARAMS: {
+			IP_PHONE: BIND_IP_PHONE
+		}
+	}
+	QIIP_WS_CTI_REQUEST(JSON_CTI_REQUEST);
+	setTimeout(function () {
+		SEND_HEART_BEAT();
+	}, HEART_BEAT_INTERVAL * 1000);
+
+	AUTO_HEART_BEAT = true;
+}
+
+function QIIP_WS_CTI_REQUEST(JSON_CTI_REQUEST) {
+
+	QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+		DIV_CONSOLE_SCROLL,
+		'<xmp>' + JSON.stringify(JSON_CTI_REQUEST, null, '\t') + '</xmp>',
+		'you',
+		'70%'
+	);
+
+	WS2S_CONNECTION.SEND_2_SOCKET(JSON.stringify(JSON_CTI_REQUEST) + '\n');
+}
+
+</script>
+
+<body>
+<div class="QIIP_WEB">
+	<div style="width:100%; height:10%;">
+		<table class="QIIP_WEB_TITLE">
+			<tr>
+				<th style="font-size:250%; text-decoration:bold;">CTI Demonstration via WS2S</th>
+			</tr>
+		</table>
+	</div>
+	<div style="width:100%; height:85%;">
+		<div style="width:50%; height:100%;box-sizing:border-box;float:left;">
+			<div style="width:100%; height:5%;box-sizing:border-box;">
+				<table>
+					<tr>
+						<th>WS2S_SERVER</th>
+						<td>
+							<select class="QIIP_SELECT" id="SELECT_WS2S_SERVER_URL">
+								<option value="ws://CTI.1KEY.WIN:3300">ws://CTI.1KEY.WIN:3300</option>
+							</select>
+						</td>
+						<th>TCP_HOST</th>
+						<td>
+							<select class="QIIP_SELECT" id="SELECT_TCP_SERVER_HOST">
+								<option value="CTI.1KEY.WIN">CTI.1KEY.WIN</option>
+							</select>
+						</td>
+						<th>TCP_PORT</th>
+						<td>
+							<select class="QIIP_SELECT" id="SELECT_TCP_SERVER_PORT">
+								<option value="23690">23690</option>
+							</select>
+						</td>
+					</tr>
+				</table>
+			</div>
+			<div style="width:100%; height:10%;box-sizing:border-box;">
+				<table>
+					<tr>
+						<th>COMP_ID</th>
+						<td><input class="QIIP_TEXTINPUT" type="text" id="COMP_ID" value="NAUTES" /></td>
+					</tr>
+				</table>
+			</div>
+			<div style="width:100%; height:10%;box-sizing:border-box;">
+				<table>
+					<tr>
+						<th>LOGIN_ID</th>
+						<td><input class="QIIP_TEXTINPUT" type="text" id="LOGIN_ID" value="6950" /></td>
+						<th>LOGIN_PW</th>
+						<td><input class="QIIP_TEXTINPUT" type="text" id="LOGIN_PW" value="6950" /></td>
+					</tr>
+				</table>
+			</div>
+			<div style="width:100%; height:10%;box-sizing:border-box;">
+				<table>
+					<tr>
+						<td><button class="QIIP_BUTTONS" id="OPENAPI_BIND">로그인</button></td>
+					</tr>
+				</table>
+			</div>
+			<div style="width:100%; height:10%;box-sizing:border-box;">
+				<table>
+					<tr>
+						<th>IP_PHONE</th>
+						<td><input class="QIIP_TEXTINPUT" type="text" id="IP_PHONE" value="07077276950" /></td>
+						<th>수신전화번호</th>
+						<td><input class="QIIP_TEXTINPUT" type="text" id="TARGET_NUMBER" value="07045816710" /></td>
+						<th>전달전화번호</th>
+						<td><input class="QIIP_TEXTINPUT" type="text" id="FW_TARGET_NUMBER" value="01077743438" /></td>
+					</tr>
+				</table>
+			</div>
+			<div style="width:100%; height:10%;box-sizing:border-box;">
+				<table>
+					<tr>
+						<td><button class="QIIP_BUTTONS" id="OPENAPI_Dial">전화걸기</button></td>
+						<td><button class="QIIP_BUTTONS" id="OPENAPI_Answer">전화받기</button></td>
+						<td><button class="QIIP_BUTTONS" id="OPENAPI_Redial">재다이얼</button></td>
+						<td><button class="QIIP_BUTTONS" id="OPENAPI_Hold">통화보류</button></td>
+						<td><button class="QIIP_BUTTONS" id="OPENAPI_Answer">통화복귀</button></td>
+						<td><button class="QIIP_BUTTONS" id="OPENAPI_Release">통화끊기</button></td>
+						<td><button class="QIIP_BUTTONS" id="OPENAPI_Xfer">전달하기</button></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		<div id="DIV_CONSOLE_SCROLL" style="width:50%;height:100%;box-sizing:border-box;background-color:#c9c9c9;overflow:auto;float:left;">
+		</div>
+	</div>
+	<div style="width:100%; height:5%;">
+		<table>
+			<tr>
+				<th style="font-size:100%; text-decoration:bold;" colspan="2">
+				NautesTechnology(C) All Rights Reserved.
+				</th>
+			</tr>
+		</table>
+	</div>
+</div>
+	
+</body>
+</html>

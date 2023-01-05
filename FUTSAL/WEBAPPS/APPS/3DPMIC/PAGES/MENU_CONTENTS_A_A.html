@@ -1,0 +1,314 @@
+<style>
+body{
+overflow-y: auto !important;
+height: 100%;
+}
+ul{
+padding: 0;
+list-style: none;	
+}
+#remote{
+	display: none;
+}
+#DIV_CONTENT{
+margin-top: -70px;
+}
+.detail_content {
+	width: 100%;
+	margin-top: -60px;
+	position: relative;
+}
+.detail_content .sub_bg{
+height: 400px;
+background: #0F2027;  /* fallback for old browsers */
+background: -webkit-linear-gradient(to bottom, #2C5364, #203A43, #0F2027);  /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to bottom, #2C5364, #203A43, #0F2027); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+text-align: center;
+	position: relative;	
+}
+.detail_content .sub_bg > div{
+	position: absolute;
+	top: calc(50% + 35px);
+	left: 50%;
+	transform: translate(-50%, -50%);
+	padding-top: 70px;
+}
+.detail_content .sub_bg > div h2{
+	font-size: 48px;
+	font-weight: 700;
+	margin-bottom: 15px;
+	margin-top: 0;
+	color: #fff;
+}
+.detail_content .sub_bg > div p{
+	font-size: 17px;
+	font-weight: 500;
+	color: #fff;
+}
+
+button#move_top_btn {
+    position: fixed;
+    right: 2%;
+    bottom: 50px;
+    display: none;
+    z-index: 999;
+    text-align: center;
+    background-color: #114991;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    color: #fff;
+    font-weight: 500;
+    border: none;
+    right: 50px;
+}
+button#move_top_btn:hover, button#move_top_btn:focus{
+	background-color: #049DCC;
+}
+button#move_top_btn.stop_move{
+display: block;
+position: absolute;
+bottom: 250px;
+}
+.breadcrumb_wrap{
+	 border-bottom: 1px solid #ddd;
+	 box-shadow: 0px 5px aliceblue;
+}
+.breadcrumb{
+	  background: none;
+   margin-bottom: 0;
+    border-radius: 0;
+    text-align: right;
+    padding: 15px 0px;
+}
+.content1{
+text-align: center;
+margin-top: 50px;
+margin-bottom: 100px;
+}
+.detail_content h3{
+	  text-align: center;
+    font-weight: bold;
+    display: inline-block;
+    border-bottom: 4px solid #114991;
+    padding-bottom: 8px;
+    font-size: 32px;
+}	
+.content1 img{
+max-width: 100%;
+clear: both;
+display: block;
+margin: 20px auto;
+}
+.content1 .text_box{
+padding: 0px 15px;
+}
+
+.content1 .text_box h4{
+    border-bottom: 1px dashed #eee;
+    padding-bottom: 10px;
+    color: #555;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.content1 .text_box p{
+text-align: left;
+font-size: 18px;
+color: #666;
+margin-top: 15px;
+}
+.content2{
+	text-align: center;	
+}
+.content2 > ul {
+    margin-top: 20px;
+    text-align: left;
+    margin-bottom: 80px;
+    border-bottom: 1px dashed #eee;
+    padding-bottom: 20px;
+}
+.content2 > ul > li{
+	min-height: 380px;
+}
+.content2 ul li{
+clear:both;
+}
+.content2 ul li img{
+width: 50%;	
+}
+.content2 .img_textbox{
+	padding: 15px;
+}
+.content2 .img_textbox h4{
+font-weight: bold;
+border-bottom: 1px solid #eee;
+padding-bottom: 10px;
+margin:0;
+}
+.content2 .img_textbox h4 span{
+border-radius: 50%;
+background-color: #114991;
+width: 50px;
+display: inline-block;
+height: 50px;
+text-align: center;
+line-height: 50px;
+color: #fff;
+margin-right: 5px;
+}
+
+.content2 ul li:nth-child(1) img{
+	float:left;	
+}
+.content2 ul li:nth-child(3) img{
+	float:left;
+}
+.content2 ul li .img_textbox{
+	width: 50%;	
+	float: left;
+}
+.content2 ul li .img_textbox ul{
+list-style: disc;	
+padding-left: 20px;
+margin-top: 10px;
+}
+.content2 ul li .img_textbox ul li{
+	font-size: 14px;
+	color: #666;	
+	margin-bottom: 10px;
+}
+
+
+</style>
+
+<script>
+	
+	function QIIP_MENU_CONTENTS_INIT_WIDGETS() {
+//		alert('QIIP_MENU_CONTENTS_INIT_WIDGETS');
+		$("#move_top_btn").click(function() {
+	        $('html, body').animate({
+	            scrollTop : 0
+	        }, 400);
+	        return false;
+	  });
+		$("body").scroll(function(){
+			if ($(this).scrollTop() > 0) {
+		        $('#move_top_btn').fadeIn();
+	    } else {
+	        $('#move_top_btn').fadeOut();
+	    }
+	    
+	    if($(this).scrollTop() > 260){
+	    		$('QIIP_MENU').animate({"background-color":"#fff", "border-color": "#eee"}, 10);	
+	    		$('DIV_LEFT, QIIP_MENU MENU_1ST_TEXT, QIIP_MENU DIV_RIGHT button, QIIP_MENU DIV_RIGHT button span').animate({"color":"#444", "border-color": "#eee"}, 10);	
+	    }else{
+	    		$('QIIP_MENU').animate({"background-color":"rgb(255, 255, 255, 0)", "border-color": "#fff"}, 10);	
+	    		$('DIV_LEFT, QIIP_MENU MENU_1ST_TEXT, QIIP_MENU DIV_RIGHT button, QIIP_MENU DIV_RIGHT button span').animate({"color":"#fff", "border-color": "#fff"}, 10);	
+	    }
+		});
+		
+		$(window).resize(function(){
+	      	var width = parseInt($(this).width());
+			if (width > 960){
+				$("body").scroll(function(){
+				    if($(this).scrollTop() + $(this).height() > $(document).height() - 200) {
+						$("button#move_top_btn").addClass("stop_move");
+				   	} else {
+				   		$("button#move_top_btn").removeClass("stop_move");
+				   	}
+				});
+			} else {
+			  	$("body").scroll(function(){
+					if($(this).scrollTop() + $(this).height() > $(document).height() - 200) {
+						$("button#move_top_btn").addClass("stop_move");
+					} else {
+						$("button#move_top_btn").removeClass("stop_move");
+					}
+				});
+			}
+	    }).resize();
+	}
+	
+</script>
+<!-- DETAIL_CONTENT START -->
+<div class="detail_content">
+	<div class="sub_bg">
+		<div>
+			<h2>INTRODUCTION</h2>
+			<p>한국 쓰리디프린팅 소재산업 협동조합에 대해 소개합니다.</p>
+		</div>
+	</div>
+	<div class="breadcrumb_wrap">
+		<ol class="breadcrumb container">
+			  <li>Home</li>
+			  <li>사업소개</li>
+			  <li class="active">개요 및 사업영역</li>
+		</ol>	
+	</div>
+	<div class="container">	
+		<div class="content1">
+			<h3>개요</h3>
+			<img src="assets/img/hand1.jpg" alt="개요 이미지">
+			<div class="text_box">
+				<h4>한국 쓰리디프린팅 소재산업 협동조합</h4>
+				<p>원자재 공급지원 및 압출장비 지원사 1개 업체, 나라장터 다수공급자계약(MAS)제도 입찰참여 필라멘트 제조사 3개 업체, 중립적 협동조합 운영을 위한 조합장 1명이 공동으로 각각20%씩 자금을 출자하여 법인 설립을 완료함</p>
+			</div>
+		</div>
+		<div class="content2">
+			<h3>사업영역</h3>
+			<ul>
+				<li>
+
+					<img src="assets/img/job1.png" />
+					<div class="img_textbox">
+						<h4><span>01</span> 원자재확보지원</h4>
+						<ul>
+							 <li>필라멘트 생산을 위한 원료 구매를 위해서는 최소 주문량을 충족하여야 하고,<br> 주문수량에 따라 가격단가 협상력을 높일 수 있음</li>
+							 <li>이에 따라, 협동조합 차원의 원자재 공동구매를 실시하여 원자재 물량 확보</li>
+							 <li>협동조합 회원사가 필요한 물량을 저가로 공급하는 지원 사업을 실시함</li> 
+						</ul>
+					</div>
+				</li>
+				<li>
+					<img src="assets/img/job2.png" />
+					<div class="img_textbox">
+						<h4><span>02</span> 나라장터 MAS 관련 지원</h4>
+						<ul>
+							<li>‘신산업 현장애로 규제혁신 추진방안’안건제안 및 토론참여 3회(총리실 산하 4차 시리즈 규제혁파)</li>
+							<li>
+								3D프린팅 소재(필라멘트) 부문 제안안건 채택(2019.05.15.)
+								<br>
+								<span>
+									나라장터 제품코드 부재 -> 제품코드 부여 및 4차 산업 혁신제품 전용몰 구축
+									<br>부여된 제품코드 : 23261601
+								</span>
+							</li>
+							<li>공인시험 항목 및 성적기준 등 행정처리기준 수립 (조달청 MAS 담당자와 협의)</li>
+							<li>다수공급자계약(MAS)제도 공급 승인 (협동조합 임원사 3개 업체)협동조합 지원활동 결과 → 쓰리디프린팅 소재(필라멘트) 공급 승인 적합판정</li>
+							<li>나라장터 쇼핑몰 구매가능 상품으로 등록 및 항목 노출 완료(2020.05.25)(나라장터쇼핑몰 http://shopping.g2b.go.kr/에서 검색키워드 ‘필라멘트’로 검색시 판매제품 노출 확인 가능)</li>
+						</ul>	
+					</div>
+				</li>
+				<li>
+					<img src="assets/img/job3.png" />
+					<div class="img_textbox">
+						<h4><span>03</span> 기타 지원사업</h4>
+						<ul>
+							<li>제조사 기술지원, 품질기준 공동개발, 총괄 유통관리 지원, 정책홍보 및 성과확산, 회원사 관리 및 교육지원 등의 역할을 실시함</li>
+						</ul>
+					</div>
+				</li>
+			</ul>
+
+			
+		</div>
+	</div>
+	<div class="footer" style="background-color: #333;">
+	    <div style="height: 200px;">footer</div>
+	</div>
+	<button id="move_top_btn" alt="MOVE TOP"><span class="glyphicon glyphicon-chevron-up"></span><br>TOP</button>
+
+</div>
+<!-- DETAIL_CONTENT END -->
+	

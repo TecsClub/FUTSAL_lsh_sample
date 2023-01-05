@@ -1,0 +1,179 @@
+{@ $ARGS = json_decode(base64_decode($ARGS->JSON_ARGS_BASE64)); }
+#PAGE_ARGS# <!-- <script>var JSON_ARGS=JSON.parse(Base64.decode($ARGS->JSON_ARGS_BASE64));</script> -->
+<script>
+
+var OBJ_POPUP_FOR_SEL_ASK_REGARD_VOICE = null;
+
+function INIT_WIDGETS_POPUP_FOR_SEL_ASK_REGARD_VOICE(OBJ_DIALOG) {
+	OBJ_POPUP_FOR_SEL_ASK_REGARD_VOICE = OBJ_DIALOG;
+	
+	$(".BTN_POPUP_FOR_SEL_ASK_REGARD_VOICE").jqxButton({
+		width: '100%',
+		height: '100%'
+	}).on('click', function () {
+		var ID = $(this).attr('ID');
+		if (ID == 'DUMMY') {
+		} else if (ID == 'BTN_FOR_ADD_ASK_REGARD_VOICE') {
+			POPUP_FOR_EXEC_ADD_ASK_REGARD_VOICE();
+		} else if (ID == 'BTN_FOR_CLOSE_ASK_REGARD_VOICE_POPUP') {
+			CLOSE_POPUP_FOR_SEL_ASK_REGARD_VOICE();
+		}
+	});
+
+	REFRESH_ASK_REGARD_VOICES(true);
+}
+
+function CLOSE_POPUP_FOR_SEL_ASK_REGARD_VOICE() {
+	if (OBJ_POPUP_FOR_SEL_ASK_REGARD_VOICE != null) {
+		QIIP_JQX_CLOSE_WINDOW(OBJ_POPUP_FOR_SEL_ASK_REGARD_VOICE);
+	}
+}
+
+function REFRESH_ASK_REGARD_VOICES(FLAG_FORCE) {
+	
+	var OLD_ATTACHES = []; if ('ATTACHES' in _RS.OBJ_POST_ROOT) OLD_ATTACHES = _RS.OBJ_POST_ROOT.ATTACHES;
+
+	QIIP_API_ACCESS({
+			REQ: 'post_GET_ROOT_INFO',
+			PHONE_ID: _RS.PHONE_INFO.PHONE_ID,
+			PHONE_NO: _RS.PHONE_INFO.PHONE_NO,
+			CATEGORY: _RS.PHONE_INFO.APP_NAME,
+		},function(STR_RESULT) {
+			var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+			_RS.OBJ_POST_ROOT = JSON_RESULT;
+			
+			if ((FLAG_FORCE) || (OLD_ATTACHES.length != _RS.OBJ_POST_ROOT.ATTACHES.length)) {
+
+				var ATTACHES = [];
+				if ('ATTACHES' in _RS.OBJ_POST_ROOT) ATTACHES = _RS.OBJ_POST_ROOT.ATTACHES;
+
+				var JSON_ARGS_BASE64 = Base64.encode(JSON.stringify(ATTACHES));
+
+				QIIP_API_ACCESS({
+						REQ: 'api_GET_PAGE',
+						FLDR_TEMPLATE: _FLDR_TEMPLATE,
+						FILE_TEMPLATE: 'POPUP/HTML_FOR_ASK_REGARD_VOICE_LIST.html',
+						PHONE_ID: _RS.PHONE_INFO.PHONE_ID,
+						PHONE_NO: _RS.PHONE_INFO.PHONE_NO,
+						CATEGORY: _RS.PHONE_INFO.APP_NAME,
+						JSON_ARGS_BASE64: JSON_ARGS_BASE64,
+					},function(STR_RESULT) {
+						$('#DIV_ASK_REGARD_VOICE_LIST').html(STR_RESULT);
+						INIT_WIDGETS_FOR_ASK_REGARD_VOICE_LIST();
+					},{
+						QIIP_JQX_WINDOW: true,
+						title: _RS.PHONE_INFO.APP_NAME + ' 안내',
+						template: ARR_TO_TABLE_CENTER([
+							'안부문의 녹음음성 목록을 구성하고 있습니다.',
+							'잠시만 기다려 주십시오!'
+						]),
+						cssClass: 'qiip_popup'
+					}
+				);
+
+			}
+/*
+		},{
+			title: _RS.PHONE_INFO.APP_NAME + ' 안내',
+			template: ARR_TO_TABLE_CENTER([
+				'팝업 화면을 구성하고 있습니다.'
+			]),
+			cssClass: 'qiip_popup'
+*/
+		}
+	);
+
+}
+
+function POPUP_FOR_EXEC_ADD_ASK_REGARD_VOICE() {
+	var FILE_KEY_INDEX = 0;
+	if (_RS.OBJ_POST_ROOT.ATTACHES != undefined) {
+		var MAX_INDEX_VALUE = 0;
+		_RS.OBJ_POST_ROOT.ATTACHES.forEach(function (ONE_ATTACH) {
+//			alert(ONE_ATTACH.STR_KEY.substring('안부문의 녹음음성 '.length + 20));
+			var VAL_INDEX_EXTRACTED = parseInt(ONE_ATTACH.STR_KEY.substring('안부문의 녹음음성 '.length + 20));
+			if (MAX_INDEX_VALUE < VAL_INDEX_EXTRACTED) MAX_INDEX_VALUE = VAL_INDEX_EXTRACTED;
+		})
+		FILE_KEY_INDEX = MAX_INDEX_VALUE + 1;
+	}
+	var STR_FILE_KEY = sprintf('안부문의 녹음음성 %03d', FILE_KEY_INDEX);
+	var SCENARIO_ADD_ASK_REGARD_VOICE = {
+		CMD:				"ARSAUTH_CALL",
+//		CMD:				"ARSAUTH_WAIT",
+		APIKEY:				IVR_APIKEY,
+		CALL_WAIT_TIME: 	55,
+	    CALL_SCENARIO:		"REC_VOICE",
+        CALL_IN_ANSWER:		true,
+	    CALL_TO:			_RS.PHONE_INFO.PHONE_NO,
+	    CALL_FROM:			IVR_NUMBER,
+	    VOICE_REC_INTRO:	'이 통화는, 자동안부전화를 수신하는 분에게 자동으로 송출할 예정인 안부전화 음성을, 고객님의 목소리로 직접 녹음하여 저장하기 위한 것입니다. ',
+	    VOICE_REC_BYE: 		'감사합니다. 말씀하신 음성을 잘 녹음했습니다. 앱 화면을 확인하시면 음성목록이 추가되어 있을 것입니다.',
+	    HTTP_ACCESS:		{
+	    	URL:	window.location.origin,
+	    	FILE_KEY: STR_FILE_KEY,
+	    	ARGS: 	[
+	    		{ KEY: "REQ",		VAL: 'post_UPDATE_ROOT_INFO'  },
+	    		{ KEY: "PHONE_ID",	VAL: _RS.PHONE_INFO.PHONE_ID },
+	    		{ KEY: "PHONE_NO",	VAL: _RS.PHONE_INFO.PHONE_NO },
+	    		{ KEY: "CATEGORY",	VAL: _RS.PHONE_INFO.APP_NAME },
+	    		{ KEY: "STR_JSON_UPDATE",	VAL: JSON.stringify({}) },
+	    	]
+	    }
+	};
+	
+	var JSON_ARGS_BASE64 = Base64.encode(JSON.stringify(SCENARIO_ADD_ASK_REGARD_VOICE));
+
+	QIIP_API_ACCESS({
+			REQ: 'api_GET_PAGE',
+			FLDR_TEMPLATE: _FLDR_TEMPLATE,
+			FILE_TEMPLATE: 'POPUP/POPUP_FOR_EXEC_ADD_ASK_REGARD_VOICE.html',
+			PHONE_ID: _RS.PHONE_INFO.PHONE_ID,
+			PHONE_NO: _RS.PHONE_INFO.PHONE_NO,
+			CATEGORY: _RS.PHONE_INFO.APP_NAME,
+			JSON_ARGS_BASE64: JSON_ARGS_BASE64,
+		},function(STR_RESULT) {
+			var OBJ_POPUP = QIIP_JQX_POPUP_WINDOW({
+	            showCollapseButton: true, 
+	            height: '95%',
+	            width: '90%',
+	            minHeight: 100,
+	            minWidth: 100,
+				},
+				'안부문의 녹음음성 추가하기',
+				STR_RESULT
+			);
+		  	INIT_WIDGETS_POPUP_FOR_EXEC_ADD_ASK_REGARD_VOICE(OBJ_POPUP);
+		},{
+			title: _RS.PHONE_INFO.APP_NAME + ' 안내',
+			template: ARR_TO_TABLE_CENTER([
+				'안부문의 녹음음성 추가를 위한 화면을 구성하고 있습니다.',
+				'잠시만 기다려 주십시오!'
+			]),
+			cssClass: 'qiip_popup'
+		}
+	);
+
+}
+
+</script>
+
+<div class="qiip_index" style="width:100%;height:90%;padding:0px;" id="DIV_ASK_REGARD_VOICE_LIST">
+</div>
+<div class="qiip_index" style="width:100%;height:10%;padding:0px;">
+	<table>
+		<col width="50%"/>
+		<tr>
+			<td>
+		      	<button class="BTN_POPUP_FOR_SEL_ASK_REGARD_VOICE" id="BTN_FOR_CLOSE_ASK_REGARD_VOICE_POPUP" >
+		        	취소 & 닫기
+		    	</button>
+			</td>
+			<td>
+		      	<button class="BTN_POPUP_FOR_SEL_ASK_REGARD_VOICE" id="BTN_FOR_ADD_ASK_REGARD_VOICE" >
+		        	추가
+		    	</button>
+			</td>
+		</tr>
+	</table>
+</div>
+

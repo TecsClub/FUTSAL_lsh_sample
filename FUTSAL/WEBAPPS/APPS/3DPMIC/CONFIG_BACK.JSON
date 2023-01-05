@@ -1,0 +1,209 @@
+{
+	"CHROME_ONLY" : false,
+	"LOGIN_BASE" : false,
+	"LOGIN_IDPW" : true,
+
+	"INITIAL_POST_INFORMATION" : {
+		"GCM_SENDER_ID" : "64222680140",
+		"GCM_API_KEY" : "AIzaSyDNiqGxlZLD2PHeHMMHxUa2DiFT1Wl_PnY"
+	},
+	"QIIP_MENU_INFORMATION" : {
+		"DIV_ID_MENU" : "DIV_MENU",
+		"DIV_ID_CONTENT" : "DIV_CONTENT",
+		"MENU_TEMPLATE" : "PAGES/MENU_TEMPLATE.html",
+		"HOME_CONTENTS" : {
+			"TEMPLATE" : "PAGES/HOME_TEMPLATE.html",
+			"INIT_FUNC" : "QIIP_HOME_INIT_WIDGETS()"
+		},
+		"MENU_INIT_FUNC" : "QIIP_MENU_INIT_WIDGETS()",
+		"MENU_CONTENTS_INIT_FUNC" : "QIIP_MENU_CONTENTS_INIT_WIDGETS()",
+		"JSON_MENU" : [
+			{
+				"MENU_TEXT" : "Menu_A",
+				"MENU_SUB" : [
+					{
+						"MENU_TEXT" : "Menu_A_A",
+						"MENU_PAGE" : "PAGES/MENU_CONTENTS_A_A.html"
+					},
+					{
+						"MENU_TEXT" : "Menu_A_B",
+						"MENU_SUB" : [
+							{
+								"MENU_TEXT" : "Menu_A_B_A",
+								"MENU_PAGE" : "PAGES/MENU_CONTENTS_A_B_A.html",
+								"MENU_SUB" : [
+									{
+										"MENU_TEXT" : "Menu_A_B_A_A",
+										"MENU_PAGE" : "PAGES/MENU_CONTENTS_A_B_A_A.html"
+									},
+									{
+										"MENU_TEXT" : "Menu_A_B_A_B",
+										"MENU_PAGE" : "PAGES/MENU_CONTENTS_A_B_A_B.html"
+									}
+								]
+							},
+							{
+								"MENU_TEXT" : "Menu_A_B_B",
+								"MENU_PAGE" : "PAGES/MENU_CONTENTS_A_B_B.html"
+							},
+							{
+								"MENU_TEXT" : "Menu_A_B_C",
+								"MENU_PAGE" : "PAGES/MENU_CONTENTS_A_B_C.html"
+							},
+							{
+								"MENU_TEXT" : "Menu_A_B_D",
+								"MENU_PAGE" : "PAGES/MENU_CONTENTS_A_B_D.html"
+							}
+						]
+					},
+					{
+						"MENU_TEXT" : "Menu_A_C",
+						"MENU_PAGE" : "PAGES/MENU_CONTENTS_A_C.html"
+					},
+					{
+						"MENU_TEXT" : "Menu_A_D",
+						"MENU_PAGE" : "PAGES/MENU_CONTENTS_A_D.html"
+					}
+				]
+			},
+			{
+				"MENU_TEXT" : "Menu_B",
+				"MENU_SUB" : [
+					{
+						"MENU_TEXT" : "Menu_B_A",
+						"MENU_PAGE" : "PAGES/MENU_CONTENTS_B_A.html"
+					},
+					{
+						"MENU_TEXT" : "Menu_B_B",
+						"MENU_SUB" : [
+							{
+								"MENU_TEXT" : "Menu_B_B_A",
+								"MENU_PAGE" : "PAGES/MENU_CONTENTS_B_B_A.html"
+							}
+						]
+					},
+					{
+						"MENU_TEXT" : "Menu_B_C",
+						"MENU_PAGE" : "PAGES/MENU_CONTENTS_B_C.html"
+					},
+					{
+						"MENU_TEXT" : "Menu_B_D",
+						"MENU_PAGE" : "PAGES/MENU_CONTENTS_B_D.html"
+					}
+				]
+			},
+			{
+				"MENU_TEXT" : "Menu_C",
+				"MENU_SUB" : [
+					{
+						"MENU_TEXT" : "Menu_C_A",
+						"MENU_PAGE" : "PAGES/MENU_CONTENTS_C_A.html"
+					},
+					{
+						"MENU_TEXT" : "Menu_C_B",
+						"MENU_PAGE" : "PAGES/MENU_CONTENTS_C_B.html"
+					},
+					{
+						"MENU_TEXT" : "Menu_C_C",
+						"MENU_SUB" : [
+							{
+								"MENU_TEXT" : "Menu_C_C_A",
+								"MENU_PAGE" : "PAGES/MENU_CONTENTS_C_C_A.html",
+								"MENU_SUB" : [
+									{
+										"MENU_TEXT" : "Menu_C_C_A_A",
+										"MENU_PAGE" : "PAGES/MENU_CONTENTS_C_C_A_A.html"
+									},
+									{
+										"MENU_TEXT" : "Menu_C_C_A_B",
+										"MENU_PAGE" : "PAGES/MENU_CONTENTS_C_C_A_B.html"
+									}
+								]
+							},
+							{
+								"MENU_TEXT" : "Menu_C_C_B",
+								"MENU_PAGE" : "PAGES/MENU_CONTENTS_C_C_B.html"
+							},
+							{
+								"MENU_TEXT" : "Menu_C_C_C",
+								"MENU_PAGE" : "PAGES/MENU_CONTENTS_C_C_C.html"
+							},
+							{
+								"MENU_TEXT" : "Menu_C_C_D",
+								"MENU_PAGE" : "PAGES/MENU_CONTENTS_C_C_D.html"
+							}
+						]
+					},
+					{
+						"MENU_TEXT" : "Menu_C_D",
+						"MENU_PAGE" : "PAGES/MENU_CONTENTS_C_D.html"
+					}
+				]
+			},
+			{
+				"MENU_TEXT" : "Menu_D",
+				"MENU_PAGE" : "PAGES/MENU_CONTENTS_D.html"
+			},
+			{
+				"MENU_TEXT" : "Menu_E",
+				"MENU_SUB" : [
+					{
+						"MENU_TEXT" : "Menu_E_A",
+						"MENU_SUB" : [
+							{
+								"MENU_TEXT" : "Menu_E_A_A",
+								"MENU_PAGE" : "PAGES/MENU_CONTENTS_E_A_A.html"
+							},
+							{
+								"MENU_TEXT" : "Menu_E_A_B",
+								"MENU_PAGE" : "PAGES/MENU_CONTENTS_E_A_B.html"
+							},
+							{
+								"MENU_TEXT" : "Menu_E_A_C",
+								"MENU_PAGE" : "PAGES/MENU_CONTENTS_E_A_C.html"
+							}
+						]
+					},
+					{
+						"MENU_TEXT" : "Menu_E_B",
+						"MENU_PAGE" : "PAGES/MENU_CONTENTS_E_B.html"
+					},
+					{
+						"MENU_TEXT" : "Menu_E_C",
+						"MENU_PAGE" : "PAGES/MENU_CONTENTS_E_C.html"
+					},
+					{
+						"MENU_TEXT" : "Menu_E_D",
+						"MENU_PAGE" : "PAGES/MENU_CONTENTS_E_D.html"
+					}
+				]
+			},
+			{
+				"MENU_TEXT" : "Menu_F",
+				"MENU_PAGE" : "PAGES/MENU_CONTENTS_F.html"
+			}
+		]
+	},
+
+	"SIDEMENU_": {
+		"HEADER" : "메뉴",
+		"FILE_TEMPLATE" : "PAGES/SIDEMENU_BOOTSTRAP.html",
+		"MENUITEMS" : [
+			{
+				"MENU_STRING"		: "JVOIP IVR SCENARIO",
+				"MENU_CONTENTS"		: "PAGES/APP_CONTENTS_JVOID_SCENARIO.html",
+				"MENU_INIT_FUNC"	: "INIT_WIDGETS_FOR_MENU_CONTENTS();"
+			}
+		],
+		"DESKTOP_MENU_USERS" : [
+			"01077743438"
+		],
+		"MENUITEMS_FOR_DESKTOP" : [
+			{
+				"MENU_STRING"		: "데스크탑 기능",
+				"MENU_CONTENTS"		: "PAGES/CONTENTS_DESKTOP.html",
+				"MENU_INIT_FUNC"	: "INIT_WIDGETS_FOR_MENU_CONTENTS();"
+			}
+		]
+	}
+}

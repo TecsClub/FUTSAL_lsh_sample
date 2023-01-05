@@ -1,0 +1,34 @@
+<script>
+var OBJ_POPUP_FOR_ALERT = null;
+var OBJ_POPUP_FUNC_OK = undefined;
+function INIT_WIDGETS_POPUP_FOR_ALERT(OBJ_DIALOG, FUNC_OK, TIME_TO_CLOSE) {
+	OBJ_POPUP_FOR_ALERT = OBJ_DIALOG;
+	OBJ_POPUP_FUNC_OK = FUNC_OK;
+	if (TIME_TO_CLOSE != undefined) {
+		setTimeout(CLOSE_POPUP_FOR_ALERT, TIME_TO_CLOSE);
+	}
+}
+
+function CLOSE_POPUP_FOR_ALERT() {
+	if (OBJ_POPUP_FOR_ALERT != null) {
+		QIIP_JQX_CLOSE_WINDOW(OBJ_POPUP_FOR_ALERT);
+		if (OBJ_POPUP_FUNC_OK != undefined) OBJ_POPUP_FUNC_OK();
+	}
+}
+</script>
+
+<div class="qiip_popup pop_inner" style="width:100%;height:90%;overflow:auto;">
+	<table>
+		<tr ng-repeat="ONE_MESSAGE in JSON_ARGS.ARRAY_FOR_MESSAGE">
+			<th>{{ONE_MESSAGE}}</th>
+		</tr>
+	</table>
+</div>
+<div ng-show="!JSON_ARGS.FLAG_NO_BUTTON" class="qiip_popup pop_button" style="width:100%;height:10%;padding:0;">
+  	<button 
+  		style="width:100%;height:100%;"
+  		onclick="CLOSE_POPUP_FOR_ALERT()">
+    	확인
+	</button>
+</div>
+

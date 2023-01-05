@@ -1,0 +1,69 @@
+{@ $JSON_ARGS = json_decode(base64_decode($ARGS->JSON_ARGS_BASE64)); }
+#PAGE_ARGS# <!-- <script>var JSON_ARGS=JSON.parse(Base64.decode($ARGS->JSON_ARGS_BASE64));</script> -->
+
+<!--@foreach($JSON_ARGS as $KEY=>$ITEM)-->
+	{@
+		$parsed = date_parse($ITEM->details->playtime);
+		$seconds = $parsed['hour'] * 3600 + $parsed['minute'] * 60 + $parsed['second'];	
+	}
+<tr cond="$seconds <= 300">
+	<td>
+		<div class="">
+			<table>
+				<tr style="height:40%;">
+					<td>
+						<table>
+							<col width="25%"/>
+							<tr style="height:60%;">
+								<td rowspan="3">
+									<img
+										width="100%"
+										class="YOUTUBE_MEDIA_THUMBNAIL"
+										YOUTUBE_MEDIA_INFO='{base64_encode(json_encode($ITEM))}'
+										src="{$ITEM->snippet->thumbnails->high->url}" />
+								</td>
+								<th colspan="2">
+									{$ITEM->snippet->title}
+								</th>
+							</tr>
+							<tr style="height:40%;">
+								<th>
+									<button
+										class="BTN_YOUTUBE_MEDIA"
+										videoId="{$ITEM->id->videoId}"
+										PLAY_TIME="{$seconds}"
+										id="BTN_YOUTUBE_MEDIA_PLAY">
+										들어보기
+									</button>
+								</th>
+								<th>
+									{$ITEM->details->playtime}
+								</th>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				<tr style="height:60%;">
+					<td>
+						<!--@if(strlen($ITEM->snippet->description) > 0)-->
+							{$ITEM->snippet->description}
+						<!--@else-->
+							...
+						<!--@end-->
+					</td>
+				</tr>
+	<!--
+				<tr>
+					<td colspan="3">
+						<pre>
+						{print_r($ITEM, true)}
+						</pre>
+					</td>
+				</tr>
+	-->
+			</table>
+			
+		</div>
+	</td>
+</tr>
+<!--@end-->

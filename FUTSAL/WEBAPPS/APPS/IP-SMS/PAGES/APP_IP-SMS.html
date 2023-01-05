@@ -1,0 +1,587 @@
+<style>
+	.APP_IP_SMS 			{width:100%; height:100%;box-sizing:border-box;}
+	.APP_IP_SMS table		{width:100%; height:100%; font-size:100%; border-collapse: separate; border-spacing: 1px; line-height: 100%;}
+	.APP_IP_SMS table th	{font-weight:bold; text-align: center; white-space:normal; vertical-align: middle; word-break:break-all; word-wrap:break-all; background:#4789b7; color:white; }
+	.APP_IP_SMS table td	{text-decoration:none; text-align: left;   white-space:normal; vertical-align: middle; word-break:break-all; word-wrap:break-all; background:#eee; padding:0 10px;}
+</style>
+
+<script>
+var JSON_SMS_REQUEST_QUEUE_INDEX = 0;
+var JSON_SMS_REQUEST_QUEUE = [];
+var JSON_SMS_REQUEST = {
+	METHOD: 'HELLO'
+};
+
+var DIV_CONSOLE_SCROLL = 'DIV_CHAT_IP_SMS_LIST';
+
+function SPLIT_BY_LEN(STR, LEN) {
+	var RESULT = [];
+	var STR_SPLIT = '';
+	var COUNTER = 0;
+	for (var i=0; i < STR.length; i++) {
+		STR_SPLIT += STR.substring(i, i+1);
+		if (STR.charCodeAt(i) > 128) {
+			COUNTER += 2;
+		} else {
+			COUNTER += 1;
+		}
+		if (COUNTER >= (LEN-1)) {
+			RESULT.push(STR_SPLIT);
+			STR_SPLIT = '';
+			COUNTER = 0;
+		}
+	}
+	if (COUNTER > 0) {
+		RESULT.push(STR_SPLIT);
+	}
+	return RESULT;
+}
+
+function EXEC_SEND_SMS_SUB() {
+	if (JSON_SMS_REQUEST_QUEUE_INDEX < JSON_SMS_REQUEST_QUEUE.length) {
+		QIIP_WS_SMS_REQUEST(
+			JSON_SMS_REQUEST_QUEUE[JSON_SMS_REQUEST_QUEUE_INDEX]
+		);
+		JSON_SMS_REQUEST_QUEUE_INDEX += 1;
+	} else {
+		if (FLAG_MODAL_FOR_NEW_SMS) {
+			CLOSE_MODAL_FOR_NEW_SMS(function () {
+				UPDATE_LAYOUT('LEFT');
+				QUERY_IP_SMS_LIST('ALL');
+				QIIP_APP_ALERT([
+					sprintf('총 %d 개의 SMS로 나누어 발송을 완료했습니다', JSON_SMS_REQUEST_QUEUE_INDEX)
+				]);
+			});
+		} else {
+			UPDATE_LAYOUT('LEFT');
+			QUERY_IP_SMS_LIST('ALL');
+		}
+	}
+}
+
+function QIIP_INIT_WIDGETS() {
+//	window.resizeTo(550, 900);
+	UPDATE_LAYOUT('LEFT');
+	QUERY_IP_SMS_LIST('ALL');
+	INIT_WS_CONNECTION(SMS_WS_SERVER_URL, SMS_WS_CHANNEL);
+}
+
+function INIT_BUTTON_WIDGETS() {
+	$(".EVENT_IP_SMS").unbind();
+	$(".EVENT_IP_SMS").on('click', function () {
+		var ID = $(this).attr('ID');
+		if (ID == 'DUMMY') {
+		} else if (ID == 'BTN_FIND_SMS') {
+			QUERY_IP_SMS_LIST('ALL');
+		} else if (ID == 'BTN_SEND_SMS') {
+			MODAL_FOR_NEW_SMS();
+		} else if (ID == 'BTN_TO_SMS_LIST') {
+			UPDATE_LAYOUT('LEFT');
+		} else if (ID == 'BTN_CHAT_SEND_SMS') {
+			EXEC_CHAT_SEND_SMS();
+		} else if (ID == 'BTN_LIST_ALL') {
+			QUERY_IP_SMS_LIST('ALL');
+		} else if (ID == 'BTN_LIST_SEND') {
+			QUERY_IP_SMS_LIST('SEND');
+		} else if (ID == 'BTN_LIST_RECV') {
+			QUERY_IP_SMS_LIST('RECV');
+		} else if (ID == 'BTN_LOGOUT') {
+			QIIP_APP_LOGOUT();
+		}
+	});
+}
+
+function EXEC_CHAT_SEND_SMS() {
+	var ARGS_SMS = {
+		SMS_FROM: _RS.LOGIN_INFO.data.user_login,
+		ARRAY_SMS_TO: [
+			_RS.SELECTD_SMS_WITH
+		],
+		SMS_TEXT: $('#CHAT_SMS_TEXT').val(),
+	};
+
+	if (ARGS_SMS.SMS_TEXT.length < 1) {
+		QIIP_APP_ALERT([
+			'SMS 내용이 없습니다!'
+		]);
+		return;
+	}
+	
+	if (ARGS_SMS.ARRAY_SMS_TO.length < 1) {
+		QIIP_APP_ALERT([
+			'SMS 수신번호 목록이 없습니다!'
+		]);
+		return;
+	}
+
+	JSON_SMS_REQUEST_QUEUE_INDEX = 0;
+	JSON_SMS_REQUEST_QUEUE = [];
+	
+//	var SMS_TEXT_SPLIT = ARGS_SMS.SMS_TEXT.match(new RegExp('[^]{1,40}', 'g'));
+	var SMS_TEXT_SPLIT = SPLIT_BY_LEN(ARGS_SMS.SMS_TEXT, 80);
+	SMS_TEXT_SPLIT.forEach(function (ONE_SMS_TEXT) {
+		JSON_SMS_REQUEST_QUEUE.push({
+			METHOD: 'SEND_SMS',
+			CONNECTION_ID: JSON_SMS_REQUEST.CONNECTION_ID,
+			PARAMS: {
+				SMS_TEXT: ONE_SMS_TEXT,
+				SMS_FROM: ARGS_SMS.SMS_FROM,
+				SMS_TO: ARGS_SMS.ARRAY_SMS_TO
+			}
+		});
+	});
+	$('#CHAT_SMS_TEXT').val('');
+//	console.log(JSON_SMS_REQUEST_QUEUE);
+	EXEC_SEND_SMS_SUB();
+}
+
+function UPDATE_LAYOUT(MODE) {
+	if (MODE == 'LEFT') {
+		$('#DIV_LEFT').css('width', '100%');
+		$('#DIV_LEFT').css('display', 'block');
+		$('#DIV_RIGHT').css('width', '0%');
+		$('#DIV_RIGHT').css('display', 'none');
+	} else if (MODE == 'RIGHT') {
+		$('#DIV_LEFT').css('width', '0%');
+		$('#DIV_LEFT').css('display', 'none');
+		$('#DIV_RIGHT').css('width', '100%');
+		$('#DIV_RIGHT').css('display', 'block');
+	}
+	INIT_BUTTON_WIDGETS();
+}
+
+function QUERY_IP_SMS_LIST(LIST_SELECT) {
+	var SMS_TYPE = '';
+	if (LIST_SELECT == 'ALL') {
+		SMS_TYPE = '';
+	} else if (LIST_SELECT == 'SEND') {
+		SMS_TYPE = 'S';
+	} else if (LIST_SELECT == 'RECV') {
+		SMS_TYPE = 'R';
+	}
+    var STR_SMS_FROM	= $('#STR_SMS_FROM').val();
+    var STR_SMS_TO		= $('#STR_SMS_TO').val();
+    var STR_SMS_TEXT	= $('#STR_SMS_TEXT').val();
+    
+    var FLAG_FILTER = false;
+    if (STR_SMS_FROM.length > 0)	{ FLAG_FILTER = true; }
+    if (STR_SMS_TO.length > 0)		{ FLAG_FILTER = true; }
+    if (STR_SMS_TEXT.length > 0)	{ FLAG_FILTER = true; }
+
+    var MAX_LIST	  = parseInt($('#MAX_LIST').val());
+    if (MAX_LIST < 1) {
+    	MAX_LIST = 500;
+    } else if (MAX_LIST > 5000) {
+    	MAX_LIST = 4000;
+    }
+
+	var STR_SQL  = "SELECT * FROM IP_SMS_HISTORY ";
+		STR_SQL += sprintf("WHERE ((TYPE = 'S' AND SMS_FROM = '%s') OR (TYPE = 'R' AND SMS_TO = '%s')) ", _RS.LOGIN_INFO.data.user_login, _RS.LOGIN_INFO.data.user_login);
+		if (STR_SMS_FROM.length > 0) {
+			STR_SQL += sprintf("AND SMS_FROM like '%s' ", '%' + STR_SMS_FROM + '%');
+		}
+		if (STR_SMS_TO.length > 0) {
+			STR_SQL += sprintf("AND SMS_TO like '%s' ", '%' + STR_SMS_TO + '%');
+		}
+		if (STR_SMS_TEXT.length > 0) {
+			STR_SQL += sprintf("AND SMS_TEXT like '%s' ", '%' + STR_SMS_TEXT + '%');
+		}
+		if (SMS_TYPE.length > 0) {
+			STR_SQL += sprintf("AND TYPE = '%s' ", SMS_TYPE);
+		}
+		
+		STR_SQL += sprintf("ORDER BY STR_DATE DESC ");
+		STR_SQL += sprintf("LIMIT %d ", MAX_LIST);
+	
+//	console.log(STR_SQL);
+	
+	QIIP_API_ACCESS({
+			REQ: 'api_DB_ACCESS',
+			STR_SQL_BASE64: Base64.encode(STR_SQL),
+		},function(STR_RESULT) {
+			var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+			if (JSON_RESULT instanceof Object) {
+				REFRESH_GRID_IP_SMS_LIST(JSON_RESULT);
+			}
+		}
+	);
+}
+
+function REFRESH_GRID_IP_SMS_LIST(SQL_RESULT) {
+/*
+	$('#DIV_GRID_IP_SMS_LIST').html(
+		'<pre>' +
+		JSON.stringify(SQL_RESULT, null, '\t') +
+		'</pre>'
+	);
+	return;
+//*/
+
+/*
+	SQL_RESULT.unshift({
+		"ID": "NA",
+		"COMP_ID": "",
+		"LOGIN_ID": "",
+		"LOGIN_PW": "",
+		"PHONE_ID": "",
+		"PHONE_PW": ""
+	});
+//*/
+
+/*
+	SQL_RESULT.forEach(function (ONE_ITEM) {
+	});
+//*/
+
+    var source = {
+        localdata: SQL_RESULT,
+        datatype: "json",
+        datafields:[
+            { name: 'ID',						type: 'string' },
+            { name: 'TYPE',						type: 'string' },
+            { name: 'STR_DATE',					type: 'string' },
+            { name: 'SMS_FROM',					type: 'string' },
+            { name: 'SMS_TO',					type: 'string' },
+            { name: 'SMS_TEXT',					type: 'string' },
+        ]                     
+    };
+    var dataAdapter = new $.jqx.dataAdapter(source);
+	$("#DIV_GRID_IP_SMS_LIST").jqxGrid({
+        width: '100%',
+        height: '100%',
+        source: dataAdapter,                
+//        pageable: true,
+//        autoheight: true,
+        sortable: true,
+        altrows: true,
+        enabletooltips: true,
+        editable: false,
+        pagesize: 15,
+        selectionmode: 'singlerow',
+        columns: [
+          { text: 'STR_DATE',	columngroup: 'IP_SMS_LIST', datafield: 'STR_DATE',	width: '25%',	align: 'center',	cellsalign: 'center'},
+          { text: 'SMS_FROM',	columngroup: 'IP_SMS_LIST', datafield: 'SMS_FROM',	width: '20%',	align: 'center',	cellsalign: 'center'},
+          { text: 'SMS_TO',		columngroup: 'IP_SMS_LIST', datafield: 'SMS_TO',	width: '20%',	align: 'center',	cellsalign: 'center'},
+          { text: 'SMS_TEXT',	columngroup: 'IP_SMS_LIST', datafield: 'SMS_TEXT',	width: '35%',	align: 'center',	cellsalign: 'center'},
+        ],
+        columngroups: [
+            { text: '인터넷 전화 SMS 목록', align: 'center', name: 'IP_SMS_LIST' },
+        ]
+    }).on('rowclick', function (event) {
+	    var args = event.args;
+	    // row's bound index.
+	    var boundIndex = args.rowindex;
+		var ROW_DATA = $(this).jqxGrid('getrowdata', args.rowindex);
+		if (ROW_DATA.TYPE == 'S') {
+			_RS.SELECTD_SMS_WITH = ROW_DATA.SMS_TO;
+		} else if (ROW_DATA.TYPE == 'R') {
+			_RS.SELECTD_SMS_WITH = ROW_DATA.SMS_FROM;
+		}
+		_RS.$apply();
+
+		UPDATE_LAYOUT('RIGHT');
+		
+		REFRESH_DIV_CHAT_IP_SMS_LIST(ROW_DATA);
+		
+	});
+    
+}
+
+function REFRESH_DIV_CHAT_IP_SMS_LIST(ROW_DATA) {
+//	console.log(JSON.stringify(ROW_DATA, null, '\t'));
+
+	var STR_SQL  = "SELECT * FROM IP_SMS_HISTORY WHERE ";
+//		STR_SQL += sprintf("((TYPE = 'S' AND SMS_FROM = '%s') OR (TYPE = 'R' AND SMS_TO = '%s')) ", _RS.LOGIN_INFO.data.user_login, _RS.LOGIN_INFO.data.user_login);
+		STR_SQL += sprintf("(SMS_FROM = '%s' AND SMS_TO = '%s') ", _RS.SELECTD_SMS_WITH, _RS.LOGIN_INFO.data.user_login);
+		STR_SQL += sprintf("OR (SMS_FROM = '%s' AND SMS_TO = '%s') ", _RS.LOGIN_INFO.data.user_login, _RS.SELECTD_SMS_WITH);
+/*
+		if (ROW_DATA.TYPE == 'S') {
+			STR_SQL += sprintf("AND SMS_TO = '%s' ", ROW_DATA.SMS_TO);
+		} else if (ROW_DATA.TYPE == 'R') {
+			STR_SQL += sprintf("AND SMS_FROM = '%s' ", ROW_DATA.SMS_FROM);
+		}
+//*/
+		STR_SQL += sprintf("ORDER BY STR_DATE ");
+//		STR_SQL += sprintf("LIMIT %d ", MAX_LIST);
+	
+//	console.log(STR_SQL);
+
+	
+	QIIP_API_ACCESS({
+			REQ: 'api_DB_ACCESS',
+			STR_SQL_BASE64: Base64.encode(STR_SQL),
+		},function(STR_RESULT) {
+			var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+			if (JSON_RESULT instanceof Object) {
+				$('#DIV_CHAT_IP_SMS_LIST').html('');
+				JSON_RESULT.forEach(function (ONE_SMS) {
+					if (ONE_SMS.TYPE == 'R') {
+						QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+							DIV_CONSOLE_SCROLL,
+							'<xmp>' + 
+								ONE_SMS.STR_DATE + '\n' +
+//								ONE_SMS.SMS_FROM + '\n' +
+//								ONE_SMS.SMS_TO + '\n' +
+								ONE_SMS.SMS_TEXT +
+							'</xmp>',
+							'me',
+							'70%'
+						);
+					} else if (ONE_SMS.TYPE == 'S') {
+						QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+							DIV_CONSOLE_SCROLL,
+							'<xmp>' + 
+								ONE_SMS.STR_DATE + '\n' +
+//								ONE_SMS.SMS_FROM + '\n' +
+//								ONE_SMS.SMS_TO + '\n' +
+								ONE_SMS.SMS_TEXT +
+							'</xmp>',
+							'you',
+							'70%'
+						);
+					}
+				});
+//				console.log(JSON.stringify(JSON_RESULT, null, '\t'));
+			}
+		}
+	);
+}
+
+var FLAG_MODAL_FOR_NEW_SMS = false;
+function MODAL_FOR_NEW_SMS() {
+	QIIP_API_ACCESS({
+			REQ: 'api_GET_PAGE',
+			FLDR_TEMPLATE: _FLDR_TEMPLATE,
+			FILE_TEMPLATE: 'PAGES/MODAL_FOR_NEW_SMS.html',
+		},function(STR_RESULT) {
+			var HTML_COMPILED = QIIP_STATIC_HTML({}, STR_RESULT);
+			QIIP_APP_MODAL_POPUP({
+				TITLE: '새 문자 발송',
+				BACKDROP: false,
+				CSS: {
+					width: '90%',
+					height: '90%',
+				},
+				CONTENT: HTML_COMPILED,
+				INIT_FUNC: function (UNIQUE_ID) {
+					INIT_WIDGETS_FOR_NEW_SMS(UNIQUE_ID);
+				}
+			});
+		}
+	);
+}
+
+var SMS_WS_SERVER_URL	= 'ws://sms.1key.kr:6070';
+var SMS_WS_CHANNEL		= 'ws-sms';
+
+var WS_CONNECTION = {};
+
+function INIT_WS_CONNECTION(ws_server, ws_channel) {
+    // if user is running mozilla then use it's built-in WebSocket
+    window.WebSocket = window.WebSocket || window.MozWebSocket;
+  
+    // if browser doesn't support WebSocket, just show some notification and exit
+    if (!window.WebSocket) {
+    	console.log('죄송합니다, 접속에 사용하신 웹 브라우저가 WebSockets 기능을 지원하지 않습니다.');
+      return;
+    }
+
+    // open connection
+    WS_CONNECTION = new WebSocket(ws_server, ws_channel);
+
+    WS_CONNECTION.onopen = function () {
+    	console.log(sprintf( "new WebSocket('%s', '%s') 이 연결되었습니다.", ws_server, ws_channel));
+    };
+    
+    WS_CONNECTION.onerror = function (error) {
+    	console.log('WebSocket 연결에 어떤 문제가 있거나 WebSocket 서버가 응답하지 않습니다.');
+    };
+
+    // most important part - incoming messages
+    WS_CONNECTION.onmessage = function (message) {
+        // try to parse JSON message. Because we know that the server always returns
+        // JSON this should work without any problem but we should make sure that
+        // the massage is not chunked or otherwise damaged.
+        try {
+          var JSON_PARSED = JSON.parse(message.data);
+        } catch (e) {
+        	console.log('이건 JSON 스트링이 아닌것 같아요! : ' + message.data);
+          return;
+        }
+
+        // NOTE: if you're not sure about the JSON structure
+        // check the server source code above
+        if ('TYPE' in JSON_PARSED) {
+          console.log(JSON.stringify(JSON_PARSED, null, '\t'));
+		  
+          var TYPE = JSON_PARSED.TYPE;
+          if (TYPE == 'CONNECTION_ID') {			// 대소문자 구분!
+				JSON_SMS_REQUEST.CONNECTION_ID = JSON_PARSED.CONNECTION_ID;
+          }
+        } else if ('CONNECTION_ID' in JSON_PARSED) {
+        	console.log(JSON.stringify(JSON_PARSED, null, '\t'));
+			JSON_SMS_REQUEST.CONNECTION_ID = JSON_PARSED.CONNECTION_ID;
+
+			JSON_SMS_REQUEST.METHOD = 'SET_PHONE_ID';
+			JSON_SMS_REQUEST.PARAMS = {
+				PHONE_ID: _RS.LOGIN_INFO.data.user_login
+			};
+			QIIP_WS_SMS_REQUEST(JSON_SMS_REQUEST);
+			
+		} else if ('type' in JSON_PARSED) {
+			console.log(JSON.stringify(JSON_PARSED, null, '\t'));
+			if (JSON_PARSED.type == 'response') {
+				if (JSON_PARSED.result == 'success') {
+					EXEC_SEND_SMS_SUB();
+				}
+			} else if (JSON_PARSED.type == 'inbound') {
+				if (FLAG_MODAL_FOR_NEW_SMS) {
+					CLOSE_MODAL_FOR_NEW_SMS(function () {
+						UPDATE_LAYOUT('LEFT');
+						QUERY_IP_SMS_LIST('ALL');
+					});
+				} else {
+					UPDATE_LAYOUT('LEFT');
+					QUERY_IP_SMS_LIST('ALL');
+				}
+				if (typeof WEB_UI_Interface !== 'undefined') {
+					QIIP_FX_NATIVE_ACCESS({
+							"REQUEST"	: "WINDOW_RESTORE",
+							"FULL_CONTENTS" : true,
+						},function (JSON_RESULT) {
+//							console.log(JSON.stringify(JSON_RESULT, null, '\t'));
+						}
+					);
+				}
+			}
+        } else {
+        	console.log('흠..., JSON 스트링이 이런식이면 곤란한데...  필요한 속성이 없쟎아...: ' + JSON.stringify(JSON_PARSED, null, '\t'));
+        }
+    };
+
+    WS_CONNECTION.onclose  = function () {
+    	console.log('WebSocket 연결이 끊어졌습니다. 1초 이내에 WebSocket 연결을 재시도 합니다.');
+		//try to reconnect in 5 seconds
+		setTimeout(function(){INIT_WS_CONNECTION(SMS_WS_SERVER_URL, SMS_WS_CHANNEL)}, 1000);
+    };
+    
+}
+
+function QIIP_WS_SMS_REQUEST(JSON_SMS_REQUEST) {
+	console.log(JSON.stringify(JSON_SMS_REQUEST, null, '\t'));
+	WS_CONNECTION.send(JSON.stringify(JSON_SMS_REQUEST));
+}
+
+</script>
+<div class="APP_IP_SMS">
+	<div style="width:50%;height:100%;box-sizing:border-box;overflow:auto;float:left;" ID="DIV_LEFT">
+		<div style="width:100%;height:6%;box-sizing:border-box;overflow:auto;">
+			<table>
+				<col width="15%" />
+				<col width="20%" />
+				<col width="15%" />
+				<col width="20%" />
+				<col width="15%" />
+				<col width="10%" />
+				<tr>
+					<th style="background:#94bbd6; color:#333;">발신번호</th>
+					<td>
+						<input type="text" id="STR_SMS_FROM" style="width:100%;height:100%" />
+					</td>
+
+					<th style="background:#94bbd6; color:#333;">수신번호</th>
+					<td>
+						<input type="text" id="STR_SMS_TO" style="width:100%;height:100%" />
+					</td>
+
+					<th style="background:#94bbd6; color:#333;">LIMIT</th>
+					<td>
+						<input type="text" id="MAX_LIST" style="width:100%;height:100%;text-align:center;" value="500"/>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div style="width:100%;height:6%;box-sizing:border-box;overflow:auto;">
+			<table>
+				<col width="15%" />
+				<col width="31%" />
+				<col width="18%" />
+				<col width="18%" />
+				<col width="18%" />
+				<tr>
+					<th style="background:#94bbd6; color:#333;">문자내용</th>
+					<td>
+						<input type="text" id="STR_SMS_TEXT" style="width:100%;height:100%" />
+					</td>
+
+					<td>
+						<button class="btn btn-primary EVENT_IP_SMS" style="width:100%;height:100%;" id="BTN_FIND_SMS" >검색</button>
+					</td>
+					<td>
+						<button class="btn btn-primary EVENT_IP_SMS" style="width:100%;height:100%;" id="BTN_SEND_SMS" >새 문자 작성</button>
+					</td>
+					<td>
+						<button class="btn btn-primary EVENT_IP_SMS" style="width:100%;height:100%;" id="BTN_LOGOUT" >로그아웃</button>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div style="width:100%;height:6%;box-sizing:border-box;overflow:auto;">
+			<table>
+				<col width="34%" />
+				<col width="33%" />
+				<col width="33%" />
+				<tr>
+					<td>
+						<button class="btn btn-primary EVENT_IP_SMS" style="width:100%;height:100%;" id="BTN_LIST_ALL" >전체목록</button>
+					</td>
+					<td>
+						<button class="btn btn-primary EVENT_IP_SMS" style="width:100%;height:100%;" id="BTN_LIST_SEND" >발신목록</button>
+					</td>
+					<td>
+						<button class="btn btn-primary EVENT_IP_SMS" style="width:100%;height:100%;" id="BTN_LIST_RECV" >수신목록</button>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div style="width:100%;height:82%;" >
+			<div id="DIV_GRID_IP_SMS_LIST">
+			</div>
+		</div>
+	</div>
+	<div style="width:50%;height:100%;box-sizing:border-box;overflow:auto;float:left;" ID="DIV_RIGHT">
+		<div style="width:100%;height:8%;">
+			<table>
+				<col width="30%" />
+				<col width="70%" />
+				<tr>
+					<th>
+						SMS 상대
+					</th>
+					<td style="text-align:center;">
+						{{SELECTD_SMS_WITH}}
+					</td>
+					<td>
+						<button class="btn btn-primary EVENT_IP_SMS" style="width:100%;height:100%;" id="BTN_TO_SMS_LIST" >뒤로</button>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div id="DIV_CHAT_IP_SMS_LIST" style="width:100%;height:82%;box-sizing:border-box;background-color:#c9c9c9;overflow:auto;">
+		</div>
+		<div style="width:100%;height:10%;box-sizing:border-box;overflow:auto;">
+			<table>
+				<col width="80%" />
+				<col width="20%" />
+				<tr>
+					<td>
+						<textarea style="width:100%;height:100%;"  id="CHAT_SMS_TEXT"></textarea>
+					</td>
+					<td>
+						<button class="btn btn-primary EVENT_IP_SMS" style="width:100%;height:100%;" id="BTN_CHAT_SEND_SMS" >보내기</button>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</div>

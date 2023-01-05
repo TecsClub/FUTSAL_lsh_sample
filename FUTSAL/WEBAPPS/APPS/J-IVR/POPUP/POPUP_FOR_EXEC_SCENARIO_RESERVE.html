@@ -1,0 +1,822 @@
+{@ $ARGS = json_decode(base64_decode($ARGS->JSON_ARGS_BASE64)); }
+#PAGE_ARGS# <!-- <script>var JSON_ARGS=JSON.parse(Base64.decode($ARGS->JSON_ARGS_BASE64));</script> -->
+<script>
+var OBJ_POPUP_FOR_EXEC_SCENARIO_RESERVE = null;
+var OBJ_FUNC_ON_ADD_RESERVE = function () {};
+
+var ARRAY_PAY_WHO = [
+	{ PAY_CODE: 'NONE',		PAY_DISP: '선택안함',
+		PAY_HELP: [
+			'통화료 지출 방식을 선택하지 않았습니다'
+		]
+	},
+	{ PAY_CODE: 'BY_PHONE',	PAY_DISP: '무료(자동안부전화 발신자 => 시스템)',
+		PAY_HELP: [
+//			'실제 서비스 운영시에는 자동안부전화 처리 시스템이 고객님이 지정하신 수신자에게 전화를 걸어서 안부를 여쭈어보는 기능으로 작동합니다.',
+//			'그렇지만, 이 경우, 서비스 바우처(통화요금)가 차감됩니다.',
+//			'그러므로, 고객님이 소지하신 스마트폰으로 자동안부전화 처리 시스템으로 전화를 걸어 보아 <b>별도 과금을 하지 않고</b>, 자동안부전화를 수신하시는 분이 어떠한 안내음성을 듣게 되는지 확인합니다.',
+			'고객님이 소지하신 스마트폰으로 자동안부전화 처리 시스템으로 전화를 걸어 보아 <b>별도 과금을 하지 않고</b>, 자동안부전화를 수신하시는 분이 어떠한 안내음성을 듣게 되는지 확인합니다.',
+			'고객님이 직접 전화를 거는 것과 동일한 통신요금이 적용됩니다.',
+		]
+	},
+	{ PAY_CODE: 'BY_SYSTEM',PAY_DISP: '유료(시스템 => 자동안부전화 수신자)',
+		PAY_HELP: [
+			'실제 서비스 운영과 동일하게,...',
+			'자동안부전화 처리 시스템이 고객님이 지정하신 수신자에게 전화를 걸어 안부를 여쭈어보는 기능을 처리합니다.',
+			'고객님에게 할당된 서비스 바우처(통화요금)가 차감됩니다.'
+		]
+	},
+];
+
+
+var IVR_PARAM_CALL_OUT	= JSON.parse(JSON.stringify(JSON_ARGS.SCENARIO_PARAM));
+var IVR_PARAM_CALL_IN	= JSON.parse(JSON.stringify(JSON_ARGS.SCENARIO_PARAM));
+
+var STEP_OF_EXEC_SCENARIO_RESERVE = 0;
+function INIT_WIDGETS_POPUP_FOR_EXEC_SCENARIO_RESERVE(OBJ_DIALOG, FUNC_ON_ADD_RESERVE) {
+	OBJ_POPUP_FOR_EXEC_SCENARIO_RESERVE = OBJ_DIALOG;
+	OBJ_FUNC_ON_ADD_RESERVE = FUNC_ON_ADD_RESERVE;
+	
+	IVR_PARAM_CALL_IN.CMD		= 'ARSAUTH_WAIT';
+	IVR_PARAM_CALL_IN.CALL_TO	= IVR_PARAM_CALL_IN.CALL_FROM;
+	IVR_PARAM_CALL_IN.CALL_FROM	= _RS.PHONE_INFO.PHONE_NO;
+
+	$(".BTN_POPUP_FOR_SCENARIO_RESERVE").jqxButton({
+		width: '100%',
+		height: '100%'
+	}).on('click', function () {
+		var ID = $(this).attr('ID');
+		if (ID == 'DUMMY') {
+		} else if (ID == 'BTN_FOR_VOICE_LISTEN') {
+			POPUP_FOR_WAE_PLAY($(this).attr('VOICE_URL'), parseInt($(this).attr('VOICE_LEN')));
+//			PLAY_ASK_REGARD_VOICE($(this).attr('VOICE_URL'));
+//		} else if (ID == 'BTN_FOR_VOICE_STOP') {
+//			STOP_ASK_REGARD_VOICE();
+		} else if (ID == 'BTN_CLOSE_POPUP_FOR_EXEC_SCENARIO_RESERVE') {
+			CLOSE_POPUP_FOR_EXEC_SCENARIO_RESERVE();
+		} else if (ID == 'BTN_STEP_FORWARD_FOR_EXEC_SCENARIO_RESERVE') {
+			STEP_FORWARD_FOR_EXEC_SCENARIO_RESERVE();
+		} else if (ID == 'BTN_SEARCH_ONE_RESERVE_ASK_TO') {
+			QIIP_GET_CONTACTS_FOR('TEXT_ONE_RESERVE_ASK_TO', true, undefined);
+		} else if (ID == 'BTN_ADD_ONE_RESERVE_ASK_TO') {
+			var JSON_ASK_TO = QIIP_TEXT_PHONE_NO_ATTR_TO_OBJECT('TEXT_ONE_RESERVE_ASK_TO');
+			ADD_LIST_RESERVE_ASK_TO(JSON_ASK_TO);
+		} else if (ID == 'BTN_DEL_ONE_RESERVE_ASK_TO') {
+			DEL_LIST_RESERVE_ASK_TO();
+		}
+	});
+	
+	
+	$('#POPUP_SERVICE_VOUCHER').html(_RS.OBJ_POST_ROOT.SERVICE_VOUCHER);
+
+	$("#ACCORDION_FOR_EXEC_SCENARIO_RESERVE").accordion({
+		heightStyle: "fill",
+		active: STEP_OF_EXEC_SCENARIO_RESERVE,
+//		animate: false,
+        create: function( event, ui ) {
+        },
+        activate: function( event, ui ) {
+            var HEADER_TEXT = ui.newHeader.text();
+            if (HEADER_TEXT.indexOf('1') >= 0) {
+		    	STEP_OF_EXEC_SCENARIO_RESERVE = 0;
+            } else if (HEADER_TEXT.indexOf('2') >= 0) {
+		    	STEP_OF_EXEC_SCENARIO_RESERVE = 1;
+            } else if (HEADER_TEXT.indexOf('3') >= 0) {
+		    	STEP_OF_EXEC_SCENARIO_RESERVE = 2;
+            } else if (HEADER_TEXT.indexOf('4') >= 0) {
+		    	STEP_OF_EXEC_SCENARIO_RESERVE = 3;
+            }
+            var strHTML  = '';
+            	strHTML += '<table>';
+            	strHTML += '<tr>';
+            	strHTML += '<th>';
+            	strHTML += '단계별 순차적으로 이 단계까지 진행하셔야 합니다.';
+            	strHTML += '</th>';
+            	strHTML += '</tr>';
+            	strHTML += '</table>';
+            if (STEP_OF_EXEC_SCENARIO_RESERVE < 3) $('#DIV_CONFIRM_STEP').html(strHTML);
+        }
+	});
+
+}
+
+function CLOSE_POPUP_FOR_EXEC_SCENARIO_RESERVE() {
+	if (OBJ_POPUP_FOR_EXEC_SCENARIO_RESERVE != null) {
+		QIIP_JQX_CLOSE_WINDOW(OBJ_POPUP_FOR_EXEC_SCENARIO_RESERVE);
+	}
+}
+
+function MY_STR_TO_DATE(STR_DATE) {
+	var D = STR_DATE.split('-');
+	return new Date(D[0], D[1] -1, D[2]);
+}
+
+function POPUP_FOR_WAE_PLAY(WAV_FILE_URL, PLAY_TIME) {
+
+	var JSON_ARGS_BASE64 = Base64.encode(JSON.stringify({
+		AUDIO_URL: WAV_FILE_URL,
+		PLAY_TIME: PLAY_TIME
+	}));
+
+	QIIP_POPUP_FOR_ALERT(
+		'안내',[
+			'팝업 화면을 구성하고 있습니다.',
+			'잠시만 기다려 주십시오!'
+		],function() {
+		},
+		90,
+		50,
+		undefined,
+		true
+	);
+
+	QIIP_HTTP_ACCESS(
+		undefined,
+		undefined,{
+			"SERVER_URL" : API_SERVER_URL,
+			"PARAMS" : [
+				QIIP_APP_OBJ_KEY_VALUE("cmd", "api_GetPage"),
+				QIIP_APP_OBJ_KEY_VALUE("FLDR_TEMPLATE", FLDR_TEMPLATE_BASE + "/POPUP"),
+				QIIP_APP_OBJ_KEY_VALUE("FILE_TEMPLATE", "POPUP_FOR_WAE_PLAY.html"),
+				QIIP_APP_OBJ_KEY_VALUE("JSON_ARGS_BASE64", JSON_ARGS_BASE64),
+			]
+		}, function (RESULT) {
+			var OBJ_POPUP = QIIP_JQX_POPUP_WINDOW({
+	            showCollapseButton: true, 
+	            height: '70%',
+	            width: '90%',
+	            minHeight: 100,
+	            minWidth: 100,
+				},
+				'오디오 파형 보기 및 재생',
+				RESULT
+			);
+		  	INIT_WIDGETS_POPUP_FOR_WAE_PLAY(OBJ_POPUP);
+		}
+	);
+	
+}
+
+
+var ARRAY_RESERVE_ASK_TO = [
+	{
+		ASK_TO: '{$ARGS->SCENARIO_PARAM->ASK_TO}', CALL_TO: '{$ARGS->SCENARIO_PARAM->CALL_TO}'
+	}
+];
+function INIT_WIDGETS_FOR_RESERVE_ASK_TO() {
+	if ('CALL_TO_LIST' in JSON_ARGS) {
+		ARRAY_RESERVE_ASK_TO = [];
+		JSON_ARGS.CALL_TO_LIST.forEach(function (ONE_CALL_TO) {
+			ARRAY_RESERVE_ASK_TO.push(ONE_CALL_TO);
+		});
+	}
+	$("#LIST_RESERVE_ASK_TO").jqxListBox({
+		width: '100%', height: '100%',
+		source: ARRAY_RESERVE_ASK_TO,
+		renderer: function (index, label, value) {
+		    var datarecord = ARRAY_RESERVE_ASK_TO[index];
+		    return '<center>' + TO_KOREAN_READABLE(datarecord.CALL_TO) + ' (' + datarecord.ASK_TO + ')' + '</center>';
+		}
+	});
+}
+
+function ADD_LIST_RESERVE_ASK_TO(OBJ_TO_ADD) {
+	var ASK_TO	= ''; if (OBJ_TO_ADD.DISPLAY_NAME	!= undefined) ASK_TO	= OBJ_TO_ADD.DISPLAY_NAME;
+	var CALL_TO	= ''; if (OBJ_TO_ADD.PHONE_NO		!= undefined) CALL_TO	= OBJ_TO_ADD.PHONE_NO;
+	if (QIIP_IS_VALID_PHONE_NO(CALL_TO)) {
+		if (ASK_TO == '') ASK_TO = PHONE_NO;
+		ARRAY_RESERVE_ASK_TO.push({
+			ASK_TO: ASK_TO, CALL_TO: CALL_TO
+		});
+		$("#LIST_RESERVE_ASK_TO").jqxListBox('refresh');
+	} else {
+		QIIP_POPUP_FOR_ALERT(
+			'안내',[
+			'추가하시고자 하는 자동안부전화 수신자의 폰 번호,...',
+			'[' + PHONE_NO + '] 가 유효하지 않습니다.'
+		],undefined,80,50);
+	}
+}
+
+function DEL_LIST_RESERVE_ASK_TO() {
+	var INDEX = $("#LIST_RESERVE_ASK_TO").jqxListBox('getSelectedIndex');
+	if (INDEX >= 0) {
+		ARRAY_RESERVE_ASK_TO.splice(INDEX, 1);
+		$("#LIST_RESERVE_ASK_TO").jqxListBox('refresh');
+	} else {
+		QIIP_POPUP_FOR_ALERT(
+			'안내',[
+			'삭제하시고자 하는 자동안부전화 수신자를,...',
+			'목록에서 선택하신 후 재시도 하십시오!'
+		],undefined,80,50);
+	}
+}
+
+var INIT_WIDGETS_FOR_RESERVE_DATE_COMPLETED = false;
+function INIT_WIDGETS_FOR_RESERVE_DATE() {
+    var TODAY			= new Date();
+    var NEXT_DAY		= new Date(); NEXT_DAY.setDate(NEXT_DAY.getDate() + 1);
+    var PREV_WEEK_TODAY = new Date(); PREV_WEEK_TODAY.setDate(PREV_WEEK_TODAY.getDate() - 7);
+    var NEXT_WEEK_TODAY	= new Date(); NEXT_WEEK_TODAY.setDate(NEXT_WEEK_TODAY.getDate() + 7);
+    var CURR_MONTH_FIRST= new Date(); CURR_MONTH_FIRST.setDate(1);
+    var CURR_MONTH_LAST	= new Date(); CURR_MONTH_LAST.setDate(1); CURR_MONTH_LAST.setMonth(CURR_MONTH_LAST.getMonth() + 1); CURR_MONTH_LAST.setDate(CURR_MONTH_LAST.getDate() - 1);
+    var PREV_MONTH_TODAY= new Date(); PREV_MONTH_TODAY.setMonth(PREV_MONTH_TODAY.getMonth() - 1);
+    var PREV_MONTH_FIRST= new Date(); PREV_MONTH_FIRST.setMonth(PREV_MONTH_FIRST.getMonth() - 1); PREV_MONTH_FIRST.setDate(1);
+    var NEXT_MONTH_TODAY= new Date(); NEXT_MONTH_TODAY.setMonth(NEXT_MONTH_TODAY.getMonth() + 1);
+    var NEXT_MONTH_FIRST= new Date(); NEXT_MONTH_FIRST.setMonth(NEXT_MONTH_FIRST.getMonth() + 1); NEXT_MONTH_FIRST.setDate(1);
+    
+	var DATE_FROM	= TODAY;
+	var DATE_TO		= NEXT_MONTH_TODAY;
+    if ('RESERVE_DATA' in JSON_ARGS) {
+    	DATE_FROM	=	MY_STR_TO_DATE(JSON_ARGS.RESERVE_DATA.STR_DATE_FROM);
+    	DATE_TO		=	MY_STR_TO_DATE(JSON_ARGS.RESERVE_DATA.STR_DATE_TO);
+    }
+    
+    $('#DATE_RANGE_FOR_RESERVE').jqxDateTimeInput({
+    	width: '100%',
+    	height: '100%',
+    	selectionMode: 'range',
+    	formatString: 'yyyy-MM-dd',
+    	readonly: true,
+    }).on('change', function (event) {
+/*
+        var selection = $(this).jqxDateTimeInput('getRange');
+        if (selection.from != null) {
+        	var STR_FROM = selection.from.toLocaleDateString();
+        	var STR_TO   = selection.to.toLocaleDateString();
+        }
+*/
+        REFRESH_RANGE_HELP();
+    });		
+    $('#DATE_RANGE_FOR_RESERVE').jqxDateTimeInput('setRange', DATE_FROM, DATE_TO);
+
+    var ARRAY_REPEAT_FOR_RESERVE = [
+			{ REPEAT_CODE:'EVERY_ONES',	REPEAT_DISP: '한번'},
+			{ REPEAT_CODE:'EVERY_DAY',	REPEAT_DISP: '매일'},
+			{ REPEAT_CODE:'EVERY_WEEK',	REPEAT_DISP: '매주'},
+			{ REPEAT_CODE:'EVERY_MONTH',REPEAT_DISP: '매월'},
+			{ REPEAT_CODE:'EVERY_YEAR', REPEAT_DISP: '매년'},
+		];
+	var INDEX_FOR_REPEAT = 0;
+    if ('RESERVE_DATA' in JSON_ARGS) {
+    	var COUNTER = 0;
+    	ARRAY_REPEAT_FOR_RESERVE.forEach(function (ONE_REPEAT) {
+    		if (JSON_ARGS.RESERVE_DATA.STR_REPEAT == ONE_REPEAT.REPEAT_CODE) {
+		    	INDEX_FOR_REPEAT = COUNTER;
+		    	return false;
+    		}
+    		COUNTER += 1;
+    	});
+    }
+	$('#REPEAT_FOR_RESERVE').jqxDropDownList({
+		width: '100%',
+		source: ARRAY_REPEAT_FOR_RESERVE,
+		selectedIndex: INDEX_FOR_REPEAT,
+		displayMember: 'REPEAT_DISP'
+	}).on('select', function (event){
+	    var args = event.args;
+	    if (args) {
+		    var index = args.index;
+	        REFRESH_RANGE_HELP();
+		}                        
+	});
+
+	var DATE_FOR_TIME	= new Date();
+    if ('RESERVE_DATA' in JSON_ARGS) {
+    	var T = JSON_ARGS.RESERVE_DATA.STR_TIME_AT.split(':');
+		DATE_FOR_TIME.setHours(T[0]); DATE_FOR_TIME.setMinutes(T[1]);
+    }
+
+    $('#TIME_FOR_RESERVE').jqxDateTimeInput({
+    	width: '100%',
+    	height: '100%',
+    	formatString: 'HH:mm',
+    	showTimeButton: true,
+    	showCalendarButton: false,
+    	readonly: true,
+    }).on('change', function (event) {
+        REFRESH_RANGE_HELP();
+    });
+    $('#TIME_FOR_RESERVE').jqxDateTimeInput('setDate', DATE_FOR_TIME);
+    
+    var ARRAY_FOR_RETRY_COUNT = [
+			{ RETRY_COUNT_VALUE:0,	RETRY_COUNT_DISP: '재시도 안함'},
+			{ RETRY_COUNT_VALUE:1,	RETRY_COUNT_DISP: '재시도 1회'},
+			{ RETRY_COUNT_VALUE:2,	RETRY_COUNT_DISP: '재시도 2회'},
+			{ RETRY_COUNT_VALUE:3,	RETRY_COUNT_DISP: '재시도 3회'},
+			{ RETRY_COUNT_VALUE:4,	RETRY_COUNT_DISP: '재시도 4회'},
+			{ RETRY_COUNT_VALUE:5,	RETRY_COUNT_DISP: '재시도 5회'},
+		];
+    
+    var INDEX_FOR_RETRY_COUNT = 0;
+    if ('RESERVE_DATA' in JSON_ARGS) {
+    	var COUNTER = 0;
+    	ARRAY_FOR_RETRY_COUNT.forEach(function (ONE_RETRT_COUNT) {
+    		if (JSON_ARGS.RESERVE_DATA.RETRY_COUNT == ONE_RETRT_COUNT.RETRY_COUNT_VALUE) {
+		    	INDEX_FOR_RETRY_COUNT = COUNTER;
+		    	return false;
+    		}
+    		COUNTER += 1;
+    	});
+    }
+/*
+	$('#RETRY_COUNT_FOR_RESERVE').jqxDropDownList({
+		width: '100%',
+		source: ARRAY_FOR_RETRY_COUNT,
+		selectedIndex: INDEX_FOR_RETRY_COUNT,
+		displayMember: 'RETRY_COUNT_DISP'
+	}).on('select', function (event){
+	    var args = event.args;
+	    if (args) {
+		    var index = args.index;
+		    REFRESH_RANGE_HELP();
+		}                        
+	});
+	
+	var ARRAY_FOR_RETRY_INTERVAL = [
+			{ RETRY_INTERVAL:  5,	RETRY_INTERVAL_DISP: ' 5분 간격'},
+			{ RETRY_INTERVAL: 10,	RETRY_INTERVAL_DISP: '10분 간격'},
+			{ RETRY_INTERVAL: 15,	RETRY_INTERVAL_DISP: '15분 간격'},
+			{ RETRY_INTERVAL: 20,	RETRY_INTERVAL_DISP: '20분 간격'},
+			{ RETRY_INTERVAL: 25,	RETRY_INTERVAL_DISP: '25분 간격'},
+			{ RETRY_INTERVAL: 30,	RETRY_INTERVAL_DISP: '30분 간격'},
+			{ RETRY_INTERVAL: 60,	RETRY_INTERVAL_DISP: '1시간 간격'},
+			{ RETRY_INTERVAL:120,	RETRY_INTERVAL_DISP: '2시간 간격'},
+			{ RETRY_INTERVAL:180,	RETRY_INTERVAL_DISP: '3시간 간격'},
+		];
+	
+	var INDEX_FOR_RETRY_INTERVAL = 5;
+    if ('RESERVE_DATA' in JSON_ARGS) {
+    	var COUNTER = 0;
+    	ARRAY_FOR_RETRY_INTERVAL.forEach(function (ONE_RETRY_INTERVAL) {
+    		if (JSON_ARGS.RESERVE_DATA.RETRY_INTERVAL == ONE_RETRY_INTERVAL.RETRY_INTERVAL) {
+		    	INDEX_FOR_RETRY_INTERVAL = COUNTER;
+		    	return false;
+    		}
+    		COUNTER += 1;
+    	});
+    }
+	
+	$('#RETRY_INTERVAL_FOR_RESERVE').jqxDropDownList({
+		width: '100%',
+		source: ARRAY_FOR_RETRY_INTERVAL,
+		selectedIndex: INDEX_FOR_RETRY_INTERVAL,
+		displayMember: 'RETRY_INTERVAL_DISP'
+	}).on('select', function (event){
+	    var args = event.args;
+	    if (args) {
+		    var index = args.index;
+		    REFRESH_RANGE_HELP();
+		}                        
+	});
+*/	
+    INIT_WIDGETS_FOR_RESERVE_DATE_COMPLETED = true;
+    REFRESH_RANGE_HELP();
+}
+
+var STR_RESERVE_HELP = '';
+var OBJ_DATE_RANGE = {};
+function REFRESH_RANGE_HELP() {
+	if (!INIT_WIDGETS_FOR_RESERVE_DATE_COMPLETED) return;
+	var TIME_FOR_RESERVE = $('#TIME_FOR_RESERVE').jqxDateTimeInput('getText');
+	OBJ_DATE_RANGE	= {
+		STR_DATE_FROM:	$('#DATE_RANGE_FOR_RESERVE').jqxDateTimeInput('getText').substring(0, 10),
+		STR_DATE_TO:	$('#DATE_RANGE_FOR_RESERVE').jqxDateTimeInput('getText').substring(13, 23),
+		STR_REPEAT:		$('#REPEAT_FOR_RESERVE').jqxDropDownList('getSelectedItem').originalItem.REPEAT_CODE,
+		STR_TIME_AT:	TIME_FOR_RESERVE,
+//		RETRY_COUNT:	$('#RETRY_COUNT_FOR_RESERVE').jqxDropDownList('getSelectedItem').originalItem.RETRY_COUNT_VALUE,
+//		RETRY_INTERVAL:	$('#RETRY_INTERVAL_FOR_RESERVE').jqxDropDownList('getSelectedItem').originalItem.RETRY_INTERVAL,
+	};
+	var STR_DATE_FROM	= $('#DATE_RANGE_FOR_RESERVE').jqxDateTimeInput('getText').substring(0, 10);
+	var STR_DATE_TO		= $('#DATE_RANGE_FOR_RESERVE').jqxDateTimeInput('getText').substring(13, 23);
+	var OBJ_REPEAT_FOR_RESERVE = $('#REPEAT_FOR_RESERVE').jqxDropDownList('getSelectedItem').originalItem;
+	var STR_TIME_AT		= TIME_FOR_RESERVE;
+	if (OBJ_REPEAT_FOR_RESERVE.REPEAT_CODE == 'EVERY_ONES') {
+		STR_RESERVE_HELP = sprintf('%s %s', STR_DATE_FROM, STR_TIME_AT);
+	} else if (OBJ_REPEAT_FOR_RESERVE.REPEAT_CODE == 'EVERY_DAY') {
+		STR_RESERVE_HELP = sprintf('%s 부터 %s 까지 %s %s', STR_DATE_FROM, STR_DATE_TO, OBJ_REPEAT_FOR_RESERVE.REPEAT_DISP, STR_TIME_AT);
+	} else if (OBJ_REPEAT_FOR_RESERVE.REPEAT_CODE == 'EVERY_WEEK') {
+		var DATE_FROM		= $('#DATE_RANGE_FOR_RESERVE').jqxDateTimeInput('getRange').from;
+		var ARRAY_WEEK_NAME = ['일요일','월요일','화요일','수요일','목요일','금요일','토요일'];
+		OBJ_DATE_RANGE.WEEK_NO = DATE_FROM.getDay();
+		var STR_WEEK_NAME	= ARRAY_WEEK_NAME[OBJ_DATE_RANGE.WEEK_NO];
+		STR_RESERVE_HELP = sprintf('%s 부터 %s 까지 %s %s %s', STR_DATE_FROM, STR_DATE_TO, OBJ_REPEAT_FOR_RESERVE.REPEAT_DISP, STR_WEEK_NAME, STR_TIME_AT);
+	} else if (OBJ_REPEAT_FOR_RESERVE.REPEAT_CODE == 'EVERY_MONTH') {
+		var STR_DATE_NAME = STR_DATE_FROM.substring(8,10);
+		STR_RESERVE_HELP = sprintf('%s 부터 %s 까지 %s %s 일  %s', STR_DATE_FROM, STR_DATE_TO, OBJ_REPEAT_FOR_RESERVE.REPEAT_DISP, STR_DATE_NAME, STR_TIME_AT);
+	} else if (OBJ_REPEAT_FOR_RESERVE.REPEAT_CODE == 'EVERY_YEAR') {
+		var STR_DATE_NAME = STR_DATE_FROM.substring(5,10);
+		STR_RESERVE_HELP = sprintf('%s 부터 %s 까지 %s %s 일  %s', STR_DATE_FROM, STR_DATE_TO, OBJ_REPEAT_FOR_RESERVE.REPEAT_DISP, STR_DATE_NAME, STR_TIME_AT);
+	}
+	STR_RESERVE_HELP += ' 에 자동안부전화가 걸려가도록 예약';
+//	STR_RESERVE_HELP += JSON.stringify(OBJ_DATE_RANGE);
+	if (OBJ_DATE_RANGE.RETRY_COUNT > 0) {
+		STR_RESERVE_HELP += sprintf('<br/><br/>통화연결 실패시 %d 분 간격으로 %d 회 재시도 합니다.', OBJ_DATE_RANGE.RETRY_INTERVAL, OBJ_DATE_RANGE.RETRY_COUNT);
+	}
+	OBJ_DATE_RANGE.STR_RESERVE_HELP = STR_RESERVE_HELP;
+	$('#RANGE_HELP').html(STR_RESERVE_HELP);
+}
+
+var JSON_RESEVE_DATA = {};
+function INIT_WIDGETS_FOR_RESERVE_CONFIRM() {
+	JSON_RESEVE_DATA = JSON_ARGS;
+	JSON_RESEVE_DATA.CALL_TO_LIST = ARRAY_RESERVE_ASK_TO;
+	JSON_RESEVE_DATA.RESERVE_DATA = OBJ_DATE_RANGE;
+	
+//	QIIP_APP_ALERT(['<xmp>' + JSON.stringify(JSON_RESEVE_DATA, null, '\t') + '</xmp>']);
+	
+	var strHTML  = '';
+		strHTML += '<table style="height:30%;">';
+		strHTML += '<tr>';
+		strHTML += '<td style="text-align:center;">';
+		JSON_RESEVE_DATA.SCENARIO_SELECTED.SCENARIO_HELP.forEach(function (ONE_HELP) {
+			strHTML += ONE_HELP + '<br/>';
+		});
+		strHTML += '</td>';
+		strHTML += '</tr>';
+		strHTML += '<tr>';
+		strHTML += '<td style="text-align:center;">';
+		strHTML += STR_RESERVE_HELP;
+		strHTML += '</td>';
+		strHTML += '</tr>';
+		strHTML += '</table>';
+		
+		strHTML += '<table style="height:70%;">';
+		strHTML += '<tr style="height:20%;">';
+		strHTML += '<th colspan="2">';
+		strHTML += '수신자 목록';
+		strHTML += '</th>';
+		strHTML += '</tr>';
+		JSON_RESEVE_DATA.CALL_TO_LIST.forEach(function (ONE_CALL_TO) {
+			strHTML += '<tr>';
+			strHTML += '<th>';
+			strHTML += ONE_CALL_TO.ASK_TO;
+			strHTML += '</th>';
+			strHTML += '<td style="text-align:center;">';
+			strHTML += ONE_CALL_TO.CALL_TO;
+			strHTML += '</td>';
+			strHTML += '</tr>';
+		});
+		strHTML += '</table>';
+	
+	$('#DIV_CONFIRM_STEP').html(
+		strHTML
+//		+ '<xmp>' + JSON.stringify(JSON_RESEVE_DATA, null, ' ') + '</xmp>'
+	);
+}
+
+function STEP_FORWARD_FOR_EXEC_SCENARIO_RESERVE() {
+	if (STEP_OF_EXEC_SCENARIO_RESERVE < 3) {
+		STEP_OF_EXEC_SCENARIO_RESERVE += 1;
+		if (STEP_OF_EXEC_SCENARIO_RESERVE == 1) {
+			var TEXT_RESULT_EMAIL_TO = $('#TEXT_RESULT_EMAIL_TO').val();
+			if (!QIIP_IS_VALID_EMAIL(TEXT_RESULT_EMAIL_TO)) {
+				QIIP_POPUP_FOR_ALERT(
+					'안내',[
+					'예약하실 자동안부전화에 대한,...',
+					'통화결과를 수신할 E-MAIL 주소,...',
+					'[' + TEXT_RESULT_EMAIL_TO + '] 가 유효하지 않습니다.'
+				],undefined,80,50);
+				return;
+			} else {
+				$("#ACCORDION_FOR_EXEC_SCENARIO_RESERVE").accordion( "option", "active", STEP_OF_EXEC_SCENARIO_RESERVE );
+				INIT_WIDGETS_FOR_RESERVE_ASK_TO()
+			}
+		} else if (STEP_OF_EXEC_SCENARIO_RESERVE == 2) {
+			if (ARRAY_RESERVE_ASK_TO.length > 0) {
+				$("#ACCORDION_FOR_EXEC_SCENARIO_RESERVE").accordion( "option", "active", STEP_OF_EXEC_SCENARIO_RESERVE );
+				INIT_WIDGETS_FOR_RESERVE_DATE();
+			} else {
+				QIIP_POPUP_FOR_ALERT(
+					'안내',[
+					'자동안부전화 수신자 목록이 텅~~ 비어 있습니다!',
+					'전화받을 사람을 하나도 지정하지 않으시면,...',
+					'자동안부 전화를 예약하실 수 없습니다.'
+				],undefined,80,50);
+				STEP_OF_EXEC_SCENARIO_RESERVE -= 1;
+			}
+		} else if (STEP_OF_EXEC_SCENARIO_RESERVE == 3) {
+			$("#ACCORDION_FOR_EXEC_SCENARIO_RESERVE").accordion( "option", "active", STEP_OF_EXEC_SCENARIO_RESERVE );
+			INIT_WIDGETS_FOR_RESERVE_CONFIRM();
+		}
+	} else {
+		var TODAY_NOW = new Date();
+//		var RESERVE_UNIQUE_ID = Base64.encode(dateFormat(TODAY_NOW, 'yyyy-mm-dd HH:MM:ss.l'));
+		var RESERVE_UNIQUE_ID = _RS.PHONE_INFO.PHONE_NO + '_' +dateFormat(TODAY_NOW, 'yyyy-mm-dd_HH:MM:ss.l');
+				
+		JSON_RESEVE_DATA.SCENARIO_PARAM.EMAIL_TO = $('#TEXT_RESULT_EMAIL_TO').val();
+		JSON_RESEVE_DATA.RESERVE_CALL_RESULT_EMAIL_TO = JSON_RESEVE_DATA.SCENARIO_PARAM.EMAIL_TO;
+		JSON_RESEVE_DATA.RESERVE_UNIQUE_ID = RESERVE_UNIQUE_ID;
+
+		QIIP_POPUP_FOR_ALERT(
+			'안내',[
+			'예약 사항을 자동안부전화 처리 시스템으로 전송하고 있습니다.',
+			'안내 창이 자동으로 닫힐 때 까지,...',
+			'잠시만 기다려 주십시오.',
+		],undefined,80,50);
+		
+		SAVE_SCENARIO_RESERVE(
+			JSON_RESEVE_DATA,
+			function () {
+				QIIP_POPUP_FOR_ALERT(
+					'안내',[
+					'예약 사항을 자동안부전화 처리 시스템에 등록했습니다.',
+					'왼쪽 상단의 메뉴 버튼을 터치한 후,...',
+					'예약목록 메뉴를 선택하시면 예약된 내용을 확인하실 수 있습니다.',
+				],function () {
+					CLOSE_POPUP_FOR_EXEC_SCENARIO_RESERVE();
+					if (OBJ_FUNC_ON_ADD_RESERVE != undefined) OBJ_FUNC_ON_ADD_RESERVE();
+				},80,50);
+			}
+		);
+	}
+}
+
+function SAVE_SCENARIO_RESERVE(OBJ_RESERVE_DATA, FUNC_AFTER) {
+	var OBJ_UPDATE = new Object();
+		OBJ_UPDATE.ASK_REGARD_RESERVE_LIST = (_RS.OBJ_POST_ROOT.ASK_REGARD_RESERVE_LIST != undefined) ? _RS.OBJ_POST_ROOT.ASK_REGARD_RESERVE_LIST : [];
+		OBJ_UPDATE.ASK_REGARD_RESERVE_LIST.push(OBJ_RESERVE_DATA);
+
+/*
+		OBJ_UPDATE.TITLE_UPDATE = JSON.stringify({
+			PHONE_ID: _RS.PHONE_INFO.PHONE_ID,
+			PHONE_NO: _RS.PHONE_INFO.PHONE_NO,
+			AUX: 'ASK_REGARD_RESERVED'
+		});
+*/
+		OBJ_UPDATE.TITLE_UPDATE = {
+			PHONE_ID: _RS.PHONE_INFO.PHONE_ID,
+			PHONE_NO: _RS.PHONE_INFO.PHONE_NO,
+			AUX: 'ASK_REGARD_RESERVED'
+		}
+		_RS.OBJ_POST_ROOT.ASK_REGARD_RESERVE_LIST = OBJ_UPDATE.ASK_REGARD_RESERVE_LIST;
+	QIIP_UPDATE_POST_ROOT(OBJ_UPDATE, FUNC_AFTER);
+}
+
+</script>
+
+<div class="qiip_index" style="width:100%; height:7%;">
+	<table>
+		<col width="50%"/>
+		<tr>
+			<th>잔여 바우처</td></th>
+			<td id="POPUP_SERVICE_VOUCHER" style="text-align:center;">
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="qiip_index" style="width:100%;height:83%;" id="ACCORDION_FOR_EXEC_SCENARIO_RESERVE">
+	<h3>단계 1 : 예약할 자동안부전화 시나리오 확인하기</h3>
+    <div style="height:100%;overflow:auto;padding:0;">
+		<table style="height:15%;">
+			<col width="35%"/>
+			<tr>
+				<th>
+					<button class="BTN_POPUP_FOR_SCENARIO_RESERVE">
+						{$ARGS->SCENARIO_SELECTED->GROUP_DISP}
+					</button>
+				</th>
+				<th>
+					<button class="BTN_POPUP_FOR_SCENARIO_RESERVE">
+						{$ARGS->SCENARIO_SELECTED->SCENARIO_DISP}
+					</button>
+				</th>
+			</tr>
+		</table>
+		<div class="card" style="height:20%;margin:1%;" >
+			<!--@foreach($ARGS->SCENARIO_SELECTED->SCENARIO_HELP as $KEY=>$ONE_HELP)-->
+				<span>
+					{$ONE_HELP}	
+				</span>
+			<!--@end-->
+		</div>
+		<table style="height:60%;">
+			<col width="35%"/>
+			<tr>
+				<th>
+					<button class="BTN_POPUP_FOR_SCENARIO_RESERVE">
+						통화 결과 수신
+					</button>
+				</th>
+				<td colspan="2">
+					<input 
+						style="width:100%;height:100%;box-sizing:border-box; border: solid gray 1px; text-align:center;"
+						type="email"
+						id="TEXT_RESULT_EMAIL_TO"
+						placeholder="E-MAIL 주소 입력"
+						value="{$ARGS->SCENARIO_PARAM->EMAIL_TO}"/>
+<!--
+					<button class="BTN_POPUP_FOR_SCENARIO_RESERVE">
+						{$ARGS->SCENARIO_PARAM->EMAIL_TO}
+					</button>
+-->
+				</td>
+			</tr>
+			<tr>
+				<th>
+					<button class="BTN_POPUP_FOR_SCENARIO_RESERVE">
+						발신
+					</button>
+				</th>
+				<td colspan="2">
+					<button class="BTN_POPUP_FOR_SCENARIO_RESERVE">
+						{$ARGS->SCENARIO_PARAM->ASK_FROM}({$ARGS->SCENARIO_PARAM->CALL_FROM})
+					</button>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					<button class="BTN_POPUP_FOR_SCENARIO_RESERVE">
+						수신 목록
+					</button>
+				</th>
+				<td colspan="2">
+					<button class="BTN_POPUP_FOR_SCENARIO_RESERVE">
+						다음 단계 에서 설정
+					</button>
+				</td>
+			</tr>
+			<!--@if(isset($ARGS->SCENARIO_PARAM->CUSTOM_GREETING))-->
+			<tr>
+				<th>
+					<button class="BTN_POPUP_FOR_SCENARIO_RESERVE">
+						안부 메시지
+					</button>
+				</th>
+				<td colspan="2">
+					<button class="BTN_POPUP_FOR_SCENARIO_RESERVE">
+						{$ARGS->SCENARIO_PARAM->CUSTOM_GREETING}
+					</button>
+				</td>
+			</tr>
+			<!--@end-->
+			<!--@if(isset($ARGS->SCENARIO_PARAM->VOICE_URL))-->
+			<tr>
+				<th>
+					<button class="BTN_POPUP_FOR_SCENARIO_RESERVE">
+						안부음성<br/>또는<br/>노래선물
+					</button>
+				</th>
+				<td colspan="2">
+					<button
+						class="BTN_POPUP_FOR_SCENARIO_RESERVE"
+						id="BTN_FOR_VOICE_LISTEN"
+						VOICE_URL="{$ARGS->SCENARIO_PARAM->VOICE_URL}"
+						VOICE_LEN="{$ARGS->SCENARIO_PARAM->VOICE_LEN}">
+						{$ARGS->SCENARIO_PARAM->VOICE_VAL}<br/>
+						들어보기
+					</button>
+				</td>
+<!--
+				<td>
+					<button class="BTN_POPUP_FOR_SCENARIO_RESERVE" id="BTN_FOR_VOICE_STOP">
+						듣기멈춤
+					</button>
+				</td>
+-->
+			</tr>
+			<!--@end-->
+		</table>
+    </div>
+	<h3>단계 2 : 수신자 목록 설정하기</h3>
+    <div style="height:100%;overflow:auto;padding:0;overflow:auto;" id="TABLE_IVR_PARAM">
+		<div class="card" style="height:20%;margin:1%;" >
+			여러 사람의 수신자에게 자동안부전화가 동시에 걸려가도록 예약 할 수 있습니다. 
+			아래, 자동안부전화 수신자 목록에 현재 예약하고 계시는 자동안부전화를 수신하실 전화번호 목록을 추가하십시오.
+		</div>
+		<table style="height:10%;">
+			<col width="30%"/>
+			<col width="40%"/>
+			<col width="15%"/>
+			<tr>
+				<th>
+					<button class="BTN_POPUP_FOR_SCENARIO_RESERVE">
+						추가할 수신자
+					</button>
+				</th>
+				<td>
+					<input 
+						style="width:100%;height:100%;box-sizing:border-box; border: solid gray 1px; text-align:center;"
+						type="text"
+						id="TEXT_ONE_RESERVE_ASK_TO"
+						onchange="QIIP_REASSIGN_PHONE_NO_ATTRIBUTE(this)"
+						placeholder="폰 번호 일부 또는 검색어"/>
+				</td>
+				<td><button class="BTN_POPUP_FOR_SCENARIO_RESERVE" id="BTN_SEARCH_ONE_RESERVE_ASK_TO">검색</button></td>
+				<td><button class="BTN_POPUP_FOR_SCENARIO_RESERVE" id="BTN_ADD_ONE_RESERVE_ASK_TO">추가</button></td>
+			</tr>
+		</table>
+		<table style="height:70%;">
+			<col width="85%"/>
+			<tr style="height:15%;">
+				<td>
+					<button class="BTN_POPUP_FOR_SCENARIO_RESERVE">
+						자동안부전화 수신자 목록
+					</button>
+				</td>
+				<td>
+					<button class="BTN_POPUP_FOR_SCENARIO_RESERVE" id="BTN_DEL_ONE_RESERVE_ASK_TO">
+						삭제
+					</button>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<div id="LIST_RESERVE_ASK_TO" ></div>
+				</td>
+			</tr>
+		</table>
+    </div>
+	<h3>단계 3 : 예약일정 설정하기</h3>
+    <div style="height:100%;overflow:auto;padding:0;">
+		<div class="card" style="height:20%;margin:1%;text-align:center;" >
+			<span id='RANGE_HELP' ></span>
+		</div>
+		<table style="height:10%;">
+			<col width="50%"/>
+			<tr>
+				<th>
+					<button class="BTN_POPUP_FOR_SCENARIO_RESERVE">
+						예약 날자 구간
+					</button>
+				</th>
+				<td>
+					<div style="width:100%;text-align:center;" id="DATE_RANGE_FOR_RESERVE"></div>
+				</td>
+			</tr>
+		</table>
+		<table style="height:10%;">
+			<col width="50%"/>
+			<tr>
+				<th>
+					<button class="BTN_POPUP_FOR_SCENARIO_RESERVE">
+						전화 거는 간격
+					</button>
+				</th>
+				<td>
+					<div style="width:100%;text-align:center;" id="REPEAT_FOR_RESERVE"></div>
+				</td>
+			</tr>
+		</table>
+		<table style="height:10%;">
+			<col width="50%"/>
+			<tr>
+				<th>
+					<button class="BTN_POPUP_FOR_SCENARIO_RESERVE">
+						전화 거는 시각
+					</button>
+				</th>
+				<td>
+					<div style="width:100%;text-align:center;" id="TIME_FOR_RESERVE"></div>
+				</td>
+			</tr>
+		</table>
+<!--
+		<table style="height:10%;">
+			<col width="34%"/>
+			<col width="33%"/>
+			<tr>
+				<th>
+					<button class="BTN_POPUP_FOR_SCENARIO_RESERVE">
+						통화연결 실패시
+					</button>
+				</th>
+				<td>
+					<div style="width:100%;text-align:center;" id="RETRY_COUNT_FOR_RESERVE"></div>
+				</td>
+				<td>
+					<div style="width:100%;text-align:center;" id="RETRY_INTERVAL_FOR_RESERVE"></div>
+				</td>
+			</tr>
+		</table>
+-->
+    </div>
+	<h3>단계 4 : 자동안부전화 예약내용 확인하기</h3>
+    <div style="height:100%;overflow:auto;padding:0;overflow:auto;" id="DIV_CONFIRM_STEP">
+    	<table>
+    		<tr>
+    			<th>
+    				단계별 순차적으로 이 단계까지 진행하셔야 합니다.
+    			</th>
+    		</tr>
+    	</table>
+    </div>
+</div>
+<div class="qiip_index" style="width:100%;height:10%;padding:0;">
+	<table>
+		<col width="50%"/>
+		<tr>
+			<td>
+		      	<button class="BTN_POPUP_FOR_SCENARIO_RESERVE" id="BTN_CLOSE_POPUP_FOR_EXEC_SCENARIO_RESERVE" >
+		        	취소 하기
+		    	</button>
+			</td>
+			<td>
+		      	<button class="BTN_POPUP_FOR_SCENARIO_RESERVE" id="BTN_STEP_FORWARD_FOR_EXEC_SCENARIO_RESERVE" >
+		        	다음 단계
+		    	</button>
+			</td>
+		</tr>
+	</table>
+</div>
+

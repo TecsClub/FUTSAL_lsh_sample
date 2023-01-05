@@ -1,0 +1,300 @@
+<script>
+	var MODAL_FOR_ADD_MATCH_ITEM_ID = null;
+	var MODAL_MODE = "ADD";
+	function INIT_WIDGETS_FOR_MODAL_FOR_ADD_MATCH_ITEM(MODAL_ID, MODE) {
+		MODAL_FOR_ADD_MATCH_ITEM_ID = MODAL_ID;
+		MODAL_MODE = MODE;
+		REGIST_BUTTON_EVENT();
+	}
+	
+	function REGIST_BUTTON_EVENT() {
+		$(".BTN_MATCH_ITEM").on('click', function () {
+			var ID = $(this).attr('ID');
+			if (ID == 'DUMMY') {
+			} else if(ID == 'BTN_SAVE') {
+				if(MODAL_MODE == "ADD"){
+					ADD_MATCH_ITEM();
+				} else if(MODAL_MODE == "UPD"){
+					UPD_MATCH_ITEM();
+				}
+			} else if(ID == 'BTN_CANCLE') {
+				CLOSE_MODAL();
+			}
+		});
+	}
+
+	function CLOSE_MODAL(){
+		if (MODAL_FOR_ADD_MATCH_ITEM_ID != undefined) $('#'+MODAL_FOR_ADD_MATCH_ITEM_ID).modal('hide');
+	}
+	
+	function ADD_MATCH_ITEM(){
+		var ROW_DATA = {
+	        'HASH': $('#TXT-HASH').val(),				
+	        'DATE': $('#TXT-DATE').val(),				
+	        'TEAM': $('#TXT-TEAM').val(),				
+	        'CAMERA_ANGLE': $('#TXT-CAMERA_ANGLE').val(),		
+	        'ARENA_NAME': $('#TXT-ARENA_NAME').val(),		
+	        'ARENA_NUM': $('#TXT-ARENA_NUM').val(),		
+	        'GAME_START_TIME': $('#TXT-GAME_START_TIME').val(),	
+	        'GAME_END_TIME': $('#TXT-GAME_END_TIME').val(),	
+	        'URL': $('#TXT-URL').val(),				
+	        'ARENA_CODE': $('#TXT-ARENA_CODE').val(),		
+	        'MANAGER_PHONE': $('#TXT-MANAGER_PHONE').val(),	
+	        'TEAM_NAME_LEFT': $('#TXT-TEAM_NAME_LEFT').val(),	
+	        'TEAM_NAME_RIGHT': $('#TXT-TEAM_NAME_RIGHT').val(),	
+	        'TAGGING_DONE': $('#TXT-TAGGING_DONE').val(),		
+	        'VALID_UNTIL': $('#TXT-VALID_UNTIL').val(),		
+	        'IS_LINK_SHARED': $('#TXT-IS_LINK_SHARED').val(),	
+	        'YOUTUBE_URLS': $('#TXT-YOUTUBE_URLS').val(),					
+		};
+/*
+		QIIP_APP_ALERT([
+			JSON.stringify(ROW_DATA, null, '\t')
+		]);
+//*/
+		var STR_SQL = "";
+		if (true) {
+			STR_SQL  = "INSERT INTO MATCH_LIST (";
+			STR_SQL += sprintf("HASH, ");
+			STR_SQL += sprintf("DATE, ");
+			STR_SQL += sprintf("TEAM, ");
+			STR_SQL += sprintf("CAMERA_ANGLE, ");
+			STR_SQL += sprintf("ARENA_NAME, ");
+			STR_SQL += sprintf("ARENA_NUM, ");
+			STR_SQL += sprintf("GAME_START_TIME, ");
+			STR_SQL += sprintf("GAME_END_TIME, ");
+			STR_SQL += sprintf("URL, ");
+			STR_SQL += sprintf("ARENA_CODE, ");
+			STR_SQL += sprintf("MANAGER_PHONE , ");
+			STR_SQL += sprintf("TEAM_NAME_LEFT, ");
+			STR_SQL += sprintf("TEAM_NAME_RIGHT, ");
+			STR_SQL += sprintf("TAGGING_DONE, ");
+			STR_SQL += sprintf("VALID_UNTIL, ");
+			STR_SQL += sprintf("IS_LINK_SHARED, ");
+			STR_SQL += sprintf("YOUTUBE_URLS ");
+			STR_SQL += sprintf(") VALUES (");
+			STR_SQL += sprintf(
+							"'%s', " +
+							"'%s', " +
+							"'%s', " +
+							"'%s', " +
+							"'%s', " +
+							"'%s', " +
+							"'%s', " +
+							"'%s', " +
+							"'%s', " +
+							"'%s', " +
+							"'%s', " +
+							"'%s', " +
+							"'%s', " +
+							"'%s', " +
+							"'%s', " +
+							"'%s', " +
+							"'%s') ",
+							ROW_DATA.HASH,
+							ROW_DATA.DATE,
+							ROW_DATA.TEAM,
+							ROW_DATA.CAMERA_ANGLE,
+							ROW_DATA.ARENA_NAME,
+							ROW_DATA.ARENA_NUM,
+							ROW_DATA.GAME_START_TIME,
+							ROW_DATA.GAME_END_TIME,
+							ROW_DATA.URL,
+							ROW_DATA.ARENA_CODE,
+							ROW_DATA.MANAGER_PHONE,
+							ROW_DATA.TEAM_NAME_LEFT,
+							ROW_DATA.TEAM_NAME_RIGHT,
+							ROW_DATA.TAGGING_DONE,
+							ROW_DATA.VALID_UNTIL,
+							ROW_DATA.IS_LINK_SHARED,
+							ROW_DATA.YOUTUBE_URLS
+					   );
+			
+		} else {
+			QIIP_APP_ALERT([
+				"데이터 중 일부를 입력하지 않았습니다."
+			]);
+		}
+
+		console.log(STR_SQL);
+		
+		if (STR_SQL.length < 1) return;
+
+		QIIP_API_ACCESS({
+				REQ: 'api_DB_ACCESS',
+				STR_SQL_BASE64: Base64.encode(STR_SQL),
+			},function(STR_RESULT) {
+				var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+/*
+				QIIP_APP_ALERT([
+					JSON.stringify(JSON_RESULT)
+				]);			
+//*/
+				CLOSE_MODAL();
+				QUERY_MATCH_LIST();
+			}
+		);
+
+	}
+
+	function UPD_MATCH_ITEM(){
+		var ROW_DATA = {
+	        'ID': $('#TXT-ID').val(),				
+	        'HASH': $('#TXT-HASH').val(),				
+	        'DATE': $('#TXT-DATE').val(),				
+	        'TEAM': $('#TXT-TEAM').val(),				
+	        'CAMERA_ANGLE': $('#TXT-CAMERA_ANGLE').val(),		
+	        'ARENA_NAME': $('#TXT-ARENA_NAME').val(),		
+	        'ARENA_NUM': $('#TXT-ARENA_NUM').val(),		
+	        'GAME_START_TIME': $('#TXT-GAME_START_TIME').val(),	
+	        'GAME_END_TIME': $('#TXT-GAME_END_TIME').val(),	
+	        'URL': $('#TXT-URL').val(),				
+	        'ARENA_CODE': $('#TXT-ARENA_CODE').val(),		
+	        'MANAGER_PHONE': $('#TXT-MANAGER_PHONE').val(),	
+	        'TEAM_NAME_LEFT': $('#TXT-TEAM_NAME_LEFT').val(),	
+	        'TEAM_NAME_RIGHT': $('#TXT-TEAM_NAME_RIGHT').val(),	
+	        'TAGGING_DONE': $('#TXT-TAGGING_DONE').val(),		
+	        'VALID_UNTIL': $('#TXT-VALID_UNTIL').val(),		
+	        'IS_LINK_SHARED': $('#TXT-IS_LINK_SHARED').val(),	
+	        'YOUTUBE_URLS': $('#TXT-YOUTUBE_URLS').val(),					
+		};
+/*
+		QIIP_APP_ALERT([
+			JSON.stringify(ROW_DATA, null, '\t')
+		]);
+		return ;
+//*/
+		var STR_SQL = "";
+		if (true) {
+			STR_SQL  = "UPDATE MATCH_LIST SET ";
+			
+			STR_SQL += sprintf("HASH = '%s',", ROW_DATA.HASH);
+			STR_SQL += sprintf("DATE = '%s',", ROW_DATA.DATE);
+			STR_SQL += sprintf("TEAM = '%s',", ROW_DATA.TEAM);
+			STR_SQL += sprintf("CAMERA_ANGLE = '%s',", ROW_DATA.CAMERA_ANGLE);
+			STR_SQL += sprintf("ARENA_NAME = '%s',", ROW_DATA.ARENA_NAME);
+			STR_SQL += sprintf("ARENA_NUM = '%s',", ROW_DATA.ARENA_NUM);
+			STR_SQL += sprintf("GAME_START_TIME = '%s',", ROW_DATA.GAME_START_TIME);
+			STR_SQL += sprintf("GAME_END_TIME = '%s',", ROW_DATA.GAME_END_TIME);
+			STR_SQL += sprintf("URL = '%s', ", ROW_DATA.URL);
+			STR_SQL += sprintf("ARENA_CODE = '%s', ", ROW_DATA.ARENA_CODE);
+			STR_SQL += sprintf("MANAGER_PHONE = '%s', ", ROW_DATA.MANAGER_PHONE);
+			STR_SQL += sprintf("TEAM_NAME_LEFT = '%s', ", ROW_DATA.TEAM_NAME_LEFT);
+			STR_SQL += sprintf("TEAM_NAME_RIGHT = '%s', ", ROW_DATA.TEAM_NAME_RIGHT);
+			STR_SQL += sprintf("TAGGING_DONE = '%s', ", ROW_DATA.TAGGING_DONE);
+			STR_SQL += sprintf("VALID_UNTIL = '%s', ", ROW_DATA.VALID_UNTIL);
+			STR_SQL += sprintf("IS_LINK_SHARED = '%s', ", ROW_DATA.IS_LINK_SHARED);
+			STR_SQL += sprintf("YOUTUBE_URLS = '%s' ", ROW_DATA.YOUTUBE_URLS);
+			STR_SQL += sprintf("WHERE ID = %s ", ROW_DATA.ID);
+		} else {
+			QIIP_APP_ALERT([
+				"데이터 중 일부를 입력하지 않았습니다."
+			]);
+		}
+
+		console.log(STR_SQL);
+		
+		if (STR_SQL.length < 1) return;
+
+		QIIP_API_ACCESS({
+				REQ: 'api_DB_ACCESS',
+				STR_SQL_BASE64: Base64.encode(STR_SQL),
+			},function(STR_RESULT) {
+				var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+/*
+				QIIP_APP_ALERT([
+					JSON.stringify(JSON_RESULT)
+				]);			
+//*/
+				CLOSE_MODAL();
+				QUERY_MATCH_LIST();
+			}
+		);
+
+	}
+
+
+</script>
+<div style="display:none;">
+	<input type="text" id="TXT-ID" value="{{JSON_ARGS.ID}}">	
+</div>
+
+
+<div style='width:100%; height:100%;'>
+	<div style='height:99%; width:100%; overflow:auto;'>
+		<div class="form-group">
+			<label>HASH</label>
+			<input type="text" class="form-control" id="TXT-HASH" placeholder="Enter" value="{{JSON_ARGS.HASH}}">
+		</div>
+		<div class="form-group">
+			<label>DATE</label>
+			<input type="text" class="form-control" id="TXT-DATE" placeholder="Enter" value="{{JSON_ARGS.DATE}}">
+		</div>
+		<div class="form-group">
+			<label>TEAM</label>
+			<input type="text" class="form-control" id="TXT-TEAM" placeholder="Enter" value="{{JSON_ARGS.TEAM}}">
+		</div>
+		<div class="form-group">
+			<label>CAMERA_ANGLE</label>
+			<input type="text" class="form-control" id="TXT-CAMERA_ANGLE" placeholder="Enter" value="{{JSON_ARGS.CAMERA_ANGLE}}">
+		</div>
+		<div class="form-group">
+			<label>ARENA_NAME</label>
+			<input type="text" class="form-control" id="TXT-ARENA_NAME" placeholder="Enter" value="{{JSON_ARGS.ARENA_NAME}}">
+		</div>
+		<div class="form-group">
+			<label>ARENA_NUM</label>
+			<input type="text" class="form-control" id="TXT-ARENA_NUM" placeholder="Enter" value="{{JSON_ARGS.ARENA_NUM}}">
+		</div>
+		<div class="form-group">
+			<label>GAME_START_TIME</label>
+			<input type="text" class="form-control" id="TXT-GAME_START_TIME" placeholder="Enter" value="{{JSON_ARGS.GAME_START_TIME}}">
+		</div>
+		<div class="form-group">
+			<label>GAME_END_TIME</label>
+			<input type="text" class="form-control" id="TXT-GAME_END_TIME" placeholder="Enter" value="{{JSON_ARGS.GAME_END_TIME}}">
+		</div>
+		<div class="form-group">
+			<label>URL</label>
+			<input type="text" class="form-control" id="TXT-URL" placeholder="Enter" value="{{JSON_ARGS.URL}}">
+		</div>
+		<div class="form-group">
+			<label>ARENA_CODE</label>
+			<input type="text" class="form-control" id="TXT-ARENA_CODE" placeholder="Enter" value="{{JSON_ARGS.ARENA_CODE}}">
+		</div>
+		<div class="form-group">
+			<label>MANAGER_PHONE </label>
+			<input type="text" class="form-control" id="TXT-MANAGER_PHONE" placeholder="Enter" value="{{JSON_ARGS.MANAGER_PHONE}}">
+		</div>
+		<div class="form-group">
+			<label>TEAM_NAME_LEFT</label>
+			<input type="text" class="form-control" id="TXT-TEAM_NAME_LEFT" placeholder="Enter" value="{{JSON_ARGS.TEAM_NAME_LEFT}}">
+		</div>
+		<div class="form-group">
+			<label>TEAM_NAME_RIGHT</label>
+			<input type="text" class="form-control" id="TXT-TEAM_NAME_RIGHT" placeholder="Enter" value="{{JSON_ARGS.TEAM_NAME_RIGHT}}">
+		</div>
+		<div class="form-group">
+			<label>TAGGING_DONE</label>
+			<input type="text" class="form-control" id="TXT-TAGGING_DONE" placeholder="Enter" value="{{JSON_ARGS.TAGGING_DONE}}">
+		</div>
+		<div class="form-group">
+			<label>VALID_UNTIL</label>
+			<input type="text" class="form-control" id="TXT-VALID_UNTIL" placeholder="Enter" value="{{JSON_ARGS.VALID_UNTIL}}">
+		</div>
+		<div class="form-group">
+			<label>IS_LINK_SHARED</label>
+			<input type="text" class="form-control" id="TXT-IS_LINK_SHARED" placeholder="Enter" value="{{JSON_ARGS.IS_LINK_SHARED}}">
+		</div>
+		<div class="form-group">
+			<label>YOUTUBE_URLS</label>
+			<input type="text" class="form-control" id="TXT-YOUTUBE_URLS" placeholder="Enter" value="{{JSON_ARGS.YOUTUBE_URLS}}">
+		</div>
+	</div>
+	<div style='height:1%; padding-top:30px; text-align:right;'>
+		<button class="BTN_MATCH_ITEM btn btn-primary" id="BTN_SAVE">저장</button>	
+		<button class="BTN_MATCH_ITEM btn btn-primary" id="BTN_CANCLE">취소</button>	
+	</div>
+
+</div>
+

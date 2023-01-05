@@ -1,0 +1,530 @@
+{@ $ARGS = json_decode(base64_decode($ARGS->JSON_ARGS_BASE64)); }
+#PAGE_ARGS# <!-- <script>var JSON_ARGS=JSON.parse(Base64.decode($ARGS->JSON_ARGS_BASE64));</script> -->
+<script>
+var OBJ_POPUP_FOR_EXEC_ADD_ASK_REGARD_VOICE = null;
+
+var ARRAY_PAY_WHO = [
+	{ PAY_CODE: 'NONE',		PAY_DISP: '선택안함',
+		PAY_HELP: [
+			'통화료 지출 방식을 선택하지 않았습니다'
+		]
+	},
+	{ PAY_CODE: 'BY_PHONE',	PAY_DISP: '무료(고객님이 소지한 폰 => 시스템)',
+		PAY_HELP: [
+//			'실제 서비스 운영시에는 자동안부전화 처리 시스템이 고객님이 지정하신 수신자에게 전화를 걸어서 안부를 여쭈어보는 기능으로 작동합니다.',
+//			'그렇지만, 이 경우, 서비스 바우처(통화요금)가 차감됩니다.',
+//			'그러므로, 고객님이 소지하신 스마트폰으로 자동안부전화 처리 시스템으로 전화를 걸어 보아 <b>별도 과금을 하지 않고</b>, 자동안부전화를 수신하시는 분이 어떠한 안내음성을 듣게 되는지 확인합니다.',
+			'고객님이 소지하신 스마트폰으로 자동안부전화 처리 시스템으로 전화를 걸어, <b>별도 과금을 하지 않고</b>, 자동안부전화를 수신하시는 분에게 말씀하실 안내음성을 직접 녹음하여 목록에 추가합니다.',
+			'고객님이 직접 전화를 거는 것과 동일한 통신요금이 적용됩니다.',
+		]
+	},
+	{ PAY_CODE: 'BY_SYSTEM',PAY_DISP: '유료(시스템 => 고객님이 지정한 전화번호)',
+		PAY_HELP: [
+			'자동안부전화 처리 시스템이 고객님이 지정하신 전화번호로 전화를 걸어 자동안부전화를 수신하시는 분에게 말씀하실 안내음성을 직접 녹음하여 목록에 추가합니다.',
+			'고객님에게 할당된 서비스 바우처(통화요금)가 차감됩니다.'
+		]
+	},
+];
+
+var IVR_PARAM_CALL_OUT	= JSON.parse(JSON.stringify(JSON_ARGS));
+var IVR_PARAM_CALL_IN	= JSON.parse(JSON.stringify(JSON_ARGS));
+
+var STEP_OF_EXEC_SCENARIO_TEST = 0;
+function INIT_WIDGETS_POPUP_FOR_EXEC_ADD_ASK_REGARD_VOICE(OBJ_DIALOG) {
+	OBJ_POPUP_FOR_EXEC_ADD_ASK_REGARD_VOICE = OBJ_DIALOG;
+
+	IVR_PARAM_CALL_OUT.CALL_FROM= IVR_NUMBER;
+	
+	IVR_PARAM_CALL_IN.CMD		= 'ARSAUTH_WAIT';
+	IVR_PARAM_CALL_IN.CALL_TO	= IVR_PARAM_CALL_IN.CALL_FROM;
+	IVR_PARAM_CALL_IN.CALL_FROM	= _RS.PHONE_INFO.PHONE_NO;
+	
+	$("#TEXT_TARGET_CALL_TO").val(_RS.PHONE_INFO.PHONE_NO);
+
+	$(".BTN_POPUP").jqxButton({
+		width: '100%',
+		height: '100%'
+	}).on('click', function () {
+		var ID = $(this).attr('ID');
+		if (ID == 'DUMMY') {
+		} else if (ID == 'BTN_SEARCH_CALL_TO') {
+			QIIP_GET_CONTACTS_FOR('TEXT_TARGET_CALL_TO',	true, undefined);
+		} else if (ID == 'BTN_CLOSE_POPUP_FOR_EXEC_ADD_ASK_REGARD_VOICE') {
+			CLOSE_POPUP_FOR_EXEC_ADD_ASK_REGARD_VOICE();
+		} else if (ID == 'BTN_STEP_FORWARD_FOR_EXEC_ADD_ASK_REGARD_VOICE') {
+			STEP_FORWARD_FOR_EXEC_ADD_ASK_REGARD_VOICE();
+		}
+	});
+	
+	
+	$('#POPUP_SERVICE_VOUCHER').html(_RS.OBJ_POST_ROOT.SERVICE_VOUCHER);
+
+	$("#ACCORDION_FOR_EXEC_ADD_ASK_REGARD_VOICE").accordion({
+		heightStyle: "fill",
+		active: STEP_OF_EXEC_SCENARIO_TEST,
+//		animate: false,
+        create: function( event, ui ) {
+        },
+        activate: function( event, ui ) {
+            var HEADER_TEXT = ui.newHeader.text();
+            if (HEADER_TEXT.indexOf('1') >= 0) {
+		    	STEP_OF_EXEC_SCENARIO_TEST = 0;
+            } else if (HEADER_TEXT.indexOf('2') >= 0) {
+		    	STEP_OF_EXEC_SCENARIO_TEST = 1;
+            } else if (HEADER_TEXT.indexOf('3') >= 0) {
+		    	STEP_OF_EXEC_SCENARIO_TEST = 2;
+            } else if (HEADER_TEXT.indexOf('4') >= 0) {
+		    	STEP_OF_EXEC_SCENARIO_TEST = 3;
+            }
+            
+            if (STEP_OF_EXEC_SCENARIO_TEST < 2) $('#DIV_LAST_STEP').html('');
+        }
+	});
+	
+
+	$('#SELECTOR_PAY_WHO').jqxDropDownList({
+		width: '100%',
+		source: ARRAY_PAY_WHO,
+		selectedIndex: 0,
+		displayMember: 'PAY_DISP'
+	}).on('select', function (event){
+	    var args = event.args;
+	    if (args) {
+		    ON_SELECT_PAY_WHO();
+		}                        
+	});
+	ON_SELECT_PAY_WHO();
+	
+}
+
+function ON_SELECT_PAY_WHO() {
+	var SELECTED_PAY_WHO = $('#SELECTOR_PAY_WHO').jqxDropDownList('getSelectedItem').originalItem;
+
+	var strHTML  = '';
+	SELECTED_PAY_WHO.PAY_HELP.forEach( function (ONE_HELP) {
+		strHTML += '<div class="item item-text-wrap">';
+		strHTML += ONE_HELP;
+		strHTML += '</div>';
+	});
+	$('#CONTAINER_TEXT_PAY_WHO').html(strHTML);
+	
+	if (SELECTED_PAY_WHO.PAY_CODE == 'DUMMY') {
+	} else if (SELECTED_PAY_WHO.PAY_CODE == 'BY_PHONE') {
+		JSON_IVR_PARAM = IVR_PARAM_CALL_IN;
+	} else if (SELECTED_PAY_WHO.PAY_CODE == 'BY_SYSTEM') {
+		JSON_IVR_PARAM = IVR_PARAM_CALL_OUT;
+		if ($('#TEXT_TARGET_CALL_TO').attr('PHONE_NO') != undefined) {
+			JSON_IVR_PARAM.CALL_TO = $('#TEXT_TARGET_CALL_TO').attr('PHONE_NO');
+		} else {
+			JSON_IVR_PARAM.CALL_TO = $('#TEXT_TARGET_CALL_TO').val();
+		}
+		if (!QIIP_IS_VALID_PHONE_NO(JSON_IVR_PARAM.CALL_TO)) {
+			QIIP_POPUP_FOR_ALERT(
+				'안내', [
+				'지정하신 폰 번호 [' + JSON_IVR_PARAM.CALL_TO + '] 가 유효하지 않습니다.'
+			], function () {
+			});
+			return;
+		} 
+	}
+	
+	var srtHTML  = '';
+	
+	if (JSON_IVR_PARAM != null) {
+
+//		alert(JSON.stringify(JSON_IVR_PARAM, null, '\t'));
+
+		srtHTML += '<table>';
+		srtHTML += '<col width="50%"/>';
+
+		srtHTML += '<tr>';
+		srtHTML += '<td colspan="2">';
+		srtHTML += '<button class="BTN_TABLE_DISP">';
+		if (JSON_IVR_PARAM.CMD == 'ARSAUTH_CALL') {
+			srtHTML += '아래 내용을 확인하세요!<br/><br/>자동안부전화 처리 시스템(' + 
+						TO_KOREAN_READABLE(JSON_IVR_PARAM.CALL_FROM) + ')이 ' + '(' + TO_KOREAN_READABLE(JSON_IVR_PARAM.CALL_TO) + 
+						') 님에게 자동안부전화를 걸 예정 입니다.<br/><br/>' +
+						'전화를 받으시고 자동안부전화를 수신하시는 분에게 말씀하실 안내음성을 직접 녹음하여 목록에 추가하십시오.<br/><br/>' +
+						'서비스 바우처(통화요금)가 차감됩니다.';
+		} else if (JSON_IVR_PARAM.CMD == 'ARSAUTH_WAIT') {
+			srtHTML += '아래 내용을 확인하세요!<br/><br/>고객님이 소지하신 스마트폰(' + 
+						TO_KOREAN_READABLE(JSON_IVR_PARAM.CALL_FROM) + ')이 자동안부전화 처리 시스템(' + TO_KOREAN_READABLE(JSON_IVR_PARAM.CALL_TO) +
+						')으로 자동으로 전화를 걸어 <b>별도 과금을 하지 않고</b>, 자동안부전화를 수신하시는 분에게 말씀하실 안내음성을 직접 녹음하여 목록에 추가합니다.<br/><br/>' + 
+						'통화가 연결되면 자동안부전화를 수신하시는 분에게 말씀하실 안내음성을 직접 녹음하여 목록에 추가하십시오.<br/><br/>' + 
+						'별도의 서비스 바우처(통화요금)가 차감되지는 않지만 고객님이 직접 전화를 거는 것과 동일한 통신요금이 적용됩니다.';
+		} else {
+		}
+		srtHTML += '</button>';
+		srtHTML += '</td>';
+		srtHTML += '</tr>';
+
+		srtHTML += '<tr>';
+		srtHTML += '<th>';
+		srtHTML += '<button class="BTN_TABLE_DISP">발신 번호</button>';
+		srtHTML += '</th>';
+		srtHTML += '<td>';
+		srtHTML += '<button class="BTN_TABLE_DISP">' + TO_KOREAN_READABLE(JSON_IVR_PARAM.CALL_FROM) + '</button>';
+		srtHTML += '</td>';
+		srtHTML += '</tr>';
+
+		srtHTML += '<tr>';
+		srtHTML += '<th>';
+		srtHTML += '<button class="BTN_TABLE_DISP">수신 번호</button>';
+		srtHTML += '</th>';
+		srtHTML += '<td>';
+		srtHTML += '<button class="BTN_TABLE_DISP">' + TO_KOREAN_READABLE(JSON_IVR_PARAM.CALL_TO) + '</button>';
+		srtHTML += '</td>';
+		srtHTML += '</tr>';
+
+		srtHTML += '</table>';
+
+//		alert(srtHTML);
+	
+		$('#TABLE_IVR_PARAM').html(srtHTML);
+		$(".BTN_TABLE_DISP").jqxButton({
+			width: '100%',
+			height: '100%'
+		});
+		
+	} else {
+		srtHTML = ARR_TO_TABLE_CENTER(SELECTED_PAY_WHO.PAY_HELP);
+//		alert(JSON.stringify(SELECTED_PAY_WHO.PAY_HELP, null, '\t'));
+		$('#TABLE_IVR_PARAM').html(srtHTML);
+	}
+		
+	
+}
+
+function CLOSE_POPUP_FOR_EXEC_ADD_ASK_REGARD_VOICE() {
+	if (OBJ_POPUP_FOR_EXEC_ADD_ASK_REGARD_VOICE != null) {
+		if (WS_CONNECTION != null) WS_CONNECTION.CLOSE_FORCE();
+		QIIP_JQX_CLOSE_WINDOW(OBJ_POPUP_FOR_EXEC_ADD_ASK_REGARD_VOICE);
+		setTimeout(function () {
+			REFRESH_ASK_REGARD_VOICES(true);
+		}, 1000);
+	}
+}
+
+var JSON_IVR_PARAM = null;
+function ON_ABOUT_TO_CALL() {
+	var SELECTED_PAY_WHO = $('#SELECTOR_PAY_WHO').jqxDropDownList('getSelectedItem').originalItem;
+	var STR_FOR_DIV_LAST_STEP = '';
+	if (SELECTED_PAY_WHO.PAY_CODE == 'DUMMY') {
+	} else if (SELECTED_PAY_WHO.PAY_CODE == 'BY_PHONE') {
+		JSON_IVR_PARAM = IVR_PARAM_CALL_IN;
+		STR_FOR_DIV_LAST_STEP = ARR_TO_TABLE_CENTER([
+			'이제 [다음 단계] 버튼을 한번 더 터치하시면,..',
+			'고객님이 소지하신 스마트폰(' + TO_KOREAN_READABLE(JSON_IVR_PARAM.CALL_FROM) + ')에서,...',
+			'자동안부전화 처리시스템(' + TO_KOREAN_READABLE(JSON_IVR_PARAM.CALL_TO)+ ')으로,...',
+			'전화를 걸게 됩니다.',
+			'고객님이 직접 전화를 거는 것과 동일한 통신요금이 적용됩니다.',
+		]);
+	} else if (SELECTED_PAY_WHO.PAY_CODE == 'BY_SYSTEM') {
+		JSON_IVR_PARAM = IVR_PARAM_CALL_OUT;
+		STR_FOR_DIV_LAST_STEP = ARR_TO_TABLE_CENTER([
+			'이제 [다음 단계] 버튼을 한번 더 터치하시면,..',
+			'자동안부전화 처리시스템(' + TO_KOREAN_READABLE(JSON_IVR_PARAM.CALL_FROM)+ ')에서,...',
+			'(' + TO_KOREAN_READABLE(JSON_IVR_PARAM.CALL_TO) + ')님 에게,...',
+			'전화를 걸게 됩니다.',
+			'서비스 바우처(통화요금)가 차감됩니다.',
+		]);
+	}
+	$('#DIV_LAST_STEP').html(STR_FOR_DIV_LAST_STEP);
+}
+
+function STEP_FORWARD_FOR_EXEC_ADD_ASK_REGARD_VOICE() {
+	if ($('#SELECTOR_PAY_WHO').jqxDropDownList('getSelectedItem').originalItem.PAY_CODE == 'NONE') {
+		QIIP_POPUP_FOR_ALERT(
+			$('#SELECTOR_PAY_WHO').jqxDropDownList('getSelectedItem').originalItem.PAY_HELP[0],
+			$('#SELECTOR_PAY_WHO').jqxDropDownList('getSelectedItem').originalItem.PAY_HELP
+		);
+	  	INIT_WIDGETS_POPUP_FOR_ALERT(OBJ_POPUP);
+		return;
+	}
+	if (STEP_OF_EXEC_SCENARIO_TEST < 3) {
+		STEP_OF_EXEC_SCENARIO_TEST += 1;
+		$("#ACCORDION_FOR_EXEC_ADD_ASK_REGARD_VOICE").accordion( "option", "active", STEP_OF_EXEC_SCENARIO_TEST );
+		if (STEP_OF_EXEC_SCENARIO_TEST == 2) {
+			ON_ABOUT_TO_CALL();
+		} else if (STEP_OF_EXEC_SCENARIO_TEST == 3) {
+			PREPARE_CALL_START_AND_MONITOR();
+		}
+	}
+}
+
+function CHANGE_PHONE_NO_FOR_TTS(PHONE_NO) {
+	return PHONE_NO.split('').join(', ');
+}
+
+var JSON_IVR_REQUEST = {};
+function ADD_ATTRIBUTE_WS_CONNECTION_ID_AND_EXEC_CALL_STARET_AND_MONITOR(WS_CONNECTION_ID) {
+	JSON_IVR_REQUEST = JSON.parse(JSON.stringify(JSON_IVR_PARAM)); // CLONE
+	
+	JSON_IVR_REQUEST.WS_CONNECTION_ID	= WS_CONNECTION_ID;
+	JSON_IVR_REQUEST.PHONE_INFO			= _RS.PHONE_INFO;
+		
+	if (QIIP_IS_VALID_PHONE_NO(JSON_IVR_REQUEST.ASK_TO))	JSON_IVR_REQUEST.ASK_TO		= CHANGE_PHONE_NO_FOR_TTS(JSON_IVR_REQUEST.ASK_TO);
+	if (QIIP_IS_VALID_PHONE_NO(JSON_IVR_REQUEST.ASK_FROM))	JSON_IVR_REQUEST.ASK_FROM	= CHANGE_PHONE_NO_FOR_TTS(JSON_IVR_REQUEST.ASK_FROM);
+
+   	WS_CONNECTION.send(JSON.stringify(JSON_IVR_REQUEST));
+
+   	$('#BTN_CLOSE_POPUP_FOR_EXEC_ADD_ASK_REGARD_VOICE').jqxButton({disabled: true });
+   	$('#BTN_STEP_FORWARD_FOR_EXEC_ADD_ASK_REGARD_VOICE').jqxButton({disabled: true });
+}
+
+function UPDATE_SERVICE_VOUCHER(JSON_PARSED) {
+	_RS.OBJ_POST_ROOT.SERVICE_VOUCHER = _RS.OBJ_POST_ROOT.SERVICE_VOUCHER - JSON_PARSED.CALL_TIMES.TIME_VALUE_AUTH_DURATION;
+	$('#POPUP_SERVICE_VOUCHER').html(_RS.OBJ_POST_ROOT.SERVICE_VOUCHER);
+	$('#SERVICE_VOUCHER').html(_RS.OBJ_POST_ROOT.SERVICE_VOUCHER);
+}
+
+var ARSAUTH_WS_SERVER_URL	= 'ws://q1p.win:3000';
+//var ARSAUTH_WS_SERVER_URL	= 'ws://qiip.win:3000';
+var ARSAUTH_WS_CHANNEL		= 'arsauth-status';
+
+function PREPARE_CALL_START_AND_MONITOR() {
+	INIT_WS_CONNECTION(ARSAUTH_WS_SERVER_URL, ARSAUTH_WS_CHANNEL);
+}
+
+var DIV_CALL_STATUS_LOG = 'DIV_CALL_STATUS_LOG';
+var WS_CONNECTION = null;
+function INIT_WS_CONNECTION(ws_server, ws_channel) {
+	WS_CONNECTION = {};
+    // if user is running mozilla then use it's built-in WebSocket
+    window.WebSocket = window.WebSocket || window.MozWebSocket;
+  
+    // if browser doesn't support WebSocket, just show some notification and exit
+    if (!window.WebSocket) {
+    	QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+    		DIV_CALL_STATUS_LOG,
+    		'죄송합니다, 접속에 사용하신 웹 브라우저가 WebSockets 기능을 지원하지 않습니다.',
+    		'me',
+    		'70%'
+    	);
+      return;
+    }
+
+    // open connection
+    WS_CONNECTION = new WebSocket(ws_server, ws_channel);
+
+    WS_CONNECTION.onopen = function () {
+    	QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+    		DIV_CALL_STATUS_LOG,
+    		sprintf( "자동안부전화 처리 시스템에 연결되었습니다."),
+//    		sprintf( "new WebSocket('%s', '%s') 이 연결되었습니다.", ws_server, ws_channel),
+    		'me',
+    		'70%'
+    	);
+    };
+    
+    WS_CONNECTION.onerror = function (error) {
+    	QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+    		DIV_CALL_STATUS_LOG,
+//    		'WebSocket 연결에 어떤 문제가 있거나 WebSocket 서버가 응답하지 않습니다.',
+    		'자동안부전화 처리 시스템에 어떤 문제가 있거나 자동안부전화 처리 시스템이 응답하지 않습니다.',
+    		'me',
+    		'70%'
+    	);
+    };
+
+    // most important part - incoming messages
+    WS_CONNECTION.onmessage = function (message) {
+        // try to parse JSON message. Because we know that the server always returns
+        // JSON this should work without any problem but we should make sure that
+        // the massage is not chunked or otherwise damaged.
+        try {
+          var JSON_PARSED = JSON.parse(message.data);
+        } catch (e) {
+	    	QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+	    		DIV_CALL_STATUS_LOG,
+	    		'이건 JSON 스트링이 아닌것 같아요! : ' + message.data,
+	    		'me',
+	    		'70%'
+	    	);
+			return;
+        }
+
+        // NOTE: if you're not sure about the JSON structure
+        // check the server source code above
+        if ('TYPE' in JSON_PARSED) {
+        	if (JSON_PARSED.COMMENT != undefined) {
+		    	QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+		    		DIV_CALL_STATUS_LOG,
+		    		JSON.stringify(JSON_PARSED.COMMENT, null, ' '),
+		    		'me',
+		    		'70%'
+		    	);
+        	}
+		  
+			var TYPE = JSON_PARSED.TYPE;
+			if (TYPE == 'WS_CONNECTION_ID') {			// 대소문자 구분!
+				ADD_ATTRIBUTE_WS_CONNECTION_ID_AND_EXEC_CALL_STARET_AND_MONITOR(JSON_PARSED.WS_CONNECTION_ID);
+			} else if (TYPE == 'ARSAUTH-STATUS') {	// 대소문자 구분!
+			    if (JSON_PARSED.CALL_END) {
+			    	QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+			    		DIV_CALL_STATUS_LOG,
+			    		sprintf("통화를 종료 하였습니다."),
+			    		'me',
+			    		'70%'
+			    	);
+					var DELAY_TIME = 3000;
+					var SELECTED_PAY_WHO = $('#SELECTOR_PAY_WHO').jqxDropDownList('getSelectedItem').originalItem;			    	
+					if (SELECTED_PAY_WHO.PAY_CODE == 'BY_PHONE') {
+						// 5초 후 팝업 창을 닫음
+						DELAY_TIME = 5000;
+					} else if (SELECTED_PAY_WHO.PAY_CODE == 'BY_SYSTEM') {
+						DELAY_TIME = 3000;
+						UPDATE_SERVICE_VOUCHER(JSON_PARSED);
+					}
+			    	QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+			    		DIV_CALL_STATUS_LOG,
+			    		sprintf("%d 초 후 자동으로 팝업창이 닫힙니다", DELAY_TIME / 1000),
+			    		'me',
+			    		'70%'
+			    	);
+					setTimeout(CLOSE_POPUP_FOR_EXEC_ADD_ASK_REGARD_VOICE, DELAY_TIME);
+			    }
+			} else if (TYPE == 'ARSAUTH_RESULT') {	// 대소문자 구분!
+				if (JSON_PARSED.CODE != 200) {
+			    	QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+			    		DIV_CALL_STATUS_LOG,
+			    		'자동안부전화 처리 시스템에 장애가 발생했습니다.<br/><br/>' +
+			    		sprintf("장애 원인은<br/><br/>[%s]<br/><br/>입니다.<br/><br/>", JSON_PARSED.MESSAGE) +
+			    		'최대한 빠른 시일 내에 복구하도록 하겠습니다.',
+			    		'me',
+			    		'70%'
+			    	);
+				   	$('#BTN_CLOSE_POPUP_FOR_EXEC_ADD_ASK_REGARD_VOICE').jqxButton({disabled: false });
+					QIIP_POPUP_FOR_ALERT(
+						'안내',[
+							'자동안부전화 처리 시스템에 장애가 발생했습니다.',
+							sprintf("장애 원인은<br/><br/>[%s]<br/><br/>입니다.", JSON_PARSED.MESSAGE),
+							'최대한 빠른 시일 내에 복구하도록 하겠습니다.'
+						]
+					);
+				} else {
+					if (_ACCESS_FROM_APP) {
+					   	if (JSON_IVR_REQUEST.CMD == 'ARSAUTH_WAIT') {
+					   		setTimeout(function () {
+								QIIP_APPS_NATIVE_ACCESS({
+									REQUEST: 'MAKE_VOICE_CALL',
+									CALL_TO: JSON_IVR_REQUEST.CALL_TO,
+								}, function (RESULT) {
+								});
+					   		}, 500);
+					   	}
+					}
+				}
+			}
+        } else {
+	    	QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+	    		DIV_CALL_STATUS_LOG,
+	    		'흠..., JSON 스트링이 이런식이면 곤란한데...  TYPE 속성이 없쟎아...: ' + JSON.stringify(JSON_PARSED, null, '\t'),
+	    		'me',
+	    		'70%'
+	    	);
+        }
+    };
+
+    WS_CONNECTION.onclose  = function () {
+    	QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+    		DIV_CALL_STATUS_LOG,
+    		'자동안부전화 처리 시스템과 연결이 끊어졌습니다. 1초 이내에 연결을 재시도 합니다.',
+//    		'WebSocket 연결이 끊어졌습니다. 1초 이내에 WebSocket 연결을 재시도 합니다.',
+    		'me',
+    		'70%'
+    	);
+		//try to reconnect in 1 seconds
+		setTimeout(function(){INIT_WS_CONNECTION(ARSAUTH_WS_SERVER_URL, ARSAUTH_WS_CHANNEL)}, 1000);
+    };
+
+    WS_CONNECTION.CLOSE_FORCE  = function () {
+    	QIIP_APP_LOG_CONSOLE.CHAT_LOG(
+    		DIV_CALL_STATUS_LOG,
+    		'자동안부전화 처리 시스템과 연결을 정상적으로 종료 합니다.',
+    		'me',
+    		'70%'
+    	);
+    	WS_CONNECTION.onclose  = function () {}; // disable onclose handler first
+    	WS_CONNECTION.close();
+    }
+}
+
+
+</script>
+
+<div class="qiip_index" style="width:100%; height:7%;">
+	<table>
+		<col width="50%"/>
+		<tr>
+			<th>잔여 바우처</td></th>
+			<td id="POPUP_SERVICE_VOUCHER" style="text-align:center;">
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="qiip_index" style="width:100%; height:7%;">
+	<table>
+		<col width="40%"/>
+		<col width="45%"/>
+		<tr>
+			<th>수신 전화번호 지정</th>
+			<td>
+				<input 
+					style="width:100%;height:100%;box-sizing:border-box; border: solid gray 1px; text-align:center;"
+					type="text"
+					id="TEXT_TARGET_CALL_TO"
+					onchange="QIIP_REASSIGN_PHONE_NO_ATTRIBUTE(this)"
+					placeholder="폰 번호 일부 또는 검색어"/>
+			</td>
+			<td><button class="BTN_POPUP" id="BTN_SEARCH_CALL_TO">검색</button></td>
+		</tr>
+	</table>
+</div>
+<div class="qiip_index" style="width:100%;height:76%;" id="ACCORDION_FOR_EXEC_ADD_ASK_REGARD_VOICE">
+	<h3>단계 1 : 통화료 지출 방식 정하기</h3>
+    <div style="height:100%;overflow:auto;padding:0;">
+		<table style="height:15%;">
+			<col width="35%"/>
+			<tr>
+				<td>
+			      	<button class="BTN_POPUP"">
+			        	통화료 지출 방식
+			    	</button>
+				</td>
+				<td>
+			      	<div id="SELECTOR_PAY_WHO"></div>
+				</td>
+			</tr>
+		</table>
+		<div class="card" style="margin:1%;" id="CONTAINER_TEXT_PAY_WHO">
+		</div>
+    </div>
+	<h3>단계 2 : 선택사항 확인하기</h3>
+    <div style="height:100%;overflow:auto;padding:0;overflow:auto;" id="TABLE_IVR_PARAM">
+    </div>
+	<h3>단계 3 : 전화걸기 동의하기</h3>
+    <div style="height:100%;overflow:auto;padding:0;" id="DIV_LAST_STEP">
+    </div>
+	<h3>단계 4 : 통화진행 모니터링</h3>
+    <div style="height:100%;overflow:auto;padding:0;overflow:auto;" id='DIV_CALL_STATUS_LOG'>
+    </div>
+</div>
+<div class="qiip_index" style="width:100%;height:10%;padding:0;">
+	<table>
+		<col width="50%"/>
+		<tr>
+			<td>
+		      	<button class="BTN_POPUP" id="BTN_CLOSE_POPUP_FOR_EXEC_ADD_ASK_REGARD_VOICE" >
+		        	취소 하기
+		    	</button>
+			</td>
+			<td>
+		      	<button class="BTN_POPUP" id="BTN_STEP_FORWARD_FOR_EXEC_ADD_ASK_REGARD_VOICE" >
+		        	다음 단계
+		    	</button>
+			</td>
+		</tr>
+	</table>
+</div>
+

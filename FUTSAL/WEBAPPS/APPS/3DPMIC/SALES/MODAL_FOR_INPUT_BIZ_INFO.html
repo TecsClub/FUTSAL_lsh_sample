@@ -1,0 +1,152 @@
+<style>
+#MODAL_BIZ_INFO table		{width:100%; height:100%; font-size:100%; border-collapse: separate; border-spacing: 1px;}
+#MODAL_BIZ_INFO table th	{font-weight:bold; text-align: center; white-space:normal; vertical-align: middle; word-break:break-all; word-wrap:break-all; background:#ccc}
+#MODAL_BIZ_INFO table td	{text-decoration:none; text-align: left;   white-space:normal; vertical-align: middle; word-break:break-all; word-wrap:break-all; background:#eee; padding:0 10px;}
+#MODAL_BIZ_INFO input		{width:100%; text-align:center;}
+#MODAL_BIZ_INFO textarea	{width:100%; height:100px;}
+</style>
+<script>
+	function INIT_WIDGETS_FOR_INPUT_BIZ_INFO(MODAL_ID) {
+		if (!('MODAL_BIZ_INFO' in _RS)) _RS.MODAL_BIZ_INFO = {};
+		$(".EVENT_INPUT_BIZ_INFO").on('click', function () {
+			var ID = $(this).attr('ID');
+			if (ID == 'DUMMY') {
+			} else if (ID == 'BTN_INPUT_CANCLE') {
+				if (MODAL_ID != undefined) $('#'+MODAL_ID).modal('hide');
+			} else if (ID == 'BTN_INPUT_OK') {
+				alert('BTN_INPUT_OK');
+			} else if (ID == 'BTN_AUTH_BIZ_INFO') {
+				alert('BTN_AUTH_BIZ_INFO');
+			}
+		});
+		_RS.$apply();
+	}
+</script>
+<div style="height:100%;" id="MODAL_BIZ_INFO">
+	<div style="height:95%;">
+		<div style="width:50%;float:left">
+			<table>
+				<col width="30%" />
+				<col width="70%" />
+				<tr>
+					<th>
+						사업자 번호
+					</th>
+					<td>
+						<table>
+								<col width="70%" />
+								<col width="30%" />
+							<tr>
+								<td>
+									<input id="TXT_MODAL_BIZ_NO" type="text" value='{{MODAL_BIZ_INFO.BIZ_NO}}' />
+								</td>
+								<td>
+									<button class="btn btn-primary btn-lg btn-block login-btn EVENT_INPUT_BIZ_INFO" id="BTN_AUTH_BIZ_INFO">사업자 번호 검증</button>
+								</td>
+							</tr>
+							<tr>
+								<th colspan="2" >
+									<input id="TXT_MODAL_BIZ_NO_VALIDATION" type="hidden" value="{{MODAL_BIZ_INFO.BIZ_NO_VALIDATION | prettyJSON}}" />
+									<span id="SPAN_REG_TAXINFO">{{MODAL_BIZ_INFO.BIZ_NO_VALIDATION.REG_TAXINFO}}</span>
+								</th>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<th>
+						사업자 등록증 사본
+					</th>
+					<td>
+						<table ng-if="MODAL_BIZ_INFO.BIZ_FILE">
+							<col width="50%" />
+							<col width="30%" />
+							<col width="20%" />
+							<tr>
+								<th>
+									파일명
+								</th>
+								<th>
+									파일형식
+								</th>
+								<th>
+									파일크기
+								</th>
+							</tr>
+							<tr>
+								<td>
+									{{OBJ_POST_ROOT.ATTACHES[MODAL_BIZ_INFO.BIZ_FILE.KEY].STR_FILE}}
+								</td>
+								<td style="text-align:center;">
+									{{OBJ_POST_ROOT.ATTACHES[MODAL_BIZ_INFO.BIZ_FILE.KEY].STR_TYPE}}
+								</td>
+								<td style="text-align:center;">
+									{{OBJ_POST_ROOT.ATTACHES[MODAL_BIZ_INFO.BIZ_FILE.KEY].STR_SIZE}}
+								</td>
+							</tr>
+							<tr>
+								<th >교체시 선택</th>
+								<td colspan="2">
+									<input id="TXT_MODAL_BIZ_FILE" type="file" />
+								</td>
+							</tr>
+						</table>
+						<table ng-if="!(MODAL_BIZ_INFO.BIZ_FILE)">
+							<tr>
+								<td>
+									<input id="TXT_MODAL_BIZ_FILE" type="file" />
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<th>
+						상호
+					</th>
+					<td>
+						<input id="TXT_MODAL_BIZ_NAME" type="text" value="{{MODAL_BIZ_INFO.BIZ_NAME}}" />
+					</td>
+				</tr>
+				<tr>
+					<th>
+						대표자 성명
+					</th>
+					<td>
+						<input id="TXT_MODAL_BIZ_CEO_NAME" type="text" value="{{MODAL_BIZ_INFO.BIZ_CEO_NAME}}" />
+					</td>
+				</tr>
+				<tr>
+					<th>
+						개업 일자
+					</th>
+					<td>
+						<input id="TXT_MODAL_BIZ_OPEN_DATE" type="text" value="{{MODAL_BIZ_INFO.BIZ_OPEN_DATE}}" />
+					</td>
+				</tr>
+				<tr>
+					<th>
+						사업장 소재지
+					</th>
+					<td>
+						<input id="TXT_MODAL_BIZ_ADDRESS" type="text" value="{{MODAL_BIZ_INFO.BIZ_ADDRESS}}" />
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div style="width:50%;float:left" id="DIV_MODAL_BIZ_FILE_VIEWER">
+		</div>
+	</div>
+	<div style="height:5%;">
+		<table>
+			<tr>
+				<td>
+					<button class="btn btn-primary btn-lg btn-block login-btn EVENT_INPUT_BIZ_INFO" id="BTN_INPUT_OK">입력</button>
+				</td>
+				<td>
+					<button class="btn btn-primary btn-lg btn-block login-btn EVENT_INPUT_BIZ_INFO" id="BTN_INPUT_CANCLE">취소</button>
+				</td>
+			</tr>
+		</table>
+	</div>	
+</div>

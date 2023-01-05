@@ -1,0 +1,77 @@
+
+.pop_i{
+	    margin-bottom: 1%;
+    text-align: center;
+}
+
+.qiip_popup{
+	text-align: center;
+}
+
+.pop_inner >div:nth-child(1){
+width: 20%;
+float: left;
+text-align: center;
+}
+.qiip_popup >div:nth-child(1) p{
+margin-top: 1rem;
+}
+.qiip_popup >div:nth-child(2){
+    margin-left: 5px;
+float: left;
+}
+.qiip_popup >div:nth-child(2) p{
+margin-top: 1rem;
+line-height: 50px;
+color: #555;
+text-align: left;
+display: inline-block;
+}
+
+.pop_button{
+	margin-top: 2%;
+	text-align: right;
+	border-top: 1px solid #eee;
+padding-top: 5px !important;
+}
+.pop_button button{
+	
+height: auto !important;
+
+width: auto !important;
+
+background-color: #333 !important;
+
+border-color: #333 !important;
+
+margin: 0;
+
+color: #fff;
+
+display: inline-block;
+
+padding: 6px 12px;
+
+font-size: 14px;
+
+font-weight: 400;
+
+line-height: 1.42857143;
+
+text-align: center;
+
+white-space: nowrap;
+
+vertical-align: middle;
+
+cursor: pointer;
+
+border: 1px solid transparent;
+border-radius: 4px;
+}
+#dropdownlistContentUSER_SELECT_DROP{
+	text-align: center;
+}
+span.jqx-item{
+	text-align: center !important;
+}

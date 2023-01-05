@@ -1,0 +1,180 @@
+@font-face {
+  font-family: "GongGothicMedium";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-10@1.0/GongGothicMedium.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "GongGothicLight";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-10@1.0/GongGothicLight.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+.row {
+  display: flex;
+  width: 100%;
+  margin: 0 0 0 0;
+}
+.form {
+  display: flex;
+  flex-direction: column;
+}
+.name-box {
+  background: #ebf7da;
+  font-size: 1.2vw;
+  border: none;
+  color: "white";
+  font-family: GongGothicMedium, serif;
+}
+.commentSection {
+  border: none;
+  margin-top: 7vh;
+  margin-left: -1.7vw;
+  font-family: GongGothicLight, serif;
+  font-size: 1vw;
+  width: 29vw;
+  height: 80vh;
+  word-break: break-all;
+  overflow: scroll;
+  display: flex;
+}
+.commentSection::-webkit-scrollbar {
+  display: none;
+}
+.input-box {
+  background: #ebf7da;
+  margin-left: 0;
+  font-size: 1vw;
+  border: none;
+  color: rgb(49, 49, 49);
+  font-family: GongGothicLight, serif;
+}
+.input-box:focus {
+  outline: none;
+}
+.input-div {
+  background: #ebf7da;
+  width: 100%;
+  padding: 1.5vh 0vw 1vh 0.5vw;
+  display: flex;
+  flex-direction: column;
+}
+.input-name {
+  color: rgb(49, 49, 49);
+}
+.arrow-left {
+  width: 0;
+  height: 0;
+  border-right: 0.5vw solid #ebf7da;
+  margin-top: 20px;
+}
+.btn-div {
+  margin-top: 0.5vh;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.post-btn {
+  border: 0.1vw solid #55c325;
+  /* border-radius: 0.3vw; */
+  background-color: #55c325;
+  padding: 0.6vh 0.8vw 0.6vh 0.8vw;
+  margin: 0 0.3vw 0 0;
+  font-family: GongGothicLight, serif;
+  color: #ffffff;
+  font-weight: 500;
+  font-size: 1vw;
+  cursor: pointer;
+}
+.post-btn:active {
+  outline: none;
+}
+.cancel-btn {
+  border: 0.1vw solid #b9b9b9;
+  /* border-radius: 0.3vw; */
+  background-color: #b9b9b9;
+  padding: 0.6vh 0.8vw 0.6vh 0.8vw;
+  margin: 0 0.3vw 0 0;
+  font-family: GongGothicLight, serif;
+  color: #ffffff;
+  font-weight: 500;
+  font-size: 1vw;
+  cursor: pointer;
+}
+.cancel-btn:focus {
+  outline: 0;
+}
+
+.profile-img {
+  width: 3vw;
+  height: 3vw;
+  margin: 0.5vh 0 0 2vw;
+}
+
+@media screen and (orientation: portrait) {
+  .commentSection {
+    border: none;
+    margin: 3vh 0 0 -2.5vw;
+    font-family: GongGothicLight, serif;
+    font-size: 1.8vh;
+    width: 95vw;
+    height: 50vh;
+    word-break: break-all;
+    overflow: scroll;
+  }
+  .commentSection::-webkit-scrollbar {
+    display: none;
+  }
+  .input-div {
+    background: #ebf7da;
+    width: 100%;
+    padding: 1.5vh 0vw 1vh 3vw;
+    margin: 0 0 0 4vw;
+    display: flex;
+    flex-direction: column;
+  }
+  .input-box {
+    background: #ebf7da;
+    margin-left: 2vw;
+    font-size: 1.8vh;
+    border: none;
+    color: rgb(49, 49, 49);
+    font-family: GongGothicLight, serif;
+  }
+  .name-box {
+    background: #ebf7da;
+    margin-left: 2vw;
+    font-size: 2vh;
+    border: none;
+    color: "white";
+    font-family: GongGothicMedium, serif;
+  }
+  .post-btn {
+    border: 0.1vw solid #55c325;
+    /* border-radius: 0.3vw; */
+    background-color: #55c325;
+    padding: 1vh 1.5vw 1vh 1.5vw;
+    font-size: 1.8vh;
+    margin: 0 0.3vw 0 0;
+    font-family: GongGothicLight, serif;
+    color: #ffffff;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  .cancel-btn {
+    border: 0.1vw solid #b9b9b9;
+    /* border-radius: 0.3vw; */
+    background-color: #b9b9b9;
+    padding: 1vh 5vw 1vh 5vw;
+    font-size: 1.8vh;
+    margin: 0 0 0 1vw;
+    font-family: GongGothicLight, serif;
+    color: #ffffff;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  .profile-img {
+    display: none;
+  }
+}

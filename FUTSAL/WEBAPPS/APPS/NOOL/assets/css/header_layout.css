@@ -1,0 +1,829 @@
+@charset "utf-8";
+*:focus { outline:none !important; }
+body{
+	overflow: hidden;
+}
+body >#wrap{
+	    max-width: 1920px;
+    margin: 0 auto;
+}
+}
+
+/* 헤더 */
+#wrap{
+
+	height: 100vh;
+}
+
+header{
+	height: 11vh;
+}
+
+nav.navbar{
+background-color: #292929;
+
+border-color: #000;
+padding-top: 50px;
+
+border-radius: 0;
+
+padding-bottom: 5px;
+margin: 0;
+}
+nav.navbar >div{
+
+}
+.navbar-header{
+	width: 35%;
+}
+.bar-header button{
+
+}
+.navbar-header button span{
+
+}
+
+.navbar > .container-fluid .navbar-brand{
+font-size: 43px;
+
+font-weight: bold;
+
+color: #E06731 !important;
+
+padding: 10px;
+margin-left: 10px;
+}
+
+a.navbar-brand em{
+	font-style: italic;
+}
+a.navbar-brand small{
+	font-size: 17px;
+
+font-weight: bold;
+
+color: #aaa;
+}
+div.navbar-collapse{
+
+}
+.navbar-nav{
+height: 50px;
+
+padding: 10px;
+}
+.navbar-right{
+	padding: 0;
+}
+.navbar-nav span{
+
+}
+.navbar-nav span strong{
+color: #e06731;
+
+font-size: 29px;
+
+line-height: 1;
+}
+.navbar-nav span small{
+
+
+	background: none;
+	border: none;
+	color: #aaa;
+	line-height: 2;
+}
+div.navbar-right > button{
+
+
+	background: none;
+	border: none;
+	color: #aaa;
+	line-height: 2;
+	position: absolute;
+	right: 56px;
+	top: 0;
+}
+div.navbar-right > button:hover{
+	color: #ededed;
+}
+div.navbar-right > button i{
+
+}
+
+div.navbar-right > .btn-group{
+	
+	margin-right: 19px;
+}
+div.navbar-right > .btn-group button{
+	
+}
+div.navbar-right > button{
+	top: 10px;
+	padding: 0;
+}
+
+/* 컨텐츠 */
+
+#content{
+	height: 89vh;
+}
+
+
+/* 왼쪽 컨텐츠 */
+
+.left_con{
+	height: 100%;
+	width: 35%;
+	float: left;
+	padding: 15px;
+}
+.info{height: auto;display: inline-block;width: 100%;margin: 0;}
+.info li{
+
+	float: left;
+	width: 25%;
+	font-size: 15px;
+	border-right: 1px solid #f3b599;
+	text-align: center;
+	color: #555;
+}
+.info li:last-child{
+	border: none;
+}
+.info li span{
+
+	display: block;
+	font-size: 19px;
+	font-weight: bold;
+	color: #999;
+	line-height: 1.7;
+}
+
+.left_con h2{font-size: 21px;border-bottom: 2px solid #e06731;line-height: 1.6;padding-left: 20px;color: #e06731;margin-top: 15px;/* margin-bottom: 15px; */}
+
+
+.motion_data{
+
+}
+.motion_data ul.nav{
+
+}
+.motion_data ul.nav li{
+
+	width: 20%;
+	text-align: center;
+}
+.motion_data ul.nav li a{
+	color: #555;
+}
+.motion_data ul.nav li.active a{
+	background-color: #eee;
+}
+.tab-content{
+
+}
+.tab-content div{width: 85%;margin: 0 auto;    margin-top: 25px;
+    margin-bottom: 30px; position: relative;}
+.tab-content div img{
+	
+	margin: 0 auto;
+	display: block;
+	/*! width: 65%; */
+}
+.tab-content div p{
+
+	color: #777;
+}
+.tab-content div ul{
+
+}
+.tab-content div ul li{
+
+	font-size: 18px;
+	text-align: center;
+	color: #666;
+}
+.tab-content div ul li:nth-child(1){
+position: absolute;
+
+top: 10%;
+
+left: 0;
+}
+.tab-content div ul li:nth-child(2){
+	position: absolute;
+
+top: 10%;
+
+right: 0;
+}
+.tab-content div ul li:nth-child(3){
+	position: absolute;
+
+bottom: 10%;
+
+left: 0;
+}
+.tab-content div ul li:nth-child(4){
+	position: absolute;
+
+bottom: 10%;
+
+right: 0;
+}
+.tab-content div ul li span{
+
+	display: block;
+	font-weight: bold;
+	color: #e06731;
+	font-size: 22px;
+}
+
+
+ul.user_data{height: auto;display: inline-block;width: 100%;margin: 0;}
+ul.user_data li{
+
+	float: left;
+	width: 33.333%;
+	text-align: center;
+	border-right: 1px solid #f3b599;
+	color: #555;
+}
+ul.user_data li:last-child{
+	border: none;
+}
+ul.user_data li span{
+
+	display: block;
+	color: #999;
+	font-weight: bold;
+	font-size: 18px;
+	line-height: 1.7;
+}
+
+
+/* 오른쪽 컨텐츠 */
+
+
+div.right_con{
+	height: 100%;
+	width: 65%;
+	float: right;
+	background-color: #eee;
+	padding: 15px;
+}
+div.right_con h2{
+
+	font-size: 21px;
+	
+	line-height: 1.6;
+
+	color: #e06731;
+	margin: 0;
+}
+div.right_con >h2{border-bottom: 2px solid #e06731;padding-left: 20px;}
+
+div.right_con .chart_g >div{
+	width: 50%;
+	float: left;
+
+}
+div.right_con .con3{
+width: 100%;
+margin-top: 10px;
+}
+div.right_con div h3{
+	
+	font-size: 17px;
+    color: #555;
+    line-height: 1.4;
+    font-weight: bold;
+
+}
+div.right_con div.con1 h3{
+	margin-left: 12%;
+}
+div.right_con div.con2 h3{
+padding-left: 20px;
+}
+div.right_con div.con3 h3{
+	margin-left: 5%;
+
+}
+
+
+
+.con1 > div.default{
+
+}
+
+.con2 > div.default{
+
+}
+.con4, .con5{
+	width: 50%;
+	float: left;
+    margin-bottom: 25px;
+}
+.con4 h2, .con5 h2{
+	margin-bottom: 10px !important;
+}
+.chart_g{
+	margin-bottom: 49px;
+    padding: 0;
+    margin-top: 10px;
+}
+
+
+/* 차트_1 */
+
+
+.con1 svg#svgChart g >text{
+	display: none;
+}
+
+.con1 svg#svgChart g >rect{
+	display: none;
+}
+.con1 svg#svgChart g:nth-child(2) >text{
+	display: inline-block;
+}
+.con1 svg#svgChart circle{
+	display: none;
+}
+
+
+.con1 .jqx-chart-axis-text:nth-child(3),.jqx-chart-axis-text:nth-child(7){
+	display: inline-block;
+}
+
+.con1 #svgChart > g:nth-child(2) >.jqx-chart-axis-text{
+}
+
+.con1 #svgChart > g:nth-child(2) > .jqx-chart-axis-text:nth-child(3), #svgChart > g:nth-child(2) > .jqx-chart-axis-text:nth-child(7){
+	display: inline-block;
+}
+.con1 #svgChart > g:nth-child(2) >text:nth-child(11), #svgChart > g:nth-child(2) >text:nth-child(13), #svgChart > g:nth-child(2) >text:nth-child(15){
+	display: inline-block;
+}
+
+.jqx-chart-legend-text{
+	display: none;
+}
+
+/* 차트_2 */
+
+
+
+/* 차트_3 */
+
+.con3 .tblChart{
+	width: 100%;
+}
+.con3 .chartContainer{
+	width: 100% !important;
+}
+.con3 .chart-inner-text{
+	font-size: 26px;
+	color: #555;
+}
+
+
+/* 메모 */
+
+.con4 >div{
+	margin-top: 3px;
+	width: 80%;
+	float: right;
+	margin-right: 8%;
+
+}
+div.right_con .con4 h2{
+	margin-left: 12%;
+}
+.con4 tbody tr td:nth-child(1){
+	text-align: center;
+}
+
+.con4 .memo .table-striped > tbody > tr{
+	background-color: #eee;
+}
+.con4 tbody{
+	border-bottom: 1px solid #ddd;
+}
+
+
+
+
+/* 비디오 */
+div.right_con .con5 h2{
+padding-left: 20px;
+}
+
+.con5 >div.row{
+	width: 78%;
+	margin-left: 8%;
+	padding: 0;
+}
+.con5 >div.row >div{
+	padding-right: 0;
+}
+.con5 .thumbnail{
+	margin: 0;
+	padding: 0;
+	position: relative;
+}
+.con5 .thumbnail .caption{
+	text-align: center;
+	
+	padding: 0;
+}
+.con5 .thumbnail .caption h4{
+	font-size: 16px;
+	color: #555;
+}
+.con5  div.thumbnail img:nth-child(1){
+	position: absolute;
+    width: auto;
+    left: 50%;
+    transform: translateX(-50%);
+}
+.con5  a:hover div.thumbnail img:nth-child(1){
+	opacity: 0;
+	transition: opacity 1s;
+}
+.con5 a:hover .thumbnail{
+    box-shadow: #aaa 0px 0px 10px;
+    transition: box-shadow 1s;
+}
+
+
+/* 모달 */
+
+.more_btn{
+	float: right;
+	background-color: #333;
+	color: #fff;
+	border-radius: 0;
+	font-size: 12px;
+padding: 2px 10px;
+margin-right: 11%;
+}
+.more_btn.focus, .more_btn:focus, .more_btn:hover{
+	color: #fff;
+	background-color: #E06731;
+}
+
+h2 .more_btn{
+	margin-top: 5px;
+}
+.con2 .more_btn, .con5 .more_btn{
+	margin-right: 15%;
+}
+
+
+/* 로그아웃 모달 */
+
+.modal-sm{
+	width: 380px;
+}
+#myModal .modal-title{
+	font-size: 20px;
+}
+#myModal .modal-header{
+	padding: 5px 15px;
+}
+#myModal .modal-footer{
+	padding: 5px;
+}
+#myModal .modal-footer .btn+.btn{
+    background-color: #333 !important;
+    border-color: #333 !important;
+        margin: 0;
+}
+#myModal .modal-body{
+	text-align: center;
+}
+#myModal .modal-body img{
+	float:left;
+}
+
+#myModal .modal-body p{
+    font-size: 15px;
+    display: inline-block;
+    text-align: left;
+    margin: 5px;
+    margin-top: 4px;
+}
+
+
+/* 메모 삭제 모달 */
+
+#delete_modal .modal-title{
+	font-size: 20px;
+}
+#delete_modal .modal-header{
+	padding: 5px 15px;
+}
+#delete_modal .modal-footer{
+	padding: 5px;
+}
+#delete_modal .modal-footer .btn+.btn{
+    background-color: #333 !important;
+    border-color: #333 !important;
+    margin: 0;
+}
+#delete_modal .modal-body{
+	text-align: center;
+}
+#delete_modal .modal-body img{
+	float:left;
+}
+
+#delete_modal .modal-body p{
+    display: inline-block;
+    text-align: left;
+    margin: 0;
+    font-size: 15px;
+    line-height: 50px;
+}
+
+/* 영상 삭제 모달 */
+
+#delete_modal2 .modal-title{
+	font-size: 20px;
+}
+#delete_modal2 .modal-header{
+	padding: 5px 15px;
+}
+#delete_modal2 .modal-footer{
+	padding: 5px;
+}
+#delete_modal2 .modal-footer .btn+.btn{
+    background-color: #333 !important;
+    border-color: #333 !important;
+    margin: 0;
+}
+#delete_modal2 .modal-body{
+	text-align: center;
+}
+#delete_modal2 .modal-body img{
+	float:left;
+}
+
+#delete_modal2 .modal-body p{
+    display: inline-block;
+    text-align: left;
+    margin: 0;
+    font-size: 15px;
+    line-height: 50px;
+}
+
+/* 컨텐츠1_모달 */
+
+#myModal_2 .modal-dialog{
+	margin-top: 12%;
+}
+
+#myModal_2 .modal-body{
+	    text-align: center;
+    overflow: hidden;
+    overflow-x: scroll;
+    margin: 30px;
+        padding-bottom: 0;
+   	margin-top: 0;
+   	margin-bottom: 20px;
+
+}
+
+
+
+#myModal_2 .btn_group{
+position: absolute;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    top: 30px;
+}
+
+#myModal_2 .btn_group .input-group:nth-child(1){
+	float: left;
+}
+#myModal_2 .btn_group{
+	outline:none !important;
+}
+#myModal_2 .btn_group .btn_group select{
+	    border: 1px solid #ccc !important;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075) !important;
+}
+
+#myModal_2 .modal-header h4{
+    padding-left: 30px;
+    font-size: 25px;
+    line-height: 1.2;
+}
+
+
+/* 컨텐츠2_모달 */
+
+#myModal_3 .modal-dialog{
+	margin-top: 12%;
+}
+
+#myModal_3 .modal-body{
+	    text-align: center;
+    overflow: hidden;
+    overflow-x: scroll;
+    margin: 30px;
+        padding-bottom: 0;
+   	margin-top: 0;
+   	margin-bottom: 20px;
+
+}
+
+
+
+#myModal_3 .btn_group{
+position: absolute;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    top: 30px;
+}
+
+#myModal_3 .btn_group .input-group:nth-child(1){
+	float: left;
+}
+#myModal_3 .btn_group{
+	outline:none !important;
+}
+#myModal_3 .btn_group .btn_group select{
+	    border: 1px solid #ccc !important;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075) !important;
+}
+
+#myModal_3 .modal-header h4{
+    padding-left: 30px;
+    font-size: 25px;
+    line-height: 1.2;
+}
+
+
+
+/* 메모_모달 */
+#myModal_4 .modal-dialog{
+	margin-top: 15%;
+}
+#myModal_4 .modal-body .col-sm-12{
+	float: none;
+	overflow-y: auto;
+	max-height:267px;
+	padding-left: 30px;
+}
+#myModal_4 .modal-body{
+text-align: center;
+    margin: 30px;
+    padding-bottom: 0;
+    margin-top: 0;
+    margin-bottom: 30px;
+
+}
+
+#myModal_4 .modal-header h4{
+    padding-left: 30px;
+    font-size: 25px;
+    line-height: 1.2;
+}
+
+#myModal_4 tbody tr td:nth-child(2){
+	text-align: left;
+}
+
+
+#myModal_4 tbody i.fa-times{
+	color: #cbcbcb;
+    margin-left: 1%;
+    padding: 2px;
+}
+#myModal_4 tbody button.delete_btn{
+
+	background: none;
+	border: none;
+}
+#myModal_4 tbody i.fa-times:hover{
+	color: #aaa;
+}
+
+
+
+/* 비디오 모달 */
+
+#myModal_5 .modal-dialog{
+	margin-top: 12%;
+}
+#myModal_5 .modal-body .col-sm-12{
+	float: none;
+	overflow-y: auto;
+	max-height:267px;
+	padding-left: 30px;
+}
+#myModal_5 .modal-body{
+text-align: center;
+    margin: 30px;
+    padding-bottom: 0;
+    margin-top: 0;
+    margin-bottom: 30px;
+
+}
+
+#myModal_5 .modal-header h4{
+    padding-left: 30px;
+    font-size: 25px;
+    line-height: 1.2;
+}
+
+#myModal_5 tbody tr td:nth-child(2){
+	text-align: left;
+}
+
+
+#myModal_5 tbody i.fa-times{
+	color: #cbcbcb;
+    margin-left: 1%;
+    padding: 2px;
+}
+#myModal_5 tbody button.delete_btn{
+
+	background: none;
+	border: none;
+	position: absolute;
+	right: 0;
+}
+#myModal_5 tbody i.fa-times:hover{
+	color: #aaa;
+}
+
+#myModal_5 td >a{
+
+    position: relative;
+    display: block;
+    height: 100%;
+    color: #666;
+}
+
+ #myModal_5 tbody td img:nth-child(1){
+	position: absolute;
+	left: 0;
+}
+ #myModal_5 tbody td img:nth-child(2){
+ 	float: left;
+ }
+
+
+ #myModal_5 tbody td .caption{
+    float: left;
+    text-align: left;
+   	padding: 10px;
+   	
+ }
+
+
+  #myModal_5 tbody td:hover >a{
+    transition: color 1s;
+   	color: #333;
+ }
+ #myModal_5 tbody td:hover >a img:nth-child(1){
+ 	opacity: 0;
+ 	transition: opacity 1s;
+ }
+
+.tab-content div ul li .past_record{
+	
+	font-size: 14px;
+	color: #c8c8c8;
+}
+.tab-content div ul li span{
+
+	display: block;
+	font-weight: bold;
+	color: #e06731;
+	font-size: 30px;
+}
+/* 팝오버 툴팁 */
+
+#myModal_4 tbody tr td a{
+	color: #333;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.popover.bottom>.arrow{
+    left: 10% !important;
+
+}
+.popover.bottom{
+	    left: 42.2% !important;
+}
+
+.memo_over{
+ color: #666 !important;
+}

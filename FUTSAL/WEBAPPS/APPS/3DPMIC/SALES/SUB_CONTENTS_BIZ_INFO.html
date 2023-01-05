@@ -1,0 +1,802 @@
+<style>
+#DIV_BIZ_INFO table		{width:100%; height:100%; font-size:100%; border-collapse: separate; border-spacing: 1px;}
+#DIV_BIZ_INFO table th	{font-weight:bold; text-align: center; white-space:normal; vertical-align: middle; word-break:break-all; word-wrap:break-all; background:#ccc}
+#DIV_BIZ_INFO table td	{text-decoration:none; text-align: left;   white-space:normal; vertical-align: middle; word-break:break-all; word-wrap:break-all; background:#eee; padding:0 10px;}
+#DIV_BIZ_INFO input		{width:100%; text-align:center;}
+#DIV_BIZ_INFO textarea	{width:100%; height:100px;}
+</style>
+<script>
+	
+	function QIIP_UPDATE_BIZ_FILE_VIEWER() {
+		if (!('BIZ_INFO' in _RS.OBJ_POST_ROOT)) return;
+		if (_RS.OBJ_POST_ROOT.BIZ_INFO.BIZ_RELATION == '대표자') {
+			if (!('ATTACHES' in _RS.OBJ_POST_ROOT)) return;
+			if (_RS.OBJ_POST_ROOT.ATTACHES[_RS.OBJ_POST_ROOT.BIZ_INFO.BIZ_FILE.KEY]) {
+				var BIZ_FILE_TYPE =_RS.OBJ_POST_ROOT.ATTACHES[_RS.OBJ_POST_ROOT.BIZ_INFO.BIZ_FILE.KEY].STR_TYPE;
+				if (BIZ_FILE_TYPE == 'DUMMY') {
+				} else if (BIZ_FILE_TYPE.includes('pdf')) {
+					QIIP_LOAD_PDF_VIEWER({
+						URL: _RS.OBJ_POST_ROOT.ATTACHES[_RS.OBJ_POST_ROOT.BIZ_INFO.BIZ_FILE.KEY].STR_URL,
+						DIV: 'DIV_BIZ_FILE_VIEWER',
+						SCALE: 2.5,
+					});
+				} else if (BIZ_FILE_TYPE.includes('image')) {
+					var strHTML  = '';
+						strHTML += '<div style="height:100%;overflow:auto;">';
+						strHTML += '<img src="' + _RS.OBJ_POST_ROOT.ATTACHES[_RS.OBJ_POST_ROOT.BIZ_INFO.BIZ_FILE.KEY].STR_URL + '" ';
+						strHTML += 'filename="' + _RS.OBJ_POST_ROOT.ATTACHES[_RS.OBJ_POST_ROOT.BIZ_INFO.BIZ_FILE.KEY].STR_FILE+ '" ';
+						strHTML += 'width="100%" />';
+						strHTML += '</div>';
+					$('#DIV_BIZ_FILE_VIEWER').html(strHTML);
+				}
+			}
+		} else {
+			if (!('BIZ_INFO_PARENT' in _RS)) return;
+			if (!('ATTACHES' in _RS.BIZ_INFO_PARENT)) return;
+			if (_RS.BIZ_INFO_PARENT.ATTACHES[_RS.BIZ_INFO_PARENT.BIZ_FILE.KEY]) {
+				var BIZ_FILE_TYPE =_RS.BIZ_INFO_PARENT.ATTACHES[_RS.BIZ_INFO_PARENT.BIZ_FILE.KEY].STR_TYPE;
+				if (BIZ_FILE_TYPE == 'DUMMY') {
+				} else if (BIZ_FILE_TYPE.includes('pdf')) {
+					QIIP_LOAD_PDF_VIEWER({
+						URL: _RS.BIZ_INFO_PARENT.ATTACHES[_RS.BIZ_INFO_PARENT.BIZ_FILE.KEY].STR_URL,
+						DIV: 'DIV_BIZ_FILE_VIEWER',
+						SCALE: 2.5,
+					});
+				} else if (BIZ_FILE_TYPE.includes('image')) {
+					var strHTML  = '';
+						strHTML += '<div style="height:100%;overflow:auto;">';
+						strHTML += '<img src="' + _RS.BIZ_INFO_PARENT.ATTACHES[_RS.BIZ_INFO_PARENT.BIZ_FILE.KEY].STR_URL + '" ';
+						strHTML += 'filename="' + _RS.BIZ_INFO_PARENT.ATTACHES[_RS.BIZ_INFO_PARENT.BIZ_FILE.KEY].STR_FILE+ '" ';
+						strHTML += 'width="100%" />';
+						strHTML += '</div>';
+					$('#DIV_BIZ_FILE_VIEWER').html(strHTML);
+				}
+			}
+		}
+	}
+	
+	function QIIP_INIT_WIDGETS_RADIO_BUTTON() {
+		
+		$('#BIZ_RELATION_CEO')
+			.jqxRadioButton({checked:false})
+			.on('checked', function() {
+				if ($('#TXT_BIZ_RELATION').val() == '임직원') {
+					QIIP_APP_ALERT([
+						'사업자와 관계가 [임직원] 인 경우 [대표자]로 변경하실 수 없습니다.'
+					]);
+					$('#BIZ_RELATION_EXE').jqxRadioButton('check');
+				} else if ($('#TXT_BIZ_RELATION').val() == '거래처') {
+					QIIP_APP_ALERT([
+						'사업자와 관계가 [거래처] 인 경우 [대표자]로 변경하실 수 없습니다.'
+					]);
+					$('#BIZ_RELATION_ACC').jqxRadioButton('check');
+				} else {
+					$('#TXT_BIZ_RELATION').val('대표자');
+				}
+		});
+		$('#BIZ_RELATION_EXE')
+			.jqxRadioButton({checked:false})
+			.on('checked', function() {
+				if ($('#TXT_BIZ_RELATION').val() == '대표자') {
+					QIIP_APP_ALERT([
+						'사업자와 관계가 [대표자] 인 경우 [임직원]으로 변경하실 수 없습니다.'
+					]);
+					$('#BIZ_RELATION_CEO').jqxRadioButton('check');
+				} else {
+					$('#TXT_BIZ_RELATION').val('임직원');
+				}
+		});
+		$('#BIZ_RELATION_ACC')
+			.jqxRadioButton({checked:false})
+			.on('checked', function() {
+				if ($('#TXT_BIZ_RELATION').val() == '대표자') {
+					QIIP_APP_ALERT([
+						'사업자와 관계가 [대표자] 인 경우 [거래처]로 변경하실 수 없습니다.'
+					]);
+					$('#BIZ_RELATION_CEO').jqxRadioButton('check');
+				} else {
+					$('#TXT_BIZ_RELATION').val('거래처');
+				}
+		});
+		
+		if ($('#TXT_BIZ_RELATION').val() == '대표자') {
+			$('#BIZ_RELATION_CEO').jqxRadioButton('check');
+		} else if ($('#TXT_BIZ_RELATION').val() == '임직원') {
+			$('#BIZ_RELATION_EXE').jqxRadioButton('check');
+		} else if ($('#TXT_BIZ_RELATION').val() == '거래처') {
+			$('#BIZ_RELATION_ACC').jqxRadioButton('check');
+		}
+		
+	}
+	
+	function QIIP_INIT_WIDGETS_BIZ_INFO() {
+		
+		if ('BIZ_INFO' in _RS.OBJ_POST_ROOT) {
+			if (_RS.OBJ_POST_ROOT.BIZ_INFO.BIZ_RELATION != '대표자') {
+
+				var STR_PHP_COND  = sprintf("$COND_CHECK = false; ");
+
+				    STR_PHP_COND += sprintf("if (isset($ONE_ROOT_CONTENTES->BIZ_INFO)) { ");
+				    STR_PHP_COND += sprintf("    if (($ONE_ROOT_CONTENTES->BIZ_INFO->BIZ_NO == '%s') && ($ONE_ROOT_CONTENTES->BIZ_INFO->BIZ_RELATION == '대표자')) $COND_CHECK = true; ", _RS.OBJ_POST_ROOT.BIZ_INFO.BIZ_NO);
+				    STR_PHP_COND += sprintf("}");
+
+				    STR_PHP_COND += sprintf("return $COND_CHECK;");
+				
+				QIIP_API_ACCESS({
+						REQ: 'post_GET_ALL_ROOT_ATTRIBUTE',
+						SVC_CATEGORY: _RS.PHONE_INFO.APP_NAME,
+						ATTR_KEY: [
+							'BIZ_INFO',
+						],
+						PHP_COND: [
+							STR_PHP_COND
+						]
+					},function(STR_RESULT) {
+						var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+						if ((JSON_RESULT instanceof Array) && (JSON_RESULT.length > 0)) {
+							_RS.BIZ_INFO_PARENT = JSON_RESULT[0].BIZ_INFO;
+
+							QIIP_API_ACCESS({
+								REQ: 'post_GET_ALL_ROOT_ATTRIBUTE',
+								SEARCH_KEY: JSON_RESULT[0].PHONE_NO,
+								SVC_CATEGORY: _RS.PHONE_INFO.APP_NAME,
+								ATTR_KEY: 'ATTACHES',
+							},function(STR_RESULT) {
+								var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+								_RS.BIZ_INFO_PARENT.ATTACHES = JSON_RESULT[0].ATTACHES;
+								_RS.$apply();
+								QIIP_UPDATE_BIZ_FILE_VIEWER();
+							});
+						}
+					}
+				);		
+			} else {
+				QIIP_UPDATE_BIZ_FILE_VIEWER();
+			}
+		}
+		
+		$(".EVENT_BIZ_INFO").on('click', function () {
+			var ID = $(this).attr('ID');
+			if (ID == 'DUMMY') {
+			} else if (ID == 'BTN_AUTH_BIZ_INFO') {
+//				MODAL_FOR_AUTH_BIZ_INFO();
+				var BIZ_NO_INPUT = $('#TXT_BIZ_NO').val();
+					BIZ_NO_INPUT = BIZ_NO_INPUT.split('-').join('');
+				if (BIZ_NO_INPUT.length > 0) {
+					CHECK_BIZ_INFO_ALREADY_REGIST(BIZ_NO_INPUT);
+				} else {
+					QIIP_APP_ALERT([
+						'사업자 번호를 입력하지 않으셨습니다.'
+					]);
+				}
+			} else if (ID == 'BTN_UPDATE_BIZ_INFO') {
+				if ($('#TXT_BIZ_RELATION').val() == '대표자') {
+					UPDATE_BIZ_INFO_CEO();
+				} else {
+					UPDATE_BIZ_INFO_EXE_ACC();
+				}
+			}
+		});
+		$("#TXT_BIZ_NO").on('change', function () {
+			$('#TXT_BIZ_NO_VALIDATION').val('');
+		});
+		
+		QIIP_INIT_WIDGETS_RADIO_BUTTON();
+	}
+	
+	function UPDATE_BIZ_INFO_EXE_ACC() {
+
+		var FALG_BIZ_NO_VALID = false;
+		if ($('#TXT_BIZ_NO_VALIDATION').val().length > 0) {
+			var JSON_BIZ_NO_VALIDATION = JSON_PARSE_IF_CAN($('#TXT_BIZ_NO_VALIDATION').val());
+			if (JSON_BIZ_NO_VALIDATION instanceof Object) {
+				FALG_BIZ_NO_VALID = JSON_BIZ_NO_VALIDATION.REG_STAT;
+			}
+		}
+		if (!FALG_BIZ_NO_VALID) {
+			QIIP_APP_ALERT([
+				'사업자 번호 검증 절차를 완료하지 않으셨습니다!'
+			]);
+			return;
+		}
+		
+		var	BIZ_INFO_FOR_UPDATE = {
+				BIZ_NO: $('#TXT_BIZ_NO').val(),
+				BIZ_NAME: $('#TXT_BIZ_NAME').val(),
+				BIZ_EMAIL: _RS.LOGIN_INFO.data.user_email,
+				BIZ_RELATION: $('#TXT_BIZ_RELATION').val(),
+				BIZ_BANK_NAME: $('#TXT_BIZ_BANK_NAME').val(),
+				BIZ_BANK_ACCOUNT: $('#TXT_BIZ_BANK_ACCOUNT').val(),
+				BIZ_BANK_OWNER: $('#TXT_BIZ_BANK_OWNER').val(),
+			};
+		
+		var KEYS = Object.keys(BIZ_INFO_FOR_UPDATE);
+		
+		var INPUT_OK = true;
+		$.each(KEYS, function (INDEX, ONE_KEY) {
+			if (BIZ_INFO_FOR_UPDATE[ONE_KEY] instanceof Object) {
+			} else {
+				if (BIZ_INFO_FOR_UPDATE[ONE_KEY].length > 0) {
+				} else {
+					INPUT_OK = false;
+				}
+			}
+		});
+		if (!INPUT_OK) {
+			QIIP_APP_ALERT([
+				'항목 중 일부를 입력하지 않으셨습니다!'
+			]);
+		} else {
+			EXEC_UPDATE_BIZ_INFO_EXE_ACC(BIZ_INFO_FOR_UPDATE, function () {
+				QIIP_APP_ALERT([
+					'저장 되었습니다!'
+				], function () {
+				},function () {
+				});
+			});
+		}
+		
+	}
+	
+	function UPDATE_BIZ_INFO_CEO() {
+		
+		var FALG_BIZ_NO_VALID = false;
+		if ($('#TXT_BIZ_NO_VALIDATION').val().length > 0) {
+			var JSON_BIZ_NO_VALIDATION = JSON_PARSE_IF_CAN($('#TXT_BIZ_NO_VALIDATION').val());
+			if (JSON_BIZ_NO_VALIDATION instanceof Object) {
+				FALG_BIZ_NO_VALID = JSON_BIZ_NO_VALIDATION.REG_STAT;
+			}
+		}
+		if (!FALG_BIZ_NO_VALID) {
+			QIIP_APP_ALERT([
+				'사업자 번호 검증 절차를 완료하지 않으셨습니다!'
+			]);
+			return;
+		}
+		
+		var FALG_BIZ_FILE_OK = false;
+		if ('BIZ_INFO' in _RS.OBJ_POST_ROOT) {
+			if (_RS.OBJ_POST_ROOT.BIZ_INFO.BIZ_FILE) {
+				FALG_BIZ_FILE_OK = true;
+			}
+		}
+		if (!FALG_BIZ_FILE_OK) {
+			if ($('#TXT_BIZ_FILE').val().length < 1) {
+				QIIP_APP_ALERT([
+					'업로드 할 사업자 등록증 사본 파일을 선택하지 않으셨습니다.'
+				]);
+				return;
+			}
+		}
+		
+		var	BIZ_INFO_FOR_UPDATE = {
+				BIZ_NO: $('#TXT_BIZ_NO').val(),
+				BIZ_NO_VALIDATION: JSON.parse($('#TXT_BIZ_NO_VALIDATION').val()),
+				BIZ_NAME: $('#TXT_BIZ_NAME').val(),
+				BIZ_EMAIL: _RS.LOGIN_INFO.data.user_email,
+				BIZ_CEO_NAME: $('#TXT_BIZ_CEO_NAME').val(),
+				BIZ_OPEN_DATE: $('#TXT_BIZ_OPEN_DATE').val(),
+				BIZ_ADDRESS: $('#TXT_BIZ_ADDRESS').val(),
+				BIZ_RELATION: $('#TXT_BIZ_RELATION').val(),
+				BIZ_BANK_NAME: $('#TXT_BIZ_BANK_NAME').val(),
+				BIZ_BANK_ACCOUNT: $('#TXT_BIZ_BANK_ACCOUNT').val(),
+				BIZ_BANK_OWNER: $('#TXT_BIZ_BANK_OWNER').val(),
+				BIZ_FILE:{
+					KEY: 'ATTACH_BIZ_FILE',
+					FILE: $('#TXT_BIZ_FILE').prop('files')[0],
+					NAME: $('#TXT_BIZ_FILE').val().replace(/^.*[\\\/]/, '')
+				},
+			};
+		
+		var KEYS = Object.keys(BIZ_INFO_FOR_UPDATE);
+		
+		var INPUT_OK = true;
+		$.each(KEYS, function (INDEX, ONE_KEY) {
+			if (BIZ_INFO_FOR_UPDATE[ONE_KEY] instanceof Object) {
+			} else {
+				if (BIZ_INFO_FOR_UPDATE[ONE_KEY].length > 0) {
+				} else {
+					INPUT_OK = false;
+				}
+			}
+		});
+		if (!INPUT_OK) {
+			QIIP_APP_ALERT([
+				'항목 중 일부를 입력하지 않으셨습니다!'
+			]);
+		} else {
+			EXEC_UPDATE_BIZ_INFO_CEO(BIZ_INFO_FOR_UPDATE, function () {
+				QIIP_APP_ALERT([
+					'저장 되었습니다!'
+				], function () {
+				},function () {
+					QIIP_APP_DO_JOB_WITH_INITIAL_POST_INFORMATION(function () {
+						_RS.$apply();
+						QIIP_UPDATE_BIZ_FILE_VIEWER();
+					});
+				});
+			});
+		}
+		
+	}
+
+	function EXEC_UPDATE_OBJ_POST_ROOT(FUNC_AFTER) {
+		QIIP_API_ACCESS({
+				REQ: 'post_PUT_ROOT_INFO',
+				PHONE_NO: _RS.PHONE_INFO.PHONE_NO,
+				PHONE_ID: _RS.PHONE_INFO.PHONE_ID,
+				SVC_CATEGORY: _RS.PHONE_INFO.APP_NAME,
+				JSON_UPDATE: _RS.OBJ_POST_ROOT,
+			},function(STR_RESULT) {
+				var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+				if (FUNC_AFTER != undefined) FUNC_AFTER();
+			}
+		);
+	}
+	
+	function EXEC_UPDATE_BIZ_INFO_EXE_ACC(BIZ_INFO_FOR_UPDATE, FUNC_AFTER) {
+
+		_RS.OBJ_POST_ROOT.BIZ_INFO = BIZ_INFO_FOR_UPDATE;
+
+		QIIP_API_ACCESS({
+				REQ: 'post_PUT_ROOT_INFO',
+				PHONE_NO: _RS.PHONE_INFO.PHONE_NO,
+				PHONE_ID: _RS.PHONE_INFO.PHONE_ID,
+				SVC_CATEGORY: _RS.PHONE_INFO.APP_NAME,
+				JSON_UPDATE: _RS.OBJ_POST_ROOT,
+			},function(STR_RESULT) {
+				var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+				if (FUNC_AFTER != undefined) FUNC_AFTER();
+			}
+		);
+	}
+	
+	function EXEC_UPDATE_BIZ_INFO_CEO(BIZ_INFO_FOR_UPDATE, FUNC_AFTER) {
+		
+		_RS.OBJ_POST_ROOT.BIZ_INFO = BIZ_INFO_FOR_UPDATE;
+
+		QIIP_API_ACCESS({
+				REQ: 'post_PUT_ROOT_INFO',
+				PHONE_NO: _RS.PHONE_INFO.PHONE_NO,
+				PHONE_ID: _RS.PHONE_INFO.PHONE_ID,
+				SVC_CATEGORY: _RS.PHONE_INFO.APP_NAME,
+				JSON_UPDATE: _RS.OBJ_POST_ROOT,
+				ATTACHES: [
+					BIZ_INFO_FOR_UPDATE.BIZ_FILE
+				],
+				ATTACH_BACKUP: 'Y',
+//				ATTACH_REMOVES: _RS.OBJ_POST_ROOT.ATTACHES,
+			},function(STR_RESULT) {
+				var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+				if (FUNC_AFTER != undefined) FUNC_AFTER();
+			}
+		);
+	}
+	
+	function CHECK_BIZ_INFO_ALREADY_REGIST(BIZ_NO) {
+
+		QIIP_API_ACCESS({
+				REQ: 'post_GET_ALL_ROOT_ATTRIBUTE',
+				SVC_CATEGORY: _RS.PHONE_INFO.APP_NAME,
+				ATTR_KEY: 'BIZ_INFO',
+				PHP_COND: [
+				sprintf("return (($ONE_ROOT_CONTENTES->BIZ_INFO->BIZ_NO == '%s') && ($ONE_ROOT_CONTENTES->BIZ_INFO->BIZ_RELATION == '대표자'));", BIZ_NO),
+				]
+			},function(STR_RESULT) {
+				var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+
+				if ((JSON_RESULT instanceof Array) && (JSON_RESULT.length > 0)) {
+					QIIP_APP_ALERT([
+						sprintf('사업자 번호 %s 는 이미 등록되어 있습니다!', BIZ_NO),
+						'[확인] 버튼을 누르시면, 등록된 사업자 정보를 가져옵니다.'
+					],function () {
+					},function () {
+						_RS.BIZ_INFO_PARENT = JSON_RESULT[0].BIZ_INFO;
+
+						QIIP_API_ACCESS({
+							REQ: 'post_GET_ALL_ROOT_ATTRIBUTE',
+							SEARCH_KEY: JSON_RESULT[0].PHONE_NO,
+							SVC_CATEGORY: _RS.PHONE_INFO.APP_NAME,
+							ATTR_KEY: 'ATTACHES',
+						},function(STR_RESULT) {
+							var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+							_RS.BIZ_INFO_PARENT.ATTACHES = JSON_RESULT[0].ATTACHES;
+							$('#BIZ_RELATION_EXE').jqxRadioButton('check');
+							_RS.OBJ_POST_ROOT.BIZ_INFO = {
+								BIZ_NO: $('#TXT_BIZ_NO').val(),
+								BIZ_NAME: $('#TXT_BIZ_NAME').val(),
+								BIZ_EMAIL: _RS.LOGIN_INFO.data.user_email,
+								BIZ_RELATION: $('#TXT_BIZ_RELATION').val(),
+								BIZ_BANK_NAME: $('#TXT_BIZ_BANK_NAME').val(),
+								BIZ_BANK_ACCOUNT: $('#TXT_BIZ_BANK_ACCOUNT').val(),
+								BIZ_BANK_OWNER: $('#TXT_BIZ_BANK_OWNER').val(),
+							}
+							EXEC_UPDATE_OBJ_POST_ROOT(function () {
+								_RS.$apply();
+								QIIP_UPDATE_BIZ_FILE_VIEWER();
+							});
+						});
+					});
+				} else {
+					AUTH_BIZ_INFO(BIZ_NO);
+				}
+			}
+		);		
+		
+	}
+
+	function AUTH_BIZ_INFO(BIZ_NO) {
+
+		var SHELL_COMMAND_BASE64 = Base64.encode(
+			sprintf('%s/../../NODE/BIZ_NO/BIZ_NO.js %s',_FLDR_TEMPLATE, BIZ_NO)
+		);
+		
+		QIIP_API_ACCESS({
+				REQ: 'api_EXEC',
+				SHELL_COMMAND_BASE64: SHELL_COMMAND_BASE64,
+			},function(STR_RESULT) {
+				var JSON_BIZ_INFO = JSON_PARSE_IF_CAN(STR_RESULT);
+				if (JSON_BIZ_INFO.EXEC_OUTPUT_TEXTS.REG_STAT) {
+					JSON_BIZ_INFO.EXEC_OUTPUT_TEXTS.BIZ_NO = '' + JSON_BIZ_INFO.EXEC_OUTPUT_TEXTS.BIZ_NO; // 강제로 문자열 형으로 만듬
+					QIIP_APP_ALERT([
+						JSON_BIZ_INFO.EXEC_OUTPUT_TEXTS.REG_TAXINFO
+					],function () {
+					},function () {
+						if (!('BIZ_INFO' in _RS.OBJ_POST_ROOT)) {
+							_RS.OBJ_POST_ROOT.BIZ_INFO = {
+								BIZ_NO: BIZ_NO,
+								BIZ_RELATION: '대표자'
+							};
+							_RS.$apply();
+//							$('#BIZ_RELATION_CEO').jqxRadioButton('check');
+							QIIP_INIT_WIDGETS_BIZ_INFO();
+						}
+						$('#TXT_BIZ_NO').val(JSON_BIZ_INFO.EXEC_OUTPUT_TEXTS.BIZ_NO);
+						$('#TXT_BIZ_NO_VALIDATION').val(JSON.stringify(JSON_BIZ_INFO.EXEC_OUTPUT_TEXTS, null, '\t'));
+						$('#SPAN_REG_TAXINFO').html(JSON_BIZ_INFO.EXEC_OUTPUT_TEXTS.REG_TAXINFO);
+					});
+				} else {
+					QIIP_APP_ALERT([
+						JSON_BIZ_INFO.EXEC_OUTPUT_TEXTS
+					],function () {
+						$('#TXT_BIZ_NO_VALIDATION').val(JSON.stringify(JSON_BIZ_INFO.EXEC_OUTPUT_TEXTS, null, '\t'));
+					});
+				}
+			}
+		);		
+	}
+	
+	function MODAL_FOR_AUTH_BIZ_INFO() {
+		QIIP_API_ACCESS({
+				REQ: 'api_GET_PAGE',
+				FLDR_TEMPLATE: _FLDR_TEMPLATE,
+				FILE_TEMPLATE: 'SALES/MODAL_FOR_AUTH_BIZ_INFO.html',
+			},function(STR_RESULT) {
+				QIIP_APP_MODAL_POPUP({
+					TITLE: '사업자 번호 확인',
+					BACKDROP: false,
+					CSS: {
+						width: '1050px',
+						height: '900px',
+					},
+					CONTENT: STR_RESULT,
+					INIT_FUNC: function (UNIQUE_ID) {
+						INIT_WIDGETS_FOR_AUTH_BIZ_INFO(UNIQUE_ID);
+					}
+				});
+			}
+		);
+	}
+	
+</script>
+<div style="width:50%;float:left" ng-if="OBJ_POST_ROOT.BIZ_INFO.BIZ_RELATION == '대표자'">
+	<table>
+		<col width="30%" />
+		<col width="70%" />
+		<tr>
+			<th>
+				사업자 번호
+			</th>
+			<td>
+				<table>
+						<col width="70%" />
+						<col width="30%" />
+					<tr>
+						<td colspan="2">
+							<input id="TXT_BIZ_NO" type="text" value='{{OBJ_POST_ROOT.BIZ_INFO.BIZ_NO}}' />
+						</td>
+<!--
+						<td>
+							<button class="btn btn-primary btn-lg btn-block login-btn EVENT_BIZ_INFO" id="BTN_AUTH_BIZ_INFO">사업자 번호 검증</button>
+						</td>
+-->
+					</tr>
+					<tr>
+						<th colspan="2" >
+							<input id="TXT_BIZ_NO_VALIDATION" type="hidden" value="{{OBJ_POST_ROOT.BIZ_INFO.BIZ_NO_VALIDATION | prettyJSON}}" />
+							<span id="SPAN_REG_TAXINFO">{{OBJ_POST_ROOT.BIZ_INFO.BIZ_NO_VALIDATION.REG_TAXINFO}}</span>
+						</th>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<th>
+				사업자 등록증 사본
+			</th>
+			<td>
+				<table ng-if="OBJ_POST_ROOT.BIZ_INFO.BIZ_FILE">
+					<col width="50%" />
+					<col width="30%" />
+					<col width="20%" />
+					<tr>
+						<th>
+							파일명
+						</th>
+						<th>
+							파일형식
+						</th>
+						<th>
+							파일크기
+						</th>
+					</tr>
+					<tr>
+						<td>
+							{{OBJ_POST_ROOT.ATTACHES[OBJ_POST_ROOT.BIZ_INFO.BIZ_FILE.KEY].STR_FILE}}
+						</td>
+						<td style="text-align:center;">
+							{{OBJ_POST_ROOT.ATTACHES[OBJ_POST_ROOT.BIZ_INFO.BIZ_FILE.KEY].STR_TYPE}}
+						</td>
+						<td style="text-align:center;">
+							{{OBJ_POST_ROOT.ATTACHES[OBJ_POST_ROOT.BIZ_INFO.BIZ_FILE.KEY].STR_SIZE}}
+						</td>
+					</tr>
+					<tr>
+						<th >교체시 선택</th>
+						<td colspan="2">
+							<input id="TXT_BIZ_FILE" type="file" />
+						</td>
+					</tr>
+				</table>
+				<table ng-if="!(OBJ_POST_ROOT.BIZ_INFO.BIZ_FILE)">
+					<tr>
+						<td>
+							<input id="TXT_BIZ_FILE" type="file" />
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<th>
+				상호
+			</th>
+			<td>
+				<input id="TXT_BIZ_NAME" type="text" value="{{OBJ_POST_ROOT.BIZ_INFO.BIZ_NAME}}" />
+			</td>
+		</tr>
+		<tr>
+			<th>
+				대표자 성명
+			</th>
+			<td>
+				<input id="TXT_BIZ_CEO_NAME" type="text" value="{{OBJ_POST_ROOT.BIZ_INFO.BIZ_CEO_NAME}}" />
+			</td>
+		</tr>
+		<tr>
+			<th>
+				개업 일자
+			</th>
+			<td>
+				<input id="TXT_BIZ_OPEN_DATE" type="text" value="{{OBJ_POST_ROOT.BIZ_INFO.BIZ_OPEN_DATE}}" />
+			</td>
+		</tr>
+		<tr>
+			<th>
+				사업장 소재지
+			</th>
+			<td>
+				<input id="TXT_BIZ_ADDRESS" type="text" value="{{OBJ_POST_ROOT.BIZ_INFO.BIZ_ADDRESS}}" />
+			</td>
+		</tr>
+		<tr>
+			<th>
+				사업자와 관계
+			</th>
+			<td>
+				<div id="BIZ_RELATION_CEO" style="float:left;width:15%">대표자</div>
+				<div id="BIZ_RELATION_EXE" style="float:left;width:15%">임직원</div>
+				<div id="BIZ_RELATION_ACC" style="float:left;width:15%">거래처</div>
+				<input id="TXT_BIZ_RELATION" type="text" readonly style="width:55%;" value="{{OBJ_POST_ROOT.BIZ_INFO.BIZ_RELATION}}" />
+			</td>
+		</tr>
+		<tr>
+			<th>
+				거래계좌
+			</th>
+			<td>
+				<table>
+					<col width="25%"/>
+					<col width="50%"/>
+					<col width="25%"/>
+					<tr>
+						<th>
+							은행명
+						</th>
+						<th>
+							계좌번호
+						</th>
+						<th>
+							예금주
+						</th>
+					</tr>
+					<tr>
+						<td>
+							<input id="TXT_BIZ_BANK_NAME" type="text" value="{{OBJ_POST_ROOT.BIZ_INFO.BIZ_BANK_NAME}}" />
+						</td>
+						<td>
+							<input id="TXT_BIZ_BANK_ACCOUNT" type="text" value="{{OBJ_POST_ROOT.BIZ_INFO.BIZ_BANK_ACCOUNT}}" />
+						</td>
+						<td>
+							<input id="TXT_BIZ_BANK_OWNER" type="text" value="{{OBJ_POST_ROOT.BIZ_INFO.BIZ_BANK_OWNER}}" />
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<button class="btn btn-primary btn-lg btn-block login-btn EVENT_BIZ_INFO" id="BTN_UPDATE_BIZ_INFO">저장</button>
+			</td>
+		</tr>
+	</table>
+</div>
+<div style="width:50%;float:left" ng-if="OBJ_POST_ROOT.BIZ_INFO.BIZ_RELATION != '대표자'">
+	<table>
+		<col width="30%" />
+		<col width="70%" />
+		<tr>
+			<th>
+				사업자 번호
+			</th>
+			<td>
+				<table>
+						<col width="70%" />
+						<col width="30%" />
+					<tr>
+						<td>
+							<input id="TXT_BIZ_NO" type="text" value='{{OBJ_POST_ROOT.BIZ_INFO.BIZ_NO}}' />
+						</td>
+						<td>
+							<button class="btn btn-primary btn-lg btn-block login-btn EVENT_BIZ_INFO" id="BTN_AUTH_BIZ_INFO">사업자 번호 검증</button>
+						</td>
+					</tr>
+					<tr>
+						<th colspan="2" >
+							<input id="TXT_BIZ_NO_VALIDATION" type="hidden" value="{{BIZ_INFO_PARENT.BIZ_NO_VALIDATION | prettyJSON}}" />
+							<span id="SPAN_REG_TAXINFO">{{BIZ_INFO_PARENT.BIZ_NO_VALIDATION.REG_TAXINFO}}</span>
+						</th>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<th>
+				사업자 등록증 사본
+			</th>
+			<td>
+				<table ng-if="BIZ_INFO_PARENT.BIZ_FILE">
+					<col width="50%" />
+					<col width="30%" />
+					<col width="20%" />
+					<tr>
+						<th>
+							파일명
+						</th>
+						<th>
+							파일형식
+						</th>
+						<th>
+							파일크기
+						</th>
+					</tr>
+					<tr>
+						<td>
+							{{BIZ_INFO_PARENT.ATTACHES[BIZ_INFO_PARENT.BIZ_FILE.KEY].STR_FILE}}
+						</td>
+						<td style="text-align:center;">
+							{{BIZ_INFO_PARENT.ATTACHES[BIZ_INFO_PARENT.BIZ_FILE.KEY].STR_TYPE}}
+						</td>
+						<td style="text-align:center;">
+							{{BIZ_INFO_PARENT.ATTACHES[BIZ_INFO_PARENT.BIZ_FILE.KEY].STR_SIZE}}
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<th>
+				상호
+			</th>
+			<td>
+				<input id="TXT_BIZ_NAME" type="text" readonly value="{{BIZ_INFO_PARENT.BIZ_NAME}}" />
+			</td>
+		</tr>
+		<tr>
+			<th>
+				대표자 성명
+			</th>
+			<td>
+				<input id="TXT_BIZ_CEO_NAME" type="text" readonly value="{{BIZ_INFO_PARENT.BIZ_CEO_NAME}}" />
+			</td>
+		</tr>
+		<tr>
+			<th>
+				개업 일자
+			</th>
+			<td>
+				<input id="TXT_BIZ_OPEN_DATE" type="text" readonly value="{{BIZ_INFO_PARENT.BIZ_OPEN_DATE}}" />
+			</td>
+		</tr>
+		<tr>
+			<th>
+				사업장 소재지
+			</th>
+			<td>
+				<input id="TXT_BIZ_ADDRESS" type="text" readonly value="{{BIZ_INFO_PARENT.BIZ_ADDRESS}}" />
+			</td>
+		</tr>
+		<tr>
+			<th>
+				사업자와 관계
+			</th>
+			<td>
+				<div id="BIZ_RELATION_CEO" style="float:left;width:15%">대표자</div>
+				<div id="BIZ_RELATION_EXE" style="float:left;width:15%">임직원</div>
+				<div id="BIZ_RELATION_ACC" style="float:left;width:15%">거래처</div>
+				<input id="TXT_BIZ_RELATION" type="text" readonly style="width:55%;" value="{{OBJ_POST_ROOT.BIZ_INFO.BIZ_RELATION}}" />
+			</td>
+		</tr>
+		<tr>
+			<th>
+				거래계좌
+			</th>
+			<td>
+				<table>
+					<col width="25%"/>
+					<col width="50%"/>
+					<col width="25%"/>
+					<tr>
+						<th>
+							은행명
+						</th>
+						<th>
+							계좌번호
+						</th>
+						<th>
+							예금주
+						</th>
+					</tr>
+					<tr>
+						<td>
+							<input id="TXT_BIZ_BANK_NAME" type="text" value="{{OBJ_POST_ROOT.BIZ_INFO.BIZ_BANK_NAME}}" />
+						</td>
+						<td>
+							<input id="TXT_BIZ_BANK_ACCOUNT" type="text" value="{{OBJ_POST_ROOT.BIZ_INFO.BIZ_BANK_ACCOUNT}}" />
+						</td>
+						<td>
+							<input id="TXT_BIZ_BANK_OWNER" type="text" value="{{OBJ_POST_ROOT.BIZ_INFO.BIZ_BANK_OWNER}}" />
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<button class="btn btn-primary btn-lg btn-block login-btn EVENT_BIZ_INFO" id="BTN_UPDATE_BIZ_INFO">저장</button>
+			</td>
+		</tr>
+	</table>
+</div>
+<div style="width:50%;float:left" id="DIV_BIZ_FILE_VIEWER">
+</div>

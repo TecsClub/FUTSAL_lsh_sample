@@ -1,0 +1,35 @@
+<style>
+#DIV_AUTH_BIZ_NO iframe {width:100%;height:100%;}
+</style>
+<script>
+	function INIT_WIDGETS_FOR_AUTH_BIZ_INFO(MODAL_ID) {
+		$(".EVENT_AUTH_BIZ_INFO").on('click', function () {
+			var ID = $(this).attr('ID');
+			if (ID == 'DUMMY') {
+			} else if (ID == 'BTN_CLOSE_AUTH_BIZ_INFO') {
+				if (MODAL_ID != undefined) $('#'+MODAL_ID).modal('hide');
+			} else if (ID == 'BTN_AUTH_BIZ_INFO') {
+				
+				alert($('#IFRAME_AUTH_BIZ_NO').html());
+				
+//				alert(document.getElementById('IFRAME_AUTH_BIZ_NO').contentWindow.document.getElementById("grid2_cell_0_0"));
+
+				if ($('#IFRAME_AUTH_BIZ_NO').contents().find('#grid2_cell_0_0').length > 0) {
+				} else {
+					QIIP_APP_ALERT([
+						'사업자등록번호 [조회하기] 를 처리하지 않으셨습니다!'
+					]);
+				}
+			}
+		});
+	}
+</script>
+<div style="height:90%;" id="DIV_AUTH_BIZ_NO">
+	<!--
+	<iframe id="IFRAME_AUTH_BIZ_NO" src="https://www.pps.go.kr/gpass/gpassCompany/selectCompanyInfo.do"></iframe>
+	-->
+	<iframe id="IFRAME_AUTH_BIZ_NO" src="https://teht.hometax.go.kr/websquare/websquare.html?w2xPath=/ui/ab/a/a/UTEABAAA13.xml"></iframe>
+</div>
+<div style="height:10%;">
+	<button class="btn btn-primary btn-lg btn-block login-btn EVENT_AUTH_BIZ_INFO" id="BTN_CLOSE_AUTH_BIZ_INFO">닫기</button>
+</div>

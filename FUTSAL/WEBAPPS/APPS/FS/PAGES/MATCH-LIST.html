@@ -1,0 +1,412 @@
+<style>
+	.CSS_FUTSAL_MATCH_LIST 			{width:100%; height:100%;}
+	.CSS_FUTSAL_MATCH_LIST table		{width:100%; height:100%; font-size:100%; border-collapse: separate; border-spacing: 1px; line-height: 100%;}
+	.CSS_FUTSAL_MATCH_LIST table th	{font-weight:bold; text-align: center; white-space:normal; vertical-align: middle; word-break:break-all; word-wrap:break-all; background:#4789b7; color:white; }
+	.CSS_FUTSAL_MATCH_LIST table td	{text-decoration:none; text-align: left;   white-space:normal; vertical-align: middle; word-break:break-all; word-wrap:break-all; background:#eee; padding:0 10px;}
+</style>
+
+<script>
+
+function REGIST_BUTTON_EVENT() {
+	$(".BTN_MATCH_LIST").jqxButton({
+		width: '100%',
+		height: '100%'
+	}).on('click', function () {
+		var ID = $(this).attr('ID');
+		if (ID == 'DUMMY') {
+		} else if(ID == 'BTN_GET_MATCH_LIST') {
+			QUERY_MATCH_LIST();
+		}
+	});
+}
+
+function ON_CLICK_BTN_PROCESS_MATCH(OBJ_DOM) {
+	var ATTR = QIIP_GET_DOM_ATTRIBUTES(OBJ_DOM);
+	var STR_CMD = ATTR.cmd;
+	var ROW_DATA = $('#DIV_GRID_MATCH_LIST').jqxGrid('getrowdata', ATTR.row);
+
+	
+
+	var STR_SQL = '';
+	if (STR_CMD == 'DUMMY') {
+	} else if (STR_CMD == 'UPD') {
+		MODAL_FOR_ADD_MATCH_ITEM(ROW_DATA, STR_CMD);
+	} else if (STR_CMD == 'UPD_X') {
+		STR_SQL  = "UPDATE MATCH_LIST SET ";
+		
+		STR_SQL += sprintf("HASH = '%s',", ROW_DATA.HASH);
+		STR_SQL += sprintf("DATE = '%s',", ROW_DATA.DATE);
+		STR_SQL += sprintf("TEAM = '%s',", ROW_DATA.TEAM);
+		STR_SQL += sprintf("CAMERA_ANGLE = '%s',", ROW_DATA.CAMERA_ANGLE);
+		STR_SQL += sprintf("ARENA_NAME = '%s',", ROW_DATA.ARENA_NAME);
+		STR_SQL += sprintf("ARENA_NUM = '%s',", ROW_DATA.ARENA_NUM);
+		STR_SQL += sprintf("GAME_START_TIME = '%s',", ROW_DATA.GAME_START_TIME);
+		STR_SQL += sprintf("GAME_END_TIME = '%s',", ROW_DATA.GAME_END_TIME);
+		STR_SQL += sprintf("URL = '%s', ", ROW_DATA.URL);
+		STR_SQL += sprintf("ARENA_CODE = '%s', ", ROW_DATA.ARENA_CODE);
+		STR_SQL += sprintf("MANAGER_PHONE = '%s', ", ROW_DATA.MANAGER_PHONE);
+		STR_SQL += sprintf("TEAM_NAME_LEFT = '%s', ", ROW_DATA.TEAM_NAME_LEFT);
+		STR_SQL += sprintf("TEAM_NAME_RIGHT = '%s', ", ROW_DATA.TEAM_NAME_RIGHT);
+		STR_SQL += sprintf("TAGGING_DONE = '%s', ", ROW_DATA.TAGGING_DONE);
+		STR_SQL += sprintf("VALID_UNTIL = '%s', ", ROW_DATA.VALID_UNTIL);
+		STR_SQL += sprintf("IS_LINK_SHARED = '%s', ", ROW_DATA.IS_LINK_SHARED);
+		STR_SQL += sprintf("YOUTUBE_URLS = '%s' ", ROW_DATA.YOUTUBE_URLS);
+		STR_SQL += sprintf("WHERE ID = %s ", ROW_DATA.ID);
+	} else if (STR_CMD == 'DEL') {
+		STR_SQL  = "DELETE FROM MATCH_LIST ";
+		STR_SQL += sprintf("WHERE ID = %s ", ROW_DATA.ID);
+	} else if (STR_CMD == 'VIEW') {
+		var oldUrl = 'blog.delfiini.co.kr'; // 기본 URL
+		var changeUrl = 'noeuldays.tistory.com'; // 기본 URL로 사이트 접속 시 변경하고 싶은 URL		
+		window.location.replace(urlString.replace(oldUrl, changeUrl));
+	} else if (STR_CMD == 'ADD') {
+		MODAL_FOR_ADD_MATCH_ITEM({}, STR_CMD);
+	} else if (STR_CMD == 'ADD_X') {
+		if (true) {
+			STR_SQL  = "INSERT INTO MATCH_LIST (";
+			STR_SQL += sprintf("HASH, ");
+			STR_SQL += sprintf("DATE, ");
+			STR_SQL += sprintf("TEAM, ");
+			STR_SQL += sprintf("CAMERA_ANGLE, ");
+			STR_SQL += sprintf("ARENA_NAME, ");
+			STR_SQL += sprintf("ARENA_NUM, ");
+			STR_SQL += sprintf("GAME_START_TIME, ");
+			STR_SQL += sprintf("GAME_END_TIME, ");
+			STR_SQL += sprintf("URL, ");
+			STR_SQL += sprintf("ARENA_CODE, ");
+			STR_SQL += sprintf("MANAGER_PHONE , ");
+			STR_SQL += sprintf("TEAM_NAME_LEFT, ");
+			STR_SQL += sprintf("TEAM_NAME_RIGHT, ");
+			STR_SQL += sprintf("TAGGING_DONE, ");
+			STR_SQL += sprintf("VALID_UNTIL, ");
+			STR_SQL += sprintf("IS_LINK_SHARED, ");
+			STR_SQL += sprintf("YOUTUBE_URLS ");
+			STR_SQL += sprintf(") VALUES (");
+			STR_SQL += sprintf(
+							"'%s', " +
+							"'%s', " +
+							"'%s', " +
+							"'%s', " +
+							"'%s', " +
+							"'%s', " +
+							"'%s', " +
+							"'%s', " +
+							"'%s', " +
+							"'%s', " +
+							"'%s', " +
+							"'%s', " +
+							"'%s', " +
+							"'%s', " +
+							"'%s', " +
+							"'%s', " +
+							"'%s') ",
+							ROW_DATA.HASH,
+							ROW_DATA.DATE,
+							ROW_DATA.TEAM,
+							ROW_DATA.CAMERA_ANGLE,
+							ROW_DATA.ARENA_NAME,
+							ROW_DATA.ARENA_NUM,
+							ROW_DATA.GAME_START_TIME,
+							ROW_DATA.GAME_END_TIME,
+							ROW_DATA.URL,
+							ROW_DATA.ARENA_CODE,
+							ROW_DATA.MANAGER_PHONE,
+							ROW_DATA.TEAM_NAME_LEFT,
+							ROW_DATA.TEAM_NAME_RIGHT,
+							ROW_DATA.TAGGING_DONE,
+							ROW_DATA.VALID_UNTIL,
+							ROW_DATA.IS_LINK_SHARED,
+							ROW_DATA.YOUTUBE_URLS
+					   );
+			
+		} else {
+
+			QIIP_APP_ALERT([
+				"데이터 중 일부를 입력하지 않았습니다."
+			]);
+			
+		}
+	}
+
+	console.log(STR_SQL);
+	
+	if (STR_SQL.length < 1) return;
+
+	QIIP_API_ACCESS({
+			REQ: 'api_DB_ACCESS',
+			STR_SQL_BASE64: Base64.encode(STR_SQL),
+		},function(STR_RESULT) {
+			var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+/*
+			QIIP_APP_ALERT([
+				JSON.stringify(JSON_RESULT)
+			]);
+//*/
+			if (JSON_RESULT instanceof Object) {
+				QUERY_MATCH_LIST();
+			}
+		}
+	);
+	
+}
+
+function DB_FIELD_ENCODE(LOGIN_ID, FUNC_AFTER) {
+
+	QIIP_API_ACCESS({
+			REQ: 'api_DB_FIELD_ENCODE',
+			TABLE: 'T_USER_LIST',
+			UNIQUE_FIELD: 'ID',
+			FIELDS: [
+				'LOGIN_PW',
+				'PHONE_PW',
+			],
+			WHERE: sprintf("LOGIN_ID = '%s'", LOGIN_ID),
+		},function(STR_RESULT) {
+			var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+			if (JSON_RESULT instanceof Object) {
+				if (FUNC_AFTER != undefined) FUNC_AFTER();
+			}
+		}
+	);
+	
+}
+
+function QIIP_SIDEMENU_INIT_WIDGETS() {
+	REGIST_BUTTON_EVENT();
+	TOGGLE_SIDEMENU(function () {
+
+		$('#MENU_CONTENTS').css('height', ($('#SIDEMENU_PAGE').height() - 70) / $('#SIDEMENU_PAGE').height() * 100 + '%');
+
+		setTimeout(function (){
+			QUERY_MATCH_LIST();
+		}, 600);
+	});
+}
+
+function QUERY_MATCH_LIST() {
+    var STR_MATCH_DATE = $('#STR_MATCH_DATE').val();
+    var STR_TEAM_NAME = $('#STR_TEAM_NAME').val();
+    var STR_ARENA_NAME = $('#STR_ARENA_NAME').val();
+
+    var MAX_LIST	  = parseInt($('#MAX_LIST').val());
+    if (MAX_LIST < 1) {
+    	MAX_LIST = 50;
+    } else if (MAX_LIST > 1000) {
+    	MAX_LIST = 1000;
+    }
+
+	var STR_SQL  = "SELECT * FROM MATCH_LIST WHERE ID > 0 ";
+	if (STR_MATCH_DATE.length > 0) {
+		STR_SQL += sprintf("AND DATE like '%s' ", '%' + STR_MATCH_DATE + '%');
+	}
+	if (STR_TEAM_NAME.length > 0) {
+		STR_SQL += sprintf("AND TEAM like '%s' ", '%' + STR_TEAM_NAME + '%');
+	}
+	if (STR_ARENA_NAME.length > 0) {
+		STR_SQL += sprintf("AND ARENA_NAME like '%s' ", '%' + STR_ARENA_NAME + '%');
+	}
+	STR_SQL += sprintf("ORDER BY ID DESC ");
+	STR_SQL += sprintf("LIMIT %d ", MAX_LIST);
+	
+	console.log(STR_SQL);
+
+	QIIP_API_ACCESS({
+			REQ: 'api_DB_ACCESS',
+			STR_SQL_BASE64: Base64.encode(STR_SQL),
+//			DEC_FIELDS: ['LOGIN_PW', 'PHONE_PW'],
+		},function(STR_RESULT) {
+			var JSON_RESULT = JSON_PARSE_IF_CAN(STR_RESULT);
+			if (JSON_RESULT instanceof Object) {
+				REFRESH_GRID_MATCH_LIST(JSON_RESULT);
+			}
+		}
+	);
+}
+
+function MODAL_FOR_ADD_MATCH_ITEM(JSON_ARGS, MODE) {
+	QIIP_API_ACCESS({
+			REQ: 'api_GET_PAGE',
+			FLDR_TEMPLATE: _FLDR_TEMPLATE,
+			FILE_TEMPLATE: 'PAGES/MODAL_FOR_ADD_MATCH_ITEM.html',
+		},function(STR_RESULT) {
+			var HTML_COMPILED = QIIP_STATIC_HTML(JSON_ARGS, STR_RESULT);
+			QIIP_APP_MODAL_POPUP({
+				TITLE: '경기 데이터 추가',
+				BACKDROP: false,
+				CSS: {
+					width: 540,
+					height: 1100,
+				},
+				CONTENT: HTML_COMPILED,
+				INIT_FUNC: function (UNIQUE_ID) {
+					INIT_WIDGETS_FOR_MODAL_FOR_ADD_MATCH_ITEM(UNIQUE_ID, MODE);
+				}
+			});
+		}
+	);
+}
+
+function REFRESH_GRID_MATCH_LIST(SQL_RESULT) {
+/*
+	$('#DIV_GRID_MATCH_LIST').html(
+		'<pre>' +
+		JSON.stringify(SQL_RESULT, null, '\t') +
+		'</pre>'
+	);
+	return;
+//*/
+
+/*
+	SQL_RESULT.unshift({
+		'ID': 'NA',
+        'HASH': '',				
+        'DATE': '',				
+        'TEAM': '',				
+        'CAMERA_ANGLE': '',		
+        'ARENA_NAME': '',		
+        'ARENA_NUM': '',		
+        'GAME_START_TIME': '',	
+        'GAME_END_TIME': '',	
+        'URL': '',				
+        'ARENA_CODE': '',		
+        'MANAGER_PHONE': '',	
+        'TEAM_NAME_LEFT': '',	
+        'TEAM_NAME_RIGHT': '',	
+        'TAGGING_DONE': '',		
+        'VALID_UNTIL': '',		
+        'IS_LINK_SHARED': '',	
+        'YOUTUBE_URLS': '',		
+	});
+//*/
+
+	SQL_RESULT.forEach(function (ONE_ITEM) {
+	});
+
+    var source = {
+        localdata: SQL_RESULT,
+        datatype: "json",
+        datafields:[
+            { name: 'ID',					type: 'string' },
+            { name: 'HASH',					type: 'string' },
+            { name: 'DATE',					type: 'string' },
+            { name: 'TEAM',					type: 'string' },
+            { name: 'CAMERA_ANGLE',			type: 'string' },
+            { name: 'ARENA_NAME',			type: 'string' },
+            { name: 'ARENA_NUM',			type: 'string' },
+            { name: 'GAME_START_TIME',		type: 'string' },
+            { name: 'GAME_END_TIME',		type: 'string' },
+            { name: 'URL',					type: 'string' },
+            { name: 'ARENA_CODE',			type: 'string' },
+            { name: 'MANAGER_PHONE',		type: 'string' },
+            { name: 'TEAM_NAME_LEFT',		type: 'string' },
+            { name: 'TEAM_NAME_RIGHT',		type: 'string' },
+            { name: 'TAGGING_DONE',			type: 'string' },
+            { name: 'VALID_UNTIL',			type: 'string' },
+            { name: 'IS_LINK_SHARED',		type: 'string' },
+            { name: 'YOUTUBE_URLS',			type: 'string' },
+        ]                     
+    };
+    var dataAdapter = new $.jqx.dataAdapter(source);
+	$("#DIV_GRID_MATCH_LIST").jqxGrid({
+        width: '100%',
+        height: '100%',
+        source: dataAdapter,                
+//        pageable: true,
+//        autoheight: true,
+        sortable: true,
+        altrows: true,
+        enabletooltips: true,
+        editable: false,
+        pagesize: 15,
+        selectionmode: 'multiplecellsadvanced',
+        columns: [
+          { text: 'MATCH_DATE',	columngroup: 'MATCH_INFO', datafield: 'DATE',		align: 'center',	cellsalign: 'center', width: '7%'},
+          { text: 'TEAM_NAME',	columngroup: 'MATCH_INFO', datafield: 'TEAM',		align: 'center',	cellsalign: 'center', width: '17%'},
+          { text: 'ARENA_NAME',	columngroup: 'MATCH_INFO', datafield: 'ARENA_NAME',		align: 'center',	cellsalign: 'center', width: '15%'},
+          { text: 'ARENA_NUM',	columngroup: 'MATCH_INFO', datafield: 'ARENA_NUM',		align: 'center',	cellsalign: 'center', width: '9%'},
+          { text: 'START_TIME',	columngroup: 'MATCH_INFO', datafield: 'GAME_START_TIME',		align: 'center',	cellsalign: 'center', width: '10%'},
+          { text: 'END_TIME',	columngroup: 'MATCH_INFO', datafield: 'GAME_END_TIME',		align: 'center',	cellsalign: 'center', width: '10%'},
+          { text: 'MANAGER_PHONE_NUM',	columngroup: 'MATCH_INFO', datafield: 'MANAGER_PHONE',		align: 'center',	cellsalign: 'center', width: '17%'},
+          { text: '<button style="height:100%;" CMD="ADD" onclick="ON_CLICK_BTN_PROCESS_MATCH(this);">추가</button>', align: 'center',	cellsalign: 'center', width: '15%',
+          	cellsrenderer: function (row, column, value) {
+                var STR_HTML  = '';
+                	STR_HTML += '<div style="width:100%;height:100%;text-align:center;">';
+          		if (row > -1) {
+                	STR_HTML += '<button style="height:100%;" CMD="UPD" ROW="' + row + '" onclick="ON_CLICK_BTN_PROCESS_MATCH(this);">';
+                	STR_HTML += '수정';
+                	STR_HTML += '</button>';
+                	STR_HTML += ' ';
+                	STR_HTML += '<button style="height:100%;" CMD="DEL" ROW="' + row + '" onclick="ON_CLICK_BTN_PROCESS_MATCH(this);">';
+                	STR_HTML += '삭제';
+                	STR_HTML += '</button>';
+                	STR_HTML += ' ';
+                	STR_HTML += '<button style="height:100%;" CMD="VIEW" ROW="' + row + '" onclick="ON_CLICK_BTN_PROCESS_MATCH(this);">';
+                	STR_HTML += '시청';
+                	STR_HTML += '</button>';
+          		} else {
+                	STR_HTML += '<button style="height:100%;" CMD="ADD" ROW="' + row + '" onclick="ON_CLICK_BTN_PROCESS_MATCH(this);">';
+                	STR_HTML += '추가';
+                	STR_HTML += '</button>';
+          		}
+                	STR_HTML += '</div>';
+                return STR_HTML;
+            }
+          },
+        ],
+/*
+        columngroups: [
+            { text: 'OPENAPI 계정정보', align: 'center', name: 'MATCH_INFO' },
+        ]
+*/
+    });	
+    
+}
+
+</script>
+<div class="CSS_FUTSAL_MATCH_LIST">
+	<div style="height:5%; overflow:auto;">
+		<table>
+			<col width="10%" />
+			<col width="10%" />
+			<col width="10%" />
+			<col width="10%" />
+			<col width="10%" />
+			<col width="10%" />
+			<col width="10%" />
+			<col width="10%" />
+			<col width="20%" />
+			<tr>
+				<th style="background:#94bbd6; color:#333;">MATCH_DATE</th>
+				<td>
+					<input type="text" id="STR_MATCH_DATE" style="width:100%;height:100%" />
+				</td>
+
+				<th style="background:#94bbd6; color:#333;">TEAM_NAME</th>
+				<td>
+					<input type="text" id="STR_TEAM_NAME" style="width:100%;height:100%" />
+				</td>
+
+				<th style="background:#94bbd6; color:#333;">ARENA_NAME</th>
+				<td>
+					<input type="text" id="STR_ARENA_NAME" style="width:100%;height:100%" />
+				</td>
+
+				<th style="background:#94bbd6; color:#333;">LIMIT</th>
+				<td>
+					<input type="text" id="MAX_LIST" style="width:100%;height:100%;text-align:center;" value="50"/>
+				</td>
+
+				<td>
+					<button class="BTN_MATCH_LIST" id="BTN_GET_MATCH_LIST">
+						목록갱신
+					</button>
+				</td>
+
+			</tr>
+		</table>
+	</div>
+	<div style="height:95%;">
+		<div id="DIV_GRID_MATCH_LIST">
+		</div>
+	</div>
+</div>

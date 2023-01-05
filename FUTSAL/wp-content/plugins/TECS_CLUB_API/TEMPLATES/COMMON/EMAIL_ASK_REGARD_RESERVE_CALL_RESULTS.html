@@ -1,0 +1,144 @@
+<div style="width:100%">
+	<table style="width:100%;">
+		<tr>
+			<th style="text-align:right; background:#CCCCCC;" colspan="2">
+				<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+				<!-- 콜세이브 메일 -->
+				<ins class="adsbygoogle"
+				     style="display:block"
+				     data-ad-client="ca-pub-9347092051220282"
+				     data-ad-slot="1597848448"
+				     data-ad-format="auto"></ins>
+				<script>
+				(adsbygoogle = window.adsbygoogle || []).push({});
+				</script>
+			</th>
+		</tr>
+	</table>
+	<table style="width:100%;">
+		<tr>
+			<th style="background:#CCCCCC;">
+				{$ARGS->SUBJECT}
+			</th>
+		</tr>
+	</table>
+	<table style="width:100%;">
+		<col width="50%"/>
+		<col width="50%"/>
+		<tr>
+			<th style="background:#CCCCCC;" colspan="2">
+				처리된 시나리오
+			</th>
+		</tr>
+		<tr>
+			<th style="text-align:left;  background:#CCCCCC; word-break:break-all">
+				{$ARGS->ASK_REGARD_RESERVE_CALL_RESULT->RESERVE_DATA->SCENARIO_SELECTED->GROUP_DISP}
+			</th>
+			<th style="text-align:left;  background:#CCCCCC; word-break:break-all">
+				{$ARGS->ASK_REGARD_RESERVE_CALL_RESULT->RESERVE_DATA->SCENARIO_SELECTED->SCENARIO_DISP}
+			</th>
+		</tr>
+		<tr loop="$ARGS->ASK_REGARD_RESERVE_CALL_RESULT->RESERVE_DATA->SCENARIO_SELECTED->SCENARIO_HELP => $ONE_HELP_MESSAGE">
+			<td style="text-align:left;  background:#EEEEEE; word-break:break-all"  colspan="2">
+				{$ONE_HELP_MESSAGE}
+			</td>
+		</tr>
+	</table>
+	<table style="width:100%;" loop="$ARGS->ASK_REGARD_RESERVE_CALL_RESULT->RESERVE_CALL_RESULT => $ONE_RESERVE_CALL_RESULT">
+		<col width="25%"/>
+		<tr>
+			<th style="text-align:right; background:#CCCCCC;">
+				자동안부전화 발신자
+			</th>
+			<td style="text-align:left;  background:#EEEEEE; word-break:break-all">
+				{$ONE_RESERVE_CALL_RESULT->CALL_ARGS->ASK_FROM}({$ONE_RESERVE_CALL_RESULT->CALL_ARGS->CALL_FROM})
+			</td>
+		</tr>
+		<tr>
+			<th style="text-align:right; background:#CCCCCC;">
+				자동안부전화 수신자
+			</th>
+			<td style="text-align:left;  background:#EEEEEE; word-break:break-all">
+				{$ONE_RESERVE_CALL_RESULT->CALL_ARGS->ASK_TO}({$ONE_RESERVE_CALL_RESULT->CALL_ARGS->CALL_TO})
+			</td>
+		</tr>
+		<tr cond="isset($ONE_RESERVE_CALL_RESULT->CALL_ARGS->VOICE_URL)">
+			<th style="text-align:right; background:#CCCCCC;">
+				녹음음성 또는 노래선물
+			</th>
+			<td style="text-align:left;  background:#EEEEEE; word-break:break-all">
+				<a href="{$ONE_RESERVE_CALL_RESULT->CALL_ARGS->VOICE_URL}">{$ONE_RESERVE_CALL_RESULT->CALL_ARGS->VOICE_VAL}</a>
+			</td>
+		</tr>
+		<tr>
+			<th style="text-align:right; background:#CCCCCC;">
+				서비스 시작 시각
+			</th>
+			<td style="text-align:left;  background:#EEEEEE; word-break:break-all">
+				{date('Y-m-d H:i:s',$ONE_RESERVE_CALL_RESULT->CALL_TIMES->TIME_VALUE_REGIST)}
+			</td>
+		</tr>
+		<tr>
+			<th style="text-align:right; background:#CCCCCC;">
+				통화 시작 시각
+			</th>
+			<td style="text-align:left;  background:#EEEEEE; word-break:break-all">
+				{date('Y-m-d H:i:s',$ONE_RESERVE_CALL_RESULT->CALL_TIMES->TIME_VALUE_REGIST)}
+			</td>
+		</tr>
+		<tr>
+			<th style="text-align:right; background:#CCCCCC;">
+				통화 종료 시각
+			</th>
+			<td style="text-align:left;  background:#EEEEEE; word-break:break-all">
+				{date('Y-m-d H:i:s',$ONE_RESERVE_CALL_RESULT->CALL_TIMES->TIME_VALUE_CALL_END)}
+			</td>
+		</tr>
+		<tr>
+			<th style="text-align:right; background:#CCCCCC;">
+				총 서비스 진행 시간
+			</th>
+			<td style="text-align:left;  background:#EEEEEE; word-break:break-all">
+				{$ONE_RESERVE_CALL_RESULT->CALL_TIMES->TIME_VALUE_AUTH_DURATION} 초
+			</td>
+		</tr>
+		<tr>
+			<th style="text-align:right; background:#CCCCCC;">
+				총 통화 진행 시간
+			</th>
+			<td style="text-align:left;  background:#EEEEEE; word-break:break-all">
+				{$ONE_RESERVE_CALL_RESULT->CALL_TIMES->TIME_VALUE_CALL_DURATION} 초
+			</td>
+		</tr>
+		<tr>
+			<th style="text-align:right; background:#CCCCCC;">
+				시나리오 전개 내역
+			</th>
+			<td style="text-align:left;  background:#EEEEEE; word-break:break-all">
+				<table style="width:100%;">
+					<col width="10%"/>
+					<tr>
+						<th style="text-align:right; background:#CCCCCC;">
+							단계
+						</th>
+						<th style="text-align:center;  background:#CCCCCC;">
+							전개 내역
+						</th>
+					</tr>
+					<tr loop="$ONE_RESERVE_CALL_RESULT->SCENARIO_HISTORY => $KEY,$ONE_HISTORY">
+						<th style="text-align:right; background:#CCCCCC;">
+							{$KEY}
+						</th>
+						<td style="text-align:left;  background:#EEEEEE; word-break:break-all">
+							<!--@if(is_object($ONE_HISTORY))-->
+							<pre>{print_r($ONE_HISTORY, true)}</pre>
+							<!--@else-->
+							{$ONE_HISTORY}
+							<!--@end-->
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+</div>

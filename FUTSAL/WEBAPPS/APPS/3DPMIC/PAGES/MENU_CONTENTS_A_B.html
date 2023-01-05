@@ -1,0 +1,772 @@
+<link href="assets/css/font-awesome.css" rel="stylesheet" />
+
+<style>
+body{
+overflow-y: auto !important;
+height: 100%;
+}
+ul{
+padding: 0;
+list-style: none;	
+}
+#remote{
+	display: none;
+}
+#DIV_CONTENT{
+margin-top: -70px;
+}
+.detail_content {
+	width: 100%;
+	margin-top: -60px;
+	position: relative;
+}
+.detail_content .sub_bg{
+height: 400px;
+background: #0F2027;  /* fallback for old browsers */
+background: -webkit-linear-gradient(to bottom, #2C5364, #203A43, #0F2027);  /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to bottom, #2C5364, #203A43, #0F2027); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+text-align: center;
+	position: relative;	
+}
+.detail_content .sub_bg > div{
+	position: absolute;
+	top: calc(50% + 35px);
+	left: 50%;
+	transform: translate(-50%, -50%);
+	padding-top: 70px;
+}
+.detail_content .sub_bg > div h2{
+	font-size: 48px;
+	font-weight: 700;
+	margin-bottom: 15px;
+	margin-top: 0;
+	color: #fff;
+}
+.detail_content .sub_bg > div p{
+	font-size: 17px;
+	font-weight: 500;
+	color: #fff;
+}
+
+button#move_top_btn {
+    position: fixed;
+    right: 2%;
+    bottom: 50px;
+    display: none;
+    z-index: 999;
+    text-align: center;
+    background-color: #114991;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    color: #fff;
+    font-weight: 500;
+    border: none;
+    right: 50px;
+}
+button#move_top_btn:hover, button#move_top_btn:focus{
+	background-color: #049DCC;
+}
+button#move_top_btn.stop_move{
+display: block;
+position: absolute;
+bottom: 250px;
+}
+.breadcrumb_wrap{
+	 border-bottom: 1px solid #ddd;
+	 box-shadow: 0px 5px aliceblue;
+}
+.breadcrumb{
+	  background: none;
+   margin-bottom: 0;
+    border-radius: 0;
+    text-align: right;
+    padding: 15px 0px;
+}
+.vision{
+text-align: center;
+margin-top: 50px;
+margin-bottom: 100px;
+}
+.vision > h3{
+	  text-align: center;
+    font-weight: bold;
+    display: inline-block;
+    border-bottom: 4px solid #114991;
+    padding-bottom: 8px;
+    font-size: 32px;
+}	
+.vision > p{
+font-size: 18px;
+color: #666;
+margin-top: 15px;
+}
+
+.vision .nav-tabs{
+	border: none;
+	margin: 50px auto;
+}
+.vision .nav-tabs > li{
+width: 50%;
+border: none;
+}
+.vision .nav-tabs > li > a{
+margin-right: 0;
+color: #444;
+font-size: 20px;
+font-weight: bold;
+border-radius: 0;
+border: 1px solid #ddd;
+padding: 15px;
+}
+.nav-tabs > li.active > a, .nav-tabs > li.active > a:focus, .nav-tabs > li.active > a:hover{
+background-color: #114991;
+border-color: #114991;
+color: #fff;
+}
+
+.tab-content > div > div{
+	margin-top: 90px;	
+}
+.tab-content h4 {
+   font-size: 21px;
+font-weight: bold;
+padding-bottom: 8px;
+display: inline-block;
+border-bottom: 2px solid #c3ccdd
+}
+.tab-content .inner1 img{
+	margin: 0 auto;
+	margin-top: 35px;
+	display: block;
+	border: 1px solid #eee;
+padding: 20px;
+}
+.vision .tab-content h5{
+		color: 	#888;
+		margin-bottom: 30px;
+}
+.tab-content #con1 .inner2 img{
+max-width: 100%;
+margin-bottom: 15px;
+padding-top: 15px;
+border-top: 1px solid #eee;
+}
+.tab-content #con1 .inner3 img{
+max-width: 100%;
+}
+.tab-content ul{
+text-align: left;	
+position: relative;
+margin-top: 20px;
+}
+.tab-content ul li{
+font-size: 16px;
+line-height: 21px;
+margin-top: 8px;
+}
+.tab-content #con1 .inner1 ul li::before{
+		content:"• ";	
+		color: #114991;
+		position: absolute;
+		left: -10px;
+	}
+	
+	.tab-content #con1 .inner2 ul li::before{
+		content:"• ";	
+		color: #114991;
+		position: absolute;
+		left: -10px;
+	}
+	.tab-content #con1 .inner3 ul li{
+		width: 50%;
+		text-align: center;
+		float: left;
+		color: #555;
+	}
+	.tab-content #con1 .inner3 ul li h5{
+	    font-weight: bold;
+    font-size: 20px;
+    color: #114991;
+}
+
+
+
+
+			#con2 .inner1 .table caption{
+				text-align: center;
+			}
+			#con2 .inner1 .table{
+				border-bottom: 1px solid #ddd;
+				margin-top: 20px;
+			}
+			#con2 .inner1 .table th{
+				text-align: center;
+				font-weight: bold;
+				font-size: 16px;
+			}
+			#con2 .inner1 .table thead tr th:nth-child(1){
+				width: 10%;
+			}
+			#con2 .inner1 .table thead tr th:nth-child(2), .inner1 thead tr th:nth-child(3){
+				width: 45%;
+			}
+			#con2 .inner1 .table tbody tr th{
+				background-color: #f7f8fa;
+				vertical-align: middle !important;
+				font-size: 16px;
+			}
+			#con2 .inner1 .table tbody tr td{
+				vertical-align: middle !important;
+				color: #555 !important;
+				font-size: 16px;
+			}
+			#con2 .inner1 .table > thead > tr > th{
+				border-bottom: 2px solid #666;
+			}
+			#con2 .inner1 .table tbody tr td ul span{
+				display: block;
+				font-size: 15px;
+				color: #114991;
+				font-weight: bold;
+			}
+			#con2 .inner1 .table tbody tr td ul{
+				margin: 0;
+				padding-left: 10px;
+				position: relative;
+			}
+			#con2 .inner1 .inner1 .table tbody tr td ul li{
+				margin: 3px 0px;
+			}
+			#con2 .inner1 .table tbody tr td ul li:first-child{
+				margin-top: 0;
+			}
+			#con2 .inner1 .table tbody tr td ul li:last-child{
+				margin-bottom: 0;
+			}
+			
+			#con2 .inner1 .table tbody tr td ul li::before{
+				content: "·";
+				position: absolute;
+				left: 0;
+			}
+
+			/* inner2 테이블 */
+			#con2 .inner2 table caption{
+				text-align: right;
+			}
+			#con2 .inner2 table *{
+				font-size: 16px;
+				text-align: center;
+				vertical-align: middle !important;
+			}
+			#con2 .inner2 th{
+				background-color: #F7F8FA;
+				font-weight: bold;
+			}
+			#con2 .inner2 th span{
+				font-weight: lighter;
+				color: #777;
+			}
+			#con2 .inner2 table .subtotal{
+				background-color: #f7f8fa;
+			
+			}
+			#con2 .inner2 table .subtotal th{
+				background-color: #f7f8fa;
+			}
+			#con2 .inner2 table .total{
+				color: #114991;
+				background-color: #e3ecff;
+				font-weight: bold;
+			}
+
+			#con2 .inner2 table .total th{
+				background-color: #e3ecff;
+			}
+			#con2 .inner2 .table-bordered > thead > tr:first-child > td, .table-bordered > thead > tr:first-child > th{
+				border-bottom-width: 1px;
+			}
+			#con2 .inner2 .total_wrap{
+				position: relative;
+				display: flex;
+				color: #fff;
+				margin-top: 40px;
+				position: relative;
+				margin: 50px auto;
+				max-width: 1000px;
+
+			}
+			
+			#con2 .inner2 .total_wrap::before{
+				    content: "";
+				    border: 1px solid #eee;
+				    width: 100%;
+				    display: block;
+				    position: absolute;
+				    top: 50%;
+				    transform: translateY(-50%);
+				    z-index: -1;
+				    border: 2px solid #c3ccdd;
+				}
+			#con2 .inner2 .total_wrap .thumb{
+				    width: 25%;
+				    background-color: #114991;
+				    border-radius: 50%;
+				    height: 0;
+				    padding-bottom: 25%;
+				    margin-right: 12.5%;
+						color: #fff;
+						position: relative;
+						
+			}
+			#con2 .inner2 .total_wrap .thumb .thumb_inner{
+				position: absolute;
+				left: 50%;
+				top: 50%;
+				transform: translate(-50%, -50%);
+				width: 100%;
+			}
+			#con2 .inner2 .total_wrap .thumb:last-child{
+				margin:0;
+			}
+			#con2 .inner2 .total_wrap .thumb .tit{
+					font-size: 20px;
+					font-weight: bold;
+			}
+			#con2 .inner2 .total_wrap .thumb i{
+					font-size: 60px;
+			}
+			#con2 .inner2 .total_wrap .thumb .num{
+				font-size: 32px;
+				font-weight: bold;
+				margin: 0;
+			}
+			#con2 .inner2 .total_wrap .thumb .noti{
+				font-size: 15px;
+				color: #f9f9f9;
+			}
+</style>
+
+<script>
+	
+	function QIIP_MENU_CONTENTS_INIT_WIDGETS() {
+//		alert('QIIP_MENU_CONTENTS_INIT_WIDGETS');
+		$("#move_top_btn").click(function() {
+	        $('html, body').animate({
+	            scrollTop : 0
+	        }, 400);
+	        return false;
+	  });
+		$("body").scroll(function(){
+			if ($(this).scrollTop() > 0) {
+		        $('#move_top_btn').fadeIn();
+	    } else {
+	        $('#move_top_btn').fadeOut();
+	    }
+	    
+	    if($(this).scrollTop() > 260){
+	    		$('QIIP_MENU').animate({"background-color":"#fff", "border-color": "#eee"}, 10);	
+	    		$('DIV_LEFT, QIIP_MENU MENU_1ST_TEXT, QIIP_MENU DIV_RIGHT button, QIIP_MENU DIV_RIGHT button span').animate({"color":"#444", "border-color": "#eee"}, 10);	
+	    }else{
+	    		$('QIIP_MENU').animate({"background-color":"rgb(255, 255, 255, 0)", "border-color": "#fff"}, 10);	
+	    		$('DIV_LEFT, QIIP_MENU MENU_1ST_TEXT, QIIP_MENU DIV_RIGHT button, QIIP_MENU DIV_RIGHT button span').animate({"color":"#fff", "border-color": "#fff"}, 10);	
+	    }
+		});
+		
+		$(window).resize(function(){
+	      	var width = parseInt($(this).width());
+			if (width > 960){
+				$("body").scroll(function(){
+				    if($(this).scrollTop() + $(this).height() > $(document).height() - 200) {
+						$("button#move_top_btn").addClass("stop_move");
+				   	} else {
+				   		$("button#move_top_btn").removeClass("stop_move");
+				   	}
+				});
+			} else {
+			  	$("body").scroll(function(){
+					if($(this).scrollTop() + $(this).height() > $(document).height() - 200) {
+						$("button#move_top_btn").addClass("stop_move");
+					} else {
+						$("button#move_top_btn").removeClass("stop_move");
+					}
+				});
+			}
+	    }).resize();
+	}
+	
+</script>
+<!-- DETAIL_CONTENT START -->
+<div class="detail_content">
+	<div class="sub_bg">
+		<div>
+			<h2>INTRODUCTION</h2>
+			<p>한국 쓰리디프린팅 소재산업 협동조합에 대해 소개합니다.</p>
+		</div>
+	</div>
+	<div class="breadcrumb_wrap">
+		<ol class="breadcrumb container">
+			  <li>Home</li>
+			  <li>사업소개</li>
+			  <li class="active">비전</li>
+		</ol>	
+	</div>
+	<div class="container vision">	
+		<h3>비전</h3>
+		<p>
+			기존의 서비스와 비교 분석하며 한국 쓰리디프린팅 소재산업 협동조합의 가치를 알아봅니다.
+		</p>
+
+		<ul class="nav nav-tabs" role="tablist">
+	    <li role="presentation" class="active"><a href="#con1" aria-controls="con1" role="tab" data-toggle="tab">과학기술 기반성</a></li>
+	    <li role="presentation"><a href="#con2" aria-controls="con2" role="tab" data-toggle="tab"> 관련 국내·외 시장현황</a></li>
+	  </ul>
+
+		<div class="tab-content">
+	    <div role="tabpanel" class="tab-pane active" id="con1">
+	    	<div class="inner1">
+		    	<h4>3D프린터 및 3D 프린팅 산업</h4>
+		    	<img src="assets/img/vision1.png" alt="출력 레시피 개발 과정">
+		    	<h5>< 출력 레시피 개발 과정 ></h5>
+		    	<ul class="text-aria">
+		    		<li>4차 산업 혁명에 대한 주요 미래 기술로 주목받고 있는 분야임</li>
+		    		<li>3D 프린팅을 위한 필수적인 소모품으로 활용되는 소재인 필라멘트는 소재의 물성(가열물성, 냉각물성, 색상안료 물성)에 따라 결과물의 품질이 천차만별로 나타남</li>
+						<li>이에 따라, 일반적으로 위 그림과 같이 최종 3D 제품을 얻기 위한 오랜 기간의 출력레시피 개발이 필요함</li>
+		    	</ul>
+		    </div>
+		    <div class="inner2">
+					<img src="assets/img/vision_img1.png">
+					<h4>3D 프린팅 소재분야 과학기술 개발 필요</h4>
+		    	<ul>
+		    		<li>같은 3D 프린터를 이용하여도, 사용하는 소재(필라멘트)의 물성에 따라 최종 3D제품 결과물의 품질이 천차만별로 차이가 나고, 이를 극복하기 위한 수많은 시행착오를 통하여, 3D프린팅 출력레시피를 완성함</li>
+						<li>현재, 이러한 3D 프린팅 출력레시피는 표준화 및 객관화가 되지 못하고, 3D프린팅 산업분야 관련 종사자의 개인별 노하우 형태로 존재함</li>
+						<li>3D 프린팅 업계에서는 최종 3D제품 결과물의 품질을 결정하는 요소로서 소모품으로 활용되는 소재(필라멘트) 물성의 영향이 가장 큰 것으로 인식하고 있음</li>
+					 	<li>이에 따라, 3D프린팅 소재(필라멘트)와 관련된 프린팅기술의 체계적인 기술개발 필요</li>
+		    	</ul>
+		    </div>
+		    <div class="inner3">
+		    	<h4>조합원의 기술 전문성</h4>
+		    	<ul>
+		    		<li>
+		    			<img src="assets/img/vision_ico1.png">
+		    			<h5>조합장</h5> IT분야 35년 경력,<br> 3D프린터 펌웨어 개발 및 3D프린팅 출력 알고리즘 개선</li>
+						<li>
+							<img src="assets/img/vision_ico2.png">
+							<h5>임원사 4명</h5> 플라스틱 소재분야 관련업 30년 이상 종사,<br> 현재 관련업체 대표이사로 활동 중 이며,<br> 나라장터 MAS 공급을 통한 3D프린팅 소재(필라멘트)<br> 관련 사업을 주력 사업 분야로 추진 예정</li>
+		    	</ul>
+	    	</div>
+	    </div>
+	    <div role="tabpanel" class="tab-pane" id="con2">
+	    	<div class="inner1">
+	    	<h4>국내 3D프린팅 소재(필라멘트) 관련기술 및 유통구조 현황</h4>
+				<table class="table">
+			      <thead>
+			        <tr>
+			          <th>구분</th>
+			          <th>AS-IS</th>
+			          <th>TO-BE</th>
+			        </tr>
+			      </thead>
+			      <tbody>
+			        <tr>
+			          	<th scope="row">품질<br>관리체계</th>
+			          	<td>
+			          		<ul>
+								<li>대부분 소규모 공급 유통업체 제품 활용 경험 및 추천 의견에 의존</li>
+								<li>유해물질 발생 등의 공인자료 없음</li>
+			          		</ul>
+			          	</td>
+			          	<td>
+			          		<ul>	          	
+								<li>공인된 품질정보 및 소재특성 제공</li>						
+								<li>유해물질 발생 등의 공인인증시험 관련 절차 체계화</li>
+			          		</ul>
+			          	</td>
+			        </tr>
+			        <tr>
+			       		<th scope="row">유통<br>관리체계</th>
+			          	<td>
+			          		<ul>
+								<li>대부분 소규모 공급 유통업체 영업활동에 의존</li>	
+								<li>공공기관 등 중ㆍ대규모 납품건의 경우, 가격중심의 입찰절차에 의존</li>
+							</ul>
+						</td>
+			          	<td>
+			          		<ul>
+								<li>조달청 나라장터 다수공급자계약(MAS) 제도를 통하여 공인되고 체계화된 유통 관리체계 운영</li>
+								<li>소규모 공급 유통업체 신뢰도 향상</li>
+			          		</ul>
+			          	</td>
+			        </tr>
+			        <tr>
+			          <th scope="row">사후<br>관리체계</th>
+						<td>
+							<ul>
+								<li>대부분 소규모 공급 유통업체 영업활동과 연계하여 운영(가격상승)</li>					
+								<li>공공기관 등 중ㆍ대규모 납품건에 대한 사후 관리체계 미흡</li>
+							</ul>
+						</td>
+			          	<td>
+			          		<ul>
+								<li>조달청 나라장터 다수공급자계약(MAS) 제도와 연계하여, 사후관리 체계를 반영한 체계적인 공급유통 시스템 운영</li>
+							</ul>
+			          	</td>
+			        </tr>
+			        <tr>
+				        <th scope="row">수입제품<br>유통경쟁</th>
+				        <td>
+							<ul>
+								<li>중국산 저가품 가격경쟁
+									<span>→ 공급 유통업체 영업이익 낮음</span>
+									<span>→ 국내 제조기업 매출증대 악영향</span>
+								</li>
+								<li>동일 물성제품 지속공급 불확실
+									<span>→ 3D프린팅레시피 재개발</span>
+								</li>
+							</ul>
+						</td>
+				        <td>		  
+							<ul>
+								<li>국가가 공인한 조달청 나라장터를 통한 공인된 제품공급으로
+									<span>→ 중국산 저가품 대비 차별성확보</span>
+									<span>→ 동일 물성제품 지속 공급보장</span>
+								</li>
+							</ul>
+				        </td>
+			        </tr>
+			        <tr>
+			          	<th scope="row">공공기관의<br>구매절차</th>
+			          	<td>
+							<ul>
+								<li>입찰 및 수의계약에 따른 복잡한 행정절차 및 느린 대금결제
+									<span>→ 입찰 및 수의계약 시 : 약 89일 소요</span>
+								</li>
+							</ul>
+						</td>
+			          	<td>	        
+							<ul>
+								<li>조달청 나라장터쇼핑몰 통한 간편 전자구매 절차 운영</li>
+								<li>다수공급자계약(MAS)에 따른 행정절차 간소화 및 신속한 대금결제</li>
+								<li>전자 조달 적용시 : 약 15일 소요</li>
+			          		</ul>
+			          	</td>
+			        </tr>
+			      </tbody>
+		    	</table>
+		    </div>
+		    <div class="inner2">
+		    	<h4>시장 규모 / 현황 및 목표치</h4>
+		    	<div class="total_wrap">
+		    		<div class="thumb">
+			    		<div class="thumb_inner">
+			    			<p class="tit">총 시장 규모</p>
+								<i class="fa fa-pie-chart" aria-hidden="true"></i>
+
+				    		<p class="num">연간 366만개</p>
+				    		<p class="noti">(학교 및 공공기관, 연구소)</p>
+				    	</div>
+		    		</div>
+		    		<div class="thumb">
+		    			<div class="thumb_inner">
+			    			<p class="tit">조달 규모</p>
+				    		<i class="fa fa-area-chart" aria-hidden="true"></i>
+
+				    		<p class="num">연간 200만개</p>
+				    		<p class="noti">(정부예산)</p>
+		    			</div>
+		    		</div>
+		    		<div class="thumb">
+		    			<div class="thumb_inner">
+			    			<p class="tit">목표 판매량</p>
+			    			<i class="fa fa-line-chart" aria-hidden="true"></i>
+
+			    			<p class="num">연간 120만개</p>
+			    			<p class="noti">(소재산업 협동조합)</p>
+		    			</div>
+		    		</div>
+		    		
+		    	</div>
+		  		<table class="table table-bordered ">
+		  			<caption>(단위: 1롤/kg)</caption>
+			      <thead>
+			        <tr>
+			          	<th colspan="3" rowspan="2">구분</th>
+			          	<th colspan="5">시장규요</th>
+			          	<th colspan="2">목표 판매량</th>
+			        </tr>
+			        <tr>
+				        	<th>
+				        		개소
+				        		<br><span>(학교수)</span>
+				        	</th>
+				        	<th>
+				        		3DP 설치대수
+				        		<br><span>(1개소, 평균)</span>
+				        	</th>
+				        	<th>
+				        		재료사용량
+				        		<br><span>(대당/개월)</span>
+				        	</th>
+				        	<th>
+				        		실사용 <br> 개월수
+				        	</th>
+				        	<th>
+				        		연간
+				        		<br> 재료사용량
+				        	</th>
+				        	<th>점유율</th>
+				        	<th>재료판매수</th>
+			        </tr>
+			      </thead>
+			      <tbody>
+			        <tr>
+			          	<th scope="row" rowspan="9">학교</th>
+			          	<th scope="row" rowspan="3">초,중,고</th>
+			          	<th scope="row">초등학교</th>
+			          	<td>6.087</td>
+			          	<td>11</td>
+			          	<td>1.5</td>
+			        	<td>9</td>
+			        	<td>903,920</td>
+			        	<td>50%</td>
+			        	<td>451,960</td>
+			        </tr>
+			        <tr>
+			          	<th scope="row">중학교</th>
+			          	<td>3,214</td>
+			          	<td>15</td>
+			          	<td>1.5</td>
+				        	<td>9</td>
+				        	<td>650,835</td>
+				        	<td>50%</td>
+				        	<td>325,418</td>
+			        </tr>
+			        <tr>
+			          	<th scope="row">고등학교</th>
+			          	<td>2,356</td>
+			          	<td>20</td>
+			          	<td>1.5</td>
+				        	<td>9</td>
+				        	<td>636,120</td>
+				        	<td>50%</td>
+				        	<td>318,060</td>
+			        </tr>
+			        <tr class="subtotal">
+			        	<th scope="row" colspan="2">소계</th>
+			        	<td>11,657</td>
+			        	<td>-</td>
+			        	<td>-</td>
+			        	<td>-</td>
+			        	<td>2,190,875</td>
+			        	<td></td>
+			        	<td>1,095,437</td>
+			        </tr>
+			        <tr>
+			          	<th scope="row" rowspan="3">대학교</th>
+			          	<th scope="row">전문대</th>
+			          	<td>148</td>
+			          	<td>26</td>
+			          	<td>1.5</td>
+				        	<td>8</td>
+				        	<td>46,176</td>
+				        	<td>50%</td>
+				        	<td>23,088</td>
+			        </tr>
+			        <tr>
+			          	<th scope="row">대학</th>
+			          	<td>244</td>
+			          	<td>26</td>
+			          	<td>1.5</td>
+				        	<td>8</td>
+				        	<td>69,888</td>
+				        	<td>50%</td>
+				        	<td>34,944</td>
+			        </tr>
+			        <tr>
+			          	<th scope="row">대학원대학</th>
+			          	<td>45</td>
+			          	<td>26</td>
+			          	<td>1.5</td>
+				        	<td>8</td>
+				        	<td>14,040</td>
+				        	<td>50%</td>
+				        	<td>7,020</td>
+			        </tr>
+			        <tr class="subtotal">
+				        	<th scope="row" colspan="2">소계</th>
+				        	<td>417</td>
+				        	<td>-</td>
+				        	<td>-</td>
+				        	<td>-</td>
+				        	<td>130,104</td>
+				        	<td>-</td>
+				        	<td>65,052</td>
+			        </tr>
+					<tr class="total">
+			        	<th scope="row" colspan="2">합계</th>
+			        	<td>12,074</td>
+			        	<td>-</td>
+			        	<td>-</td>
+			        	<td>-</td>
+			        	<td>2,320,979</td>
+			        	<td>-</td>
+			        	<td>1,160,489</td>
+			        </tr>
+			        <tr>
+			          	<th scope="row" colspan="3">베이커스페이스</th>
+			          	<td>262</td>
+			          	<td>3.1</td>
+			          	<td>2</td>
+			        	<td>12</td>
+			        	<td>19,493</td>
+			        	<td>3%</td>
+			        	<td>585</td>
+			        </tr>
+					<tr>
+			          	<th scope="row" colspan="3">공공기관</th>
+			          	<td>117</td>
+			          	<td>1.5</td>
+			          	<td>1</td>
+			        	<td>12</td>
+			        	<td>2,106</td>
+			        	<td>3%</td>
+			        	<td>63</td>
+			        </tr>
+			        <tr>
+			          	<th scope="row" colspan="3">국공립연구소</th>
+			          	<td>36,552</td>
+			          	<td>1.5</td>
+			          	<td>2</td>
+			        	<td>12</td>
+			        	<td>1,315,872</td>
+			        	<td>3%</td>
+			        	<td>39,476</td>
+			        </tr>
+			        <tr class="total">
+			        	<th scope="row" colspan="3">합계</th>
+			        	<td>379</td>
+			        	<td>-</td>
+			        	<td>-</td>
+			        	<td>-</td>
+			        	<td>1,337,471</td>
+			        	<td>-</td>
+			        	<td>40,124</td>
+			        </tr>
+			      </tbody>
+		    	</table>
+		    	<h5>2019e-나라지표, 2019한국대학협의회, 2018쓰리디 프린팅 산업 실태 조사 외 신문 및 동향자료 토대로 총 시장 규모를 통계적으로 역산하여 추정함</h5>
+		    </div>
+	    	
+	    </div>
+	  </div>	
+	</div>
+</div>
+	<div class="footer" style="background-color: #333;">
+	    <div style="height: 200px;">footer</div>
+	</div>
+	<button id="move_top_btn" alt="MOVE TOP"><span class="glyphicon glyphicon-chevron-up"></span><br>TOP</button>
+
+</div>
+<!-- DETAIL_CONTENT END -->
+	

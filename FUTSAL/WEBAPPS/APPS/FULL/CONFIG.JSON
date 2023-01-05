@@ -1,0 +1,78 @@
+{
+	"CHROME_ONLY" : false,
+	"LOGIN_IDPW" : true,
+
+	"IVR_SERVER_IPS" : [
+		{
+			"SERVER_NAME"	: "PBX.Q1P.WIN",
+			"SERVER_IP"		: "222.239.78.249"
+		},
+		{
+			"SERVER_NAME"	: "QIIP.WIN",
+			"SERVER_IP"		: "112.158.118.159"
+		},
+		{
+			"SERVER_NAME"	: "NAVER_CLOUD",
+			"SERVER_IP"		: "220.230.120.230"
+		}
+	],
+
+	"IVR_LEGACY_SERVER_IPS" : [
+		{
+			"SERVER_NAME"	: "LEGACY_47",
+			"SERVER_IP"		: "211.61.220.47"
+		},
+		{
+			"SERVER_NAME"	: "LEGACY_48",
+			"SERVER_IP"		: "211.61.220.48"
+		}
+	],
+
+	"INITIAL_POST_INFORMATION" : {
+		"GCM_SENDER_ID" : "64222680140",
+		"GCM_API_KEY" : "AIzaSyDNiqGxlZLD2PHeHMMHxUa2DiFT1Wl_PnY"
+	},
+
+	"SIDEMENU": {
+		"HEADER" : "메뉴",
+		"FILE_TEMPLATE_" : "PAGES/SIDEMENU.html",
+		"FILE_TEMPLATE" : "PAGES/SIDEMENU_BOOTSTRAP_DONG.html",
+		"MENUITEMS" : [
+			{
+				"MENU_STRING"		: "이력보기",
+				"MENU_CONTENTS"		: "PAGES/IOTMON_HISTORY.html",
+				"MENU_INIT_FUNC"	: "INIT_WIDGETS_FOR_MENU_CONTENTS();"
+			},
+			{
+				"MENU_STRING"		: "단말 정보",
+				"MENU_CONTENTS"		: "PAGES/IOTMON_TERMINATING_INFO.html",
+				"MENU_INIT_FUNC"	: "INIT_WIDGETS_FOR_MENU_CONTENTS();"
+			},
+			{
+				"MENU_STRING"		: "단말 동작 설정",
+				"MENU_CONTENTS"		: "PAGES/IOTMON_TERMINATING_MOTION.html",
+				"MENU_INIT_FUNC"	: "INIT_WIDGETS_FOR_MENU_CONTENTS();"
+			},
+			{
+				"MENU_STRING"		: "시스템 정보",
+				"MENU_CONTENTS"		: "PAGES/IOTMON_SYSTEM.html",
+				"MENU_INIT_FUNC"	: "INIT_WIDGETS_FOR_MENU_CONTENTS();"
+			},
+			{
+				"MENU_STRING"		: "가입자 관리",
+				"MENU_CONTENTS"		: "PAGES/IOTMON_ADMIN.html",
+				"MENU_INIT_FUNC"	: "INIT_WIDGETS_FOR_MENU_CONTENTS();"
+			}
+		],
+		"DESKTOP_MENU_USERS" : [
+			"01077743438"
+		],
+		"MENUITEMS_FOR_DESKTOP" : [
+			{
+				"MENU_STRING"		: "데스크탑 기능",
+				"MENU_CONTENTS"		: "PAGES/CONTENTS_DESKTOP.html",
+				"MENU_INIT_FUNC"	: "INIT_WIDGETS_FOR_MENU_CONTENTS();"
+			}
+		]
+	}
+}

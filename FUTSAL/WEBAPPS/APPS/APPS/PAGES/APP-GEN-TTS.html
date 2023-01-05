@@ -1,0 +1,103 @@
+<link rel="stylesheet" href="/WEBAPPS/APPS/APPS/PAGES/SIDEMENU_APPS.css">
+
+<style>
+	.APP-GEN-TTS 			{width:100%; height:100%;box-sizing:border-box;}
+	.APP-GEN-TTS table		{width:100%; height:100%; font-size:100%; border-collapse: separate; border-spacing: 1px; line-height: 100%;}
+	.APP-GEN-TTS table th	{font-weight:bold; text-align: center; white-space:normal; vertical-align: middle; word-break:break-all; word-wrap:break-all; background:#4789b7; color:white; }
+	.APP-GEN-TTS table td	{text-decoration:none; text-align: left;   white-space:normal; vertical-align: middle; word-break:break-all; word-wrap:break-all; background:#eee; padding:0 10px;}
+</style>
+
+<script>
+
+function INIT_BUTTON_WIDGETS() {
+	$(".EVENT_BUTTON").unbind();
+	$(".EVENT_BUTTON").on('click', function () {
+		var ID = $(this).attr('id');
+		if (ID == 'DUMMY') {
+		} else if (ID == 'BTN_PLAY') {
+			CREATE_TTS_TRACK();
+		}
+	});
+}
+
+function CREATE_TTS_TRACK() {
+	if ($('#TTS_TEXT').val().length < 1) {
+		QIIP_APP_ALERT([
+			'TTS TEXT 영역에 음성 합성으로 생성하실 문장을 입력하세요.'
+		],function () {
+//				window.location.replace(_API_SERVER_URL);
+		});
+		return;
+	}
+	var TTS_URL  = _API_SERVER_URL;
+		TTS_URL += '?REQ=api_TTS_VW';
+//		TTS_URL += '&TTS_URL=http://pbx.1key.kr:8080/API/';
+//		TTS_URL += '&TTS_URL=http://1key.kr:8080/API/';
+		TTS_URL += '&TTS_URL=http://apps.tecs.club:8080/API/';
+		TTS_URL += '&TTS_TEXT=' + $('#TTS_TEXT').val();
+	if ($('#CHK_ENG').is(":checked")) {
+		TTS_URL += '&TTS_LANG=1';
+	}
+	_NAUTES_SoundVisualizer.WAE_EE.emit("automaticscroll", false);
+	_NAUTES_SoundVisualizer.WAE_EE.emit("clear");
+	_NAUTES_SoundVisualizer.WAE_PLAYLIST.load([{
+			src: TTS_URL,
+			name: 'TTS_TRACK'
+	}]).then(function() {
+	});
+}
+
+var _NAUTES_SoundVisualizer = undefined;
+function INIT_NAUTES_SoundVisualizer() {
+	_NAUTES_SoundVisualizer = new NAUTES_SoundVisualizer({
+		DOM_ID_FOR_RENDERING: 'DIV_NAUTES_SoundVisualizer',
+		DOWNLOAD_DISABLE: false,
+//		WAVE_DISPLAY_ONLY: true,
+	});
+/*
+	_NAUTES_SoundVisualizer.WAE_PLAYLIST.load([{
+			src: 'http://ask-regard.call-save.biz?PASS=1&cmd=api_YOUTUBE_MP3&YOUTUBE_videoId=yQxB1M0VZLU&EXT=.mp3'
+	}]).then(function() {
+	});
+//*/
+}
+
+function QIIP_SIDEMENU_INIT_WIDGETS() {
+	TOGGLE_SIDEMENU(function () {
+		$('#MENU_CONTENTS').css('height', ($('#SIDEMENU_PAGE').height() - 70) / $('#SIDEMENU_PAGE').height() * 100 + '%');
+		
+		INIT_BUTTON_WIDGETS();
+		INIT_NAUTES_SoundVisualizer();
+	});
+}
+
+</script>
+
+
+<div class="APP-GEN-TTS" style="overflow:auto;">
+	<div style="width:100%;height:70%;" id="DIV_NAUTES_SoundVisualizer">
+	</div>
+	<div style="height:30%;">
+		<table>
+			<col width="15%" />
+			<col width="70%" />
+			<col width="15%" />
+			<tr>
+				<th rowspan="2">
+					TTS TEXT
+				</th>
+				<td rowspan="2">
+					<textarea type="text" style="width:100%;height:100%;" id="TTS_TEXT"></textarea>
+				</td>
+				<td style="text-align:center;">
+					<input type="checkbox" id="CHK_ENG" /> TTS ENGLISH
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<button class="btn btn-primary EVENT_BUTTON" id="BTN_PLAY" style="width:100%;height:100%;">생성</button>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>

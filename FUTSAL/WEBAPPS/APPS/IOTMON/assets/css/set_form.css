@@ -1,0 +1,143 @@
+ @charset "utf-8";
+ .border_line{
+margin: 15px;
+
+border-bottom: 1px dotted #eee;
+ }
+ /* Rounded sliders */ 
+  
+ .slider.round { 
+     border-radius: 34px; 
+ } 
+ .slider.round:before { 
+     border-radius: 50%; 
+ }
+ .switch{
+ 	margin: 0;
+ 	float: left;
+ 	}
+ .time_am_pm{
+height: 34px;
+
+text-align: right;
+
+line-height: 34px;
+
+padding: 0;
+ }
+	.time_min{
+height: 34px;
+
+text-align: left;
+
+line-height: 34px;
+
+padding: 0;		
+	}
+ 
+ input{
+ text-align: center;	
+ }
+ .input-daterange{
+ width: 100%;	
+ }
+ .input-daterange select{
+ text-align: center;	
+ }
+ .input-daterange option{
+ text-align: center;	
+ }
+ .form-horizontal{
+ text-align: center;
+max-width: 500px;
+margin: 0 auto;	
+ }
+ 
+ 
+ .form-horizontal	.form-group {
+ 	margin: 0;
+    margin-bottom: 5px;
+}
+
+.save_btn{
+margin-bottom: 5px;	
+}
+.info_form input{
+	text-align: left;
+}
+.pw_form input{
+	text-align: left;
+}
+
+@media (max-width: 767px){
+	
+	.form-horizontal{
+		text-align: left;	
+	}	
+	.switch_form label{
+	float: left;
+
+line-height: 34px;	
+	}
+	
+	.time_form label{
+	width: 100%;	
+	}
+	.time_am_pm{
+	float: left;
+	width: 10%;
+	}
+	.time_form div.col-sm-4{
+		width: 80%;
+
+float: left;
+	}
+	
+	.wifi_form label{
+	width: 100%;	
+	}
+	.wifi_form div.col-sm-4{
+		width: 80%;
+margin-left: 10%;
+float: left;
+	}
+	.time_min{
+	width: 10%;
+	float: left;	
+	}
+	
+	.led_form div.col-sm-4{
+		width: 80%;
+margin-left: 10%;
+float: left;
+	}
+	.save_form{
+	text-align: center;	
+	}
+	
+}
+
+@media (max-width: 500px){
+	#APPS_CONTENTS {
+    margin: 0;
+}
+
+.openapi_accounts{
+margin: 0;
+
+box-shadow: none;
+
+border-radius: 0;	
+}
+}
+
+@media (max-width: 320px){
+
+.search input{
+		margin-right: 5%;
+		width: 70%;
+}
+.search button{
+	width: 25%;
+}
+}

@@ -1,0 +1,139 @@
+@charset "utf-8";
+#APP_CONTENTS .save_clip{
+	width: 100%;
+	height:27%;
+	margin:0 auto;
+	max-width: 1140px;
+}
+#APP_CONTENTS .save_clip .memo{
+width: 46%;
+float: left;
+margin-right: 2%;
+}
+#APP_CONTENTS .save_clip .memo h2{
+font-size: 21px;
+line-height: 1.6;
+color: #e06731;
+margin: 0;
+}
+#APP_CONTENTS .save_clip .memo h2 button{
+	margin-top: 5px;
+float: right;
+background-color: #333;
+color: #fff;
+border-radius: 0;
+font-size: 12px;
+padding: 2px 10px;
+}
+.memo .col-sm-12{
+width: 100%;
+margin: 0 auto;
+}
+#APP_CONTENTS .save_clip .memo tbody{
+	border-bottom: 1px solid #ddd;
+}
+#APP_CONTENTS .save_clip .memo tr{
+	background-color: unset;
+}
+#APP_CONTENTS .save_clip .memo tr td{
+	text-align: center;
+padding: 8px;
+line-height: 1.42857143;
+vertical-align: top;
+border-top: 1px solid #ddd;
+font-size: 14px;
+}
+#APP_CONTENTS .save_clip .memo tr td:last-child{
+	text-align: left;
+}
+
+/* 비디오클립 */
+#APP_CONTENTS .save_clip .video_clip{
+width: 46%;
+float: left;
+margin-left: 2%;
+}
+#APP_CONTENTS .save_clip .video_clip h2{
+font-size: 21px;
+line-height: 1.6;
+color: #e06731;
+margin: 0;
+}
+#APP_CONTENTS .save_clip .video_clip h2 button{
+	float: right;
+background-color: #333;
+color: #fff;
+border-radius: 0;
+font-size: 12px;
+padding: 2px 10px;
+}
+#APP_CONTENTS .save_clip .video_clip .row {	
+padding: 0;
+margin: 0;
+}
+#APP_CONTENTS .save_clip .video_clip .thumbnail{
+margin: 0;
+padding: 0;
+position: relative;
+}
+#APP_CONTENTS .save_clip .video_clip .thumbnail img:first-child{
+position: absolute;
+z-index: 1;
+}
+#APP_CONTENTS .save_clip .video_clip .thumbnail img{
+	width: 100%;
+}
+#APP_CONTENTS .save_clip .video_clip .thumbnail .caption{
+text-align: center;
+background-color: #fff;
+border: 1px solid #ddd;
+border-radius: 4px;
+padding: 0;
+}
+#APP_CONTENTS .save_clip .video_clip .thumbnail .caption h4{
+	font-size: 16px;
+color: #555;
+margin-top: 10px;
+
+margin-bottom: 10px;
+}
+button.delete_btn{
+border: none;
+color: #999;
+background: unset;
+}
+button.delete_btn:hover{
+
+color: #888;
+}
+
+.BTN_CLASS_MODIFY_MEMO{
+	background-color: #777;color: #eee;border: none;box-shadow: none !important;padding: 0% 1%;margin-left: 1%;font-size: 12px; text-align: center;
+}
+.BTN_CLASS_MODIFY_ALL_MEMO{
+	background-color: #777;color: #eee;border: none;box-shadow: none !important;padding: 0% 1%;margin-left: 1%;font-size: 12px; text-align: center;
+}
+.BTN_CLASS_MODIFY_MEMO:hover, #BTN_CLASS_MODIFY_MEMO:focus{
+	background-color: #555;
+}
+.BTN_CLASS_MODIFY_ALL_MEMO:hover, #BTN_CLASS_MODIFY_ALL_MEMO:focus{
+	background-color: #555;
+}
+.memo_modify_footer{
+	margin-top: 2%;
+text-align: center;
+border-top: 1px solid #eee;
+padding-top: 5px !important;
+}
+#BTN_MEMO_SAVE{
+	background-color: #555; color: #fff; box-shadow: none !important;
+}
+#BTN_MEMO_SAVE:hover, #BTN_MEMO_SAVE:focus {
+	background-color: #444;
+}
+#BTN_CANCLE{
+	background: unset; border: 1px solid #555; box-shadow: none !important;
+}
+#BTN_CANCLE:hover, #BTN_CANCLE:focus {
+	background: #eee; border: 1px solid #333;
+}

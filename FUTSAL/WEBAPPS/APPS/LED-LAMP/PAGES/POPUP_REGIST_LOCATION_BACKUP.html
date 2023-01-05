@@ -1,0 +1,252 @@
+<script>
+var OBJ_POPUP_DIALOG_FOR_REGIST_LOCATION = null;
+
+function INIT_WIDGETS_FOR_POPUP_REGIST_LOCATION(OBJ_DIALOG) {
+	OBJ_POPUP_DIALOG_FOR_REGIST_LOCATION = OBJ_DIALOG;
+	$(".BTN_POPUP").jqxButton({
+		width: '100%',
+		height: '100%'
+	}).on('click', function () {
+		var ID = $(this).attr('ID');
+		if (ID == 'DUMMY') {
+		} else if (ID == 'BTN_POPUP_CHANGE_LOCATION') {
+			CLOSE_POPUP_FOR_REGIST_LOCATION();
+			EXEC_WITH_GEOCODE_ADRESS_VIA_MARKER(
+				MARKER_FOR_G_MAP,
+				function (MY_LOCATION_INFO) {
+					POPUP_SEARCH_LOCATION(MY_LOCATION_INFO)
+				}
+			);
+		} else if (ID == 'BTN_POPUP_TARGET_PHONE_NO_SEARCH') {
+			if ($('#TEXT_TARGET_PHONE_NO').val().length > 2) {
+				GET_CONTACTS_FOR_REGIST_LOCATION();
+			} else {
+				if ($('#TEXT_TARGET_PHONE_NO').val().length < 2) {
+					$('#TEXT_TARGET_PHONE_NO').attr('placeholder','검색어를 2글자 이상 입력 하십시오.');
+				} else {
+					GET_CONTACTS_FOR_REGIST_LOCATION();
+				}
+			}
+		} else if (ID == 'BTN_POPUP_ADD_ITEM_NOTIFY_TO_ME_LIST') {
+			ADD_NOTIFY_LIST('TO_ME');
+		} else if (ID == 'BTN_POPUP_ADD_ITEM_NOTIFY_FROM_ME_LIST') {
+			ADD_NOTIFY_LIST('FROM_ME');
+		} else if (ID == 'BTN_POPUP_REGIST_CANCLE') {
+			CLOSE_POPUP_FOR_REGIST_LOCATION();
+		}
+	});
+	$('#DIV_NOTIFY_TO_ME_LIST').jqxListBox({
+		width : '100%',
+		height: '100%',
+//		checkboxes: true,
+	    renderer: function (index, label, value) {
+	    	var STR_HTML = '';
+	    		STR_HTML += '<table>';
+	    		STR_HTML += '<tr>';
+	    		STR_HTML += '<th>';
+	    		STR_HTML += value.MEMBER ? '회원' : '비회원';
+	    		STR_HTML += '</th>';
+	    		STR_HTML += '</tr>';
+	    		STR_HTML += '<tr>';
+	    		STR_HTML += '<th>';
+	    		STR_HTML += value.DISPLAY_NAME;
+	    		STR_HTML += '</th>';
+	    		STR_HTML += '</tr>';
+	    		STR_HTML += '<tr>';
+	    		STR_HTML += '<th>';
+	    		STR_HTML += value.PHONE_NO;
+	    		STR_HTML += '</th>';
+	    		STR_HTML += '</tr>';
+	    		STR_HTML += '</table>';
+		    return STR_HTML;
+	    }
+	});
+	$('#DIV_NOTIFY_FROM_ME_LIST').jqxListBox({
+		width : '100%',
+		height: '100%',
+//		checkboxes: true,
+	    renderer: function (index, label, value) {
+	    	var STR_HTML = '';
+	    		STR_HTML += '<table>';
+	    		STR_HTML += '<tr>';
+	    		STR_HTML += '<th>';
+	    		STR_HTML += value.MEMBER ? '회원' : '비회원';
+	    		STR_HTML += '</th>';
+	    		STR_HTML += '</tr>';
+	    		STR_HTML += '<tr>';
+	    		STR_HTML += '<th>';
+	    		STR_HTML += value.DISPLAY_NAME;
+	    		STR_HTML += '</th>';
+	    		STR_HTML += '</tr>';
+	    		STR_HTML += '<tr>';
+	    		STR_HTML += '<th>';
+	    		STR_HTML += value.PHONE_NO;
+	    		STR_HTML += '</th>';
+	    		STR_HTML += '</tr>';
+	    		STR_HTML += '</table>';
+		    return STR_HTML;
+	    }
+	});
+
+}
+
+function CLOSE_POPUP_FOR_REGIST_LOCATION() {
+	if (OBJ_POPUP_DIALOG_FOR_REGIST_LOCATION != null) {
+		QIIP_JQX_CLOSE_WINDOW(OBJ_POPUP_DIALOG_FOR_REGIST_LOCATION);
+	}
+}
+
+function GET_CONTACTS_FOR_REGIST_LOCATION() {
+	QIIP_APP_GET_CONTACTS({
+		"STR_FILTER" : $('#TEXT_TARGET_PHONE_NO').val(),
+		"DIV_ID_RESULT" : "TEXT_TARGET_PHONE_NO",
+		"MEMBER_CHECK" : "YES",
+	});
+}
+
+function IS_VALID_MOBILE_PHONE_NUMBER(PHONE_NO) {
+	var RESULT = false;
+	if (PHONE_NO == undefined)	return RESULT;
+	if (PHONE_NO.length < 10)	return RESULT;
+	if (PHONE_NO.length > 11)	return RESULT;
+	if (PHONE_NO.substring(0,2) == "01") RESULT = true;
+	return RESULT;  
+}
+
+function ADD_NOTIFY_LIST(STR_WHERE) {
+	if (!IS_VALID_MOBILE_PHONE_NUMBER($('#TEXT_TARGET_PHONE_NO').val())) {
+		var strHTML = '';
+			strHTML += '<div class="qiip_index" style="width:100%; height:80%;">';
+			strHTML += ARR_TO_TABLE_CENTER([
+				sprintf(
+					"[%s] 은 잘못된 폰 번호 입니다!",
+					$('#TEXT_TARGET_PHONE_NO').val()
+				),
+			]);
+			strHTML += '</div>';
+			strHTML += '<div class="qiip_index" style="width:100%; height:20%;">';
+			strHTML += ARR_TO_TABLE_CENTER([
+				'<button class="BTN_POPUP" id="BTN_POPUP_ALERT_OK">확인</button>',
+			]);
+			strHTML += '</div>';
+
+		var OBJ_POPUP = QIIP_JQX_POPUP_WINDOW({
+            showCollapseButton: true, 
+            height: '45%',
+            width: '90%',
+            minHeight: 100,
+            minWidth: 100,
+			},
+			'잘못된 폰 번호 안내',
+			strHTML
+		);
+		$('#BTN_POPUP_ALERT_OK').jqxButton({
+		width: '100%',
+		height: '100%'
+		}).on('click', function () {
+			QIIP_JQX_CLOSE_WINDOW(OBJ_POPUP);
+		});
+		return;
+	}
+	var ADD_CONTACT_INFO = {
+		STR_WHERE:		STR_WHERE,
+		PHONE_NO:		$('#TEXT_TARGET_PHONE_NO').attr('PHONE_NO'),
+		MEMBER:			$('#TEXT_TARGET_PHONE_NO').attr('MEMBER'),
+		DISPLAY_NAME:	$('#TEXT_TARGET_PHONE_NO').attr('DISPLAY_NAME'),
+	};
+	if (ADD_CONTACT_INFO.STR_WHERE == 'TO_ME') {
+		$("#DIV_NOTIFY_TO_ME_LIST").jqxListBox('addItem', ADD_CONTACT_INFO); 
+	} else if (ADD_CONTACT_INFO.STR_WHERE == 'FROM_ME') {
+		$("#DIV_NOTIFY_FROM_ME_LIST").jqxListBox('addItem', ADD_CONTACT_INFO); 
+	}
+}
+
+</script>
+<div class="qiip_index" style="width:100%; height:100%;">
+	<div style="width:100%; height:7%;">
+		<table>
+			<tr>
+				<td><button class="BTN_POPUP" id="BTN_POPUP_CHANGE_LOCATION">도착 알림 등록 장소 변경</button></td>
+			</tr>
+		</table>
+	</div>
+	<div style="width:100%; height:25%;">
+		{@ $LOCATION_INFO = $JSON_ARGS->LOCATION_INFO;}
+		<table>
+			<col width="20%"/>
+			<tr>
+				<th>주소</th>
+				<td id="TEXT_LOCATION_ADDRESS">{$LOCATION_INFO->주소}</td>
+			</tr>
+			<tr>
+				<th>상호</th>
+				<td id="TEXT_LOCATION_NAME">{$LOCATION_INFO->상호}</td>
+			</tr>
+			<tr>
+				<th>경도</th>
+				<td id="TEXT_LOCATION_Longitude">{$LOCATION_INFO->경도}</td>
+			</tr>
+			<tr>
+				<th>위도</th>
+				<td id="TEXT_LOCATION_Latitude">{$LOCATION_INFO->위도}</td>
+			</tr>
+		</table>
+	</div>
+	<div style="width:100%; height:7%;">
+		<table>
+			<col width="20%"/>
+			<col width="60%"/>
+			<tr>
+				<th>폰 번호</td></th>
+				<td>
+					<input 
+						style="width:100%;height:100%;box-sizing:border-box; border: solid gray 1px; text-align:center;"
+						type="text"
+						id="TEXT_TARGET_PHONE_NO"
+						placeholder="폰 번호 일부 또는 검색어 입력!"/>
+				</td>
+				<td><button class="BTN_POPUP" id="BTN_POPUP_TARGET_PHONE_NO_SEARCH">검색</button></td>
+			</tr>
+		</table>
+	</div>
+	<div style="width:100%; height:7%;">
+		<table>
+			<col width="50%"/>
+			<tr>
+				<td><button class="BTN_POPUP" id="BTN_POPUP_ADD_ITEM_NOTIFY_TO_ME_LIST"  >나에게 알림 목록에 추가</button></td>
+				<td><button class="BTN_POPUP" id="BTN_POPUP_ADD_ITEM_NOTIFY_FROM_ME_LIST">내가 알림 목록에 추가</button></td>
+			</tr>
+		</table>
+	</div>
+	<div style="width:100%; height:47%;">
+		<div style="width:50%; height:100%; float:left;">
+			<table style="width:100%; height:100%;">
+				<tr style="height:15%">
+					<th>나에게 알림 목록</th>
+				</tr>
+				<tr>
+					<td><div id="DIV_NOTIFY_TO_ME_LIST"></div></td>
+				</tr>
+			</table>
+		</div>
+		<div style="width:50%; height:100%; float:left;">
+			<table style="width:100%; height:100%;">
+				<tr style="height:15%">
+					<th>내가 알림 목록</th>
+				</tr>
+				<tr>
+					<td><div id="DIV_NOTIFY_FROM_ME_LIST"></div></td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	<div style="width:100%; height:7%;">
+		<table>
+			<col width="50%"/>
+			<tr>
+				<td><button class="BTN_POPUP" id="BTN_POPUP_REGIST_OK"    >등록</button></td>
+				<td><button class="BTN_POPUP" id="BTN_POPUP_REGIST_CANCLE">취소</button></td>
+			</tr>
+		</table>
+	</div>
+</div>

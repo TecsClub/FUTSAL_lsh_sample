@@ -1,0 +1,183 @@
+@charset "utf-8";
+#info_data{
+	padding-top: 30px;
+	height: 100vh;
+	background-color: #f5e9dc;
+}
+.info_form{
+	background-color: #fff;
+	width: 600px;
+	margin: 0 auto;
+	box-shadow: 0 5px 15px rgba(0,0,0,.5);
+	border: 1px solid rgba(0,0,0,.2);
+	border-radius: 6px;
+}
+.info_header{
+min-height: 16.43px;
+padding: 15px;
+border-bottom: 1px solid #e5e5e5;
+}
+.info_header h4{
+margin: 0;
+line-height: 1.5;
+font-size: 18px;
+font-weight: bold;
+color: #333;
+}
+.info_body{
+padding: 15px;
+color: #333;
+}
+
+.info_body label.col-sm-2{
+text-align: center;
+float: left;
+padding-top: 7px;
+margin-bottom: 0;
+font-weight: 700;
+font-size: 14px;
+margin-bottom: 20px;
+
+}
+.info_body .col-sm-5{
+	float: left;
+}
+
+.info_body .col-sm-5 input{
+	font-size: 14px;
+
+box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+
+font-weight: 200;
+}
+.info_body .text-warning{
+font-size: 11px;
+margin: 0;
+margin-top: 0px;
+padding-top: 14px;
+color: #8a6d3b !important;
+}
+.hr-line-dashed {
+
+    border-top: 1px dashed #e7eaec;
+    color: #ffffff;
+    background-color: #ffffff;
+    height: 1px;
+    margin: 20px 0;
+clear: both;
+}
+.info_body .form-horizontal .pw_ch label{
+padding-top: 0;	
+}
+.info_body div.col-sm-8 .col-sm-3 {
+
+    width: 25%;
+    font-size: 14px;
+	float:left;
+}
+.info_body div.col-sm-8 .col-sm-1 {
+
+    width: 12%;
+    text-align: center;
+    margin-top: 4px;
+	float: left;
+}
+.info_body .col-sm-8{
+max-width: 66.666667%;
+
+float: left;
+}
+.info_body .gender label{
+	padding-top: 0;
+	margin: 0;
+}
+.info_body .gender label:last-child{
+	   margin-left: 10px;
+}
+
+.info_body  .form-group .col-sm-8 select{
+	margin-bottom: 20px;
+
+font-size: 14px;
+}
+.info_body  .form-group .col-sm-8 select:focus{
+	box-shadow: none !important;
+border-color: #e06731 !important;
+}
+.info_body .text-primary{
+	font-size: 14px;
+color: #e06731 !important;
+padding-top: 5px;
+}
+.info_body input{
+	font-size: 14px;
+	font-weight: 200;
+	margin-bottom: 20px;
+}
+.info_body input:focus{
+	border-color: #e06731;
+	box-shadow: none !important;
+}
+
+.info_footer{
+	clear: both;
+text-align: center;
+border-top: 1px solid #e5e5e5;
+padding: 15px;
+}
+
+.info_footer button{
+	background-color: #333;
+
+color: #fff;
+
+border-color: #333;
+}
+
+.info_footer button:hover, .info_footer button:hover {
+
+    background-color: #000;
+    color: #fff;
+    border-color: #000;
+	box-shadow: none !important;
+}
+
+.info_body textarea{
+margin-bottom: 20px;
+
+border-radius: 4px;
+
+font-size: 14px;
+
+box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+
+font-weight: 200;
+
+border: 1px solid #ced4da;
+padding: 5px;
+color: #555;
+width: 100%;
+}
+
+.info_body #inputNOOL_BIRTH{
+	text-align: center !important;
+}
+.info_body .input-daterange{
+	margin-bottom: 20px;
+}
+
+
+#dropdownlistContentNOOL_PHONE_1ST span{
+	font-size: 14px !important;
+    padding-top: 3px;
+    
+   }
+#innerListBoxNOOL_PHONE_1ST span{
+font-size: 14px !important;
+
+}
+
+#NOOL_REHAB_CODE >div >div >div {
+margin: 0 !important;
+line-height: 1.5 !important;
+}

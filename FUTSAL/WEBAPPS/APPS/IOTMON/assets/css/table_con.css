@@ -1,0 +1,130 @@
+@charset "utf-8";
+
+#APPS_CONTENTS{
+	margin: 15px;	
+}
+
+	.openapi_accounts{
+	max-width: 1200px;
+	margin: 15px auto;
+	padding: 10px;
+min-width: 200px;
+border-radius: 4px;
+
+box-shadow: 0 1px 4px rgba(0,0,0,.3);
+	}
+	.openapi_accounts >p{
+		border-bottom: 1px solid #eee;
+padding-bottom: 5px;
+padding-left: 5px;
+	}
+	.form-group {
+    margin-bottom: 10px;
+}
+	/* table style */
+	table tr th{
+			text-align:center;
+		}
+	table tr td{
+			text-align:center;
+		}
+		
+		.table{
+		margin-bottom: 10px;
+		border-top-color: #111;
+		}
+		.table thead{
+				background-color: #333;
+color: #eee;
+		}
+		.table thead tr th{
+				border-color: #111;
+		}
+		
+		/* 페이지네이션 스타일 */
+		.page_num{
+				text-align: center;
+		}
+		.pagination{
+		margin: 0;	
+		}
+		.pagination > li:first-child > a, .pagination > li:first-child > span{
+			border-radius: 50%;
+		}
+		.pagination > li:last-child > a, .pagination > li:last-child > span{
+			border-radius: 50%;
+		}
+		
+		.pagination > li > a, .pagination > li > span{
+				border-radius: 50%;
+height: 34px;
+width: 34px;
+border: none;
+		}
+		.pagination > .active > a, .pagination > .active > a:focus, .pagination > .active > a:hover, .pagination > .active > span, .pagination > .active > span:focus, .pagination > .active > span:hover{
+			background-color: #7386D5;
+border-color: #7386D5;	
+		}
+		.pagination > li > a, .pagination > li > span{
+				color: #777;
+		}
+		.pagination > li > a:focus, .pagination > li > a:hover, .pagination > li > span:focus, .pagination > li > span:hover{
+			color: #555;
+		}
+		
+		/* search */
+		.search input{
+		width: 240px;
+float: left;
+margin-right: 5px;	
+		}
+		
+		
+		/* The switch - the box around the slider */ 
+  
+ .switch { 
+     position: relative; 
+     display: inline-block; 
+     width: 60px; 
+     height: 34px; 
+ } 
+ /* Hide default HTML checkbox */ 
+  
+ .switch input { 
+     display: none; 
+ } 
+ /* The slider */ 
+  
+ .slider { 
+     position: absolute; 
+     cursor: pointer; 
+     top: 0; 
+     left: 0; 
+     right: 0; 
+     bottom: 0; 
+     background-color: #ccc; 
+     -webkit-transition: .4s; 
+     transition: .4s; 
+ } 
+ .slider:before { 
+     position: absolute; 
+     content: ""; 
+     height: 26px; 
+     width: 26px; 
+     left: 4px; 
+     bottom: 4px; 
+     background-color: white; 
+     -webkit-transition: .4s; 
+     transition: .4s; 
+ } 
+ input:checked + .slider { 
+     background-color: #2196F3; 
+ } 
+ input:focus + .slider { 
+     box-shadow: 0 0 1px #2196F3; 
+ } 
+ input:checked + .slider:before { 
+     -webkit-transform: translateX(26px); 
+     -ms-transform: translateX(26px); 
+     transform: translateX(26px); 
+ } 
